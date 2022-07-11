@@ -1,4 +1,4 @@
-@import '../../../scss/index.scss';
+@import '../../scss/index.scss';
 
 .register-form{
     text-align: left;
@@ -36,6 +36,7 @@
     
     &__select{
         font-size: 0em+20px/$defaultFontSize;
+        color: #c3c3c3;
 
         &:hover{
             border-color: $secondary-color !important;

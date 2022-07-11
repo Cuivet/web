@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import { Layout, Tabs } from "antd";
-import Logo from '../../../assets/img/png/logo2.png'
-import RegisterForm from "../../../components/Admin/RegisterForm";
-import SignInForm from "../../../components/Admin/SignInForm/SignInForm";
+import Logo from '../../assets/img/png/logo2.png'
+import RegisterForm from "../../components/RegisterForm";
+import SignInForm from "../../components/SignInForm/SignInForm";
 
-import './SignIn.scss';
+import './LogIn.scss';
 
-export default function SignIn(){
+export default function LogIn(){
     const [input, setInput]= useState({
         isLogged : sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null
     });
@@ -31,8 +31,8 @@ export default function SignIn(){
                     </h1>
     
                     <div className="sign-in__content-tabs">
-                        <Tabs type="card">
-                            <TabPane tab={<span>Entrar</span>} key="1">
+                        <Tabs type="card" centered>
+                            <TabPane tab={<span>Entrar</span>} key="1" >
                                 <SignInForm logIn={logIn} />
                             </TabPane>
                             <TabPane tab={<span>Nuevo usuario</span>} key="2">

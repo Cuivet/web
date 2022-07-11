@@ -1,7 +1,9 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Checkbox } from 'antd';
 import React, {useState} from 'react';
 import { LockOutlined, MailOutlined} from "@ant-design/icons";
-import { auth } from '../../../services/auth.service';
+import { auth } from '../../services/auth.service';
+
+import '../RegisterForm/RegisterForm.scss'
 
 export default function SignInForm(props){
     const [input, setInput]= useState({});
@@ -33,7 +35,11 @@ export default function SignInForm(props){
             <Form.Item>
                 <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" placeholder="Contraseña" className="register-form__input"/>
             </Form.Item>
-            
+            <Form.Item>
+                <Checkbox name="session">
+                    Mantener iniciada la sesion
+                </Checkbox>
+            </Form.Item>            
         
             <Form.Item>
                 <Button htmlType="submit" className="register-form__button"> 

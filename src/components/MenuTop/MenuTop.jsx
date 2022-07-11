@@ -1,7 +1,7 @@
 import { Button } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined, PoweroffOutlined } from "@ant-design/icons";
 import React from "react";
-import CUIVET_logo from '../../../assets/img/png/logo.png';
+import CUIVET_logo from '../../assets/img/png/logo.png';
 
 import './MenuTop.scss'
 

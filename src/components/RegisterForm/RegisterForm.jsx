@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Form, Input, Button, Checkbox, Select, notification} from 'antd';
-import {emailValidation, minLengthValidation} from '../../../utils/formValidation'
+import {emailValidation, minLengthValidation} from '../../utils/formValidation'
 
 import './RegisterForm.scss'
 import { LoadingOutlined, LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
@@ -17,7 +17,7 @@ export default function RegisterForm(){
         lastName:"",
         dni:null,
         phone:null,
-        profile: 'Seleccione',
+        profile: 'Seleccione su Perfil',
         mp: null,
         privacyPolicy:false
 
@@ -107,18 +107,58 @@ export default function RegisterForm(){
                 placement: "top"
             })
         } else{
-            if(password !== repeatPasswordVal){
+           // const res = await 
+            if(passwordVal !== repeatPasswordVal){
                 notification['error']({
                     message: "Las constrasenias deben ser iguales",
                     description: "Compruebe que las contrasenias ingresadas coincidan",
                     placement: "top"
                 })
             } else{
-                
+                notification['success']({
+                    message: "Usuario creado correctamente",
+                    placement: "top"
+                })
+                resetForm();
+                //conectar con la api
             }
             
         }
     };
+
+    const resetForm = () =>{
+        const inputs = document.getElementsByTagName('input');
+
+        for (let i = 0; i< inputs.length; i++){
+            inputs[i].classList.remove("success");
+            inputs[i].classList.remove("error");
+
+            setInput({
+                email:"",
+                password:"",
+                repeatPassword:"",
+                name:"",
+                lastName:"",
+                dni:null,
+                phone:null,
+                profile: 'Seleccione su Perfil',
+                mp: null,
+                privacyPolicy:false
+            });
+            setFormValid({
+                email: false,
+                password: false,
+                repeatPassword: false,
+                name: false,
+                lastName: false,
+                dni:false,
+                phone:false,
+                profile: false,
+                mp: false,
+                privacyPolicy:false
+            })
+        }
+    }
 
     //para mostrar/ocultar campo de matricula segun perfil 
     //setea el valor de profile en input
@@ -130,17 +170,17 @@ export default function RegisterForm(){
         switch(val){
             case '1':
                 setVet(false);
-                setInput({profile:"1"});
+                setInput({...input, profile:"1"});
                 setFormValid({profile: true});
                 break;
             case '2':
                 setVet(true);
-                setInput({profile: "2"});
+                setInput({...input, profile: "2"});
                 setFormValid({profile: true});
                 break;
             case '3':
                 setVet(false);
-                setInput({profile: "3"});
+                setInput({...input, profile: "3"});
                 setFormValid({profile: true});
                 break;
             default:

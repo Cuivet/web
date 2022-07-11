@@ -12,10 +12,12 @@
 
     &__input{
         .ant-input-prefix{
+            
             i{
                 font-size: 0em + 22px / $defaultFontSize;
             }
         }
+        
 
         input{
             font-size: 0em + 20px / $defaultFontSize;

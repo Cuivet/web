@@ -5,14 +5,12 @@
 @import "~antd/dist/antd.css";
 @import "./scss/index.scss";
 
-.App {
-    h2{
-    color: rgb(255, 89, 0);
-    }
-    h1{
-        color: $primary-color;
-        span{
-            font-weight: 100;
-        }
-    }
+.success{
+    border: 1px solid $success !important;
+    background-color: $background-success;
+
+}
+.error{
+    border: 1px solid $error !important;
+    background-color: $background-error;
 }

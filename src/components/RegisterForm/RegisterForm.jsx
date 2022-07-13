@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import {Form, Input, Button, Checkbox, Select, notification} from 'antd';
-import {emailValidation, minLengthValidation} from '../../utils/formValidation'
+import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service"; 
 
-import './RegisterForm.scss'
+import './RegisterForm.scss';
 import { LoadingOutlined, LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
 
 
 //componente formulario del LogIn para nuevos usuarios
-export default function RegisterForm(){
+export default function RegisterForm(){ 
     //donde almacena los datos del formulario
     const [input, setInput]= useState({
         email:"",
@@ -84,11 +84,18 @@ export default function RegisterForm(){
                 [name]:e.target.checked
             });
         };
+        if (type === "number"){
+            setFormValid({
+                ...formValid,
+                [name]:numberValidation(e.target)
+            });
+        }
+        
     }
 
     const register = e => {
         // console.log(input);
-        // console.log(formValid);
+        console.log(formValid);
         const {email, password, repeatPassword, name, lastName, phone, dni, privacyPolicy, profile} = formValid;
 
         const emailVal = input.email;
@@ -195,13 +202,13 @@ export default function RegisterForm(){
     return (        
         <Form className="register-form"  onFinish={register} onChange={changeForm}>            
             <Form.Item rules={[{required: true, message: 'Ingrese su email'}]}>
-                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" onChange={inputValidation} value={input.email} placeholder="Correo electronico" className="register-form__input"/>
+                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" onChange={inputValidation} value={input.email} placeholder="Correo electrónico" className="register-form__input"/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" onChange={inputValidation} value={input.password} placeholder="Contrasenia" className="register-form__input"/>
+                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" onChange={inputValidation} value={input.password} placeholder="Contraseña" className="register-form__input"/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="repeatPassword" onChange={inputValidation} value={input.repeatPassword} placeholder="Repetir Contrasenia" className="register-form__input"/>
+                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="repeatPassword" onChange={inputValidation} value={input.repeatPassword} placeholder="Repetir Contraseña" className="register-form__input"/>
             </Form.Item>
             <Form.Item>
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="name" onChange={inputValidation} value={input.name} placeholder="Nombre" className="register-form__input"/>
@@ -210,10 +217,10 @@ export default function RegisterForm(){
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="lastName" onChange={inputValidation} value={input.lastName} placeholder="Apellido" className="register-form__input"/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="D.N.I." className="register-form__input"/>
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="D.N.I." className="register-form__input" onChange={inputValidation} min="0" max="999999999" />
             </Form.Item>
             <Form.Item>
-                <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Telefono" className="register-form__input"/>
+                <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Teléfono" className="register-form__input" onChange={inputValidation} min="0" max="999999999" />
             </Form.Item>
             <Form.Item>
                 <Select name="profile" placeholder="Seleccione su perfil" className="register-form__select" value={input.profile} onChange={onProfileChange} allowClear > 
@@ -223,13 +230,13 @@ export default function RegisterForm(){
                 </Select>
             </Form.Item>  
             {vet ? <div> <Form.Item id="matricula">
-                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Numero de Matricula" className="register-form__input"/>
+                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Numero de Matricula" className="register-form__input"min="1" max="999999999"/>
             </Form.Item></div>
             : null}          
             
             <Form.Item>
                 <Checkbox name="privacyPolicy" onChange={inputValidation} checked={input.privacyPolicy}>
-                    He leido y acepto la politica de privacidad
+                    He leído y acepto la politica de privacidad
                 </Checkbox>
             </Form.Item>
             <Form.Item>

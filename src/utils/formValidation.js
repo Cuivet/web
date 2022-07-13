@@ -28,25 +28,29 @@ export function emailValidation(inputData){
         return false;
     };
 }
+
 //no haria falta hacer la comprobacion ya que el framework de antd hace automaticamente esto, 
 //pero solo para comprobaciones de numeros, excluye la comprobacion de numeros enteros
-// export function numberValidation(inputData){
-//     console.log(inputData);
-//     const numberValid = /[0-9]+$/;
-//     const {value} = inputData;
 
-//     removeClassErrorSuccess(inputData);
+export function numberValidation(inputData){
+    //const numberValid = /^\d{1,2}\.?\d{3}\.?\d{3}$/;
+    const numberValid = /[0-9]+$/;
+    const {value} = inputData;
 
-//     const resultValidation = numberValid.test(value);
+    removeClassErrorSuccess(inputData);
 
-//     if(resultValidation){
-//         inputData.classList.add("success");
-//         return true;
-//     }else{
-//         inputData.classList.add("error");
-//         return false;
-//     };
-// }
+    const resultValidation = numberValid.test(value);
+
+    if(resultValidation){
+        inputData.classList.add("success");
+        return true;
+    }else{
+        inputData.classList.add("error");
+        return false;
+    };
+}
+
+
 
 function removeClassErrorSuccess(inputData){
     inputData.classList.remove("success");

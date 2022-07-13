@@ -1,8 +1,10 @@
+import { basePATH } from './config';
+
 export function auth(user,pass) {
   var axios = require('axios');
   return axios({
       method: "post",
-      url: 'http://localhost:3000/api/user/login',
+      url: `${basePATH}/user/login`,
       timeout: 1000 * 5, // Wait for 5 seconds
       headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Form, Input, Button, Checkbox, Select, notification} from 'antd';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation'
+import { signUpApi } from "../../services/user.service"; 
 
 import './RegisterForm.scss'
 import { LoadingOutlined, LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
@@ -39,7 +40,7 @@ export default function RegisterForm(){
 
     //setea los valores del form a la variable input
     const changeForm = e =>{
-        console.log(e.target.name);
+        // console.log(e.target.name);
         if(e.target.name === "privacyPolicy"){
             setInput({
                 ...input,
@@ -86,8 +87,8 @@ export default function RegisterForm(){
     }
 
     const register = e => {
-        console.log(input);
-        console.log(formValid);
+        // console.log(input);
+        // console.log(formValid);
         const {email, password, repeatPassword, name, lastName, phone, dni, privacyPolicy, profile} = formValid;
 
         const emailVal = input.email;
@@ -107,7 +108,6 @@ export default function RegisterForm(){
                 placement: "top"
             })
         } else{
-           // const res = await 
             if(passwordVal !== repeatPasswordVal){
                 notification['error']({
                     message: "Las constrasenias deben ser iguales",
@@ -115,6 +115,7 @@ export default function RegisterForm(){
                     placement: "top"
                 })
             } else{
+                const res = signUpApi(input);
                 notification['success']({
                     message: "Usuario creado correctamente",
                     placement: "top"
@@ -165,7 +166,7 @@ export default function RegisterForm(){
     const [vet, setVet] =  useState(false);
     
     const onProfileChange = (val) => {
-        console.log(vet);
+        // console.log(vet);
        
         switch(val){
             case '1':

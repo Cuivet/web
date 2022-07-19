@@ -179,17 +179,17 @@ export default function RegisterForm(){
             case '1':
                 setVet(false);
                 setInput({...input, profile:"1"});
-                setFormValid({profile: true});
+                setFormValid({...formValid, profile: true});
                 break;
             case '2':
                 setVet(true);
                 setInput({...input, profile: "2"});
-                setFormValid({profile: true});
+                setFormValid({...formValid, profile: true});
                 break;
             case '3':
                 setVet(false);
                 setInput({...input, profile: "3"});
-                setFormValid({profile: true});
+                setFormValid({...formValid, profile: true});
                 break;
             default:
                 break;

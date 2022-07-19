@@ -3,7 +3,39 @@
 .admin-sider{
     overflow: auto;
     height: 100vh;
-    position: fixed;
+    //position: fixed;
     left: 0;
     top: 65px;
+    background-color: $background-light;
+
+    .ant-menu-item-selected{
+        background-color: $secondary-color !important;
+        
+        a {
+            color: $third-color !important;
+        }
+    }
+
+    .ant-menu-inline .ant-menu-item::after{
+        border-right:3px !important;
+        border-right-color: $third-color !important;
+        //no esta andando esto
+    }
+
+    &__item{
+        color: $font-grey;
+
+        &:hover{
+            color: $primary-color !important;
+        }
+        // &:focus,
+        // &:active{
+        //     color: $font-grey !important;
+        //     background-color: $secondary-color;
+        // }
+    }
+
+}
+.ant-layout-has-sider{
+    background-color: $background-light;
 }

@@ -27,15 +27,15 @@ export default function LogIn(){
             <Layout className="sign-in">
                 <Content className="sign-in__content">
                     <h1 className="sign-in__content-logo">
-                        <img src={ Logo } alt="Juanfra" />
+                        <img src={ Logo } alt="CUIVET" />
                     </h1>
     
                     <div className="sign-in__content-tabs">
                         <Tabs type="card" centered>
-                            <TabPane tab={<span>Entrar</span>} key="1" >
+                            <TabPane tab={<span>Iniciar Sesion</span>} key="1" >
                                 <SignInForm logIn={logIn} />
                             </TabPane>
-                            <TabPane tab={<span>Nuevo usuario</span>} key="2">
+                            <TabPane tab={<span>Registrarse</span>} key="2">
                                 <RegisterForm />
                             </TabPane>
                         </Tabs>

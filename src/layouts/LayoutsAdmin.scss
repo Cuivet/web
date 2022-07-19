@@ -13,12 +13,17 @@
         display: flex;
         padding: 0;
         height: 65px;
+        background-color: $background-light;
+        color: $font-grey;
+        z-index: 1;
     }
     &__content{
         min-height: calc(100vh - 65px);
         padding: 90px 25px 25px 25px;
+        //margin-left: 5%;
     }
     &__footer{
         padding: 20px;
+        margin-left: 5%;
     }
 }

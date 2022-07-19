@@ -1,13 +1,14 @@
-import { Button } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined, PoweroffOutlined } from "@ant-design/icons";
+import { Button, Tooltip } from "antd";
+import { MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from "@ant-design/icons";
 import React from "react";
-import CUIVET_logo from '../../assets/img/png/logo.png';
+import CUIVET_logo from '../../assets/img/png/logo2.png';
 
 import './MenuTop.scss'
 
 export default function MenuTop(props){
     console.log(props);
     const {menuCollapsed, setMenuCollapsed} = props;
+
     return (
         <div className="menu-top">
             <div className="menu-top__left">
@@ -22,7 +23,10 @@ export default function MenuTop(props){
             </div>
             <h3 className="menu-top__center">CUIVET</h3>
             <div className="menu-top__right">
-                <Button type="link" icon={<PoweroffOutlined />} />
+                <Tooltip title='Cerrar sesion' placement="left" color={'#5B2569'}>
+                    <Button type="link" icon={<LogoutOutlined /> }/>
+                </Tooltip>
+                
             </div>
         </div>
     )

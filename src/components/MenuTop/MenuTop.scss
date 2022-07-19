@@ -4,16 +4,17 @@
 
 .menu-top{
     display: flex;
+    
 
     button{
 
-        color: $font-light;
+        color: $font-grey;
         &:hover{
             color: $primary-color;
         }
         &:focus,
         &:active{
-            color: $font-light;
+            color: $font-grey;
         }
     }
     &__left{
@@ -28,6 +29,5 @@
     }
     &__center{
         position: relative;
-        color: white;
     }
 }

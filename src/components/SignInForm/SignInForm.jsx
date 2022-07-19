@@ -1,9 +1,11 @@
-import { Button, Form, Input, Checkbox } from 'antd';
 import React, {useState} from 'react';
+import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
 import { LockOutlined, MailOutlined} from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 
 import '../RegisterForm/RegisterForm.scss'
+
+const {Link} = Typography;
 
 export default function SignInForm(props){
     const [input, setInput]= useState({});
@@ -37,7 +39,7 @@ export default function SignInForm(props){
             </Form.Item>
             <Form.Item>
                 <Checkbox name="session">
-                    Mantener iniciada la sesion
+                    Mantener iniciada la sesion 
                 </Checkbox>
             </Form.Item>            
         
@@ -45,6 +47,11 @@ export default function SignInForm(props){
                 <Button htmlType="submit" className="register-form__button"> 
                     Ingresar
                 </Button>
+            </Form.Item>
+            <Form.Item>
+                <Space align='center'>
+                    <Link className="register-form__link">Recuperar contrasenia?</Link>
+                </Space>
             </Form.Item>
         </Form>
   );

@@ -217,10 +217,10 @@ export default function RegisterForm(){
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="lastName" onChange={inputValidation} value={input.lastName} placeholder="Apellido" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="D.N.I." className="register-form__input" onChange={inputValidation} min="0" max="999999999" onSelect={inputValidation} />
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="D.N.I." className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
             </Form.Item>
             <Form.Item>
-                <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Teléfono" className="register-form__input" onChange={inputValidation} min="0" max="999999999" onSelect={inputValidation} />
+                <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Teléfono" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
             </Form.Item>
             <Form.Item>
                 <Select name="profile" placeholder="Seleccione su perfil" className="register-form__select" value={input.profile} onChange={onProfileChange} allowClear > 
@@ -230,7 +230,7 @@ export default function RegisterForm(){
                 </Select>
             </Form.Item>  
             {vet ? <div> <Form.Item id="matricula">
-                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Numero de Matricula" className="register-form__input"min="1" max="999999999" onSelect={inputValidation}/>
+                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Numero de Matricula" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item></div>
             : null}          
             

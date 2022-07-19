@@ -33,7 +33,7 @@ export default function LayoutAdmin(props){
                 <Content className="layout-admin__content">
                     {children}
                 </Content>
-                <Footer className="layout-admin__footer">Juan Frattin</Footer>
+                <Footer className="layout-admin__footer">CUIVET</Footer>
             </Layout> 
         </Layout>
 

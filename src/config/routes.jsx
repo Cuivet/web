@@ -5,7 +5,10 @@ import LayoutBasic from "../layouts/LayoutBasic";
 
 //Admin pages
 import AdminHome from "../pages/Admin";
+
+//Cuivet
 import LogIn from "../pages/LogIn/LogIn";
+import Menu from "../pages/MenuWeb/MenuWeb";
 
 //Client pages
 import Home from "../pages/Home";
@@ -22,6 +25,11 @@ const routesAdmin = [
         path: "/login",
         component: LogIn,
         layout: LayoutBasic,
+    },
+    {
+        path: "/menu",
+        component: Menu,
+        layout: LayoutAdmin,
     }
 ];
 

@@ -12,15 +12,15 @@
         background-color: $secondary-color !important;
         
         a {
-            color: $third-color !important;
+            color: $primary-color !important;
         }
     }
 
-    .ant-menu-inline .ant-menu-item::after{
-        border-right:3px !important;
-        border-right-color: $third-color !important;
-        //no esta andando esto
-    }
+    // .ant-menu-inline .ant-menu-item::after{
+    //     border-right:3px !important;
+    //     border-right-color: $third-color !important;
+    //     //no esta andando esto
+    // }
 
     &__item{
         color: $font-grey;
@@ -36,6 +36,15 @@
     }
 
 }
-.ant-layout-has-sider{
-    background-color: $background-light;
+// .ant-layout-has-sider{
+//     background-color: $background-light;
+// }
+
+.ant-menu-vertical .ant-menu-item::after,
+.ant-menu-vertical-left .ant-menu-item::after,
+.ant-menu-vertical-right .ant-menu-item::after,
+.ant-menu-inline .ant-menu-item::after {
+    border-right: 3px solid $primary-color;
+    //border-right: 3px solid $primary-color;
 }
+

@@ -14,3 +14,15 @@
     border: 1px solid $error !important;
     background-color: $background-error;
 }
+
+.ant-tooltip-inner {
+    //color: yellow;
+    background-color: $primary-color;
+}
+
+.ant-tooltip-placement-bottom .ant-tooltip-arrow, .ant-tooltip-placement-bottomLeft .ant-tooltip-arrow, .ant-tooltip-placement-bottomRight .ant-tooltip-arrow {
+    border-bottom-color: $primary-color;
+}
+.ant-tooltip-arrow-content{
+    background-color: $primary-color;
+}

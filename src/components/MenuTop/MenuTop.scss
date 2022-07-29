@@ -8,13 +8,13 @@
 
     button{
 
-        color: $font-grey;
+        color: $primary-color;
         &:hover{
             color: $primary-color;
         }
         &:focus,
         &:active{
-            color: $font-grey;
+            color:  $primary-color;
         }
     }
     &__left{
@@ -30,4 +30,6 @@
     &__center{
         position: relative;
     }
+
 }
+

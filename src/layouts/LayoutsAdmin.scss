@@ -4,6 +4,7 @@
 
 .layout-admin{
     transition: margin-left 0.2s;
+    border-bottom: 10px solid $primary-color;
 
     &__header{
         position: fixed;

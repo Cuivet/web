@@ -3,7 +3,7 @@ import { Layout, Tabs } from "antd";
 import Logo from '../../assets/img/png/logo2.png'
 import RegisterForm from "../../components/RegisterForm";
 import SignInForm from "../../components/SignInForm/SignInForm";
-
+import { getProfile } from '../../services/user.service';
 import './LogIn.scss';
 
 export default function LogIn(){
@@ -20,6 +20,13 @@ export default function LogIn(){
 
     const logIn = () => {
         setInput({...input,['isLogged']: true});
+        getProfile()
+            .then(res => {
+                sessionStorage.setItem('profile',res.data);
+            })
+            .catch(e => {
+                console.error(e)
+            });
     };
      
     if(!input.isLogged){

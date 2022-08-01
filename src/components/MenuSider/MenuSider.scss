@@ -35,10 +35,24 @@
         // }
     }
 
+    &__submenu{
+        color: $font-grey;
+        &:hover{
+            color: $primary-color !important;
+        }
+    }
+
 }
 // .ant-layout-has-sider{
 //     background-color: $background-light;
 // }
+.ant-menu-submenu-active .ant-menu-submenu-selected{
+    // color: $primary-color !important;
+    color: $font-grey;
+    &:hover{
+        color: $primary-color !important;
+    }
+}
 
 .ant-menu-vertical .ant-menu-item::after,
 .ant-menu-vertical-left .ant-menu-item::after,

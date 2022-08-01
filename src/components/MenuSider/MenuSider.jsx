@@ -1,9 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
-import { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined } from '@ant-design/icons';
+import { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined } from '@ant-design/icons';
 
 import './MenuSider.scss';
+import MenuItem from "antd/lib/menu/MenuItem";
+
+function getItem(label, key, to, icon, children, theme) {
+    return {
+      key,
+      to,
+      icon,
+      children,
+      label,
+      theme,
+    };
+  }
 
 export default function MenuSider(props){
     console.log(props);
@@ -14,12 +26,14 @@ export default function MenuSider(props){
     // }
 
     // const items = [
-    //     admin{
-    //         key:'1',
-    //         to:'/menu',
-    //         icon: <HomeOutlined/>,
-    //         text: 'Home',
-    //     },
+    //     getItem('Inicio',"/menu",'1', <HomeOutlined/>),
+    //     getItem()
+    // //     admin{
+    // //         key:'1',
+    // //         to:'/menu',
+    // //         icon: <HomeOutlined/>,
+    // //         text: 'Home',
+    // //     },
 
     // ]
 
@@ -44,6 +58,19 @@ export default function MenuSider(props){
                         <span className="nav-text"> Consulta</span>
                     </Link>
                 </Menu.Item>
+                <Menu.SubMenu key={'sub1'} className="admin-sider__submenu" 
+                    title={<> <SettingOutlined /><span className="nav-text">Configuracion</span> </>}>
+                    <Menu.Item key={"4"}>
+                        <Link to={"/settings/user"} className='admin-sider__submenu-item'>                        
+                            <span className="nav-text"> Cuenta</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key={"5"}>
+                        <Link to={"/"} className='admin-sider__submenu-item'>                        
+                            <span className="nav-text"> Veterinaria</span>
+                        </Link>
+                    </Menu.Item>
+                </Menu.SubMenu>
             </Menu>
 
         </Sider>

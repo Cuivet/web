@@ -1,0 +1,29 @@
+@import "../../../scss/index.scss";
+
+th.description-item{
+    width: 30%;
+    color: $primary-color;
+}
+td.description-item{
+    width: 70%;
+    background-color: $secondary-color;
+    color: white;
+}
+
+.description-item{
+    &__title{
+        color: $primary-color!important;
+    }
+
+    &__button{
+        color: $primary-color;
+        
+        .anticon {
+            font-size: 38px;
+        }
+        .anticon:hover {
+            color: $secondary-color;
+        }
+    }
+    
+}

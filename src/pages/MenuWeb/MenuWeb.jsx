@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Row, Col } from "antd";
+import {Layout, Row, Col, Descriptions } from "antd";
 import CardMenu from "../../components/CardMenu";
 import clipboard from "../../assets/img/jpg/clipboard.jpg";
 
@@ -24,15 +24,15 @@ export default function MenuWeb(){
        // const row = [];
         const mod = [];
      //   for (let j = 0 ; j<rows;j++){
-            for(let i = 0; i < cantMod; i++ ){
-                console.log(modules.text[i]);
-                mod.push(            
-                    <Col span={6}>
-                        <CardMenu text={modules.text[i]} description={modules.description[0]} disabled={modules.disabled[0]} img={modules.img[0]} ></CardMenu>
-                    </Col>
-                );      
-            
-            };
+        for(let i = 0; i < cantMod; i++ ){
+            console.log(modules.text[i]);
+            mod.push(            
+                <Col span={6}>
+                    <CardMenu text={modules.text[i]} description={modules.description[0]} disabled={modules.disabled[0]} img={modules.img[0]} ></CardMenu>
+                </Col>
+            );      
+        
+        };
         //     row.push(
         //         <Row>{mod}</Row>
         //     )
@@ -44,7 +44,7 @@ export default function MenuWeb(){
     return (
         <Row>
             <Mod></Mod>
-        </Row>       
+        </Row> 
         
         
     )

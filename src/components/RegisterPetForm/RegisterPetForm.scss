@@ -1,0 +1,73 @@
+@import '../../scss/index.scss';
+
+
+.register-pet-form{
+    text-align: left;
+    
+    &__input{
+        .ant-input-prefix{
+            i{
+                font-size: 0em + 22px / $defaultFontSize;
+            }
+        }
+
+        font-size: 0em + 22px / $defaultFontSize;
+        
+        
+
+        input{
+            background-color: transparent;
+            font-size: 0em + 20px / $defaultFontSize;
+            margin-left: 1%;
+            //padding: 10px 10px 10px 20px !important;
+            &:focus{
+                border-color: $primary-color !important;
+                box-shadow: none;
+            }
+        }
+
+        &:hover{
+            border-color: $secondary-color !important;
+        }
+    };
+    
+    &__select{
+        font-size: 0em+20px/$defaultFontSize;
+
+        &:hover{
+            border-color: $secondary-color !important;
+        }
+
+    };
+
+    &__radio{
+        font-size: 0em+20px/$defaultFontSize;
+        &:hover{
+            border-color: $secondary-color !important;
+        }
+    };
+
+    &__button{
+        width: 100%;
+        font-size: 0em+22px/$defaultFontSize;
+        background-color: $primary-color;
+        color: $font-light;
+        height: 42px;
+
+        &:hover{
+            background-color: $primary-color-hover !important;
+            color: $font-light;
+
+        }
+        &:focus, &:active{
+            background-color: $primary-color;
+            color: $font-light;
+            border:0;
+        }
+    }
+    
+}
+span.ant-radio + *{
+    font-size: 0em+20px/$defaultFontSize !important;
+    //color: #c3c3c3
+}

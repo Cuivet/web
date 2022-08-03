@@ -39,7 +39,7 @@ export default function LogIn(){
     
                     <div className="sign-in__content-tabs">
                         <Tabs type="card" centered>
-                            <TabPane tab={<span>Iniciar Sesion</span>} key="1" >
+                            <TabPane tab={<span>Iniciar Sesión</span>} key="1" >
                                 <SignInForm logIn={logIn} />
                             </TabPane>
                             <TabPane tab={<span>Registrarse</span>} key="2">

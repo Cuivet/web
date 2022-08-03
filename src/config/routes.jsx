@@ -11,6 +11,7 @@ import LogIn from "../pages/LogIn/LogIn";
 import Menu from "../pages/MenuWeb/MenuWeb";
 import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
+import RegisterPet from "../pages/RegisterPet/RegisterPet"
 
 //Client pages
 import Home from "../pages/Home";
@@ -44,6 +45,11 @@ const routesAdmin = [
         component: UserSettings,
         layout: LayoutAdmin,
 
+    },
+    {
+        path: "/register-pet",
+        component: RegisterPet,
+        layout: LayoutAdmin,
     }
 ];
 

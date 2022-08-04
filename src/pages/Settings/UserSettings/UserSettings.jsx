@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Row, Col, Descriptions,Typography, Button, Tooltip  } from "antd";
+import { Row, Col, Descriptions,Typography, Button, Tooltip  } from "antd";
 import {EditOutlined  } from "@ant-design/icons";
 
 import './UserSettings.scss'
@@ -7,14 +7,18 @@ import './UserSettings.scss'
 const {Title} = Typography;
 
 export default function UserSettings(){
+
+    const profile = JSON.parse(sessionStorage.getItem('profile')) ;
+
     const user = {
-        name: "Juan",
-        lastname: "Frattin",
-        phone: "456789",
+        name: profile.person.name,
+        lastname: profile.person.lastName,
+        phone: profile.person.phone,
         dni: "24356789",
-        address: "adsadadmsalndlnasld"
+        address: profile.person.address
     };
-    const label = ['Nombre','Apellido','Teléfono','DNI','Dirección'];
+    const label = ['Nombre','Apellido','Perfil','Telefono','DNI','Direccion'];
+
     // console.log(user);
 
     function Items(){

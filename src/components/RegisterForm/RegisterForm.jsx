@@ -90,6 +90,7 @@ export default function RegisterForm(){
                 [name]:numberValidation(e.target)
             });
         }
+        console.log(formValid)
         
     }
 

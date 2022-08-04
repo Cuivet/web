@@ -6,7 +6,7 @@ th.description-item{
 }
 td.description-item{
     width: 70%;
-    background-color: $secondary-color;
+    background-color: $background-grey;
     color: white;
 }
 
@@ -19,7 +19,7 @@ td.description-item{
         color: $primary-color;
         
         .anticon {
-            font-size: 38px;
+            font-size: 35px;
         }
         .anticon:hover {
             color: $secondary-color;

@@ -1,12 +1,14 @@
 //Layout
 import LayoutAdmin from "../layouts/LayoutAdmin";
-import LayoutBasic from "../layouts/LayoutBasic";
+import LayoutBasic from "../layouts/LayoutBasic/LayoutBasic";
+import LayoutLanding from "../layouts/LayoutLanding/LayoutLanding";
+// import LayoutTest from "../layouts/LayoutTest";
 
 
 //Admin pages
 import AdminHome from "../pages/Admin";
-
-//Cuivet
+ 
+//Cuivet pages
 import LogIn from "../pages/LogIn/LogIn";
 import Menu from "../pages/MenuWeb/MenuWeb";
 import Settings from "../pages/Settings/Settings";
@@ -14,7 +16,7 @@ import UserSettings from "../pages/Settings/UserSettings";
 import RegisterPet from "../pages/RegisterPet/RegisterPet"
 
 //Client pages
-import Home from "../pages/Home";
+import Landing from "../pages/Landing";
 import Contact from "../pages/Contact";
 
 const routesAdmin = [
@@ -53,11 +55,12 @@ const routesAdmin = [
     }
 ];
 
-const routesClient = [
+const routesClient = [    
     {
         path:"/",
-        layout: LayoutBasic,
-        component:Home,
+        component:Landing,
+        layout: LayoutLanding,
+        
     },
     {
         path:"/contact",

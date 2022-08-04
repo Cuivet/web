@@ -40,6 +40,7 @@ export default function SignInForm(props){
             <Form.Item>
                 <Checkbox name="session">
                     Mantener iniciada la sesión 
+
                 </Checkbox>
             </Form.Item>            
         

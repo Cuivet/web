@@ -12,7 +12,7 @@ export default function LogIn(){
     });
     const {Content} = Layout;
     const {TabPane} = Tabs;
-
+    //sacar de aca
     const logOut = e =>{
         setInput({...input,['isLogged']: false});
         sessionStorage.clear();
@@ -22,7 +22,7 @@ export default function LogIn(){
         setInput({...input,['isLogged']: true});
         getProfile()
             .then(res => {
-                sessionStorage.setItem('profile',res.data);
+                sessionStorage.setItem('profile',JSON.stringify(res.data) );
             })
             .catch(e => {
                 console.error(e)

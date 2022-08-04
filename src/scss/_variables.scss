@@ -47,4 +47,11 @@ $media-breackpoint-up-xs: 320px;
 $media-breackpoint-up-sm: 576px;
 $media-breackpoint-up-md: 768px;
 $media-breackpoint-up-lg: 992px;
-$media-breackpoint-up-lg: 1200px;
+$media-breackpoint-up-xl: 1200px;
+
+@font-face {
+    font-family: 'Bobby Jones';
+    src: url('../assets/fonts/bobbyjones/Bobby\ Jones\ Soft.otf') format('opentype');
+}
+
+$bobby: Bobby Jones;

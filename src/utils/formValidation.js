@@ -1,15 +1,16 @@
 export function minLengthValidation(inputData, minLength) {
     const {value}=inputData;
     const parent = inputData.parentElement;
-    removeClassErrorSuccess(parent);
-
+    removeClassErrorSuccess(inputData,parent);
     if(value.length >= minLength){
         //inputData.classList.add("success");
         parent.classList.add("success");
+        inputData.classList.add("success");
         return true;
     } else{
         //inputData.classList.add("error");
         parent.classList.add("error");
+        inputData.classList.add("error");
         return false;
     }
 
@@ -20,14 +21,16 @@ export function emailValidation(inputData){
     const {value}= inputData;
     const parent = inputData.parentElement;
 
-    removeClassErrorSuccess(parent);
+    removeClassErrorSuccess(inputData, parent);
 
     const resultValidation = emailValid.test(value);
     if(resultValidation){
         parent.classList.add("success");
+        inputData.classList.add("success");
         return true;
     }else{
         parent.classList.add("error");
+        inputData.classList.add("error");
         return false;
     };
 }
@@ -42,23 +45,27 @@ export function numberValidation(inputData){
     const parent = inputData.parentElement;
 
 
-    removeClassErrorSuccess(parent);
+    removeClassErrorSuccess(inputData, parent);
 
     const resultValidation = numberValid.test(value);
 
     if(resultValidation){
         parent.classList.add("success");
+        inputData.classList.add("success");
         return true;
     }else{
         parent.classList.add("error");
+        inputData.classList.add("error");
         return false;
     };
 }
 
 
 
-function removeClassErrorSuccess(inputData){
+export function removeClassErrorSuccess(inputData, parent){
     inputData.classList.remove("success");
     inputData.classList.remove("error");
+    parent.classList.remove("success");
+    parent.classList.remove("error");
 
 }

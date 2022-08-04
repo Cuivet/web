@@ -32,14 +32,15 @@ export default function SignInForm(props){
   return (
     <Form className="register-form"  onFinish={tryToLogIn} onChange={changeForm}>            
             <Form.Item>
-                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" placeholder="Correo electronico" className="register-form__input"/>
+                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" placeholder="Correo electrónico" className="register-form__input"/>
             </Form.Item>
             <Form.Item>
                 <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" placeholder="Contraseña" className="register-form__input"/>
             </Form.Item>
             <Form.Item>
                 <Checkbox name="session">
-                    Mantener sesion iniciada
+                    Mantener iniciada la sesión 
+
                 </Checkbox>
             </Form.Item>            
         
@@ -50,7 +51,7 @@ export default function SignInForm(props){
             </Form.Item>
             <Form.Item>
                 <Space align='center'>
-                    <Link className="register-form__link">Recuperar contrasenia?</Link>
+                    <Link className="register-form__link">¿Recuperar contraseña?</Link>
                 </Space>
             </Form.Item>
         </Form>

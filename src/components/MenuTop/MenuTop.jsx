@@ -29,11 +29,13 @@ export default function MenuTop(props){
             </div>
             <h3 className="menu-top__center">CUIVET</h3>
             <div className="menu-top__right">
+                <Tooltip title='Cerrar Sesión' placement="left" color={'#5B2569'}>
+                    <Button type="link" icon={<LogoutOutlined /> }/>
                 <Tooltip title='Cerrar sesión' placement="left" color={'#5B2569'}>
                     <Link to='/login'>
                         <Button type="link" to='/login' onClick={logOut} icon={<LogoutOutlined /> }/>
                     </Link>
-                    
+
                 </Tooltip>
                 
             </div>

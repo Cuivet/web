@@ -18,6 +18,7 @@ export default function UserSettings(){
         address: profile.person.address
     };
     const label = ['Nombre','Apellido','Perfil','Telefono','DNI','Direccion'];
+
     // console.log(user);
 
     function Items(){
@@ -44,7 +45,7 @@ export default function UserSettings(){
         <>
         <Row>
             <Col span={18} offset={3}>
-                <Title className="description-item__title">Informacion del Usuario <Tooltip title='Editar' placement="top" color={'#5B2569'}>
+                <Title className="description-item__title">Información del Usuario <Tooltip title='Editar' placement="top" color={'#5B2569'}>
                     <Button type="link" className="description-item__button" icon={<EditOutlined /> }/>
                 </Tooltip></Title>
                 

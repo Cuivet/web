@@ -37,7 +37,7 @@ export default function MenuTop(props){
                     </Link>
 
                 </Tooltip>
-                
+                </Tooltip>
             </div>
         </div>
     )

@@ -13,7 +13,8 @@ import LogIn from "../pages/LogIn/LogIn";
 import Menu from "../pages/MenuWeb/MenuWeb";
 import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
-import RegisterPet from "../pages/RegisterPet/RegisterPet"
+import Pets from "../pages/Pets/Pets";
+import RegisterPet from "../pages/RegisterPet/RegisterPet";
 
 //Client pages
 import Landing from "../pages/Landing";
@@ -47,6 +48,11 @@ const routesAdmin = [
         component: UserSettings,
         layout: LayoutAdmin,
 
+    },
+    {
+        path: "/pets",
+        component: Pets,
+        layout: LayoutAdmin,
     },
     {
         path: "/register-pet",

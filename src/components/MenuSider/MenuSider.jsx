@@ -59,7 +59,7 @@ export default function MenuSider(props){
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="4"  >
-                    <Link to={"/register-pet"} className='admin-sider__item'>
+                    <Link to={"/pets"} className='admin-sider__item'>
                         <QqOutlined />
                         <span className="nav-text"> Mascotas </span>
                     </Link>

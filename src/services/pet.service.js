@@ -1,4 +1,3 @@
-import { UserSwitchOutlined } from "@ant-design/icons";
 import { basePATH } from "./config";
 
 export function registerPet(data){
@@ -10,11 +9,9 @@ export function registerPet(data){
             "Content-Type":"application/json",
         },
     };
-    
     fetch(url, params)
     .then(response => {
       return response.json();
       //console.log(response);
     })    
 };
-

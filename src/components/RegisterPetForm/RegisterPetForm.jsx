@@ -16,7 +16,7 @@ export default function RegisterPetForm(){
         name:"",
         species:"Especie",
         raza:"Raza",
-        date_birth:null,
+        birth:null,
         sex:null,
         size:"Tamaño",
     });
@@ -25,7 +25,7 @@ export default function RegisterPetForm(){
         name:false,
         species:false,
         raza:false,
-        date_birth:false,
+        birth:false,
         sex:false,
         size:false,
     });
@@ -83,11 +83,11 @@ export default function RegisterPetForm(){
         const nameVal = input.name;
         const speciesVal = input.species;
         const razaVal = input.raza;
-        const dateBirthVal = input.date_birth;
+        const birthVal = input.birth;
         const sexVal = input.sex;
         const sizeVal = input.size;
 
-        if(!nameVal || !speciesVal || !razaVal|| !dateBirthVal|| !sexVal|| !sizeVal){
+        if(!nameVal || !speciesVal || !razaVal|| !birthVal|| !sexVal|| !sizeVal){
             notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
@@ -116,7 +116,7 @@ export default function RegisterPetForm(){
                 name:"",
                 species:"Especie",
                 raza:"Raza",
-                date_birth:null,
+                birth:null,
                 sex:null,
                 size:"Tamaño",
             });
@@ -124,7 +124,7 @@ export default function RegisterPetForm(){
                 name:false,
                 responsible:false,
                 raza:false,
-                date_birth:false,
+                birth:false,
                 sex:false,
                 size:false,
             })
@@ -200,8 +200,8 @@ export default function RegisterPetForm(){
     const onDateBirthChange = (value, dateString) => {
         //'2022-08-02' -> dateString
         //console.log(value, dateString);
-        setInput({...input, date_birth: dateString});
-        setFormValid({...formValid, date_birth: true});
+        setInput({...input, birth: value});
+        setFormValid({...formValid, birth: true});
     };
 
 

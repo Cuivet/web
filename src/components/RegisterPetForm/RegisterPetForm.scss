@@ -2,32 +2,18 @@
 
 
 .register-pet-form{
+    width: 60%;
     text-align: left;
-    
-    
+    font-size: 0em + 22px / $defaultFontSize;
+    color: $primary-color;
+    align-items: center;
+
+    //este es solo para el nombre
     &__input{
-        .ant-input-prefix{
-            i{
-                font-size: 0em + 22px / $defaultFontSize;
-            }
-        }
-
-        
         // font-size: 0em + 22px / $defaultFontSize;
+        color: black;
+        font-size: 16px;
         
-        
-
-        input{
-            background-color: transparent;
-            font-size: 0em + 20px / $defaultFontSize;
-            margin-left: 1%;
-            //padding: 10px 10px 10px 20px !important;
-            &:focus{
-                border-color: $primary-color !important;
-                box-shadow: none;
-            }
-        }
-
         &:hover{
             border-color: $secondary-color !important;
         }
@@ -37,12 +23,10 @@
         font-size: 0em + 20px / $defaultFontSize!important;
     }
     &__select{
-        font-size: 0em+20px/$defaultFontSize!important;
-
+        font-size: 0em+20px/$defaultFontSize;
         &:hover{
             border-color: $secondary-color !important;
         }
-
     };
 
     &__radio{
@@ -53,7 +37,7 @@
     };
 
     &__button{
-        width: 100%;
+        // width: 100%;
         font-size: 0em+22px/$defaultFontSize;
         background-color: $primary-color;
         color: $font-light;
@@ -62,6 +46,7 @@
         &:hover{
             background-color: $primary-color-hover !important;
             color: $font-light;
+            border-color: $primary-color-hover;
 
         }
         &:focus, &:active{
@@ -71,20 +56,19 @@
         }
     }
     
+    &__datepicker{
+        font-size: 0em+20px/$defaultFontSize !important;
+        &:hover{
+            border-color: $secondary-color !important;
+        }
+        width: 100%;
+    }
+    
+
 }
+
 span.ant-radio + *{
     font-size: 0em+20px/$defaultFontSize !important;
     //color: #c3c3c3
 }
 
-.ant-radio-group-outline,
-.ant-radio-button-wrapper-checked
-{
-    border-color: $primary-color!important;
-    color: $primary-color!important;
-    // box-shadow: 0 0 0 3px $secondary-color;
-
-    &:hover{
-        // color: $secondary-color!important;
-    }
-}

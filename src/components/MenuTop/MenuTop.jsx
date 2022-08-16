@@ -42,7 +42,7 @@ export default function MenuTop(props){
                         <Button type="link" to='/login' onClick={logOut} icon={<LogoutOutlined /> }/>
                     </Link>
                 </Tooltip>
-                
+                </Tooltip>
             </div>
         </div>
     )

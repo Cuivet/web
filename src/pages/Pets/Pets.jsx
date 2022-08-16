@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 export default function Pets(){
 
-    // //completar con mascotas traidas de la base
+    //completar con mascotas traidas de la base
     const pets = {
         text:['Balú', 'Koda', 'Timoteo','Hooper', 'Tina', 'Malú','Lima', 'Duki'],
         description:['Ésta es una mascota'],
@@ -17,10 +17,21 @@ export default function Pets(){
         img:[<img alt="mascota" src={paw}></img>],
     }
 
+    const pets2 = [];
+
     const cantPets = 8;
 
     function Pet(){
         const pet = [];
+        //VER ESTO
+        // pets2.array.forEach(pet => {
+            
+        // });
+        
+        // pets2.array.forEach(element => {
+        //     console.log(element.text);
+        // });
+        
         for(let i = 0; i < cantPets; i++ ){
             pet.push(            
                 <Col span={6}>

@@ -2,14 +2,21 @@ import React, {useState} from "react";
 import {Form, Input, Button, notification, Select, Radio, DatePicker, Descriptions } from 'antd';
 import { minLengthValidation, numberValidation } from '../../utils/formValidation';
 import './RegisterPetForm.scss';
+import {registerPet} from "../../services/pet.service"
 
 export default function RegisterPetForm(){
+    
+     //saco los datos del tutor que está logueado
+     const profile = JSON.parse(sessionStorage.getItem('profile'));
+     const tutorId = profile.tutor.id;
+
+
 
     const [input, setInput]= useState({
         name:"",
         species:"Especie",
         raza:"Raza",
-        dateBirth:null,
+        birth:null,
         sex:null,
         size:"Tamaño",
     });
@@ -18,7 +25,7 @@ export default function RegisterPetForm(){
         name:false,
         species:false,
         raza:false,
-        dateBirth:false,
+        birth:false,
         sex:false,
         size:false,
     });
@@ -65,42 +72,36 @@ export default function RegisterPetForm(){
             });
         };
 
-        // if(type ==="datePicker"){
-        //     setFormValid({
-        //         ...formValid,
-        //         [name]:e.target.checked
-        //     });
-        // };
-
+        setInput({...input, tutorId: tutorId});
         
     };
 
     const register = e => {
         console.log(input);
-        console.log(formValid);
+        //console.log(formValid);
         //const {name, species, raza, dateBirth, sex, size} = formValid;
         const nameVal = input.name;
         const speciesVal = input.species;
         const razaVal = input.raza;
-        const dateBirthVal = input.dateBirth;
+        const birthVal = input.birth;
         const sexVal = input.sex;
         const sizeVal = input.size;
 
-        if(!nameVal || !speciesVal || !razaVal|| !dateBirthVal|| !sexVal|| !sizeVal){
+        if(!nameVal || !speciesVal || !razaVal|| !birthVal|| !sexVal|| !sizeVal){
             notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
                 placement: "top"
             })
         } else{
-                // const res = signUpApi(input);
+                //console.log(tutorId);
+                const res = registerPet(input);
                 notification['success']({
                     message: "Mascota creada correctamente",
                     placement: "top"
                 })
                 resetForm();
-                //removeClassErrorSuccess(input);
-                //conectar con la api
+
             }
     };
 
@@ -115,7 +116,7 @@ export default function RegisterPetForm(){
                 name:"",
                 species:"Especie",
                 raza:"Raza",
-                dateBirth:null,
+                birth:null,
                 sex:null,
                 size:"Tamaño",
             });
@@ -123,7 +124,7 @@ export default function RegisterPetForm(){
                 name:false,
                 responsible:false,
                 raza:false,
-                dateBirth:false,
+                birth:false,
                 sex:false,
                 size:false,
             })
@@ -199,8 +200,8 @@ export default function RegisterPetForm(){
     const onDateBirthChange = (value, dateString) => {
         //'2022-08-02' -> dateString
         //console.log(value, dateString);
-        setInput({...input, dateBirth: dateString});
-        setFormValid({...formValid, dateBirth: true});
+        setInput({...input, birth: value});
+        setFormValid({...formValid, birth: true});
     };
 
 

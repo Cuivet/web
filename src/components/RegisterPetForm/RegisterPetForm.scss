@@ -4,6 +4,7 @@
 .register-pet-form{
     text-align: left;
     
+    
     &__input{
         .ant-input-prefix{
             i{
@@ -11,7 +12,8 @@
             }
         }
 
-        font-size: 0em + 22px / $defaultFontSize;
+        
+        // font-size: 0em + 22px / $defaultFontSize;
         
         
 
@@ -30,9 +32,12 @@
             border-color: $secondary-color !important;
         }
     };
-    
+    &__date{
+        width: 100%;
+        font-size: 0em + 20px / $defaultFontSize!important;
+    }
     &__select{
-        font-size: 0em+20px/$defaultFontSize;
+        font-size: 0em+20px/$defaultFontSize!important;
 
         &:hover{
             border-color: $secondary-color !important;
@@ -70,4 +75,16 @@
 span.ant-radio + *{
     font-size: 0em+20px/$defaultFontSize !important;
     //color: #c3c3c3
+}
+
+.ant-radio-group-outline,
+.ant-radio-button-wrapper-checked
+{
+    border-color: $primary-color!important;
+    color: $primary-color!important;
+    // box-shadow: 0 0 0 3px $secondary-color;
+
+    &:hover{
+        // color: $secondary-color!important;
+    }
 }

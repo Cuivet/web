@@ -7,7 +7,6 @@ export default function LayoutBasic(props){
 
     const {children}=props;
     const {Content, Footer, Header} = Layout;
-    const [menuCollapsed, setMenuCollapsed] = useState(true);
 
     return (
         <Layout>

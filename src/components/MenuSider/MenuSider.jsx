@@ -1,15 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
 import { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined, QqOutlined } from '@ant-design/icons';
+import PetsIcon from '@mui/icons-material/Pets';
+
+import SvgIcon from '@mui/material/SvgIcon';
+// import createSvgIcon from '@material-ui';
 
 import './MenuSider.scss';
-import MenuItem from "antd/lib/menu/MenuItem";
 
-function getItem(label, key, to, icon, children, theme) {
+
+function getItem(label, key, link, icon, children, theme) {
     return {
       key,
-      to,
+      link,
       icon,
       children,
       label,
@@ -18,60 +22,83 @@ function getItem(label, key, to, icon, children, theme) {
   }
 
 export default function MenuSider(props){
-    console.log(props);
+   
     const {menuCollapsed} = props;
     const {Sider}= Layout;
-    // const getItem = () => {
+    var tutor = false;
+    var veterinary = false;
+    var vetOwner = false;
 
+    const profile = JSON.parse(sessionStorage.getItem('profile')) ;
+
+    if(profile.tutor != null){
+        tutor= true;
+    };
+    if(profile.veterinary != null){
+        veterinary = true;
+    };
+    if(profile.vetOwner != null){
+        vetOwner = true;
+    };
+   if(profile === undefined){
+        tutor = false;
+        vetOwner = false;
+        veterinary = false;
+    };
+
+    //como hacer el ruteo pasandolo por items
+    const items = [
+        getItem('Inicio','1', <Link to={"/menu"}></Link>, <HomeOutlined/>),
+        getItem('Consulta','3', <Link to={'/test'}  className='admin-sider__item'></Link>,<UnorderedListOutlined />),
+        getItem('Mascotas','4',  <PetsIcon fontSize="small" />, <Link to={'/register-pet'}  className='admin-sider__item'></Link>),
+        getItem('Configuracion','/test2','sub1', <SettingOutlined />,[
+            getItem('Usuario','/settings/user','5'),
+            getItem('Veterinario','/settings/vet','6'),
+            
+        ])
+    ];
+    // const menu = {
+    //     label:['Inicio', 'Consulta','Mascotas', 'Configuracion', 'Usuario'],
+    //     route: ["/menu","/test","/register-pet","/settings","/settings/user"],
+    //     icon: [<HomeOutlined/>, <UnorderedListOutlined />, <PetsIcon fontSize="small" />, <SettingOutlined />],
+    //     key: ['1','2','3','sub1','4','5']
     // }
-
-    // const items = [
-    //     getItem('Inicio',"/menu",'1', <HomeOutlined/>),
-    //     getItem()
-    // //     admin{
-    // //         key:'1',
-    // //         to:'/menu',
-    // //         icon: <HomeOutlined/>,
-    // //         text: 'Home',
-    // //     },
-
-    // ]
-
+  
     return (
         <Sider trigger={null} collapsible className="admin-sider" collapsed={menuCollapsed}>
             <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]} > 
+                {/* <Test></Test> */}
+                
                 <Menu.Item key="1" >
                     <Link to={"/menu"} className='admin-sider__item' >
                         <HomeOutlined />
                         <span className="nav-text"> Inicio</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="2" >
-                    <Link to={"/login"}  className='admin-sider__item'>
-                        <LoginOutlined />
-                        <span className="nav-text"> Login</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="3"  >
-                    <Link to={"/admin"} className='admin-sider__item'>
-                        <UnorderedListOutlined />
-                        <span className="nav-text"> Consulta</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="4"  >
-                    <Link to={"/register-pet"} className='admin-sider__item'>
-                        <QqOutlined />
-                        <span className="nav-text"> Mascotas </span>
-                    </Link>
-                </Menu.Item>
+                { veterinary ? <>
+                    <Menu.Item key="3"  >
+                        <Link to={"/admin"} className='admin-sider__item'>
+                            <UnorderedListOutlined />
+                            <span className="nav-text"> Consulta</span>
+                        </Link>
+                    </Menu.Item>
+                </>: null}                
+                { tutor ? <>
+                        <Menu.Item key="4"  >
+                            <Link to={"/register-pet"} className='admin-sider__item'>                      
+                                <PetsIcon fontSize="small" />
+                                <span className="nav-text"> Mascotas </span>
+                            </Link>
+                        </Menu.Item>
+                    </> : null}
                 <Menu.SubMenu key={'sub1'} className="admin-sider__submenu" 
                     title={<> <SettingOutlined /><span className="nav-text">Configuración</span> </>}>
-                    <Menu.Item key={"4"}>
+                    <Menu.Item key={"5"}>
                         <Link to={"/settings/user"} className='admin-sider__submenu-item'>                        
                             <span className="nav-text"> Cuenta</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key={"5"}>
+                    <Menu.Item key={"6"}>
                         <Link to={"/"} className='admin-sider__submenu-item'>                        
                             <span className="nav-text"> Veterinaria</span>
                         </Link>

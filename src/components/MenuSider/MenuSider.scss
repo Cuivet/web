@@ -36,23 +36,45 @@
     }
 
     &__submenu{
-        color: $font-grey;
+        color: $font-grey!important;
         &:hover{
-            color: $primary-color !important;
-        }
-    }
+            color: $primary-color!important;
+        }      
+        
+    } 
 
 }
-// .ant-layout-has-sider{
-//     background-color: $background-light;
-// }
-.ant-menu-submenu-active .ant-menu-submenu-selected{
-    // color: $primary-color !important;
-    color: $font-grey;
+
+
+//Dar el color al texto del menu lateral, pisando las clases de antd
+.ant-menu-submenu, 
+.ant-menu-submenu-inline, 
+.ant-menu-light,
+.ant-menu-submenu-arrow,
+.ant-menu-submenu-title,
+.ant-menu-submenu-open, 
+.ant-menu-submenu-active,
+.ant-menu-item,
+.ant-menu-item-only-child,
+a.admin-sider__submenu-item,
+.ant-menu-submenu-selected{
+    color: $font-grey!important;
     &:hover{
-        color: $primary-color !important;
+        color: $primary-color!important;
     }
+    
 }
+// .ant-menu-item-selected a::before{
+// // .ant-menu-item-selected a,
+// // .ant-menu-item-active{
+//     background-color: $secondary-color;
+//     // color: black;
+//     // color: $font-grey!important;
+
+//     // &:hover{
+//     //     color: black;
+//     // }
+// }
 
 .ant-menu-vertical .ant-menu-item::after,
 .ant-menu-vertical-left .ant-menu-item::after,
@@ -60,5 +82,5 @@
 .ant-menu-inline .ant-menu-item::after {
     border-right: 3px solid $primary-color;
     //border-right: 3px solid $primary-color;
+    color: $font-grey !important;
 }
-

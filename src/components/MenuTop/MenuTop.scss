@@ -26,6 +26,15 @@
     &__right{
         position: absolute;
         right: 0;
+
+        .badge{
+            margin-right: 1vw;
+        }
+
+        //si queremos cambiar el color de la alerta del avatar
+        // .ant-badge-dot{
+        //     background-color: $primary-color!important;
+        // }
     }
     &__center{
         position: relative;

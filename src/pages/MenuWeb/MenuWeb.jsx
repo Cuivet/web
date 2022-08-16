@@ -9,23 +9,12 @@ import './MenuWeb.scss'
 export default function MenuWeb(){
 
     const profile = JSON.parse(sessionStorage.getItem('profile')) ;
-    // await getProfile()
-    // .then(res => {
-    //     return res.data;
-    // })
-    // .catch(e => {
-    //     return console.error(e)
-    // });
-
-    // const tutor_id = profile.tutor.id;
-    // const vet_id = profile.veterinary.id;
-    // const vetOwner_id = profile.vetOwner.id;
-    // const vector = [tutor_id, vet_id, vetOwner_id]
-
+    // console.log(profile);
+    
     const vet = ['Consulta','Calendario','Ficha Clinica'];
     const tutor = ['Mascotas','Calendario','Valorar','Historial Clinico'];
     const vetOwner = ['Veterinaria','Calendario'];
-    const test = "Hola";
+    // const test = "Hola";
 
     function cantMod(){
         //definir modulos comunes en todos los perfiles

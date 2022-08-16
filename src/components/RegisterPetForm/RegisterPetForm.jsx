@@ -177,8 +177,9 @@ export default function RegisterPetForm(){
                 <Input  type="number" name="responsible" value={input.responsible} placeholder="DNI Responsable" className="register-pet-form__input" onChange={inputValidation}  onSelect={inputValidation} />
             </Form.Item> */}
             <Form.Item>
-                <label>Fecha de nacimiento</label>
-                <Input type="date" name="dateBirth" value={input.dateBirth} placeholder="Fecha de nacimiento" className="register-pet-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                {/* <label>Fecha de nacimiento</label> */}
+                <DatePicker name="dateBirth" value={input.dateBirth} placeholder="Fecha de nacimiento" className="register-pet-form__date" onChange={inputValidation} format={"DD/MM/YYYY"}></DatePicker>
+                {/* <Input type="date" name="dateBirth" value={input.dateBirth} placeholder="Fecha de nacimiento" className="register-pet-form__input" onChange={inputValidation}  onSelect={inputValidation} /> */}
             </Form.Item>
             {/* <Form.Item>
                 <DatePicker onChange={onChange} name="dateBirth" value={input.dateBirth} placeholder="Fecha de nacimiento" className="register-pet-form__input" />
@@ -189,11 +190,10 @@ export default function RegisterPetForm(){
                     <Select.Option value="2">Golden</Select.Option>
                     <Select.Option value="3">Caniche</Select.Option>
                     <Select.Option value="4">None</Select.Option>
-
                 </Select>
             </Form.Item> 
             <Form.Item>
-                <Radio.Group name="sex" className="register-pet-form__radio" onChange={inputValidation} value={input.sex}>
+                <Radio.Group optionType="button" name="sex" className="register-pet-form__radio" onChange={inputValidation} value={input.sex}>
                     <Radio value="1">Macho</Radio>
                     <Radio value="2">Hembra</Radio>
                 </Radio.Group>

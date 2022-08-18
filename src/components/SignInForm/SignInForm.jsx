@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
 import { LockOutlined, MailOutlined} from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
+import {emailValidation, minLengthValidation} from '../../utils/formValidation';
 
 import '../RegisterForm/RegisterForm.scss'
 
@@ -9,6 +10,11 @@ const {Link} = Typography;
 
 export default function SignInForm(props){
     const [input, setInput]= useState({});
+    const [formValid, setFormValid] = useState({
+        email: false,
+        password: false,
+        
+    });
 
     const changeForm = e =>{
         console.log(e.target.name);
@@ -29,13 +35,29 @@ export default function SignInForm(props){
             });
     };
 
+    const inputValidation = e =>{
+        const {type, name}=e.target;
+        if(type === "email"){
+            setFormValid({
+                ...formValid,
+                [name]:emailValidation(e.target)
+            });
+        };
+        if(type ==="password"){
+            setFormValid({
+                ...formValid,
+                [name]:minLengthValidation(e.target, 8)
+            });
+        };
+    }
+
   return (
     <Form className="register-form"  onFinish={tryToLogIn} onChange={changeForm}>            
             <Form.Item>
-                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" placeholder="Correo electrónico" className="register-form__input"/>
+                <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" placeholder="Correo electrónico" className="register-form__input" onChange={inputValidation}/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" placeholder="Contraseña" className="register-form__input"/>
+                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" placeholder="Contraseña" className="register-form__input" onChange={inputValidation}/>
             </Form.Item>
             <Form.Item>
                 <Checkbox name="session">
@@ -45,9 +67,11 @@ export default function SignInForm(props){
             </Form.Item>            
         
             <Form.Item>
-                <Button htmlType="submit" className="register-form__button"> 
-                    Ingresar
-                </Button>
+                <Link to={'/menu'}>
+                    <Button htmlType="submit" className="register-form__button"> 
+                        Ingresar
+                    </Button>
+                </Link>
             </Form.Item>
             <Form.Item>
                 <Space align='center'>

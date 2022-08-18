@@ -2,19 +2,20 @@ import React from "react";
 import {UserOutlined} from  "@ant-design/icons";
 import { Avatar, Image } from "antd";
 
-import './Avatar.scss'
+import './AvatarUser.scss'
 
 export default function AvatarUser(props){
     let flag1, flag2 = null;
-    const {icon} = props;
-    console.log(icon);
+    const {icon, preview} = props;
+
+    // console.log(icon);
+
     if(icon == null){
         flag1 = <UserOutlined />;
     }else{
-        flag2 = <Image src={icon} className="avatar-img"></Image>;
+        flag2 = <Image src={icon} preview={preview} className="avatar-img"></Image>;
     }
     
-
     return (
         <Avatar className="avatar" 
         size={"large"} 

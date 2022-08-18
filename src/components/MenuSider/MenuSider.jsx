@@ -4,7 +4,6 @@ import { Layout, Menu} from "antd";
 import { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined, QqOutlined } from '@ant-design/icons';
 import PetsIcon from '@mui/icons-material/Pets';
 
-import SvgIcon from '@mui/material/SvgIcon';
 // import createSvgIcon from '@material-ui';
 
 import './MenuSider.scss';
@@ -85,7 +84,7 @@ export default function MenuSider(props){
                 </>: null}                
                 { tutor ? <>
                         <Menu.Item key="4"  >
-                            <Link to={"/register-pet"} className='admin-sider__item'>                      
+                            <Link to={"/pets"} className='admin-sider__item'>                      
                                 <PetsIcon fontSize="small" />
                                 <span className="nav-text"> Mascotas </span>
                             </Link>
@@ -98,11 +97,13 @@ export default function MenuSider(props){
                             <span className="nav-text"> Cuenta</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key={"6"}>
+                    {vetOwner ? <> <Menu.Item key={"6"}>
                         <Link to={"/"} className='admin-sider__submenu-item'>                        
                             <span className="nav-text"> Veterinaria</span>
                         </Link>
-                    </Menu.Item>
+                    </Menu.Item>                    
+                    </> : null}
+                    
                 </Menu.SubMenu>
             </Menu>
 

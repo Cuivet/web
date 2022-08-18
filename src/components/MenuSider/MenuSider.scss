@@ -2,11 +2,16 @@
 
 .admin-sider{
     overflow: auto;
-    height: 100vh;
+    
     //position: fixed;
     left: 0;
     top: 60px;
     background-color: $background-light;
+
+    @media (min-width: $media-breackpoint-up-lg) {
+        // height: 100vh;
+    }
+
 
     .ant-menu-item-selected{
         background-color: $secondary-color !important;

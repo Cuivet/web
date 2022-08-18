@@ -1,0 +1,22 @@
+@import "../../scss/index.scss";
+
+
+.card-pet{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    // max-height: 50vh;
+
+    @media (min-width: $media-breackpoint-up-lg) {
+        // max-height: ;
+    }
+}
+
+.ant-card-hoverable:hover {
+    box-shadow: 0 1px 2px -2px rgba(94, 27, 116, 0.385), 
+                0 3px 6px 0 rgba(88, 9, 114, 0.329),
+                0 5px 12px 4px rgba(10, 9, 9, 0.09);
+    .ant-card-head{
+        color: $primary-color;
+    }
+    
+}

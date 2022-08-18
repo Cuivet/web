@@ -1,50 +1,80 @@
 @import '../../scss/index.scss';
 
 
-.pet-card{
-    //text-align: right;
-    margin: 10px 5px 5px 5px; 
-    &:hover{
-        color: $primary-color;
-    }
+// .pets{
+//     &-card{
+//         //text-align: right;
+//         margin: 10px 5px 5px 5px; 
+//         &:hover{
+//             color: $primary-color;
+//         }
+//     }
 
-}
+// }
 
-.ant-card-head{
-    color: $secondary-color;
-    text-align: center;
-    font-size: large;
-}
+// .ant-card-head{
+//     color: $secondary-color;
+//     text-align: center;
+//     font-size: large;
+// }
 
-.ant-card-hoverable:hover {
-    box-shadow: 0 1px 2px -2px rgba(94, 27, 116, 0.385), 
-                0 3px 6px 0 rgba(88, 9, 114, 0.329),
-                0 5px 12px 4px rgba(10, 9, 9, 0.09);
-    .ant-card-head{
-        color: $primary-color;
-    }
+// .ant-card-hoverable:hover {
+//     box-shadow: 0 1px 2px -2px rgba(94, 27, 116, 0.385), 
+//                 0 3px 6px 0 rgba(88, 9, 114, 0.329),
+//                 0 5px 12px 4px rgba(10, 9, 9, 0.09);
+//     .ant-card-head{
+//         color: $primary-color;
+//     }
     
-}
+// }
 
-.pets__add-button{
+.pets__button{
     
-    margin: 1px 5px 5px 5px; 
-    text-align: center;
-    font-size: 0em+22px/$defaultFontSize;
-    background-color: $primary-color;
-    //background-color: $secondary-color;
-    color: $font-light;
-    &:hover{
-        //background-color: $primary-color-hover !important;
-        background-color: $secondary-color !important;
-        border-color: $secondary-color;
-        color: $font-light;
+
+    &-add{
+        margin: 1px 5px 5px 5px;         
+        font-size: 0em+40px/$defaultFontSize;  
+        background-color: $primary-color;
+        color: $font-light;    
+        border-radius: 50px!important;
+
+        &:hover{
+            //background-color: $primary-color-hover !important;
+            background-color: $secondary-color !important;
+            border-color: $secondary-color;
+            color: $font-light;
+        }
+        &:focus, &:active{
+            background-color: $primary-color!important;
+            color: $font-light;
+            // border:0;
+        }
+        
     }
-    &:focus, &:active{
+    &-cancel{
+        &:hover, :active, :focus{            
+            border-color: $primary-color!important;
+            color: $primary-color!important;
+        }
+    }
+    &-register{        
         background-color: $primary-color;
         color: $font-light;
-        border:0;
+
+        &:hover{
+            //background-color: $primary-color-hover !important;
+            background-color: $secondary-color !important;
+            border-color: $secondary-color;
+            color: $font-light;
+        }
+        &:focus, &:active{
+            background-color: $primary-color!important;
+            color: $font-light;
+            border:0;
+        }
     }
+    
+    
 }
 
 

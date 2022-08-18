@@ -1,5 +1,5 @@
 import { Avatar, Badge, Button, Tooltip } from "antd";
-import AvatarUser from "../Avatar/Avatar";
+import AvatarUser from "../AvatarUser/AvatarUser";
 import { Link } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from "@ant-design/icons";
 import React from "react";
@@ -34,14 +34,13 @@ export default function MenuTop(props){
             <h3 className="menu-top__center">CUIVET</h3>
             <div className="menu-top__right">
                 <Badge dot className="badge">
-                    <AvatarUser icon={users[1]}></AvatarUser>
+                    <AvatarUser icon={users[0]} preview={true}></AvatarUser>
                 </Badge>
                
                 <Tooltip title='Cerrar sesión' placement="left" color={'#5B2569'}>
                     <Link to='/login'>
                         <Button type="link" to='/login' onClick={logOut} icon={<LogoutOutlined /> }/>
                     </Link>
-                </Tooltip>
                 </Tooltip>
             </div>
         </div>

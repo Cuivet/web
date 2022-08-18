@@ -15,6 +15,7 @@ import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
 import Pets from "../pages/Pets/Pets";
 import RegisterPet from "../pages/RegisterPet/RegisterPet";
+import Error404 from "../pages/Error/Error404/Error404"
 
 //Client pages
 import Landing from "../pages/Landing";
@@ -58,6 +59,11 @@ const routesAdmin = [
         path: "/register-pet",
         component: RegisterPet,
         layout: LayoutAdmin,
+    },
+    {
+        component: Error404,
+        layout:LayoutLanding,
+        path: "*"
     }
 ];
 

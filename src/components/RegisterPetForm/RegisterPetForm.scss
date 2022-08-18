@@ -2,11 +2,14 @@
 
 
 .register-pet-form{
-    width: 60%;
+    // width: 60%;
     text-align: left;
     font-size: 0em + 22px / $defaultFontSize;
     color: $primary-color;
-    align-items: center;
+    // align-items: center;
+    @media (min-width: $media-breackpoint-up-lg) {
+        // width: 70%;
+    }
 
     //este es solo para el nombre
     &__input{
@@ -31,13 +34,23 @@
 
     &__radio{
         font-size: 0em+20px/$defaultFontSize;
+        width: 100%;
         &:hover{
             border-color: $secondary-color !important;
+        }
+        &-item{
+            width: 50%;
+            text-align: center;
+
+            &:hover, :active{
+                color: $secondary-color;
+                border-color: $secondary-color;
+            }
         }
     };
 
     &__button{
-        // width: 100%;
+        width: 100%;
         font-size: 0em+22px/$defaultFontSize;
         background-color: $primary-color;
         color: $font-light;
@@ -72,3 +85,9 @@ span.ant-radio + *{
     //color: #c3c3c3
 }
 
+.ant-radio-button-wrapper-checked{
+    color: $primary-color!important;
+    border-color: $primary-color!important;
+    transition-property: color, border-color, box-shadow;
+    transition-duration: 0.3s, 0.3s, 0.3s, 0.3s;
+}

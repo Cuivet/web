@@ -5,6 +5,8 @@ import RegisterForm from "../../components/RegisterForm";
 import SignInForm from "../../components/SignInForm/SignInForm";
 import { getProfile } from '../../services/user.service';
 import './LogIn.scss';
+import { Link, Route, Navigate, Routes,Redirect } from "react-router-dom";
+import MenuWeb from "../MenuWeb/MenuWeb";
 
 export default function LogIn(){
     const [input, setInput]= useState({
@@ -28,7 +30,8 @@ export default function LogIn(){
                 console.error(e)
             });
     };
-     
+    
+    console.log(input.isLogged);
     if(!input.isLogged){
         return (
             <Layout className="sign-in">
@@ -52,12 +55,20 @@ export default function LogIn(){
         )
     } else{
         return (
-            <div>
-                <span>Atroden del sistema!</span><br/>
-                <button onClick={logOut}> 
-                    Salir del sistema
-                </button>
-            </div>
+            <>
+                {/* <Routes>
+                    <Route path="/home" component={<MenuWeb />}></Route>
+                </Routes>
+                 */}
+                <Navigate to="/menu" />
+            </>
+           
+            // <div>
+            //     <span>Atroden del sistema!</span><br/>
+            //     <button onClick={logOut}> 
+            //         Salir del sistema
+            //     </button>
+            // </div>
             
         )
     }

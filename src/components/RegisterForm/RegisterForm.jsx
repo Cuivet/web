@@ -75,9 +75,6 @@ export default function RegisterForm(){
         if(type === "text"){
             setFormValid({ ...formValid, [name]:minLengthValidation(e.target, 2)});
         };
-        // if(type === "number"){
-        //     setFormValid({ phone:true, dni:true, mp:true})
-        // };
         if(type ==="checkbox"){
             setFormValid({
                 ...formValid,
@@ -90,13 +87,12 @@ export default function RegisterForm(){
                 [name]:numberValidation(e.target)
             });
         }
-        console.log(formValid)
         
     }
 
     const register = e => {
         // console.log(input);
-        console.log(formValid);
+        // console.log(formValid);
         const {email, password, repeatPassword, name, lastName, phone, dni, privacyPolicy, profile} = formValid;
 
         const emailVal = input.email;

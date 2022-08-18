@@ -1,29 +1,45 @@
 @import "../../../scss/index.scss";
 
 th.description-item{
-    width: 30%;
+    width: 20%;
+    // padding: 0!important;
     color: $primary-color;
+
+    @media (min-width: $media-breackpoint-up-lg) {
+        width: 30%;
+    }
 }
 td.description-item{
-    width: 70%;
+    // padding: 0!important;
+    width: 80%;
     background-color: $secondary-color;
     color: black ;
+    @media (min-width: $media-breackpoint-up-lg) {
+        width: 70%;
+    }
 }
 
 .description-item{
     &__title{
         color: $primary-color!important;
+        font-size: 22px!important   ;
     }
 
     &__button{
         color: $primary-color;
         
-        .anticon {
-            font-size: 35px;
-        }
+        
         .anticon:hover {
             color: $secondary-color;
         }
     }
+    @media (min-width: $media-breackpoint-up-lg) {
+        .anticon {
+            font-size: 35px;
+        }
+        &__title{
+            font-size: 38px;
+        }
+    }   
     
 }

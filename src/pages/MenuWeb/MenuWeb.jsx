@@ -38,7 +38,7 @@ export default function MenuWeb(){
         text:['Consulta', 'Mapa', 'Mascotas','Calendario', 'Valoracion', 'Historial'],
         description:['Este es un modulo del sistema'],
         disabled:[false,true],
-        img:[<img alt="consulta" src={clipboard}></img>],
+        img:[clipboard],
     }
 
     //fijo 4 modulos por fila 

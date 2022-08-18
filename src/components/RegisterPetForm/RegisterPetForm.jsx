@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, Input, Button, notification, Select, Radio, DatePicker, Descriptions } from 'antd';
+import {Form, Input, Button, notification, Select, Radio, DatePicker, Descriptions, Row, Col } from 'antd';
 import { minLengthValidation, numberValidation } from '../../utils/formValidation';
 import './RegisterPetForm.scss';
 import {registerPet} from "../../services/pet.service"
@@ -208,46 +208,62 @@ export default function RegisterPetForm(){
 
     return (        
         <Form className="register-pet-form"  onFinish={register} onChange={changeForm}>           
-            <Form.Item>
-                <Input type="text" name="name" onChange={inputValidation} value={input.name} placeholder="Nombre" className="register-pet-form__input" onSelect={inputValidation}/>
-            </Form.Item>
-                <Form.Item>
-                    <DatePicker name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" />
-                </Form.Item>
-            <Form.Item>
-            <Select name="species" className="register-pet-form__select" value={input.species} onChange={onSpeciesChange} allowClear > 
-                <Select.Option value="1">Perro</Select.Option>
-                <Select.Option value="2">Gato</Select.Option>
-                <Select.Option value="3">Roedor</Select.Option>
-                <Select.Option value="4">Otro</Select.Option>
-            </Select>
-        </Form.Item> 
-            <Form.Item>
-                <Select name="raza"  className="register-pet-form__select" value={input.raza} onChange={onRazaChange} allowClear > 
-                    <Select.Option value="1">Labrador</Select.Option>
-                    <Select.Option value="2">Golden</Select.Option>
-                    <Select.Option value="3">Caniche</Select.Option>
-                    <Select.Option value="4">Sin Raza</Select.Option>
-                </Select>
-            </Form.Item> 
-            <Form.Item>
-                <Radio.Group optionType="button" name="sex" className="register-pet-form__radio" onChange={inputValidation} value={input.sex}>
-                    <Radio value="1">Macho</Radio>
-                    <Radio value="2">Hembra</Radio>
-                </Radio.Group>
-            </Form.Item>
-            <Form.Item>
-                <Select name="size" className="register-pet-form__select" value={input.size} onChange={onSizeChange} allowClear > 
-                    <Select.Option value="1">Chico</Select.Option>
-                    <Select.Option value="2">Mediano</Select.Option>
-                    <Select.Option value="3">Grande</Select.Option>
-                </Select>
-            </Form.Item>
-            <Form.Item>
-                <Button htmlType="submit" className="register-pet-form__button"> 
-                    Registrar Mascota
-                </Button>
-            </Form.Item>
+            <Row gutter={16}>
+                <Col span={24}>
+                    <Form.Item>
+                        <Input type="text" name="name" onChange={inputValidation} value={input.name} placeholder="Nombre" className="register-pet-form__input" onSelect={inputValidation}/>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <DatePicker name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} />
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Select name="species" className="register-pet-form__select" value={input.species} onChange={onSpeciesChange} allowClear > 
+                            <Select.Option value="1">Perro</Select.Option>
+                            <Select.Option value="2">Gato</Select.Option>
+                            <Select.Option value="3">Roedor</Select.Option>
+                            <Select.Option value="4">Otro</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Select name="raza"  className="register-pet-form__select" value={input.raza} onChange={onRazaChange} allowClear > 
+                            <Select.Option value="1">Labrador</Select.Option>
+                            <Select.Option value="2">Golden</Select.Option>
+                            <Select.Option value="3">Caniche</Select.Option>
+                            <Select.Option value="4">Sin Raza</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Radio.Group optionType="button" name="sex" size="large" className="register-pet-form__radio" onChange={inputValidation} value={input.sex}>
+                            <Radio value="1" className="register-pet-form__radio-item">Macho</Radio>
+                            <Radio value="2"  className="register-pet-form__radio-item">Hembra</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Select name="size" className="register-pet-form__select" value={input.size} onChange={onSizeChange} allowClear > 
+                            <Select.Option value="1">Chico</Select.Option>
+                            <Select.Option value="2">Mediano</Select.Option>
+                            <Select.Option value="3">Grande</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Col>     
+                <Col span={24}>
+                    <Form.Item>
+                        <Button htmlType="submit" className="register-pet-form__button"> 
+                            Guardar
+                        </Button>
+                    </Form.Item>
+                </Col>  
+            </Row>
         </Form>
     );  
 };

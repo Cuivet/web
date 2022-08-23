@@ -1,4 +1,4 @@
-import { Card, Col, Row, Button, Drawer, Space, Tooltip } from 'antd';
+import { Card, Col, Row, Button, Drawer, Space, Tooltip, Affix, Typography } from 'antd';
 import React, {useState} from 'react';
 import paw from "../../assets/img/png/paw.png";
 import pet1 from "../../assets/img/png/pet2.png";
@@ -9,6 +9,8 @@ import CardPet from '../../components/CardPet';
 import User from '../../assets/img/png/tutorUsuario.png'
 
 import './Pets.scss';
+
+const { Title } = Typography;
 
 export default function Pets(){
 
@@ -68,9 +70,19 @@ export default function Pets(){
         {/* <Button icon={<PlusCircleOutlined />} size="large" className="pets__add-button" href={"/register-pet"}> Añadir Mascota
             <Link to={"/register-pet"}/>
         </Button> */}
-        <Tooltip title="Nueva mascota" placement='right'>
-            <Button className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusOutlined />} />
-        </Tooltip>
+        <Row >
+            <Col span={24} offset={""}>
+                <Title className='pets__title'>
+                Mascotas 
+                <Affix offsetTop={80}>
+                    <Tooltip title="Nueva mascota" placement='right'>
+                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusOutlined  />} />
+                    </Tooltip>
+                </Affix>
+                </Title>
+            </Col>
+        </Row>
+        
         
         <Drawer
             title="Registrar nueva mascota"

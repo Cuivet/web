@@ -1,8 +1,10 @@
 import React, {useState} from "react";
 import {Form, Input, Button, notification, Select, Radio, DatePicker, Descriptions, Row, Col } from 'antd';
 import { minLengthValidation, numberValidation } from '../../utils/formValidation';
-import './RegisterPetForm.scss';
+import { SaveOutlined } from '@ant-design/icons';
 import {registerPet} from "../../services/pet.service"
+
+import './RegisterPetForm.scss';
 
 export default function RegisterPetForm(){
     
@@ -259,7 +261,7 @@ export default function RegisterPetForm(){
                 <Col span={24}>
                     <Form.Item>
                         <Button htmlType="submit" className="register-pet-form__button"> 
-                            Guardar
+                           Guardar {/* <SaveOutlined /> */}
                         </Button>
                     </Form.Item>
                 </Col>  

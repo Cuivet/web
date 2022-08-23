@@ -43,3 +43,20 @@ td.description-item{
     }   
     
 }
+.ant-popover-buttons {
+    .ant-btn-primary{
+        background-color: $primary-color!important;
+        border-color: $primary-color;
+    }
+    .ant-btn-default:hover{
+        border-color: $secondary-color!important;
+        color: $secondary-color;
+    }
+}
+
+
+.ant-btn-link:active, 
+.ant-btn-link:hover,
+.ant-btn-link:focus{
+    color: $secondary-color!important;
+}

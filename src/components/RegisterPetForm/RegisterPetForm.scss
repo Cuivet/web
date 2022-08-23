@@ -54,7 +54,8 @@
         font-size: 0em+22px/$defaultFontSize;
         background-color: $primary-color;
         color: $font-light;
-        height: 42px;
+        border-radius: 4px;
+        height: 40px;
 
         &:hover{
             background-color: $primary-color-hover !important;

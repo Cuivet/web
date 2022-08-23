@@ -47,7 +47,7 @@ export default function MenuWeb(){
         for(let i = 0; i < cantMod()[0].length; i++ ){
             console.log(modules.text[i]);
             mod.push(            
-                <Col span={6}>
+                <Col xs={{ span: 24}} lg={{ span: 6 }}>
                     <CardMenu key={i} text={cantMod()[0][i]} description={modules.description[0]} disabled={modules.disabled[0]} img={modules.img[0]} ></CardMenu>
                 </Col>
             );      

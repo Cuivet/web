@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Form, Input, Button, Checkbox, Select, notification} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service"; 
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 
 import './RegisterForm.scss';
 import { LoadingOutlined, LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
@@ -237,8 +238,8 @@ export default function RegisterForm(){
                 </Checkbox>
             </Form.Item>
             <Form.Item>
-                <Button htmlType="submit" className="register-form__button"> 
-                    Registrarme
+                <Button htmlType="submit" className="register-form__button" > 
+                  Registrarme
                 </Button>
             </Form.Item>
         </Form>

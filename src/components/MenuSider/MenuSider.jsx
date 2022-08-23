@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
-import { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined, QqOutlined } from '@ant-design/icons';
+import Icon, { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined, QqOutlined } from '@ant-design/icons';
 import PetsIcon from '@mui/icons-material/Pets';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 
 // import createSvgIcon from '@material-ui';
 
@@ -85,7 +86,7 @@ export default function MenuSider(props){
                 { tutor ? <>
                         <Menu.Item key="4"  >
                             <Link to={"/pets"} className='admin-sider__item'>                      
-                                <PetsIcon fontSize="small" />
+                                <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mascotas </span>
                             </Link>
                         </Menu.Item>

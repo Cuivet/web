@@ -9,68 +9,51 @@ import { Link, Route, Navigate, Routes,Redirect } from "react-router-dom";
 import MenuWeb from "../MenuWeb/MenuWeb";
 
 export default function LogIn(){
-    const [input, setInput]= useState({
-        isLogged : sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null
-    });
+    const [isLogged, setLogStatus] = useState(sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null);
     const {Content} = Layout;
     const {TabPane} = Tabs;
     //sacar de aca
     const logOut = e =>{
-        setInput({...input,['isLogged']: false});
+        setLogStatus(false);
         sessionStorage.clear();
     };
 
     const logIn = () => {
-        setInput({...input,['isLogged']: true});
         getProfile()
             .then(res => {
-                sessionStorage.setItem('profile',JSON.stringify(res.data) );
+                sessionStorage.setItem('profile',JSON.stringify(res.data));
+                setLogStatus(true);
             })
             .catch(e => {
                 console.error(e)
             });
     };
-    
-    console.log(input.isLogged);
-    if(!input.isLogged){
-        return (
-            <Layout className="sign-in">
-                <Content className="sign-in__content">
-                    <h1 className="sign-in__content-logo">
-                        <img src={ Logo } alt="CUIVET" />
-                    </h1>
-    
-                    <div className="sign-in__content-tabs">
-                        <Tabs type="card" centered>
-                            <TabPane tab={<span>Iniciar Sesión</span>} key="1" >
-                                <SignInForm logIn={logIn} />
-                            </TabPane>
-                            <TabPane tab={<span>Registrarse</span>} key="2">
-                                <RegisterForm />
-                            </TabPane>
-                        </Tabs>
-                    </div>
-                </Content>
-            </Layout>        
-        )
-    } else{
-        return (
-            <>
-                {/* <Routes>
-                    <Route path="/home" component={<MenuWeb />}></Route>
-                </Routes>
-                 */}
-                <Navigate to="/menu" />
-            </>
-           
-            // <div>
-            //     <span>Atroden del sistema!</span><br/>
-            //     <button onClick={logOut}> 
-            //         Salir del sistema
-            //     </button>
-            // </div>
-            
-        )
+
+    function CheckIfIsLogged(){
+        return isLogged ? <Navigate to="/menu" /> : null;
     }
+
+    return (
+        <Layout className="sign-in">
+            <Content className="sign-in__content">
+                <h1 className="sign-in__content-logo">
+                    <img src={ Logo } alt="CUIVET" />
+                </h1>
+
+                <div className="sign-in__content-tabs">
+                    <Tabs type="card" centered>
+                        <TabPane tab={<span>Iniciar Sesión</span>} key="1" >
+                            <SignInForm logIn={logIn} />
+                        </TabPane>
+                        <TabPane tab={<span>Registrarse</span>} key="2">
+                            <RegisterForm />
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </Content>
+            <CheckIfIsLogged></CheckIfIsLogged>
+        </Layout>
+    )
+    
     
 }

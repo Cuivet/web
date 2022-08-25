@@ -21,56 +21,41 @@ export default function LogIn(){
     };
 
     const logIn = () => {
-        setInput({...input,['isLogged']: true});
         getProfile()
             .then(res => {
-                sessionStorage.setItem('profile',JSON.stringify(res.data) );
+                sessionStorage.setItem('profile',JSON.stringify(res.data));
+                setInput({...input,['isLogged']: true});
             })
             .catch(e => {
                 console.error(e)
             });
     };
-    
-    console.log(input.isLogged);
-    if(!input.isLogged){
-        return (
-            <Layout className="sign-in">
-                <Content className="sign-in__content">
-                    <h1 className="sign-in__content-logo">
-                        <img src={ Logo } alt="CUIVET" />
-                    </h1>
-    
-                    <div className="sign-in__content-tabs">
-                        <Tabs type="card" centered>
-                            <TabPane tab={<span>Iniciar Sesión</span>} key="1" >
-                                <SignInForm logIn={logIn} />
-                            </TabPane>
-                            <TabPane tab={<span>Registrarse</span>} key="2">
-                                <RegisterForm />
-                            </TabPane>
-                        </Tabs>
-                    </div>
-                </Content>
-            </Layout>        
-        )
-    } else{
-        return (
-            <>
-                {/* <Routes>
-                    <Route path="/home" component={<MenuWeb />}></Route>
-                </Routes>
-                 */}
-                <Navigate to="/menu" />
-            </>
-           
-            // <div>
-            //     <span>Atroden del sistema!</span><br/>
-            //     <button onClick={logOut}> 
-            //         Salir del sistema
-            //     </button>
-            // </div>
-            
-        )
+
+    function CheckIfIsLogged(){
+        return input.isLogged ? <Navigate to="/menu" /> : null;
     }
+
+    return (
+        <Layout className="sign-in">
+            <Content className="sign-in__content">
+                <h1 className="sign-in__content-logo">
+                    <img src={ Logo } alt="CUIVET" />
+                </h1>
+
+                <div className="sign-in__content-tabs">
+                    <Tabs type="card" centered>
+                        <TabPane tab={<span>Iniciar Sesión</span>} key="1" >
+                            <SignInForm logIn={logIn} />
+                        </TabPane>
+                        <TabPane tab={<span>Registrarse</span>} key="2">
+                            <RegisterForm />
+                        </TabPane>
+                    </Tabs>
+                </div>
+            </Content>
+            <CheckIfIsLogged></CheckIfIsLogged>
+        </Layout>
+    )
+    
     
 }

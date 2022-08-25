@@ -5,6 +5,7 @@ import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
 import { Alert } from 'antd';
 import { Spin } from 'antd';
+import { Navigate } from "react-router-dom";
 
 import '../RegisterForm/RegisterForm.scss'
 
@@ -104,11 +105,9 @@ export default function SignInForm(props){
             <AlertMessage></AlertMessage>
             
             <Form.Item>
-                <Link to={'/menu'}>
-                    <Button htmlType="submit" className="register-form__button"> 
-                        <LogginMessage></LogginMessage>
-                    </Button>
-                </Link>
+                <Button htmlType="submit" className="register-form__button"> 
+                    <LogginMessage></LogginMessage>
+                </Button>
             </Form.Item>
         
             <Form.Item>
@@ -116,7 +115,6 @@ export default function SignInForm(props){
                     <Link className="register-form__link">¿Recuperar contraseña?</Link>
                 </Space>
             </Form.Item>
-
         </Form>
   );
 };

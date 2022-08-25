@@ -9,14 +9,12 @@ import { Link, Route, Navigate, Routes,Redirect } from "react-router-dom";
 import MenuWeb from "../MenuWeb/MenuWeb";
 
 export default function LogIn(){
-    const [input, setInput]= useState({
-        isLogged : sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null
-    });
+    const [isLogged, setLogStatus] = useState(sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null);
     const {Content} = Layout;
     const {TabPane} = Tabs;
     //sacar de aca
     const logOut = e =>{
-        setInput({...input,['isLogged']: false});
+        setLogStatus(false);
         sessionStorage.clear();
     };
 
@@ -24,7 +22,7 @@ export default function LogIn(){
         getProfile()
             .then(res => {
                 sessionStorage.setItem('profile',JSON.stringify(res.data));
-                setInput({...input,['isLogged']: true});
+                setLogStatus(true);
             })
             .catch(e => {
                 console.error(e)
@@ -32,7 +30,7 @@ export default function LogIn(){
     };
 
     function CheckIfIsLogged(){
-        return input.isLogged ? <Navigate to="/menu" /> : null;
+        return isLogged ? <Navigate to="/menu" /> : null;
     }
 
     return (

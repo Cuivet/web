@@ -1,7 +1,7 @@
 import React from "react";
-import {Card, Avatar} from 'antd';
+import {Card, Avatar,Popconfirm, message} from 'antd';
 import Meta from "antd/lib/card/Meta";
-import { EyeOutlined, SettingOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EyeOutlined, SettingOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 import './CardPet.scss'
 import AvatarUser from "../AvatarUser/AvatarUser";
@@ -32,6 +32,34 @@ export default function CardPet(props){
         };
         return group;
     };
+    // evento para borrar la mascota
+    const confirm = (e) => {
+        // console.log(e);
+        message.success('Click on Yes');
+      };
+      //evento para cancelar borrado de la mascota
+      const cancel = (e) => {
+        // console.log(e);
+        message.error('Click on No');
+      };
+    function Delete(){
+        console.log("Hola")
+       return( <><Popconfirm
+                        title="Esta seguro que desea borrar el usuario?"
+                        onConfirm={confirm}
+                        onCancel={cancel}
+                        visible={true}
+                        okText="Si"
+                        cancelText="No"
+                        placement="bottom"
+                        arrowPointAtCenter 
+                        icon={<ExclamationCircleOutlined fontSize="small" style={{
+                            color: 'red',
+                          }} />}
+                    ></Popconfirm></>
+                    )
+    }
+
     //agregar tooltip o alguna forma de mostrar texto sobre la accion
     return(
         <Card            
@@ -40,7 +68,18 @@ export default function CardPet(props){
             cover={<img src={img}></img>}
             actions={[
             <EyeOutlined key="edit" />,
-            <DeleteOutlined key="delete" />,
+            <Popconfirm
+                        title="Esta seguro que desea borrar la mascota?"
+                        onConfirm={confirm}
+                        onCancel={cancel}
+                        okText="Si"
+                        cancelText="No"
+                        placement="top"
+                        arrowPointAtCenter 
+                        icon={<ExclamationCircleOutlined fontSize="small" style={{
+                            color: 'red',
+                          }} />}
+                    ><DeleteOutlined key="delete" /></Popconfirm>,
             ]}
         >
             <Meta className='card-pet__meta'

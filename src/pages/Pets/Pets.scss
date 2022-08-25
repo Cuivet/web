@@ -17,21 +17,32 @@
     
 
         &-add{
-            margin: 1px 5px 5px 20px;         
-            font-size: 0em+40px/$defaultFontSize;  
-            border: 0px;
-            background-color: $primary-color;
-            color: $font-light;    
-            border-radius: 50px!important;
+            // margin: 1px 5px 5px 20px;         
+            // font-size: 0em+40px/$defaultFontSize;  
+            // border: 0px;
+            // background-color: $primary-color;
+            // color: $font-light;    
+            // border-radius: 50px!important;
+            color: $primary-color;
+            margin-top: 0.5%;
+            
     
             &:hover{
-                background-color: $secondary-color !important;
-                border-color: $secondary-color;
-                color: $primary-color!important;
+                // background-color: $secondary-color !important;
+                // border-color: $secondary-color;
+                color: $secondary-color!important;
             }
             &:focus, &:active{
-                background-color: $primary-color!important;
-                color: $primary-color!important;
+                // background-color: $primary-color!important;
+                color: $secondary-color!important;
+            }
+            @media (min-width: $media-breackpoint-up-lg) {
+               span{
+                font-size: 22px!important;
+               }
+            //    margin-left: 2%;
+            align-items: baseline!important;
+                
             }
             
         }

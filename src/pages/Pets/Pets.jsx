@@ -8,6 +8,7 @@ import RegisterPetForm from '../../components/RegisterPetForm';
 import CardPet from '../../components/CardPet';
 import User from '../../assets/img/png/tutorUsuario.png'
 
+
 import './Pets.scss';
 
 const { Title } = Typography;
@@ -74,11 +75,11 @@ export default function Pets(){
             <Col span={24} offset={""}>
                 <Title className='pets__title'>
                 Mascotas 
-                <Affix offsetTop={80}>
-                    <Tooltip title="Nueva mascota" placement='right'>
-                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusOutlined  />} />
+                {/* <Affix offsetTop={80}> */}
+                    <Tooltip title="Agregar mascota" placement='right'>
+                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined  />} />
                     </Tooltip>
-                </Affix>
+                {/* </Affix> */}
                 </Title>
             </Col>
         </Row>

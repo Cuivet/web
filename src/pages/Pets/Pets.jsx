@@ -1,12 +1,13 @@
 import { Card, Col, Row, Button, Drawer, Space, Tooltip, Affix, Typography } from 'antd';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import paw from "../../assets/img/png/paw.png";
 import pet1 from "../../assets/img/png/pet2.png";
 import pet2 from "../../assets/img/png/pet3.png"
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import RegisterPetForm from '../../components/RegisterPetForm';
 import CardPet from '../../components/CardPet';
-import User from '../../assets/img/png/tutorUsuario.png'
+import User from '../../assets/img/png/tutorUsuario.png';
+import {getAllPets, getPetsByTutorId} from '../../services/pet.service';
 
 import './Pets.scss';
 
@@ -14,99 +15,77 @@ const { Title } = Typography;
 
 export default function Pets(){
 
-    //completar con mascotas traidas de la base
-    //una mascota puede tener muchos avatares (varios usuarios) [[],[]]
-    const pets = {
-        text:['Balú', 'Koda', 'Timoteo','Hooper', 'Tina', 'Malú','Lima', 'Duki'],
-        description:['Ésta es una mascota'],
-        disabled:[false,true],
-        img:[paw,pet1, pet2,paw,pet1, pet2,paw,pet1, pet2],
-        avatar: [User, [null,User,User], [null,User], [null,User], [null,User], [null,User], [null,User], null]
-    }
+    const [pets,setPets] = useState([]);
+    
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
 
-    const pets2 = [];
+    if (!pets.length) {
+        getPetsByTutorId(profile.tutor.id).then(response => {
+            setPets(response);
+        });
+    }
     //para el drawer
     const [visible, setVisible] = useState(false);
-
     const showDrawer = () => {
         setVisible(true);
-      }; 
-      const onClose = () => {
+    }; 
+    const onClose = () => {
         setVisible(false);
-      };   
-
-    const cantPets = 8;
+    };   
 
     function Pet(){
-        const pet = [];
-        //VER ESTO
-        // pets2.array.forEach(pet => {
-            
-        // });
-        
-        // pets2.array.forEach(element => {
-        //     console.log(element.text);
-        // });
-        
-        for(let i = 0; i < pets.text.length; i++ ){
-            pet.push(            
-                <Col xs={{ span: 24}} lg={{ span: 6 }}>
-                    <CardPet key={i} title={pets.text[i]} img={pets.img[i]} description={'prueba'} avatar={pets.avatar[i]}></CardPet>
-                    {/* <Card title={pets.text[i]} bordered={true} cover={pets.img[0]} className="pet-card" hoverable disabled={pets.disabled[0]}
-                    actions={[
-                        <EditOutlined key="edit" />,
-                        <DeleteOutlined key="delete" className='pets-card__actions'/>,
-                    ]}
-                    >Ésta es una mascota</Card> */}
+        const renderPetList = [];
 
-                </Col>
-            );      
-        };
-        return pet;
+        if (pets.length) {
+            pets.forEach(pet => {
+                renderPetList.push(
+                    <Col xs={{ span: 24}} lg={{ span: 6 }}>
+                        <CardPet title={pet.name} img={paw} description={getAgeContent(pet.birth)}></CardPet>
+                    </Col>
+                )
+            });
+        }
+        return renderPetList;
     };
+
+    function getAgeContent(birth){
+        var today = new Date();
+        var birthDate = new Date(birth);
+        var age = today.getFullYear() - birthDate.getFullYear();    
+        return "Edad: "+ age;
+    }
 
     return (
         <div>
-        {/* <Button icon={<PlusCircleOutlined />} size="large" className="pets__add-button" href={"/register-pet"}> Añadir Mascota
-            <Link to={"/register-pet"}/>
-        </Button> */}
-        <Row >
-            <Col span={24} offset={""}>
-                <Title className='pets__title'>
-                Mascotas 
-                <Affix offsetTop={80}>
-                    <Tooltip title="Nueva mascota" placement='right'>
-                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusOutlined  />} />
-                    </Tooltip>
-                </Affix>
-                </Title>
-            </Col>
-        </Row>
-        
-        
-        <Drawer
-            title="Registrar nueva mascota"
-          
-            onClose={onClose}
-            visible={visible}
-            bodyStyle={{
-            paddingBottom: 80,
-            }}
-            extra={
-            <Space>
-                <Button className='pets__button-cancel' onClick={onClose}>Cancelar</Button>
-                {/* <Button className="pets__button-register" onClick={onClose} >
-                    Registrar
-                </Button> */}
-            </Space>
-            }
-        ><RegisterPetForm /></Drawer>
-
-        <Row gutter={16} >
-            <Pet></Pet>
-        </Row> 
+            <Row >
+                <Col span={24} offset={""}>
+                    <Title className='pets__title'>Mascotas 
+                        <Affix offsetTop={80}>
+                            <Tooltip title="Nueva mascota" placement='right'>
+                                <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusOutlined  />} />
+                            </Tooltip>
+                        </Affix>
+                    </Title>
+                </Col>
+            </Row>
+            <Drawer
+                title="Registrar nueva mascota"
+                onClose={onClose}
+                visible={visible}
+                bodyStyle={{
+                    paddingBottom: 80,
+                }}
+                extra={
+                    <Space>
+                        <Button className='pets__button-cancel' onClick={onClose}>Cancelar</Button>
+                    </Space>
+                }><RegisterPetForm/>
+            </Drawer>
+            
+            <Row gutter={16}>
+                <Pet></Pet>
+            </Row> 
         </div>
-
     );
 };
 

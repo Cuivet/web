@@ -15,3 +15,14 @@ export function registerPet(data){
       //console.log(response);
     })    
 };
+
+export function getPetsByTutorId(tutorId) {
+    const url = `${basePATH}/pet/all/${tutorId}`;
+    return fetch(url).then(response => {
+        return response.json();
+    }).catch((err) => {
+        return err;
+    });
+};
+
+

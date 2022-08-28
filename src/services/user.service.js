@@ -1,22 +1,23 @@
 import { basePATH } from "./config";
 
 export function signUpApi(data){
-    const url = `${basePATH}/user/register` 
-
-    const params ={
-        method: "POST",
-        body: JSON.stringify(data),
+    var axios = require('axios');
+    return axios({
+        method: "post",
+        url: `${basePATH}/user/register`,
+        data: data,
+        timeout: 1000 * 5, // Wait for 5 seconds
         headers: {
-            "Content-Type":"application/json"
+            "Content-Type": "application/json",
+            Accept: 'application/json'
         }
-    };
-    console.log(data);
-
-    fetch(url, params)
-    .then(response =>{
-        console.log(response);
-        return response.json();
-    })
+        })
+        .then((response) => {
+            return response;
+        })
+        .catch((err) => {
+            return err;
+        });
 }
 
 export function getProfile() {

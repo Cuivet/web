@@ -1,15 +1,14 @@
 import React, {useState} from "react";
 import {Form, Input, Button, Checkbox, Select, notification} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
-import { signUpApi } from "../../services/user.service"; 
-import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import { signUpApi } from "../../services/user.service";
 
 import './RegisterForm.scss';
-import { LoadingOutlined, LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
+import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
 
 
 //componente formulario del LogIn para nuevos usuarios
-export default function RegisterForm(){ 
+export default function RegisterForm(props){ 
     //donde almacena los datos del formulario
     const [input, setInput]= useState({
         email:"",
@@ -92,10 +91,34 @@ export default function RegisterForm(){
     }
 
     const register = e => {
-        // console.log(input);
-        // console.log(formValid);
         const {email, password, repeatPassword, name, lastName, phone, dni, privacyPolicy, profile} = formValid;
 
+        const person = {
+            name: input.name,
+            lastName: input.lastName,
+            dni: input.dni,
+            phone: input.phone
+        };
+        const user = {
+            email: input.email,
+            password: input.password
+        }
+
+        let completeProfile;
+        switch (input.profile) {
+            case '1':
+                completeProfile = {person, user, tutor: {}}
+                break;
+            case '2':
+                completeProfile = {person, user, veterinary: {}}
+                break;
+            case '3':
+                completeProfile = {person, user, vetOwner: {}}
+                break;
+            default:
+              console.log('No se selecciono perfil');
+          }
+        
         const emailVal = input.email;
         const passwordVal = input.password;
         const repeatPasswordVal = input.repeatPassword;
@@ -115,18 +138,24 @@ export default function RegisterForm(){
         } else{
             if(passwordVal !== repeatPasswordVal){
                 notification['error']({
-                    message: "Las constrasenias deben ser iguales",
-                    description: "Compruebe que las contrasenias ingresadas coincidan",
+                    message: "Las constraseñas deben ser iguales",
+                    description: "Compruebe que las contraseñas ingresadas coincidan",
                     placement: "top"
                 })
             } else{
-                const res = signUpApi(input);
-                notification['success']({
-                    message: "Usuario creado correctamente",
-                    placement: "top"
-                })
+                signUpApi(completeProfile)
+                    .then(res => {
+                        notification['success']({
+                            message: "Usuario creado correctamente",
+                            placement: "top"
+                        });
+                        props.successRegister();
+                    })
+                    .catch(e => {
+                        console.error(e)
+                    });
+                
                 resetForm();
-                //conectar con la api
             }
             
         }

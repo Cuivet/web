@@ -10,13 +10,9 @@ import MenuWeb from "../MenuWeb/MenuWeb";
 
 export default function LogIn(){
     const [isLogged, setLogStatus] = useState(sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null);
+    const [activeTab, changeActiveTab] = useState(undefined);
     const {Content} = Layout;
     const {TabPane} = Tabs;
-    //sacar de aca
-    const logOut = e =>{
-        setLogStatus(false);
-        sessionStorage.clear();
-    };
 
     const logIn = () => {
         getProfile()
@@ -29,8 +25,16 @@ export default function LogIn(){
             });
     };
 
+    const successRegister = () => {
+        changeActiveTab("1");
+    }
+
     function CheckIfIsLogged(){
         return isLogged ? <Navigate to="/menu" /> : null;
+    }
+
+    function changeTabKey(){
+        activeTab === undefined ? changeActiveTab("2") : activeTab === "1" ? changeActiveTab("2") : changeActiveTab("1");
     }
 
     return (
@@ -41,12 +45,12 @@ export default function LogIn(){
                 </h1>
 
                 <div className="sign-in__content-tabs">
-                    <Tabs type="card" centered>
-                        <TabPane tab={<span>Iniciar Sesión</span>} key="1" >
+                    <Tabs type="card" centered activeKey={activeTab} onChange={changeTabKey}>
+                        <TabPane tab={<span>Iniciar Sesión</span>} key="1">
                             <SignInForm logIn={logIn} />
                         </TabPane>
                         <TabPane tab={<span>Registrarse</span>} key="2">
-                            <RegisterForm />
+                            <RegisterForm successRegister={successRegister} />
                         </TabPane>
                     </Tabs>
                 </div>

@@ -21,7 +21,6 @@ export default function RegisterForm(props){
         profile: 'Seleccione su Perfil',
         mp: null,
         privacyPolicy:false
-
     });
 
     //validaciones en el formulario
@@ -91,8 +90,6 @@ export default function RegisterForm(props){
     }
 
     const register = e => {
-        const {email, password, repeatPassword, name, lastName, phone, dni, privacyPolicy, profile} = formValid;
-
         const person = {
             name: input.name,
             lastName: input.lastName,
@@ -103,22 +100,20 @@ export default function RegisterForm(props){
             email: input.email,
             password: input.password
         }
-
         let completeProfile;
         switch (input.profile) {
-            case '1':
+            case 'tutor':
                 completeProfile = {person, user, tutor: {}}
                 break;
-            case '2':
+            case 'veterinary':
                 completeProfile = {person, user, veterinary: {}}
                 break;
-            case '3':
+            case 'vetOwner':
                 completeProfile = {person, user, vetOwner: {}}
                 break;
             default:
-              console.log('No se selecciono perfil');
+              break;
           }
-        
         const emailVal = input.email;
         const passwordVal = input.password;
         const repeatPasswordVal = input.repeatPassword;
@@ -200,22 +195,20 @@ export default function RegisterForm(props){
     const [vet, setVet] =  useState(false);
     
     const onProfileChange = (val) => {
-        // console.log(vet);
-       
         switch(val){
-            case '1':
+            case 'tutor':
                 setVet(false);
-                setInput({...input, profile:"1"});
+                setInput({...input, profile:"tutor"});
                 setFormValid({...formValid, profile: true});
                 break;
-            case '2':
+            case 'veterinary':
                 setVet(true);
-                setInput({...input, profile: "2"});
+                setInput({...input, profile: "veterinary"});
                 setFormValid({...formValid, profile: true});
                 break;
-            case '3':
+            case 'vetOwner':
                 setVet(false);
-                setInput({...input, profile: "3"});
+                setInput({...input, profile: "vetOwner"});
                 setFormValid({...formValid, profile: true});
                 break;
             default:
@@ -251,9 +244,9 @@ export default function RegisterForm(props){
             </Form.Item>
             <Form.Item>
                 <Select name="profile" placeholder="Seleccione su perfil" className="register-form__select" value={input.profile} onChange={onProfileChange} allowClear > 
-                    <Select.Option value="1" >Tutor</Select.Option>
-                    <Select.Option value="2">Veterinario</Select.Option>
-                    <Select.Option value="3">Duenio Veterinaria</Select.Option>
+                    <Select.Option value="tutor" >Tutor</Select.Option>
+                    <Select.Option value="veterinary">Veterinario</Select.Option>
+                    <Select.Option value="vetOwner">Dueño Veterinaria</Select.Option>
                 </Select>
             </Form.Item>  
             {vet ? <div> <Form.Item id="matricula">

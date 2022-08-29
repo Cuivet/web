@@ -2,14 +2,12 @@ import React from "react";
 import {Card, Avatar,Popconfirm, message} from 'antd';
 import Meta from "antd/lib/card/Meta";
 import { EyeOutlined, SettingOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-
+import {deletePet} from "../../services/pet.service"
 import './CardPet.scss'
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardPet(props){
-    const {img, title, description, avatar} = props
-
-    // console.log(avatar);
+    const {img, title, description, avatar, item} = props;
 
     function AvatarGroup(){
         const group =[]
@@ -35,7 +33,8 @@ export default function CardPet(props){
     // evento para borrar la mascota
     const confirm = (e) => {
         // console.log(e);
-        message.success('Click on Yes');
+        message.success('Mascota '+ title + ' borrada exitosamente.' );
+        deletePet(item);
       };
       //evento para cancelar borrado de la mascota
       const cancel = (e) => {
@@ -62,14 +61,14 @@ export default function CardPet(props){
 
     //agregar tooltip o alguna forma de mostrar texto sobre la accion
     return(
-        <Card            
+        <Card  
             className='card-pet'
             hoverable
             cover={<img src={img}></img>}
             actions={[
             <EyeOutlined key="edit" />,
             <Popconfirm
-                        title="Esta seguro que desea borrar la mascota?"
+                        title="¿Está seguro que desea borrar la mascota?"  
                         onConfirm={confirm}
                         onCancel={cancel}
                         okText="Si"

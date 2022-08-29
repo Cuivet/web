@@ -40,7 +40,7 @@ export default function Pets(){
             pets.forEach(pet => {
                 renderPetList.push(
                     <Col xs={{ span: 24}} lg={{ span: 6 }}>
-                        <CardPet title={pet.name} img={paw} description={getAgeContent(pet.birth)}></CardPet>
+                        <CardPet item={pet.id }title={pet.name} img={paw} description={getAgeContent(pet.birth)}></CardPet>
                     </Col>
                 )
             });

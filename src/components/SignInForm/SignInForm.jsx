@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
-import { LockOutlined, MailOutlined} from "@ant-design/icons";
+import { InfoOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
 import { Alert } from 'antd';
@@ -34,6 +34,7 @@ export default function SignInForm(props){
             .then(res => {
                 if(res.data.success){
                     sessionStorage.setItem('token',res.data.success);
+                    sessionStorage.setItem('email',input.email);
                     props.logIn();
                 }
                 if(res.data.error){

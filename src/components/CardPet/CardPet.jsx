@@ -1,13 +1,14 @@
-import React from "react";
-import {Card, Avatar,Popconfirm, message} from 'antd';
+import React, {useState} from "react";
+import {Card,Modal, Avatar,Popconfirm, message} from 'antd';
 import Meta from "antd/lib/card/Meta";
 import { EyeOutlined, SettingOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import {Items} from '../../pages/Settings/UserSettings'
 
 import './CardPet.scss'
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardPet(props){
-    const {img, title, description, avatar} = props
+    const {img, title, description, avatar} = props;
 
     // console.log(avatar);
 
@@ -38,27 +39,11 @@ export default function CardPet(props){
         message.success('Click on Yes');
       };
       //evento para cancelar borrado de la mascota
-      const cancel = (e) => {
+    const cancel = (e) => {
         // console.log(e);
         message.error('Click on No');
       };
-    function Delete(){
-        console.log("Hola")
-       return( <><Popconfirm
-                        title="Esta seguro que desea borrar el usuario?"
-                        onConfirm={confirm}
-                        onCancel={cancel}
-                        visible={true}
-                        okText="Si"
-                        cancelText="No"
-                        placement="bottom"
-                        arrowPointAtCenter 
-                        icon={<ExclamationCircleOutlined fontSize="small" style={{
-                            color: 'red',
-                          }} />}
-                    ></Popconfirm></>
-                    )
-    }
+    
 
     //agregar tooltip o alguna forma de mostrar texto sobre la accion
     return(

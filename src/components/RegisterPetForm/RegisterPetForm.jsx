@@ -1,8 +1,11 @@
 import React, {useState} from "react";
-import {Form, Input, Button, notification, Select, Radio, DatePicker, Descriptions, Row, Col } from 'antd';
+import {Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Descriptions, Row, Col } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { minLengthValidation, numberValidation } from '../../utils/formValidation';
-import { SaveOutlined } from '@ant-design/icons';
+import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
 import {registerPet} from "../../services/pet.service"
+import moment  from "moment";
+
 
 import './RegisterPetForm.scss';
 
@@ -12,7 +15,36 @@ export default function RegisterPetForm(){
      const profile = JSON.parse(sessionStorage.getItem('profile'));
      const tutorId = profile.tutor.id;
 
+    const {Dragger} = Upload;
+    var petName;
 
+    const props = {
+        name: `pet-${petName}`, //le dejamos el nombre con el que lo sube ?
+        multiple: false,
+        maxCount:1,
+        accept: 'image/png, image/jpeg',
+        method: 'post',
+        action: 'localhost', //creo es para llamar el endpoint... 
+      
+        onChange(info) {
+          const { status } = info.file;
+      
+          if (status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+      
+          if (status === 'done') {
+            message.success(`${info.file.name} Imagen subida con exito.`);
+            //aca iria lo del back para guardar la img
+          } else if (status === 'error') {
+            message.error(`${info.file.name} La imagen no se ha podido subir`);
+          }
+        },
+      
+        onDrop(e) {
+          console.log('Archivo eliminado', e.dataTransfer.files);
+        },
+      };
 
     const [input, setInput]= useState({
         name:"",
@@ -54,7 +86,7 @@ export default function RegisterPetForm(){
     
     const inputValidation = e =>{
         //console.log(e.target);
-        const {type, name} = e.target;
+        const {type, name, value} = e.target;
 
         if(type ==="radio"){
             setFormValid({
@@ -64,6 +96,9 @@ export default function RegisterPetForm(){
         };
 
         if(type === "text"){
+            if(name === "name"){
+                petName = value;
+            }
             setFormValid({ ...formValid, [name]:(e.target)});
         };
 
@@ -205,7 +240,9 @@ export default function RegisterPetForm(){
         setInput({...input, birth: value});
         setFormValid({...formValid, birth: true});
     };
-
+    const disabledDate =(current) =>{
+        return current && current> moment().endOf('day');
+    }
 
 
     return (        
@@ -218,7 +255,7 @@ export default function RegisterPetForm(){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <DatePicker name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} />
+                        <DatePicker disabledDate={disabledDate} name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} />
                     </Form.Item>
                 </Col>
                 <Col span={24}>
@@ -257,11 +294,32 @@ export default function RegisterPetForm(){
                             <Select.Option value="3">Grande</Select.Option>
                         </Select>
                     </Form.Item>
+                </Col> 
+                <Col span={24}>
+                    <Form.Item>
+                        <ImgCrop rotate>
+                            {/* <Upload
+                                    action=""
+                                listType="picture-card"
+                                fileList={fileList}
+                                onChange={onChange}
+                                onPreview={onPreview}
+                            >
+                                {fileList.length < 5 && '+ Cargar'}
+                            </Upload> */}
+                            <Dragger {...props}>
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <p className="ant-upload-text">Click aquí o arrastre la imagen a esta área</p>
+                            </Dragger>
+                        </ImgCrop>
+                    </Form.Item>
                 </Col>     
                 <Col span={24}>
                     <Form.Item>
-                        <Button htmlType="submit" className="register-pet-form__button"> 
-                           Guardar {/* <SaveOutlined /> */}
+                        <Button htmlType="submit" className="register-pet-form__button" icon={<SaveOutlined />}> 
+                           Guardar 
                         </Button>
                     </Form.Item>
                 </Col>  

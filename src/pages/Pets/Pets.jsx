@@ -52,14 +52,11 @@ export default function Pets(){
         var today = new Date();
         var birthDate = new Date(birth);
         var age = today.getFullYear() - birthDate.getFullYear();    
-        return "Edad: "+ age;
+        return age+" anios";
     }
 
     return (
         <div>
-        {/* <Button icon={<PlusCircleOutlined />} size="large" className="pets__add-button" href={"/register-pet"}> Añadir Mascota
-            <Link to={"/register-pet"}/>
-        </Button> */}
         <Row >
             <Col span={24} offset={""}>
                 <Title className='pets__title'>
@@ -84,10 +81,7 @@ export default function Pets(){
             }}
             extra={
             <Space>
-                <Button className='pets__button-cancel' onClick={onClose}>Cancelar</Button>
-                {/* <Button className="pets__button-register" onClick={onClose} >
-                    Registrar
-                </Button> */}
+                <Button className='pets__button-cancel' onClick={onClose}>Cancelar</Button>        
             </Space>
             }
         ><RegisterPetForm /></Drawer>

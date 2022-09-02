@@ -58,13 +58,14 @@
         height: 40px;
 
         &:hover{
-            background-color: $primary-color-hover !important;
+            background-color: $secondary-color!important;
             color: $font-light;
-            border-color: $primary-color-hover;
+            // border-color: $primary-color-hover;
+            border: 0;
 
         }
         &:focus, &:active{
-            background-color: $primary-color;
+            background-color: $secondary-color;
             color: $font-light;
             border:0;
         }
@@ -91,4 +92,36 @@ span.ant-radio + *{
     border-color: $primary-color!important;
     transition-property: color, border-color, box-shadow;
     transition-duration: 0.3s, 0.3s, 0.3s, 0.3s;
+}
+
+.ant-upload,
+.ant-upload-drag{
+    &:hover{
+        border-color: $primary-color!important;
+        // color: $secondary-color;
+    }
+    &-icon{
+        span{
+            color: $primary-color!important;
+    
+            &:hover{
+                // color: $secondary-color!important;
+            }
+        }
+    
+    }
+}
+.ant-modal-footer {
+    .ant-btn-primary{
+        background-color: $primary-color!important;
+        border: 0;
+    }
+    .ant-btn-default:hover{
+        border-color: $secondary-color!important;
+        color: $secondary-color!important;
+    }
+    
+}
+.ant-modal-title{
+    content: 'Editar imagen'!important;
 }

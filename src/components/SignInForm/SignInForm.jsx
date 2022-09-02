@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
+import { Button, Form, Input, Checkbox, Typography, Space, Modal } from 'antd';
 import { LockOutlined, MailOutlined} from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
@@ -19,6 +19,20 @@ export default function SignInForm(props){
     });
     const [warningAlert, setWarningAlert] = useState(null);
     const [isTryingToLogin, setIsLogging] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
 
     const changeForm = e =>{
         console.log(e.target.name);
@@ -112,7 +126,10 @@ export default function SignInForm(props){
         
             <Form.Item>
                 <Space align='center'>
-                    <Link className="register-form__link">¿Recuperar contraseña?</Link>
+                    <Link className="register-form__link" onClick={showModal}>¿Recuperar contraseña?</Link>
+                    <Modal title="Recuperar Cuenta" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+
+                    </Modal>
                 </Space>
             </Form.Item>
         </Form>

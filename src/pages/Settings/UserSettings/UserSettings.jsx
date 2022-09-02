@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import { Row, message, Popconfirm, Col, Descriptions,Typography, Button, Tooltip, Form, Input  } from "antd";
-import { DeleteOutlined,ExclamationCircleOutlined,EditOutlined, LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, SaveOutlined} from "@ant-design/icons";
+import { Row, message, Popconfirm, Col,Typography, Button, Tooltip, Form, Input, Divider } from "antd";
+import { DeleteOutlined,ExclamationCircleOutlined,EditOutlined, UserOutlined, PhoneOutlined, SaveOutlined} from "@ant-design/icons";
 import {emailValidation, minLengthValidation,numberValidation} from '../../../utils/formValidation';
-import DangerousOutlinedIcon from '@mui/icons-material/DangerousOutlined';
 
 import './UserSettings.scss'
 
@@ -24,18 +23,16 @@ export default function UserSettings(){
         privacyPolicy:false
     });
 
-    const profile = JSON.parse(sessionStorage.getItem('profile')) ;
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
 
-    const user = {
-        
+    const formData = {
         name: profile.person.name,
         lastName: profile.person.lastName,
         phone: profile.person.phone,
         dni: "24356789",
         address: profile.person.address,
-        email: profile.person.email,
+        email: sessionStorage.getItem('email')
     };
-    const label = ['Nombre','Apellido','Telefono','DNI','Direccion','Email','Perfil'];
 
     const inputValidation = e =>{
         
@@ -71,39 +68,13 @@ export default function UserSettings(){
         
     }
 
-    function Items(){
-        console.clear();   
-        console.log(user)     
-        const item = [];
-        let sum = 0;
-        for(var i of Object.keys(user)){
-           
-            console.log(i + " : "+ user[i]);
-            // console.log(Object.keys(user));
-            item.push(                        
-                <Descriptions bordered layout="horizontal" column={{
-                    xxl: 2,
-                    xl: 2,
-                    lg: 2,
-                    md: 2,
-                    sm: 2,
-                    xs: 2,
-                  }}>
-                    <Descriptions.Item key={sum} label={label[sum]} span={3} className="description-item">{user[i]}</Descriptions.Item>
-                </Descriptions>
-                
-            );  
-            sum = sum + 1;            
-        };              
-        return item;
-    };
-
     function Edit(){
         console.log("Hola")
         setEditable(true);
         
     }
     function Save(){
+        // Pegarle al back y que cuando actualice setee el editable false y refreste el sessionStorage
         setEditable(false);
     }
     //evento para borrar el usuario
@@ -122,71 +93,81 @@ export default function UserSettings(){
 
     return (
         <>
+        {formData ? 
+        <>
         <Row>
-            <Col span={18} offset={3}>
+            <Col span={24}>
                 <Title className="description-item__title">Información del Usuario 
-                    {!editable ? <>
+                {!editable ? 
+                    <>
                         <Tooltip title='Editar usuario' placement="right" color={'#5B2569'}>
                             <Button type="link" className="description-item__button" icon={<EditOutlined /> } onClick={Edit}/>
-                         </Tooltip></>
-                        : <>
+                        </Tooltip>
+                    </>
+                    : 
+                    <>
                         <Popconfirm
-                        title="Esta seguro que desea borrar el usuario?"
-                        onConfirm={confirm}
-                        onCancel={cancel}
-                        okText="Si"
-                        cancelText="No"
-                        placement="bottom"
-                        arrowPointAtCenter 
-                        icon={<ExclamationCircleOutlined fontSize="small" style={{
-                            color: 'red',
-                          }} />}
-                        >
+                            title="Esta seguro que desea borrar el usuario?"
+                            onConfirm={confirm}
+                            onCancel={cancel}
+                            okText="Si"
+                            cancelText="No"
+                            placement="bottom"
+                            arrowPointAtCenter 
+                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
                             <Tooltip title='Borrar usuario' placement="right" color={'#5B2569'}>
                                 <Button type="link" className="description-item__button" icon={<DeleteOutlined /> } onClick={Delete}/>
                             </Tooltip> 
-                        </Popconfirm> </>   }
+                        </Popconfirm> 
+                    </>   
+                }
+            </Title>
+        </Col>
+    </Row>
+    <Row>
+        <Col xs={{ span: 24}} lg={{ span:12 }}>
+            <Form className="register-form" layout="vertical"  onFinish={""} onChange={""}> 
+                <Divider orientation="left">Datos Personales</Divider>
                 
-                </Title>
-                
-            </Col>
-        </Row>
-        <Row>
-            <Col  xs={{ span: 24}} lg={{ span:18 ,offset:3 }} >    
-                {!editable ? <Items></Items> : <>
-                <Form className="register-form" layout="vertical"  onFinish={""} onChange={""}>            
-                          
+                <Form.Item label="Nombre">
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="name" onChange={inputValidation} defaultValue={formData.name} className="register-form__input" onSelect={inputValidation}/>
+                </Form.Item>
+
+                <Form.Item label="Apellido">
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="lastName" onChange={inputValidation} defaultValue={formData.lastName} className="register-form__input" onSelect={inputValidation}/>
+                </Form.Item>
+            
+                <Form.Item label="DNI">
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="number" name="dni" defaultValue={formData.dni} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                </Form.Item>
+            
+                <Form.Item label="Telefono">
+                    <Input prefix={<PhoneOutlined className="site-form-item-icon" />} disabled={!editable} type="number" name="phone" vadefaultValuelue={formData.phone} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                </Form.Item>
+            
+                <Form.Item label="Dirección">
+                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="address" onChange={inputValidation} defaultValue={formData.address} className="register-form__input" onSelect={inputValidation}/>
+                </Form.Item>
+
+                <Divider orientation="left">Configuración de Cuenta</Divider>
+
+                <Form.Item rules={[{required: true, message: 'Ingrese su email'}]} label="Email">
+                    <Input type="email" name="email" onChange={"inputValidation"} value={formData.email} disabled className="register-form__input" onSelect={"inputValidation"}/>
+                </Form.Item>
                     
-                    <Form.Item label="Nombre">
-                        <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="name" onChange={inputValidation} value={user.null} placeholder={user.name} className="register-form__input" onSelect={inputValidation}/>
-                    </Form.Item>
-                    <Form.Item label="Apellido">
-                        <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="lastName" onChange={inputValidation} value={user.null} placeholder={user.lastName} className="register-form__input" onSelect={inputValidation}/>
-                    </Form.Item>
-                    <Form.Item label="DNI">
-                        <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={user.null} placeholder={user.dni} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
-                    </Form.Item>
-                    <Form.Item label="Telefono">
-                        <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={user.null} placeholder={user.phone} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
-                    </Form.Item>
-                    <Form.Item rules={[{required: true, message: 'Ingrese su email'}]} label="Email">
-                        <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" onChange={"inputValidation"} value={null} placeholder={user.email} className="register-form__input" onSelect={"inputValidation"}/>
-                    </Form.Item>
-                    <Form.Item label="Contraseña">
-                        <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" onChange={inputValidation} value={null} placeholder={user.password} className="register-form__input" onSelect={inputValidation}/>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button htmlType="submit" className="register-form__button" icon={<SaveOutlined />} onClick={Save}> 
-                            Guardar
-                        </Button>
-                    </Form.Item>
-                </Form>
-                </>}            
-                    
-                    
-                    {/* <RegisterForm ></RegisterForm> */}
-            </Col>
-        </Row>
+                {editable ? 
+                <Form.Item>
+                    <Button htmlType="submit" className="register-form__button" icon={<SaveOutlined />} onClick={Save}> 
+                        Guardar
+                    </Button>
+                </Form.Item> :
+                null
+                }
+            </Form>
+        </Col>
+    </Row>
+    </>
+        : null}
         </>
         
     )

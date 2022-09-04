@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
-<<<<<<< HEAD
 import { Button, Form, Input, Checkbox, Typography, Space, Modal } from 'antd';
 import { LockOutlined, MailOutlined} from "@ant-design/icons";
-=======
 import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
 import { InfoOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
->>>>>>> cf82474c64365f10814019b96387d928d37fa38f
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
 import { Alert } from 'antd';

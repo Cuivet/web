@@ -1,25 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
-import Icon, { HomeOutlined, SettingOutlined } from '@ant-design/icons';
+import Icon, { HomeOutlined, SettingOutlined, SnippetsOutlined } from '@ant-design/icons';
 import PetsIcon from '@mui/icons-material/Pets';
 import ScienceIcon from '@mui/icons-material/Science';
 import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutlined';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import './MenuSider.scss';
-
-/*
-function getItem(label, key, link, icon, children, theme) {
-    return {
-      key,
-      link,
-      icon,
-      children,
-      label,
-      theme,
-    };
-  }
-*/
 
 export default function MenuSider(props){
    
@@ -53,7 +40,7 @@ export default function MenuSider(props){
                 <Menu.Item key="1">
                     <Link to={"/menu"} className='admin-sider__item'>
                         <HomeOutlined/>
-                        <span className="nav-text"> Inicio</span>
+                        <span className="nav-text"> Inicio </span>
                     </Link>
                 </Menu.Item>
 
@@ -86,19 +73,26 @@ export default function MenuSider(props){
                     <>
                         <Menu.Item key="5">
                             <Link to={"/admin"} className='admin-sider__item'>                      
+                                <SnippetsOutlined/>
+                                <span className="nav-text"> Consultas </span>
+                            </Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="6">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="6">
+                        <Menu.Item key="7">
                             <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Pacientes </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="7">
+                        <Menu.Item key="8">
                             <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Veterinarias Asociadas </span>
@@ -109,14 +103,14 @@ export default function MenuSider(props){
 
                 { vetOwner ? 
                     <>
-                        <Menu.Item key="8">
+                        <Menu.Item key="9">
                             <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Veterinarios </span>
                             </Link>
                         </Menu.Item>
                         
-                        <Menu.Item key="9">
+                        <Menu.Item key="10">
                             <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Veterinarias </span>
@@ -125,7 +119,7 @@ export default function MenuSider(props){
                     </> 
                     : null}
 
-                <Menu.Item key="10">
+                <Menu.Item key="11">
                     <Link to={"/settings/user"} className='admin-sider__item'>            
                         <SettingOutlined/>
                         <span className="nav-text"> Perfil </span>

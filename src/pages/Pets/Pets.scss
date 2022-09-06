@@ -3,14 +3,18 @@
 .pets{
     &__title{
         color: $primary-color!important;
-        font-size: 22px!important;
+        font-size: 28px!important;
         display: flex;
         align-items: center;
+        display: flex;
+        justify-content: center;
     }
     @media (min-width: $media-breackpoint-up-lg) {
         
         &__title{
             font-size: 38px!important;
+            display: flex;
+            justify-content: center;
         }
     } 
     &__button{

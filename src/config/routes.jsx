@@ -13,6 +13,7 @@ import LogIn from "../pages/LogIn/LogIn";
 import Menu from "../pages/MenuWeb/MenuWeb";
 import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
+import VetClinicSettings from "../pages/Settings/VetClinicSettings/VetClinicSettings";
 import Pets from "../pages/Pets/Pets";
 // import RegisterPet from "../pages/RegisterPet/RegisterPet";
 import Error404 from "../pages/Error/Error404/Error404"
@@ -47,6 +48,12 @@ const routesAdmin = [
     {
         path: "/settings/user",
         component: UserSettings,
+        layout: LayoutAdmin,
+
+    },
+    {
+        path: "/settings/vetclinic",
+        component: VetClinicSettings,
         layout: LayoutAdmin,
 
     },

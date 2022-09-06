@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import { Button, Form, Input, Checkbox, Typography, Space, Modal } from 'antd';
-import { LockOutlined, MailOutlined} from "@ant-design/icons";
-import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
+import { Button, Form, Input, Checkbox, Typography, Space, Modal, Row, Col } from 'antd';
+// import { LockOutlined, MailOutlined} from "@ant-design/icons";
+// import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
 import { InfoOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
@@ -10,8 +10,9 @@ import { Spin } from 'antd';
 import { Navigate } from "react-router-dom";
 
 import '../RegisterForm/RegisterForm.scss'
+import { keyboard } from '@testing-library/user-event/dist/keyboard';
 
-const {Link} = Typography;
+const {Link, Paragraph} = Typography;
 
 export default function SignInForm(props){
     const [input, setInput]= useState({});
@@ -130,8 +131,23 @@ export default function SignInForm(props){
             <Form.Item>
                 <Space align='center'>
                     <Link className="register-form__link" onClick={showModal}>¿Recuperar contraseña?</Link>
-                    <Modal title="Recuperar Cuenta" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <Modal title="Recuperar Cuenta" 
+                    visible={isModalVisible} 
+                    onOk={handleOk} 
+                    onCancel={handleCancel}
+                    footer={[
+                        <Button key='link' type='primary'>Recuperar</Button>
+                    ]}>
+                    
+                        <Row>
+                            <Col span={24}>
+                                <Paragraph >Algo que te diga que vas a recuperar la cuenta ingresando tu email.</Paragraph>
+                            </Col>
+                            <Col span={24}>
+                                <Input className='register-form__input' placeholder='Ingrese la cuenta a recuperar'></Input>
+                            </Col>
 
+                        </Row>
                     </Modal>
                 </Space>
             </Form.Item>

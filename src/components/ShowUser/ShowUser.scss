@@ -1,0 +1,11 @@
+@import '../../scss/index.scss';
+
+.show-item{
+    height: 30px;
+    &:hover{
+        background-color: beige!important;
+        color: $primary-color!important;
+        cursor: pointer;
+    }
+
+}

@@ -1,12 +1,14 @@
 import React, {useState} from "react";
-import {Form, Input, Button, Checkbox, Select, notification} from 'antd';
+import {Form, Input, Button, Checkbox, Select, notification, Typography, Modal} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service";
 
 import './RegisterForm.scss';
 import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
+import Terms from "../Terms/Terms";
 
 
+const {Link} = Typography;
 //componente formulario del LogIn para nuevos usuarios
 export default function RegisterForm(props){ 
     //donde almacena los datos del formulario
@@ -122,9 +124,9 @@ export default function RegisterForm(props){
         const dniVal = input.dni;
         const phoneVal = input.phone;
         const profileVal = input.profile;
-        const privacyPolicyVal = input.privacyPolicy;
+        // const privacyPolicyVal = input.privacyPolicy;
 
-        if(!emailVal || !passwordVal ||!repeatPasswordVal|| !nameVal|| !lastNameVal|| !phoneVal|| !dniVal|| !profileVal|| !privacyPolicyVal){
+        if(!emailVal || !passwordVal ||!repeatPasswordVal|| !nameVal|| !lastNameVal|| !phoneVal|| !dniVal|| !profileVal){
             notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
@@ -154,6 +156,7 @@ export default function RegisterForm(props){
             }
             
         }
+        setIsModalVisible(false);
     };
 
     const resetForm = () =>{
@@ -217,10 +220,17 @@ export default function RegisterForm(props){
         
        
     }
+    const [ isModalVisible, setIsModalVisible] = useState(false);
 
-
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+    const hideModal = () =>{
+        setIsModalVisible(false);
+    }
+    
     return (        
-        <Form className="register-form"  onFinish={register} onChange={changeForm}>            
+        <Form className="register-form"  onChange={changeForm}>            
             <Form.Item rules={[{required: true, message: 'Ingrese su email'}]}>
                 <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" onChange={inputValidation} value={input.email} placeholder="Correo electrónico" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item>
@@ -254,15 +264,27 @@ export default function RegisterForm(props){
             </Form.Item></div>
             : null}          
             
-            <Form.Item>
+            {/* <Form.Item>
                 <Checkbox name="privacyPolicy" onChange={inputValidation} checked={input.privacyPolicy}>
-                    He leído y acepto la politica de privacidad
+                    He leído y acepto los <Link >terminos y condiciones</Link>
                 </Checkbox>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item>
-                <Button htmlType="submit" className="register-form__button" > 
+                <Button type="submit" htmlType="submit" className="register-form__button" onClick={showModal} > 
                   Registrarme
                 </Button>
+                {/* hacerlo de un tamanio gijo pero scrolleable */}
+                <Modal title="Terminos y Condiciones"
+                    visible={isModalVisible}
+                    onCancel={hideModal}
+                    footer={[
+                        <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
+                            Cancelar
+                        </Button>,
+                        <Button htmlType="submit" type="primary" onClick={register} className="register-form_button-ok-modal" > 
+                            Aceptar
+                        </Button>
+                    ]}><Terms></Terms></Modal>
             </Form.Item>
         </Form>
     );  

@@ -22,11 +22,14 @@ td.description-item{
 .description-item{
     &__title{
         color: $primary-color!important;
-        font-size: 22px!important   ;
+        font-size: 22px!important;
+        display: flex;
+        justify-content: center;
     }
 
     &__button{
         color: $primary-color;
+        margin-top: 2%;
         
         
         .anticon:hover {
@@ -65,5 +68,5 @@ td.description-item{
 .ant-btn-link:active, 
 .ant-btn-link:hover,
 .ant-btn-link:focus{
-    color: $secondary-color!important;
+    // color: $secondary-color!important;
 }

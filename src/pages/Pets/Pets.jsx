@@ -58,9 +58,9 @@ export default function Pets(){
     return (
         <div>
         <Row >
-            <Col span={24} offset={""}>
+            <Col xs={{span:24}} lg={{span:12, offset:6}}>
                 <Title className='pets__title'>
-                Mascotas 
+                Mis Mascotas 
                 {/* <Affix offsetTop={80}> */}
                     <Tooltip title="Agregar mascota" placement='right'>
                         <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined  />} />
@@ -79,14 +79,12 @@ export default function Pets(){
             bodyStyle={{
             paddingBottom: 80,
             }}
-<<<<<<< HEAD
+
             extra={
             <Space>
                 <Button className='pets__button-cancel' onClick={onClose}>Cancelar</Button>        
             </Space>
             }
-=======
->>>>>>> cf82474c64365f10814019b96387d928d37fa38f
         ><RegisterPetForm /></Drawer>
 
         <Row gutter={16} >

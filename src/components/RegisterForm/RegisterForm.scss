@@ -3,12 +3,13 @@
 .register-form{
     text-align: left;
 
-    .ant-form-item{
+    // .ant-form-item{
         // &:nth-child(3),
         // &:last-child{
         //     margin: 0;
         // }
-    }
+    // }
+    
 
     &__input{
         .ant-input-prefix{
@@ -32,6 +33,7 @@
         }
         &:hover{
             border-color: $secondary-color !important;
+            
         }
     };
     
@@ -53,14 +55,27 @@
         height: 42px;
 
         &:hover{
-            background-color: $primary-color-hover !important;
-            color: $font-light;
+            background-color: $secondary-color!important;
+            color: $font-light!important;
+            border: 0;
 
         }
         &:focus, &:active{
             background-color: $primary-color;
-            color: $font-light;
+        color: $font-light!important;
             border:0;
         }
     }
+}
+.ant-input-affix-wrapper-focused{
+    border-color: $secondary-color!important;
+    box-shadow: 0 0 0 2px rgba(230, 196, 243, 0.614);
+}
+.ant-input:focus{
+    border: $secondary-color!important;
+    box-shadow: 0 0 0 2px rgba(230, 196, 243, 0.614)!important;
+}
+.ant-select-focused .ant-select-selector{
+    border: $secondary-color!important;
+    box-shadow: 0 0 0 2px rgba(230, 196, 243, 0.614)!important;
 }

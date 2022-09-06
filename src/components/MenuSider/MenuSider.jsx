@@ -92,15 +92,15 @@ export default function MenuSider(props){
                         </Menu.Item>
                     </> : null}
                 <Menu.SubMenu key={'sub1'} className="admin-sider__submenu" 
-                    title={<> <SettingOutlined /><span className="nav-text">Configuración</span> </>}>
+                    title={<> <SettingOutlined /><span to={'/settings'} className="nav-text">Configuración</span> </>}>
                     <Menu.Item key={"5"}>
                         <Link to={"/settings/user"} className='admin-sider__submenu-item'>                        
                             <span className="nav-text"> Cuenta</span>
                         </Link>
                     </Menu.Item>
                     {vetOwner ? <> <Menu.Item key={"6"}>
-                        <Link to={"/"} className='admin-sider__submenu-item'>                        
-                            <span className="nav-text"> Veterinaria</span>
+                        <Link to={"/settings/vetclinic"} className='admin-sider__submenu-item'>                        
+                            <span className="nav-text"> Clinica Veterinaria</span>
                         </Link>
                     </Menu.Item>                    
                     </> : null}

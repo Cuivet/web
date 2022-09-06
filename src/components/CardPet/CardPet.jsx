@@ -2,23 +2,18 @@ import React, {useState} from "react";
 import {Card,Modal, Avatar,Popconfirm, message} from 'antd';
 import Meta from "antd/lib/card/Meta";
 import { EyeOutlined, SettingOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-<<<<<<< HEAD
+
 import {Items} from '../../pages/Settings/UserSettings'
 
-=======
 import {deletePet} from "../../services/pet.service"
->>>>>>> cf82474c64365f10814019b96387d928d37fa38f
 import './CardPet.scss'
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardPet(props){
-<<<<<<< HEAD
-    const {img, title, description, avatar} = props;
 
-    // console.log(avatar);
-=======
+
     const {img, title, description, avatar, item} = props;
->>>>>>> cf82474c64365f10814019b96387d928d37fa38f
+
 
     function AvatarGroup(){
         const group =[]

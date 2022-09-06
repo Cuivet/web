@@ -4,6 +4,10 @@ import { Layout, Menu} from "antd";
 import Icon, { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined, QqOutlined } from '@ant-design/icons';
 import PetsIcon from '@mui/icons-material/Pets';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ScienceIcon from '@mui/icons-material/Science';
+import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutlined';
+import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
+
 
 // import createSvgIcon from '@material-ui';
 
@@ -51,6 +55,9 @@ export default function MenuSider(props){
         getItem('Inicio','1', <Link to={"/menu"}></Link>, <HomeOutlined/>),
         getItem('Consulta','3', <Link to={'/test'}  className='admin-sider__item'></Link>,<UnorderedListOutlined />),
         getItem('Mascotas','4',  <PetsIcon fontSize="small" />, <Link to={'/register-pet'}  className='admin-sider__item'></Link>),
+        getItem('Estudios','2', <Link to={"/menu"}></Link>, <ScienceIcon/>), //Aun no desarrollado
+        getItem('Profesionales','7', <Link to={"/menu"}></Link>, <MedicalServicesOutlinedIcon/>), //Aun no desarrollado
+        getItem('LocalVet','8', <Link to={"/menu"}></Link>, <PersonPinCircleOutlinedIcon/>),
         getItem('Configuracion','/test2','sub1', <SettingOutlined />,[
             getItem('Usuario','/settings/user','5'),
             getItem('Veterinario','/settings/vet','6'),
@@ -82,28 +89,85 @@ export default function MenuSider(props){
                             <span className="nav-text"> Consulta</span>
                         </Link>
                     </Menu.Item>
+
+                    <Menu.Item key="4"  >
+                            <Link to={"/pets"} className='admin-sider__item'>                      
+                                <Icon component={''}><PetsIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Mis Pacientes </span>
+                            </Link>
+                        </Menu.Item>
+                    
+
+                    <Menu.Item key="2"  >
+                            <Link to={"/menu"} className='admin-sider__item'>                      
+                                <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Estudios </span>
+                            </Link>
+                        </Menu.Item>
+
+                    <Menu.Item key="8"  >
+                        <Link to={"/menu"} className='admin-sider__item'>                      
+                            <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
+                            <span className="nav-text"> Veterinarias (locales) </span>
+                        </Link>
+                    </Menu.Item>
+
+
                 </>: null}                
                 { tutor ? <>
                         <Menu.Item key="4"  >
                             <Link to={"/pets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Mascotas </span>
+                                <span className="nav-text"> Mis mascotas </span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="2"  >
+                            <Link to={"/menu"} className='admin-sider__item'>                      
+                                <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Estudios </span>
+                            </Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="7"  >
+                            <Link to={"/menu"} className='admin-sider__item'>                      
+                                <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Veterinarios </span>
                             </Link>
                         </Menu.Item>
                     </> : null}
+
+
+                    {vetOwner ? <> 
+                        <Menu.Item key="7"  >
+                            <Link to={"/menu"} className='admin-sider__item'>                      
+                                <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Profesionales </span>
+                            </Link>
+                        </Menu.Item>
+                        
+                        <Menu.Item key="8"  >
+                            <Link to={"/menu"} className='admin-sider__item'>                      
+                                <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Veterinaria </span>
+                            </Link>
+                        </Menu.Item>
+                        
+                                    
+                        </> : null}
+
+
+
                 <Menu.SubMenu key={'sub1'} className="admin-sider__submenu" 
                     title={<> <SettingOutlined /><span className="nav-text">Configuración</span> </>}>
                     <Menu.Item key={"5"}>
                         <Link to={"/settings/user"} className='admin-sider__submenu-item'>                        
-                            <span className="nav-text"> Cuenta</span>
+                            <span className="nav-text"> Perfil </span>
                         </Link>
                     </Menu.Item>
-                    {vetOwner ? <> <Menu.Item key={"6"}>
-                        <Link to={"/"} className='admin-sider__submenu-item'>                        
-                            <span className="nav-text"> Veterinaria</span>
-                        </Link>
-                    </Menu.Item>                    
-                    </> : null}
+                    
+                    
+                    
+                    
                     
                 </Menu.SubMenu>
             </Menu>

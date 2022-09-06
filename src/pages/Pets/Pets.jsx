@@ -10,12 +10,12 @@ import './Pets.scss';
 const { Title } = Typography;
 
 export default function Pets(){
-
+    const [isInit,setIsInit] = useState(false);
     const [pets,setPets] = useState([]);
-    
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
-    if (!pets.length) {
+    if (!isInit) {
+        setIsInit(true);
         getPetsByTutorId(profile.tutor.id).then(response => {
             setPets(response);
         });
@@ -51,6 +51,11 @@ export default function Pets(){
         return age+" anios";
     }
 
+    const registeredPet = () => {
+        setIsInit(false);
+        setVisible(false);
+    };
+
     return (
         <div>
         <Row >
@@ -59,7 +64,7 @@ export default function Pets(){
                 Mascotas 
                 {/* <Affix offsetTop={80}> */}
                     <Tooltip title="Agregar mascota" placement='right'>
-                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined  />} />
+                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>
                 {/* </Affix> */}
                 </Title>
@@ -75,7 +80,7 @@ export default function Pets(){
             bodyStyle={{
             paddingBottom: 80,
             }}
-        ><RegisterPetForm /></Drawer>
+        ><RegisterPetForm registeredPet={registeredPet}/></Drawer>
 
         <Row gutter={16} >
             <Pet></Pet>

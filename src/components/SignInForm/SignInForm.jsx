@@ -88,7 +88,7 @@ export default function SignInForm(props){
     }
 
   return (
-    <Form className="register-form"  onFinish={tryToLogIn} onChange={changeForm}>
+    <Form className="register-form" onFinish={tryToLogIn} onChange={changeForm}>
 
             <Form.Item>
                 <Input  prefix={<MailOutlined className="site-form-item-icon" />} 

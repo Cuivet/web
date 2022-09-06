@@ -18,7 +18,7 @@ import Pets from "../pages/Pets/Pets";
 import Error404 from "../pages/Error/Error404/Error404"
 
 //Client pages
-import Landing from "../pages/Landing";
+import Landing from "../pages/Landing/Landing";
 import Contact from "../pages/Contact";
 
 const routesAdmin = [
@@ -66,7 +66,7 @@ const routesClient = [
     {
         path:"/",
         component:Landing,
-        layout: LayoutLanding,
+        layout: LayoutBasic,
         
     },
     {

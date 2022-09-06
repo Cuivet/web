@@ -86,7 +86,7 @@ export default function MenuSider(props){
                         </Menu.Item>
 
                         <Menu.Item key="7">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/pets-manage"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Pacientes </span>
                             </Link>

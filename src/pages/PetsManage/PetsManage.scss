@@ -1,0 +1,87 @@
+@import '../../scss/index.scss';
+
+.pets{
+    &__title{
+        color: $primary-color!important;
+        font-size: 22px!important;
+        display: flex;
+        align-items: center;
+    }
+    @media (min-width: $media-breackpoint-up-lg) {
+        
+        &__title{
+            font-size: 38px!important;
+        }
+    } 
+    &__button{
+    
+
+        &-add{
+            // margin: 1px 5px 5px 20px;         
+            // font-size: 0em+40px/$defaultFontSize;  
+            // border: 0px;
+            // background-color: $primary-color;
+            // color: $font-light;    
+            // border-radius: 50px!important;
+            color: $primary-color;
+            margin-top: 0.5%;
+            
+    
+            &:hover{
+                // background-color: $secondary-color !important;
+                // border-color: $secondary-color;
+                color: $secondary-color!important;
+            }
+            &:focus, &:active{
+                // background-color: $primary-color!important;
+                color: $secondary-color!important;
+            }
+            @media (min-width: $media-breackpoint-up-lg) {
+               span{
+                font-size: 22px!important;
+               }
+            //    margin-left: 2%;
+            align-items: baseline!important;
+                
+            }
+            
+        }
+        &-cancel{
+            &:hover, :active, :focus{            
+                border-color: $primary-color!important;
+                color: $primary-color!important;
+            }
+        }
+        &-register{        
+            background-color: $primary-color;
+            color: $font-light;
+    
+            &:hover{
+                //background-color: $primary-color-hover !important;
+                background-color: $secondary-color !important;
+                border-color: $secondary-color;
+                color: $font-light;
+            }
+            &:focus, &:active{
+                background-color: $primary-color!important;
+                color: $font-light;
+                border:0;
+            }
+        }
+        
+        
+    }
+}
+
+
+
+.ant-card-actions{
+
+    .anticon svg{
+        color: $secondary-color;
+        font-size: 0em + 22px / $defaultFontSize;
+        &:hover{
+            color: $primary-color;
+        }
+    }  
+}

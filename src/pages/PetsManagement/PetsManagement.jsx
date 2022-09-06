@@ -1,5 +1,5 @@
 import React from 'react';
-import './PetsManage.scss';
+import './PetsManagement.scss';
 import { Table } from 'antd';
 import { Button } from 'antd';
 import { Col, Row, Divider } from 'antd';
@@ -7,7 +7,7 @@ import { Input } from 'antd';
 import { Select, Typography } from 'antd';
 const { Option } = Select;
 const { Title } = Typography;
-export default function PetsManage(){
+export default function PetsManagement(){
 
     const columns = [
         {

@@ -256,7 +256,7 @@ export default function RegisterForm(props){
                 <Select name="profile" placeholder="Seleccione su perfil" className="register-form__select" value={input.profile} onChange={onProfileChange} allowClear > 
                     <Select.Option value="tutor" >Tutor</Select.Option>
                     <Select.Option value="veterinary">Veterinario</Select.Option>
-                    <Select.Option value="vetOwner">Dueño Veterinaria</Select.Option>
+                    <Select.Option value="vetOwner">Propietario de Veterinaria</Select.Option>
                 </Select>
             </Form.Item>  
             {vet ? <div> <Form.Item id="matricula">
@@ -273,7 +273,7 @@ export default function RegisterForm(props){
                 <Button type="submit" htmlType="submit" className="register-form__button" onClick={showModal} > 
                   Registrarme
                 </Button>
-                {/* hacerlo de un tamanio gijo pero scrolleable */}
+                {/* hacerlo de un tamanio fijo pero scrolleable */}
                 <Modal title="Terminos y Condiciones"
                     visible={isModalVisible}
                     onCancel={hideModal}

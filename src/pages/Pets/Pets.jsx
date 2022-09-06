@@ -79,12 +79,6 @@ export default function Pets(){
             bodyStyle={{
             paddingBottom: 80,
             }}
-
-            extra={
-            <Space>
-                <Button className='pets__button-cancel' onClick={onClose}>Cancelar</Button>        
-            </Space>
-            }
         ><RegisterPetForm /></Drawer>
 
         <Row gutter={16} >

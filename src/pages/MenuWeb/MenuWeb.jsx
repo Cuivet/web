@@ -1,10 +1,8 @@
 import React from "react";
-import {Layout, Row, Col, Descriptions } from "antd";
+import { Row, Col } from "antd";
 import CardMenu from "../../components/CardMenu";
 import clipboard from "../../assets/img/jpg/clipboard.jpg";
-import { getProfile } from "../../services/user.service";
-
-import './MenuWeb.scss'
+import './MenuWeb.scss';
 
 export default function MenuWeb(){
 

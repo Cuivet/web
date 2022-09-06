@@ -1,12 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Layout } from "antd";
 import MenuTop from "../components/MenuTop";
 import MenuSider from "../components/MenuSider/MenuSider";
-import AdminSignIn from '../pages/LogIn/LogIn';
-
 import "./LayoutsAdmin.scss";
-import { Navigate, Route } from "react-router-dom";
-import Admin from "../pages/Admin";
 
 export default function LayoutAdmin(props){
     const { children } = props;

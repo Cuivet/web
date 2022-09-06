@@ -1,9 +1,8 @@
 import React, {useState} from "react";
-import {Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Descriptions, Row, Col } from 'antd';
+import { Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Row, Col } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { minLengthValidation, numberValidation } from '../../utils/formValidation';
+import { numberValidation } from '../../utils/formValidation';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
-import {registerPet} from "../../services/pet.service"
 import moment  from "moment";
 
 
@@ -132,7 +131,7 @@ export default function RegisterPetForm(){
             })
         } else{
                 //console.log(tutorId);
-                const res = registerPet(input);
+                // const res = registerPet(input);
                 notification['success']({
                     message: "Mascota creada correctamente",
                     placement: "top"

@@ -1,19 +1,14 @@
-import React, {useState} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
-import Icon, { HomeOutlined, MenuOutlined, UnorderedListOutlined, LoginOutlined, SettingOutlined, QqOutlined } from '@ant-design/icons';
+import Icon, { HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import PetsIcon from '@mui/icons-material/Pets';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ScienceIcon from '@mui/icons-material/Science';
 import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutlined';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
-
-
-// import createSvgIcon from '@material-ui';
-
 import './MenuSider.scss';
 
-
+/*
 function getItem(label, key, link, icon, children, theme) {
     return {
       key,
@@ -24,6 +19,7 @@ function getItem(label, key, link, icon, children, theme) {
       theme,
     };
   }
+*/
 
 export default function MenuSider(props){
    
@@ -49,127 +45,92 @@ export default function MenuSider(props){
         vetOwner = false;
         veterinary = false;
     };
-
-    //como hacer el ruteo pasandolo por items
-    const items = [
-        getItem('Inicio','1', <Link to={"/menu"}></Link>, <HomeOutlined/>),
-        getItem('Consulta','3', <Link to={'/test'}  className='admin-sider__item'></Link>,<UnorderedListOutlined />),
-        getItem('Mascotas','4',  <PetsIcon fontSize="small" />, <Link to={'/register-pet'}  className='admin-sider__item'></Link>),
-        getItem('Estudios','2', <Link to={"/menu"}></Link>, <ScienceIcon/>), //Aun no desarrollado
-        getItem('Profesionales','7', <Link to={"/menu"}></Link>, <MedicalServicesOutlinedIcon/>), //Aun no desarrollado
-        getItem('LocalVet','8', <Link to={"/menu"}></Link>, <PersonPinCircleOutlinedIcon/>),
-        getItem('Configuracion','/test2','sub1', <SettingOutlined />,[
-            getItem('Usuario','/settings/user','5'),
-            getItem('Veterinario','/settings/vet','6'),
-            
-        ])
-    ];
-    // const menu = {
-    //     label:['Inicio', 'Consulta','Mascotas', 'Configuracion', 'Usuario'],
-    //     route: ["/menu","/test","/register-pet","/settings","/settings/user"],
-    //     icon: [<HomeOutlined/>, <UnorderedListOutlined />, <PetsIcon fontSize="small" />, <SettingOutlined />],
-    //     key: ['1','2','3','sub1','4','5']
-    // }
   
     return (
         <Sider trigger={null} collapsible className="admin-sider" collapsed={menuCollapsed}>
-            <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]} > 
-                {/* <Test></Test> */}
+            <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}> 
                 
-                <Menu.Item key="1" >
-                    <Link to={"/menu"} className='admin-sider__item' >
-                        <HomeOutlined />
+                <Menu.Item key="1">
+                    <Link to={"/menu"} className='admin-sider__item'>
+                        <HomeOutlined/>
                         <span className="nav-text"> Inicio</span>
                     </Link>
                 </Menu.Item>
-                { veterinary ? <>
-                    <Menu.Item key="3"  >
-                        <Link to={"/admin"} className='admin-sider__item'>
-                            <UnorderedListOutlined />
-                            <span className="nav-text"> Consulta</span>
-                        </Link>
-                    </Menu.Item>
 
-                    <Menu.Item key="4"  >
-                            <Link to={"/pets"} className='admin-sider__item'>                      
-                                <Icon component={''}><PetsIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Mis Pacientes </span>
-                            </Link>
-                        </Menu.Item>
-                    
-
-                    <Menu.Item key="2"  >
-                            <Link to={"/menu"} className='admin-sider__item'>                      
+                { tutor ?   
+                    <>
+                        <Menu.Item key="2">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
                         </Menu.Item>
 
-                    <Menu.Item key="8"  >
-                        <Link to={"/menu"} className='admin-sider__item'>                      
-                            <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                            <span className="nav-text"> Veterinarias (locales) </span>
-                        </Link>
-                    </Menu.Item>
-
-
-                </>: null}                
-                { tutor ? <>
-                        <Menu.Item key="4"  >
+                        <Menu.Item key="3">
                             <Link to={"/pets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis mascotas </span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="2"  >
-                            <Link to={"/menu"} className='admin-sider__item'>                      
+
+                        <Menu.Item key="4">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
+                                <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Veterinarios Asociados </span>
+                            </Link>
+                        </Menu.Item>
+                    </> 
+                    : null}
+
+                { veterinary ?
+                    <>
+                        <Menu.Item key="5">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="7"  >
-                            <Link to={"/menu"} className='admin-sider__item'>                      
-                                <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Veterinarios </span>
+                        <Menu.Item key="6">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
+                                <Icon component={''}><PetsIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Mis Pacientes </span>
                             </Link>
                         </Menu.Item>
-                    </> : null}
 
-
-                    {vetOwner ? <> 
-                        <Menu.Item key="7"  >
-                            <Link to={"/menu"} className='admin-sider__item'>                      
-                                <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Profesionales </span>
-                            </Link>
-                        </Menu.Item>
-                        
-                        <Menu.Item key="8"  >
-                            <Link to={"/menu"} className='admin-sider__item'>                      
+                        <Menu.Item key="7">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Veterinaria </span>
+                                <span className="nav-text"> Veterinarias Asociadas </span>
+                            </Link>
+                        </Menu.Item>
+                    </>
+                    : null }
+
+                { vetOwner ? 
+                    <>
+                        <Menu.Item key="8">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
+                                <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Mis Veterinarios </span>
                             </Link>
                         </Menu.Item>
                         
-                                    
-                        </> : null}
+                        <Menu.Item key="9">
+                            <Link to={"/admin"} className='admin-sider__item'>                      
+                                <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Mis Veterinarias </span>
+                            </Link>
+                        </Menu.Item>   
+                    </> 
+                    : null}
 
-
-
-                <Menu.SubMenu key={'sub1'} className="admin-sider__submenu" 
-                    title={<> <SettingOutlined /><span className="nav-text">Configuración</span> </>}>
-                    <Menu.Item key={"5"}>
-                        <Link to={"/settings/user"} className='admin-sider__submenu-item'>                        
-                            <span className="nav-text"> Perfil </span>
-                        </Link>
-                    </Menu.Item>
-                    
-                    
-                    
-                    
-                    
-                </Menu.SubMenu>
+                <Menu.Item key="10">
+                    <Link to={"/settings/user"} className='admin-sider__item'>            
+                        <SettingOutlined/>
+                        <span className="nav-text"> Perfil </span>
+                    </Link>
+                </Menu.Item>
             </Menu>
 
         </Sider>

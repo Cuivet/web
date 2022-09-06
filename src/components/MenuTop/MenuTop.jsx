@@ -1,11 +1,10 @@
-import { Avatar, Badge, Button, Tooltip } from "antd";
+import { Badge, Button, Tooltip } from "antd";
 import AvatarUser from "../AvatarUser/AvatarUser";
 import { Link } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from "@ant-design/icons";
 import React from "react";
 import CUIVET_logo from '../../assets/img/png/logo2.png';
 import User from '../../assets/img/png/tutorUsuario.png'
-// import logOut from '../../pages/LogIn/LogIn';
 
 import './MenuTop.scss'
 

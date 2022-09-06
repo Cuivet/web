@@ -5,6 +5,7 @@ import { numberValidation } from '../../utils/formValidation';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
 import moment  from "moment";
 import { registerPet } from "../../services/pet.service";
+import storage from "../../fb";
 
 import './RegisterPetForm.scss';
 
@@ -16,6 +17,32 @@ export default function RegisterPetForm(props){
 
     const {Dragger} = Upload;
     var petName;
+
+    const [image, setImage] = useState('');
+    // const [imageCode, setImageCode] = useState('');
+    
+    const [fileList, setFileList] = useState([
+    ]);
+    
+    const onChange = ({fileList}) => {
+        setFileList(fileList);
+        setImage(fileList[0].originFileObj);
+    };
+    
+    const onPreview = async (file) => {
+        let src = file.url;
+        if (!src) {
+          src = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file.originFileObj);
+            reader.onload = () => resolve(reader.result);
+          });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
 
     const fields = {
         name: `pet-${petName}`, //le dejamos el nombre con el que lo sube ?
@@ -43,7 +70,28 @@ export default function RegisterPetForm(props){
         onDrop(e) {
           console.log('Archivo eliminado', e.dataTransfer.files);
         },
-      };
+    };
+
+    function upload(code) {
+        storage.ref(`/petImages/${code}`).put(image)
+        .then((response) => {
+            alert("se subio la fotuki" + code)
+            return response;
+        })
+        .catch((err) => {
+            return err;
+        });
+        //
+        // .on("state_changed", alert("Imagen subida"), alert, () => {
+        //     // Getting Download Link
+        //     storage.ref("images").child(image.name).getDownloadURL()
+        //       .then((url) => {
+        //       //   setUrl(url);
+        //         setInput({...input, url: url});
+        //       })
+        //   });
+    }
+
 
     const [input, setInput]= useState({
         name:"",
@@ -64,11 +112,6 @@ export default function RegisterPetForm(props){
     });
 
     const changeForm = e =>{
-        //console.log(e.target.name);
-        // setInput({
-        //     ...input,
-        //     [e.target.name]: e.target.value
-        // });
 
         if(e.target.name === "sex"){
             setInput({
@@ -113,9 +156,6 @@ export default function RegisterPetForm(props){
     };
 
     const register = e => {
-        console.log(input);
-        //console.log(formValid);
-        //const {name, species, raza, dateBirth, sex, size} = formValid;
         const nameVal = input.name;
         const speciesVal = input.species;
         const razaVal = input.raza;
@@ -130,11 +170,11 @@ export default function RegisterPetForm(props){
                 placement: "top"
             })
         } else{
-                //console.log(tutorId);
                 registerPet(input)
                     .then( res => {
                         resetForm();
                         props.registeredPet();
+                        upload("martina");
                         notification['success']({
                             message: "Mascota creada correctamente",
                             placement: "top"
@@ -241,6 +281,7 @@ export default function RegisterPetForm(props){
         setInput({...input, birth: value});
         setFormValid({...formValid, birth: true});
     };
+
     const disabledDate =(current) =>{
         return current && current> moment().endOf('day');
     }
@@ -298,24 +339,26 @@ export default function RegisterPetForm(props){
                 </Col> 
                 <Col span={24}>
                     <Form.Item>
-                        <ImgCrop rotate>
-                            {/* <Upload
-                                    action=""
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={onChange}
-                                onPreview={onPreview}
-                            >
-                                {fileList.length < 5 && '+ Cargar'}
-                            </Upload> */}
-                            <Dragger {...fields}>
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">Click aquí o arrastre la imagen a esta área</p>
-                            </Dragger>
-                        </ImgCrop>
-                    </Form.Item>
+                            {/* <ImgCrop rotate> */}
+                                <Upload
+                                        action=""
+                                        listType="picture-card"
+                                        fileList={fileList}
+                                        onChange={onChange}
+                                        onPreview={onPreview}
+                                        beforeUpload={() => false}
+                                >
+                                    {fileList.length <1 && 'Cargar Imagen'}
+                                </Upload>
+                                {/* <Dragger {...fields}>
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">Click aquí o arrastre la imagen a esta área</p>
+                                </Dragger> */}
+                            {/* </ImgCrop>  */}
+                        </Form.Item>
+
                 </Col>     
                 <Col span={24}>
                     <Form.Item>

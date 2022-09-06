@@ -26,3 +26,23 @@
 .ant-tooltip-arrow-content{
     background-color: $primary-color;
 }
+
+.appButton { 
+    width: 100%;
+        font-size: 0em+22px/$defaultFontSize;
+        background-color: $primary-color;
+        color: $font-light;
+        border-radius: 4px;
+        height: 40px;
+        border: 0;
+        &:hover{
+            background-color: $secondary-color!important;
+        }
+        &:focus, &:active{
+            background-color: $primary-color;   
+        }
+}
+
+.full-width {
+    width: 100%;
+}

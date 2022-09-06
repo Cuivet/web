@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { Layout } from "antd";
 
 import "./LayoutBasic.scss"
@@ -6,7 +6,7 @@ import "./LayoutBasic.scss"
 export default function LayoutBasic(props){
 
     const {children}=props;
-    const {Content, Footer, Header} = Layout;
+    const {Content} = Layout;
 
     return (
         <Layout>

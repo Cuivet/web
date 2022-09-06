@@ -9,7 +9,7 @@ export default function CardMenu(props){
     const {img, text, description, disabled} = props;
     return (
         
-        <Card hoverable cover={<img src={img} ></img>} loading={disabled} className='card-menu'>
+        <Card hoverable cover={<img alt='required field' src={img} ></img>} loading={disabled} className='card-menu'>
             <Meta title={text} description={description} className='card-menu__meta'></Meta>
         </Card>
     )

@@ -1,15 +1,14 @@
 import React, {useState} from "react";
-import {Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Descriptions, Row, Col } from 'antd';
+import { Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Row, Col } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { minLengthValidation, numberValidation } from '../../utils/formValidation';
+import { numberValidation } from '../../utils/formValidation';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
-import {registerPet} from "../../services/pet.service"
 import moment  from "moment";
-
+import { registerPet } from "../../services/pet.service";
 
 import './RegisterPetForm.scss';
 
-export default function RegisterPetForm(){
+export default function RegisterPetForm(props){
     
      //saco los datos del tutor que está logueado
      const profile = JSON.parse(sessionStorage.getItem('profile'));
@@ -18,7 +17,7 @@ export default function RegisterPetForm(){
     const {Dragger} = Upload;
     var petName;
 
-    const props = {
+    const fields = {
         name: `pet-${petName}`, //le dejamos el nombre con el que lo sube ?
         multiple: false,
         maxCount:1,
@@ -132,13 +131,15 @@ export default function RegisterPetForm(){
             })
         } else{
                 //console.log(tutorId);
-                const res = registerPet(input);
-                notification['success']({
-                    message: "Mascota creada correctamente",
-                    placement: "top"
-                })
-                resetForm();
-
+                registerPet(input)
+                    .then( res => {
+                        resetForm();
+                        props.registeredPet();
+                        notification['success']({
+                            message: "Mascota creada correctamente",
+                            placement: "top"
+                        });
+                    });
             }
     };
 
@@ -307,7 +308,7 @@ export default function RegisterPetForm(){
                             >
                                 {fileList.length < 5 && '+ Cargar'}
                             </Upload> */}
-                            <Dragger {...props}>
+                            <Dragger {...fields}>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
                                 </p>

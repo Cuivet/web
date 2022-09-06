@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import { Layout, Tooltip, Button } from "antd";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import CUIVET_logo from '../../assets/img/png/logo2.png'
 
 import "./LayoutLanding.scss"
@@ -9,7 +9,6 @@ export default function LayoutLanding(props){
 
     const {children}=props;
     const {Content, Footer, Header} = Layout;
-    const [menuCollapsed, setMenuCollapsed] = useState(true);
 
     return (
         <Layout>

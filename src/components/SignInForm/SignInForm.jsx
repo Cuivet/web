@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input, Checkbox, Typography, Space, Modal } from 'antd';
-import { LockOutlined, MailOutlined} from "@ant-design/icons";
-import { Button, Form, Input, Checkbox, Typography, Space } from 'antd';
-import { InfoOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
 import { Alert } from 'antd';
 import { Spin } from 'antd';
-import { Navigate } from "react-router-dom";
 
 import '../RegisterForm/RegisterForm.scss'
 
@@ -91,7 +88,7 @@ export default function SignInForm(props){
     }
 
   return (
-    <Form className="register-form"  onFinish={tryToLogIn} onChange={changeForm}>
+    <Form className="register-form" onFinish={tryToLogIn} onChange={changeForm}>
 
             <Form.Item>
                 <Input  prefix={<MailOutlined className="site-form-item-icon" />} 

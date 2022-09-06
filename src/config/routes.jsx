@@ -14,7 +14,7 @@ import Menu from "../pages/MenuWeb/MenuWeb";
 import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
 import Pets from "../pages/Pets/Pets";
-import PetsManage from "../pages/PetsManage/PetsManage";
+import PetsManagement from "../pages/PetsManagement/PetsManagement";
 import Error404 from "../pages/Error/Error404/Error404"
 
 //Client pages
@@ -56,8 +56,8 @@ const routesAdmin = [
         layout: LayoutAdmin,
     },
     {
-        path: "/pets-manage",
-        component: PetsManage,
+        path: "/pets-management",
+        component: PetsManagement,
         layout: LayoutAdmin,
     },
     {

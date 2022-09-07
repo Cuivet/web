@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import { Row, message, Popconfirm, Col,Typography, Button, Tooltip, Form, Input, Divider } from "antd";
-import { DeleteOutlined,ExclamationCircleOutlined,EditOutlined, UserOutlined, PhoneOutlined, SaveOutlined} from "@ant-design/icons";
-import {emailValidation, minLengthValidation,numberValidation} from '../../../utils/formValidation';
+import { Row, Col, Typography, Button, Tooltip, Form, Input, Divider } from "antd";
+import { EditOutlined, UserOutlined, PhoneOutlined, SaveOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { emailValidation, minLengthValidation, numberValidation } from '../../../utils/formValidation';
 
-import './UserSettings.scss'
+import './UserSettings.scss';
 
 const {Title} = Typography;
 
@@ -69,106 +69,88 @@ export default function UserSettings(){
     }
 
     function Edit(){
-        console.log("Hola")
         setEditable(true);
-        
     }
+
     function Save(){
-        // Pegarle al back y que cuando actualice setee el editable false y refreste el sessionStorage
         setEditable(false);
     }
-    //evento para borrar el usuario
-    const confirm = (e) => {
-        // console.log(e);
-        message.success('Click on Yes');
-      };
-      //evento para cancelar borrado del usuario
-      const cancel = (e) => {
-        // console.log(e);
-        message.error('Click on No');
-      };
-    function Delete(){
-        //De onda
+
+    function closeEditable(){
+        setEditable(false);
     }
 
     return (
         <>
-        {formData ? 
-        <>
-        <Row>
-            <Col span={24}>
-                <Title className="description-item__title">Información del Usuario 
-                {!editable ? 
-                    <>
-                        <Tooltip title='Editar usuario' placement="right" color={'#5B2569'}>
-                            <Button type="link" className="description-item__button" icon={<EditOutlined /> } onClick={Edit}/>
-                        </Tooltip>
-                    </>
-                    : 
-                    <>
-                        <Popconfirm
-                            title="Esta seguro que desea borrar el usuario?"
-                            onConfirm={confirm}
-                            onCancel={cancel}
-                            okText="Si"
-                            cancelText="No"
-                            placement="bottom"
-                            arrowPointAtCenter 
-                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                            <Tooltip title='Borrar usuario' placement="right" color={'#5B2569'}>
-                                <Button type="link" className="description-item__button" icon={<DeleteOutlined /> } onClick={Delete}/>
-                            </Tooltip> 
-                        </Popconfirm> 
-                    </>   
-                }
-            </Title>
-        </Col>
-    </Row>
-    <Row>
-        <Col xs={{ span: 24}} lg={{ span:12 }}>
-            <Form className="register-form" layout="vertical"  onFinish={""} onChange={""}> 
-                <Divider orientation="left">Datos Personales</Divider>
-                
-                <Form.Item label="Nombre">
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="name" onChange={inputValidation} defaultValue={formData.name} className="register-form__input" onSelect={inputValidation}/>
-                </Form.Item>
+            {formData ? 
+                <>
+                    <Row align="middle">
+                        <Col span={23}>
+                            <Title className="appTitle">Información del Usuario</Title>
+                        </Col>
+                        <Col span={1}>
+                            {!editable ?
+                                <>
+                                    <Tooltip title="Editar usuario" placement='right'>
+                                        <Button type='link' className="appButton" size='large' icon={<EditOutlined/>} onClick={Edit}/>
+                                    </Tooltip>
+                                </>
+                                : 
+                                <>
+                                    <Tooltip title="Cancelar" placement='right'>
+                                        <Button type='link' className="appButton" size='large' icon={<CloseCircleOutlined/>} onClick={closeEditable}/>
+                                    </Tooltip>
+                                </>   
+                            }
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Divider></Divider>
+                    </Row>
+                    <Row>
+                        <Col xs={{ span: 24}} lg={{ span:12 }}>
+                            <Form className="register-form" layout="vertical"  onFinish={""} onChange={""}> 
+                                <Divider orientation="left">Datos Personales</Divider>
+                                
+                                <Form.Item label="Nombre">
+                                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="name" onChange={inputValidation} defaultValue={formData.name} className="register-form__input" onSelect={inputValidation}/>
+                                </Form.Item>
 
-                <Form.Item label="Apellido">
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="lastName" onChange={inputValidation} defaultValue={formData.lastName} className="register-form__input" onSelect={inputValidation}/>
-                </Form.Item>
-            
-                <Form.Item label="DNI">
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="number" name="dni" defaultValue={formData.dni} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
-                </Form.Item>
-            
-                <Form.Item label="Telefono">
-                    <Input prefix={<PhoneOutlined className="site-form-item-icon" />} disabled={!editable} type="number" name="phone" vadefaultValuelue={formData.phone} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
-                </Form.Item>
-            
-                <Form.Item label="Dirección">
-                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="address" onChange={inputValidation} defaultValue={formData.address} className="register-form__input" onSelect={inputValidation}/>
-                </Form.Item>
+                                <Form.Item label="Apellido">
+                                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="lastName" onChange={inputValidation} defaultValue={formData.lastName} className="register-form__input" onSelect={inputValidation}/>
+                                </Form.Item>
+                            
+                                <Form.Item label="DNI">
+                                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="number" name="dni" defaultValue={formData.dni} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                                </Form.Item>
+                            
+                                <Form.Item label="Telefono">
+                                    <Input prefix={<PhoneOutlined className="site-form-item-icon" />} disabled={!editable} type="number" name="phone" vadefaultValuelue={formData.phone} className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                                </Form.Item>
+                            
+                                <Form.Item label="Dirección">
+                                    <Input prefix={<UserOutlined className="site-form-item-icon" />} disabled={!editable} type="text" name="address" onChange={inputValidation} defaultValue={formData.address} className="register-form__input" onSelect={inputValidation}/>
+                                </Form.Item>
 
-                <Divider orientation="left">Configuración de Cuenta</Divider>
+                                <Divider orientation="left">Configuración de Cuenta</Divider>
 
-                <Form.Item rules={[{required: true, message: 'Ingrese su email'}]} label="Email">
-                    <Input type="email" name="email" onChange={"inputValidation"} value={formData.email} disabled className="register-form__input" onSelect={"inputValidation"}/>
-                </Form.Item>
-                    
-                {editable ? 
-                <Form.Item>
-                    <Button htmlType="submit" className="register-form__button" icon={<SaveOutlined />} onClick={Save}> 
-                        Guardar
-                    </Button>
-                </Form.Item> :
-                null
-                }
-            </Form>
-        </Col>
-    </Row>
-    </>
-        : null}
+                                <Form.Item rules={[{required: true, message: 'Ingrese su email'}]} label="Email">
+                                    <Input type="email" name="email" onChange={"inputValidation"} value={formData.email} disabled className="register-form__input" onSelect={"inputValidation"}/>
+                                </Form.Item>
+                                    
+                                {editable ? 
+                                <Form.Item>
+                                    <Button htmlType="submit" className="register-form__button" icon={<SaveOutlined />} onClick={Save}> 
+                                        Guardar
+                                    </Button>
+                                </Form.Item> :
+                                null
+                                }
+                            </Form>
+                        </Col>
+                    </Row>
+                </>
+            : null}
         </>
-        
     )
 };

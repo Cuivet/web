@@ -3,7 +3,6 @@ import { Card, Avatar, Popconfirm, message } from 'antd';
 import Meta from "antd/lib/card/Meta";
 import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { deletePet } from "../../services/pet.service";
-import './CardPet.scss';
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardPet(props){
@@ -12,16 +11,12 @@ export default function CardPet(props){
     function AvatarGroup(){
         const group =[]
         if(Array.isArray(avatar)){
-            
-            // if(avatar.length >1){
                 for(let i=0; i < avatar.length;i++){
                     console.log(avatar[i])
                     group.push(
                         <AvatarUser key={i} icon={avatar[i]} preview={false} className="card-pet__avatar" />
                     );
                 };
-                
-            // }
         }
         else{            
             group.push(
@@ -30,31 +25,23 @@ export default function CardPet(props){
         };
         return group;
     };
-    // evento para borrar la mascota
+
     const confirm = (e) => {
-        // console.log(e);
         message.success('Mascota '+ title + ' borrada exitosamente.' );
         deletePet(item);
       };
-      //evento para cancelar borrado de la mascota
-    const cancel = (e) => {
-        // console.log(e);
-        message.error('Click on No');
-      };
     
-
-    //agregar tooltip o alguna forma de mostrar texto sobre la accion
     return(
-        <Card  
-            className='card-pet'
+        <Card 
+            className='appCard'
             hoverable
+            style={{width: 300}}
             cover={<img alt='required text' src={img}></img>}
             actions={[
             <EyeOutlined key="edit" />,
             <Popconfirm
                         title="¿Está seguro que desea borrar la mascota?"  
                         onConfirm={confirm}
-                        onCancel={cancel}
                         okText="Si"
                         cancelText="No"
                         placement="top"

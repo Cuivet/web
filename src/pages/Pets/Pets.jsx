@@ -1,4 +1,4 @@
-import { Col, Row, Button, Drawer, Tooltip, Typography } from 'antd';
+import { Col, Row, Button, Drawer, Tooltip, Typography, Divider } from 'antd';
 import React, { useState } from 'react';
 import paw from "../../assets/img/png/paw.png";
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -35,9 +35,7 @@ export default function Pets(){
         if (pets.length) {
             pets.forEach(pet => {
                 renderPetList.push(
-                    <Col xs={{ span: 24}} lg={{ span: 6 }}>
-                        <CardPet item={pet.id }title={pet.name} img={paw} description={getAgeContent(pet.birth)}></CardPet>
-                    </Col>
+                    <CardPet item={pet.id} title={pet.name} img={paw} description={getAgeContent(pet.birth)}></CardPet>
                 )
             });
         }
@@ -57,35 +55,30 @@ export default function Pets(){
     };
 
     return (
-        <div>
-        <Row >
-            <Col span={24} offset={""}>
-                <Title className='pets__title'>
-                Mascotas 
-                {/* <Affix offsetTop={80}> */}
-                    <Tooltip title="Agregar mascota" placement='right'>
-                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
+        <>
+            <Row align="middle">
+                <Col span={23}>
+                    <Title className='appTitle'>Mascotas</Title>
+                </Col>
+                <Col span={1}>
+                    <Tooltip title="Asociar Veterinario" placement='right'>
+                    <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>
-                {/* </Affix> */}
-                </Title>
-            </Col>
-        </Row>
-        
-        
-        <Drawer
-            title="Registrar nueva mascota"
-          
-            onClose={onClose}
-            visible={visible}
-            bodyStyle={{
-            paddingBottom: 80,
-            }}
-        ><RegisterPetForm registeredPet={registeredPet}/></Drawer>
+                </Col>
+            </Row>
 
-        <Row gutter={16} >
-            <Pet></Pet>
-        </Row> 
-        </div>
+            <Row>
+                <Divider></Divider>
+            </Row>
+            
+            <Drawer title="Registrar nueva mascota" onClose={onClose} visible={visible} bodyStyle={{paddingBottom: 80}}>
+                        <RegisterPetForm registeredPet={registeredPet}/>
+            </Drawer>
+
+            <Row>
+                <Pet></Pet>
+            </Row> 
+        </>
     );
 };
 

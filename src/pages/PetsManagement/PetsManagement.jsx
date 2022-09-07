@@ -1,5 +1,4 @@
 import React from 'react';
-import './PetsManagement.scss';
 import { Table } from 'antd';
 import { Button } from 'antd';
 import { Col, Row, Divider } from 'antd';

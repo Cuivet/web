@@ -15,7 +15,11 @@ import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
 import Pets from "../pages/Pets/Pets";
 import PetsManagement from "../pages/PetsManagement/PetsManagement";
-import Error404 from "../pages/Error/Error404/Error404"
+import Error404 from "../pages/Error/Error404/Error404";
+import VetsAssociations from "../pages/VetsAssociations";
+import VeterinariesAssociations from "../pages/VeterinariesAssociations";
+import VeterinariesManagement from "../pages/VeterinariesManagement";
+import Vets from "../pages/Vets";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -58,6 +62,26 @@ const routesAdmin = [
     {
         path: "/pets-management",
         component: PetsManagement,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/vets-associations",
+        component: VetsAssociations,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/veterinaries-management",
+        component: VeterinariesManagement,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/veterinaries-associations",
+        component: VeterinariesAssociations,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/vets",
+        component: Vets,
         layout: LayoutAdmin,
     },
     {

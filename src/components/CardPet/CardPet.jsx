@@ -1,19 +1,13 @@
-import React, {useState} from "react";
-import {Card,Modal, Avatar,Popconfirm, message} from 'antd';
+import React from "react";
+import { Card, Avatar, Popconfirm, message } from 'antd';
 import Meta from "antd/lib/card/Meta";
-import { EyeOutlined, SettingOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-
-import {Items} from '../../pages/Settings/UserSettings'
-
-import {deletePet} from "../../services/pet.service"
-import './CardPet.scss'
+import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { deletePet } from "../../services/pet.service";
+import './CardPet.scss';
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardPet(props){
-
-
     const {img, title, description, avatar, item} = props;
-
 
     function AvatarGroup(){
         const group =[]
@@ -54,7 +48,7 @@ export default function CardPet(props){
         <Card  
             className='card-pet'
             hoverable
-            cover={<img src={img}></img>}
+            cover={<img alt='required text' src={img}></img>}
             actions={[
             <EyeOutlined key="edit" />,
             <Popconfirm

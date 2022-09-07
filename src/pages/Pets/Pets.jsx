@@ -1,25 +1,21 @@
-import { Card, Col, Row, Button, Drawer, Space, Tooltip, Affix, Typography } from 'antd';
-import React, {useState, useEffect} from 'react';
+import { Col, Row, Button, Drawer, Tooltip, Typography } from 'antd';
+import React, { useState } from 'react';
 import paw from "../../assets/img/png/paw.png";
-import pet1 from "../../assets/img/png/pet2.png";
-import pet2 from "../../assets/img/png/pet3.png"
-import { EditOutlined, DeleteOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import RegisterPetForm from '../../components/RegisterPetForm';
 import CardPet from '../../components/CardPet';
-import User from '../../assets/img/png/tutorUsuario.png';
-import {getAllPets, getPetsByTutorId} from '../../services/pet.service';
-
+import { getPetsByTutorId } from '../../services/pet.service';
 import './Pets.scss';
 
 const { Title } = Typography;
 
 export default function Pets(){
-
+    const [isInit,setIsInit] = useState(false);
     const [pets,setPets] = useState([]);
-    
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
-    if (!pets.length) {
+    if (!isInit) {
+        setIsInit(true);
         getPetsByTutorId(profile.tutor.id).then(response => {
             setPets(response);
         });
@@ -55,6 +51,11 @@ export default function Pets(){
         return age+" anios";
     }
 
+    const registeredPet = () => {
+        setIsInit(false);
+        setVisible(false);
+    };
+
     return (
         <div>
         <Row >
@@ -63,7 +64,7 @@ export default function Pets(){
                 Mis Mascotas 
                 {/* <Affix offsetTop={80}> */}
                     <Tooltip title="Agregar mascota" placement='right'>
-                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined  />} />
+                        <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>
                 {/* </Affix> */}
                 </Title>
@@ -79,7 +80,7 @@ export default function Pets(){
             bodyStyle={{
             paddingBottom: 80,
             }}
-        ><RegisterPetForm /></Drawer>
+        ><RegisterPetForm registeredPet={registeredPet}/></Drawer>
 
         <Row gutter={16} >
             <Pet></Pet>

@@ -2,9 +2,7 @@ import React from "react";
 import {Layout, Row, Col, Descriptions, Typography } from "antd";
 import CardMenu from "../../components/CardMenu";
 import clipboard from "../../assets/img/jpg/clipboard.jpg";
-import { getProfile } from "../../services/user.service";
-
-import '../Settings/UserSettings/UserSettings.scss'
+import '../Settings/UserSettings/UserSettings.scss';
 
 const {Title} = Typography;
 

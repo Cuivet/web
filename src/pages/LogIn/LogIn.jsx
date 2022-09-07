@@ -5,8 +5,7 @@ import RegisterForm from "../../components/RegisterForm";
 import SignInForm from "../../components/SignInForm/SignInForm";
 import { getProfile } from '../../services/user.service';
 import './LogIn.scss';
-import { Link, Route, Navigate, Routes,Redirect } from "react-router-dom";
-import MenuWeb from "../MenuWeb/MenuWeb";
+import { Navigate } from "react-router-dom";
 
 export default function LogIn(){
     const [isLogged, setLogStatus] = useState(sessionStorage.getItem('token') ? sessionStorage.getItem('token') : null);

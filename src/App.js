@@ -1,7 +1,6 @@
 import './App.scss';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import routes from './config/routes';
-import AdminHome from './pages/Admin';
 
 // import { DatePicker, Card } from 'antd';
 //import{BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
@@ -29,6 +28,7 @@ function App() {
     </Router>
   );
 }
+/*
 function RouterWithSubRoutes(route){
   console.log(route);
   return (
@@ -43,6 +43,7 @@ function RouterWithSubRoutes(route){
     </Routes>     
   );
 }
+*/
 // function Home(){
 //   return <h2>Estamos en el componente home</h2>;
 // }

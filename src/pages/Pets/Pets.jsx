@@ -67,9 +67,7 @@ export default function Pets(){
                 </Col>
             </Row>
 
-            <Row>
-                <Divider></Divider>
-            </Row>
+            <Divider></Divider>
             
             <Drawer title="Registrar nueva mascota" onClose={onClose} visible={visible} bodyStyle={{paddingBottom: 80}}>
                         <RegisterPetForm registeredPet={registeredPet}/>

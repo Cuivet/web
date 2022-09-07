@@ -24,9 +24,7 @@ export default function VeterinariesAssociations(){
                 </Col>
             </Row>
 
-            <Row>
-                <Divider></Divider>
-            </Row>
+            <Divider></Divider>
 
             <Row>
                 <Card   className='appCard'

@@ -1,9 +1,6 @@
 import React from 'react';
-import { Table } from 'antd';
-import { Button } from 'antd';
-import { Col, Row, Divider } from 'antd';
-import { Input } from 'antd';
-import { Select, Typography } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip } from 'antd';
+import { NodeIndexOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { Title } = Typography;
 export default function PetsManagement(){
@@ -74,17 +71,17 @@ export default function PetsManagement(){
     return (
         <>   
             <Row align="middle">
-                <Col xs={{span:24}} md={{span:15}}>
+                <Col span={23}>
                     <Title className='appTitle'>Mis pacientes asociados</Title>
                 </Col>
-                <Col xs={{span:24}} md={{span:9}}>
-                    <Button className='appButton' type="primary">Asociar nueva mascota</Button>
+                <Col span={1}>
+                    <Tooltip title="Asociar nueva mascota" placement='right'>
+                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>}/>
+                    </Tooltip>
                 </Col>
             </Row>
 
-            <Row>
-                <Divider orientation="left">Filtros</Divider>
-            </Row>
+            <Divider orientation="left">Filtros</Divider>
             
             <Row gutter={[16, 16]}>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>

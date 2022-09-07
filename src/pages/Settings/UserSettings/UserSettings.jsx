@@ -104,9 +104,9 @@ export default function UserSettings(){
                             }
                         </Col>
                     </Row>
-                    <Row>
-                        <Divider></Divider>
-                    </Row>
+
+                    <Divider></Divider>
+                    
                     <Row>
                         <Col xs={{ span: 24}} lg={{ span:12 }}>
                             <Form className="register-form" layout="vertical"  onFinish={""} onChange={""}> 

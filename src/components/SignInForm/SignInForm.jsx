@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Checkbox, Typography, Space, Modal } from 'antd';
+import { Button, Form, Input, Checkbox, Typography, Space, Modal, Row, Col } from 'antd';
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';

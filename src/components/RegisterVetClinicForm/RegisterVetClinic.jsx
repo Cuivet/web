@@ -1,10 +1,41 @@
 import React, {useState} from "react";
 import { minLengthValidation, numberValidation } from '../../utils/formValidation';
-import {Row, Col, Form, Button, Dragger, notification, message, Input, DatePicker } from 'antd';
+import {Row, Col, Form, Button, Upload, notification, message, Input, DatePicker } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
 
 export default function RegisterVetClinicForm(){
+    const {Dragger} = Upload;
+
+    var clinicName;
+
+    const fields = {
+        name: `clinic`, //le dejamos el nombre con el que lo sube ?
+        multiple: false,
+        maxCount:1,
+        accept: 'image/png, image/jpeg',
+        method: 'post',
+        action: 'localhost', //creo es para llamar el endpoint... 
+      
+        onChange(info) {
+          const { status } = info.file;
+      
+          if (status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+      
+          if (status === 'done') {
+            message.success(`${info.file.name} Imagen subida con exito.`);
+            //aca iria lo del back para guardar la img
+          } else if (status === 'error') {
+            message.error(`${info.file.name} La imagen no se ha podido subir`);
+          }
+        },
+      
+        onDrop(e) {
+          console.log('Archivo eliminado', e.dataTransfer.files);
+        },
+      };
 
     const [input, setInput]= useState({
         name:null,
@@ -46,7 +77,7 @@ export default function RegisterVetClinicForm(){
 
         if(type === "text"){
             if(name === "name"){
-                petName = value;
+                clinicName = value;
             }
             setFormValid({ ...formValid, [name]:(e.target)});
         };
@@ -58,7 +89,7 @@ export default function RegisterVetClinicForm(){
             });
         };
 
-        setInput({...input, tutorId: tutorId});
+        setInput({...input});
         
     };
     const register = e => {
@@ -114,7 +145,7 @@ export default function RegisterVetClinicForm(){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <DatePicker disabledDate={disabledDate} name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} />
+                        {/* <DatePicker  name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} /> */}
                     </Form.Item>
                 </Col>
                 <Col span={24}>
@@ -129,7 +160,7 @@ export default function RegisterVetClinicForm(){
                             >
                                 {fileList.length < 5 && '+ Cargar'}
                             </Upload> */}
-                            <Dragger {...props}>
+                            <Dragger {...fields}>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
                                 </p>

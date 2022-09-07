@@ -5,6 +5,7 @@ import clinic from '../../../assets/img/jpg/clinic.jpg';
 
 import '../UserSettings/UserSettings.scss'
 import CardPet from "../../../components/CardPet";
+import RegisterVetClinicForm from "../../../components/RegisterVetClinicForm/RegisterVetClinic";
 const {Title}= Typography;
 export default function VetClinicSettings(){
     const clinic ={
@@ -58,7 +59,7 @@ export default function VetClinicSettings(){
             bodyStyle={{
             paddingBottom: 80,
             }}
-        ></Drawer>
+        ><RegisterVetClinicForm></RegisterVetClinicForm></Drawer>
         <Row>
             <VetClinic></VetClinic>
         </Row>

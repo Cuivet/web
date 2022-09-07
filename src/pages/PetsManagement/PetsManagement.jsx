@@ -74,10 +74,10 @@ export default function PetsManagement(){
     return (
         <>   
             <Row align="middle">
-                <Col xs={{span:24}} md={{span:14}}>
-                    <Title className='pets__title'>Mis pacientes asociados</Title>
+                <Col xs={{span:24}} md={{span:15}}>
+                    <Title className='appTitle'>Mis pacientes asociados</Title>
                 </Col>
-                <Col xs={{span:24}} md={{span:10}}>
+                <Col xs={{span:24}} md={{span:9}}>
                     <Button className='appButton' type="primary">Asociar nueva mascota</Button>
                 </Col>
             </Row>

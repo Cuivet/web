@@ -11,9 +11,7 @@ import AdminHome from "../pages/Admin";
 //Cuivet pages
 import LogIn from "../pages/LogIn/LogIn";
 import Menu from "../pages/MenuWeb/MenuWeb";
-import Settings from "../pages/Settings/Settings";
 import UserSettings from "../pages/Settings/UserSettings";
-import VetClinicSettings from "../pages/Settings/VetClinicSettings/VetClinicSettings";
 import Pets from "../pages/Pets/Pets";
 import PetsManagement from "../pages/PetsManagement/PetsManagement";
 import Error404 from "../pages/Error/Error404/Error404";
@@ -44,20 +42,8 @@ const routesAdmin = [
         layout: LayoutAdmin,
     },
     {
-        path: "/settings",
-        component: Settings,
-        layout: LayoutAdmin,
-
-    },
-    {
         path: "/settings/user",
         component: UserSettings,
-        layout: LayoutAdmin,
-
-    },
-    {
-        path: "/settings/vetclinic",
-        component: VetClinicSettings,
         layout: LayoutAdmin,
 
     },

@@ -45,8 +45,20 @@ export default function Pets(){
     function getAgeContent(birth){
         var today = new Date();
         var birthDate = new Date(birth);
-        var age = today.getFullYear() - birthDate.getFullYear();    
-        return age+" anios";
+        var years = today.getFullYear() - birthDate.getFullYear();    
+        if(years > 0){
+            if (years === 1) {
+                return years+" año";
+            }
+            return years+" años";
+        }else {
+            var months = today.getMonth() - birthDate.getMonth();
+            if (months ===1){
+                return months + " mes"
+
+            }
+            return months + " meses"
+        }
     }
 
     const registeredPet = () => {

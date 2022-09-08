@@ -22,25 +22,62 @@ export function registerPet(data){
 }
 
 export function getPetsByTutorId(tutorId) {
-    const url = `${basePATH}/pet/all/${tutorId}`;
-    return fetch(url).then(response => {
-        return response.json();
-    }).catch((err) => {
-        return err;
-    });
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/pet/allByTutorId/${tutorId}`,
+        timeout: 1000 * 5, // Wait for 5 seconds
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+        .catch((err) => {
+            return err;
+        });
 };
 
-export function deletePet(petId){
-    const url = `${basePATH}/pet/${petId}` 
-    const params ={
-        method: "DELETE",
+
+export function deletePet(petId) {
+    var axios = require('axios');
+    return axios({
+        method: "delete",
+        url: `${basePATH}/pet/${petId}`,
+        timeout: 1000 * 5, // Wait for 5 seconds
         headers: {
-            "Content-Type":"application/json",
-        },
-    };
-    fetch(url, params).then(response => {
-      return response.json();
-    }).catch((err) => {
-        return err;
-    });
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+        .catch((err) => {
+            return err;
+        });
 };
+
+export function getPet(petId) {
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/pet/${petId}`,
+        timeout: 1000 * 5, // Wait for 5 seconds
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token')
+        }
+        })
+        .then((response) => {
+            return response;
+        })
+        .catch((err) => {
+            return err;
+        });
+  }

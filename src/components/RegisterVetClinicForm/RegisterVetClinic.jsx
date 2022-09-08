@@ -145,7 +145,7 @@ export default function RegisterVetClinicForm(){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        {/* <DatePicker  name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} /> */}
+                    <Input type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Matricula MVR" className="register-pet-form__input" onSelect={inputValidation}/>
                     </Form.Item>
                 </Col>
                 <Col span={24}>

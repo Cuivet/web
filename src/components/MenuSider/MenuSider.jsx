@@ -61,7 +61,7 @@ export default function MenuSider(props){
                         </Menu.Item>
 
                         <Menu.Item key="4">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/veterinaries-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Veterinarios Asociados </span>
                             </Link>
@@ -86,14 +86,14 @@ export default function MenuSider(props){
                         </Menu.Item>
 
                         <Menu.Item key="7">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/pets-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Pacientes </span>
                             </Link>
                         </Menu.Item>
 
                         <Menu.Item key="8">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/vets-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Veterinarias Asociadas </span>
                             </Link>
@@ -104,7 +104,7 @@ export default function MenuSider(props){
                 { vetOwner ? 
                     <>
                         <Menu.Item key="9">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/veterinaries-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Veterinarios </span>
                             </Link>

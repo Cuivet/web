@@ -1,7 +1,4 @@
 @import './scss/variables';
-// .App{
-//     color: red;
-// } 
 @import "~antd/dist/antd.css";
 @import "./scss/index.scss";
 
@@ -25,4 +22,52 @@
 }
 .ant-tooltip-arrow-content{
     background-color: $primary-color;
+}
+
+.appButton { 
+    width: 100%;
+    font-size: 0em+16px/$defaultFontSize;
+    background-color: $primary-color;
+    color: $font-light;
+    border-radius: 252px!important;
+    margin: 0;
+    &:hover{
+        background-color: $secondary-color!important;
+    }
+    &:focus, &:active{
+        background-color: $primary-color;   
+    }
+    @media (min-width: $media-breackpoint-up-sm) {
+        font-size: 0em+22px/$defaultFontSize;
+        height: 40px;
+    }
+    @media (min-width: $media-breackpoint-up-md) {
+        font-size: 0em+22px/$defaultFontSize;
+        margin-top: 0rem;
+    }
+}
+
+.appTitle {
+    margin: 0!important;
+    vertical-align: middle!important;
+    color: $primary-color!important;
+    font-size: 1.5rem!important;
+    @media (min-width: $media-breackpoint-up-sm) {
+        font-size: 2rem!important;
+    }
+    @media (min-width: $media-breackpoint-up-lg) {
+        font-size: 2.5rem!important;
+    }
+}
+
+.appCard {
+    margin-right: 15px;
+    margin-bottom: 15px;
+    @media (min-width: $media-breackpoint-up-lg) {
+        // max-height: ;
+    }
+}
+
+.full-width {
+    width: 100%;
 }

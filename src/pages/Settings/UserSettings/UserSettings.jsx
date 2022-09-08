@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import { Row, message, Popconfirm, Col,Typography, Button, Tooltip, Form, Input, Divider } from "antd";
-import { DeleteOutlined,ExclamationCircleOutlined,EditOutlined, UserOutlined, PhoneOutlined, SaveOutlined} from "@ant-design/icons";
-import {emailValidation, minLengthValidation,numberValidation} from '../../../utils/formValidation';
+import { Row, Col, Typography, Button, Tooltip, Form, Input, Divider, Popconfirm } from "antd";
+import { EditOutlined, UserOutlined, PhoneOutlined, SaveOutlined,ExclamationCircleOutlined, CloseCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { emailValidation, minLengthValidation, numberValidation } from '../../../utils/formValidation';
 
 import './UserSettings.scss'
 import ShowUser from "../../../components/ShowUser";
@@ -70,26 +70,15 @@ export default function UserSettings(){
     }
 
     function Edit(){
-        console.log("Hola")
         setEditable(true);
-        
     }
+
     function Save(){
-        // Pegarle al back y que cuando actualice setee el editable false y refreste el sessionStorage
         setEditable(false);
     }
-    //evento para borrar el usuario
-    const confirm = (e) => {
-        // console.log(e);
-        message.success('Click on Yes');
-      };
-      //evento para cancelar borrado del usuario
-      const cancel = (e) => {
-        // console.log(e);
-        message.error('Click on No');
-      };
-    function Delete(){
-        //De onda
+
+    function closeEditable(){
+        setEditable(false);
     }
 
     return (
@@ -109,15 +98,14 @@ export default function UserSettings(){
                     <>
                         <Popconfirm
                             title="Esta seguro que desea borrar el usuario?"
-                            onConfirm={confirm}
-                            onCancel={cancel}
+                            
                             okText="Si"
                             cancelText="No"
                             placement="bottom"
                             arrowPointAtCenter 
                             icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
                             <Tooltip title='Borrar usuario' placement="right" color={'#5B2569'}>
-                                <Button type="link" className="description-item__button" icon={<DeleteOutlined /> } onClick={Delete}/>
+                                <Button type="link" className="description-item__button" icon={<DeleteOutlined /> }/>
                             </Tooltip> 
                         </Popconfirm> 
                     </>   
@@ -172,6 +160,5 @@ export default function UserSettings(){
     </>
         : null}
         </>
-        
     )
 };

@@ -1,9 +1,12 @@
-import React from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip } from 'antd';
+import React, {useState} from 'react';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { Title } = Typography;
+
 export default function PetsManagement(){
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [generatedCode, setGeneratedCode] = useState(false);
 
     const columns = [
         {
@@ -68,6 +71,19 @@ export default function PetsManagement(){
         console.log('params', pagination, filters, sorter, extra);
     };
 
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    
+    const generateCode = () => {
+        setGeneratedCode(true);
+    };
+
+    const hideModal = () => {
+        setIsModalOpen(false);
+        setGeneratedCode(false);
+    };
+
     return (
         <>   
             <Row align="middle">
@@ -76,7 +92,7 @@ export default function PetsManagement(){
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar nueva mascota" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>}/>
+                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModal}/>
                     </Tooltip>
                 </Col>
             </Row>
@@ -114,6 +130,37 @@ export default function PetsManagement(){
             
             <Divider orientation="left"></Divider>
             <Table columns={columns} dataSource={data} onChange={onChange} />
+
+            <Modal  title="Generar código de asociacion con mascota"
+                    visible={isModalOpen}
+                    onCancel={hideModal}
+                    footer={[
+                        <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
+                            Cancelar
+                        </Button>,
+                        <>
+                            {
+                            generatedCode ? 
+                            <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
+                                Aceptar
+                            </Button>
+                            :
+                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal" > 
+                                Generar
+                            </Button>
+                            }
+                        </>
+                    ]}>
+                {
+                generatedCode ?
+                <div>El código generado es '20202461'. El mismo expirará en 10 minutos</div>
+                :
+                <>
+                    <div>Ingrese el ID de la mascota a asociar</div>
+                    <Input type="number" name="phone" placeholder="ID de Mascóta"/>
+                </>
+                }
+            </Modal>
         </>
     );
 };

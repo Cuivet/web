@@ -4,7 +4,7 @@ import {emailValidation, minLengthValidation,numberValidation} from '../../utils
 import { signUpApi } from "../../services/user.service";
 
 import './RegisterForm.scss';
-import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined} from "@ant-design/icons";
+import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined} from "@ant-design/icons";
 import Terms from "../Terms/Terms";
 
 
@@ -22,7 +22,8 @@ export default function RegisterForm(props){
         phone:null,
         profile: 'Seleccione su Perfil',
         mp: null,
-        privacyPolicy:false
+        privacyPolicy:false,
+        address: "",
     });
 
     //validaciones en el formulario
@@ -36,7 +37,8 @@ export default function RegisterForm(props){
         phone:false,
         profile: false,
         mp: false,
-        privacyPolicy:false
+        privacyPolicy:false,
+        address: false
     });
 
     //setea los valores del form a la variable input
@@ -96,7 +98,8 @@ export default function RegisterForm(props){
             name: input.name,
             lastName: input.lastName,
             dni: input.dni,
-            phone: input.phone
+            phone: input.phone,
+            address: input.address
         };
         const user = {
             email: input.email,
@@ -108,7 +111,7 @@ export default function RegisterForm(props){
                 completeProfile = {person, user, tutor: {}}
                 break;
             case 'veterinary':
-                completeProfile = {person, user, veterinary: {}}
+                completeProfile = {person, user, veterinary: {mp:input.mp}}
                 break;
             case 'vetOwner':
                 completeProfile = {person, user, vetOwner: {}}
@@ -124,9 +127,10 @@ export default function RegisterForm(props){
         const dniVal = input.dni;
         const phoneVal = input.phone;
         const profileVal = input.profile;
+        const addressVal = input.address;
         // const privacyPolicyVal = input.privacyPolicy;
 
-        if(!emailVal || !passwordVal ||!repeatPasswordVal|| !nameVal|| !lastNameVal|| !phoneVal|| !dniVal|| !profileVal){
+        if(!emailVal || !passwordVal ||!repeatPasswordVal|| !nameVal|| !lastNameVal|| !phoneVal|| !dniVal|| !profileVal || !addressVal){
             notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
@@ -153,8 +157,7 @@ export default function RegisterForm(props){
                     });
                 
                 resetForm();
-            }
-            
+            }      
         }
         setIsModalVisible(false);
     };
@@ -176,7 +179,8 @@ export default function RegisterForm(props){
                 phone:null,
                 profile: 'Seleccione su Perfil',
                 mp: null,
-                privacyPolicy:false
+                privacyPolicy:false,
+                address: "",
             });
             setFormValid({
                 email: false,
@@ -188,7 +192,8 @@ export default function RegisterForm(props){
                 phone:false,
                 profile: false,
                 mp: false,
-                privacyPolicy:false
+                privacyPolicy:false,
+                address:false,
             })
         }
     }
@@ -253,6 +258,9 @@ export default function RegisterForm(props){
                 <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Teléfono" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
             </Form.Item>
             <Form.Item>
+                <Input prefix={<HomeOutlined className="site-form-item-icon" />} type="text" name="address" onChange={inputValidation} value={input.address} placeholder="Dirección" className="register-form__input" onSelect={inputValidation}/>
+            </Form.Item>
+            <Form.Item>
                 <Select name="profile" placeholder="Seleccione su perfil" className="register-form__select" value={input.profile} onChange={onProfileChange} allowClear > 
                     <Select.Option value="tutor" >Tutor</Select.Option>
                     <Select.Option value="veterinary">Veterinario</Select.Option>
@@ -260,7 +268,7 @@ export default function RegisterForm(props){
                 </Select>
             </Form.Item>  
             {vet ? <div> <Form.Item id="matricula">
-                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Numero de Matricula" className="register-form__input" onSelect={inputValidation}/>
+                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Número de Matrícula" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item></div>
             : null}          
             

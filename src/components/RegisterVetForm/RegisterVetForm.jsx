@@ -1,16 +1,16 @@
 import React, {useState} from "react";
-import { minLengthValidation, numberValidation } from '../../utils/formValidation';
-import {Row, Col, Form, Button, Upload, notification, message, Input, DatePicker } from 'antd';
+import { numberValidation } from '../../utils/formValidation';
+import {Row, Col, Form, Button, Upload, notification, message, Input } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
+import { registerVet } from '../../services/vet.service';
 
-export default function RegisterVetClinicForm(){
+export default function RegisterVetForm(props){
     const {Dragger} = Upload;
 
-    var clinicName;
-
+    var vetName;
     const fields = {
-        name: `clinic`, //le dejamos el nombre con el que lo sube ?
+        name: `vet`, //le dejamos el nombre con el que lo sube ?
         multiple: false,
         maxCount:1,
         accept: 'image/png, image/jpeg',
@@ -36,19 +36,23 @@ export default function RegisterVetClinicForm(){
           console.log('Archivo eliminado', e.dataTransfer.files);
         },
       };
+    
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
 
     const [input, setInput]= useState({
         name:null,
-        matricula: null,
+        mp: null,
+        phone: null,
+        vetOwnerId: profile.vetOwner.id,
         address:null,
     });
 
     const [formValid, setFormValid] = useState({
         name:false,
-        matricula: false,
+        mp: false,
+        phone: false,
         address:false,
     });
-    //ver si va
     const changeForm = e =>{
         
         if(e.target.name === "sex"){
@@ -77,7 +81,7 @@ export default function RegisterVetClinicForm(){
 
         if(type === "text"){
             if(name === "name"){
-                clinicName = value;
+                vetName = value;
             }
             setFormValid({ ...formValid, [name]:(e.target)});
         };
@@ -93,25 +97,32 @@ export default function RegisterVetClinicForm(){
         
     };
     const register = e => {
-        // console.log(input);
+        const newVet = {
+            name: input.name,
+            mp: null,
+            address:input.address,
+            phone: input.phone,
+        }
         const nameVal = input.name;
-        const matriculaVal = input.matricula;
         const addressVal = input.address;
+        const phoneVal = input.phone;
+        
 
-        if(!nameVal || !matriculaVal || !addressVal){
+        if(!nameVal || !addressVal || !phoneVal){
             notification['error']({
                 message: "Todos los campos son obligatorios",
-                description: "Debe completar todos los campos para poder registrar una clinica",
+                description: "Debe completar todos los campos para poder registrar una Clinica",
                 placement: "top"
             })
         } else{
-                //console.log(tutorId);
-                const res = //registerPet(input);
-                notification['success']({
-                    message: "Clinica creada correctamente",
-                    placement: "top"
-                })
-                resetForm();
+                registerVet(newVet)
+                    .then( res => {
+                        resetForm();
+                        notification['success']({
+                            message: "Clinica creada correctamente",
+                            placement: "top"
+                        });
+                })               
 
             }
     };
@@ -124,12 +135,12 @@ export default function RegisterVetClinicForm(){
 
             setInput({
                 name:null,
-                matricula: null,
+                mp: null,
                 address:null,
             });
             setFormValid({
                 name:false,
-                matricula: false,
+                mp: false,
                 address:false,
             })
         }
@@ -145,9 +156,19 @@ export default function RegisterVetClinicForm(){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                    <Input type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Matricula MVR" className="register-pet-form__input" onSelect={inputValidation}/>
+                    <Input type="number" name="phone" onChange={inputValidation} value={input.phone} placeholder="Telefono" className="register-pet-form__input" onSelect={inputValidation}/>
                     </Form.Item>
                 </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Input type="text" name="address" onChange={inputValidation} value={input.address} placeholder="Dirección " className="register-pet-form__input" onSelect={inputValidation}/>
+                    </Form.Item>
+                </Col>
+                {/* <Col span={24}>
+                    <Form.Item>
+                    <Input type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Matricula MVR" className="register-pet-form__input" onSelect={inputValidation}/>
+                    </Form.Item>
+                </Col> */}
                 <Col span={24}>
                     <Form.Item>
                         <ImgCrop rotate>
@@ -178,5 +199,5 @@ export default function RegisterVetClinicForm(){
                 </Col>  
             </Row>
         </Form>
-    )
+    );
 }

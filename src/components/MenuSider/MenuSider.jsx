@@ -111,7 +111,7 @@ export default function MenuSider(props){
                         </Menu.Item>
                         
                         <Menu.Item key="10">
-                            <Link to={"/settings/vetclinic"} className='admin-sider__item'>                      
+                            <Link to={"/vets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Clinicas </span>
                             </Link>

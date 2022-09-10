@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Divider, Row, Typography } from "antd";
+import { Col, Divider, Row, Typography, Tooltip } from "antd";
 import {CheckOutlined, EditOutlined} from "@ant-design/icons";
 
 import './ShowUser.scss'
@@ -11,37 +11,43 @@ export default function ShowUser(props){
     const {name, lastName, dni, phone,address, email} = props;
     return(
         <Row>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
+
+            <Col xs={{span: 24}}>
                 {/* <Title level={4}>Nombre: </Title> */}
-                <Divider orientation="left" plain>Nombre</Divider>
-                <Paragraph 
-                    className="show-item" 
-                    type="secondary" 
-                    level={5} 
-                    editable={{
-                        tooltip: `Editar Nombre`,
-                        enterIcon: <EditOutlined />,
-                        triggerType:['text']}}>{name}</Paragraph>
+                <Divider orientation="left">Nombre</Divider>
+                <Tooltip title="Haz click aquí para editar">
+                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text']}}>{name}</Paragraph>
+                </Tooltip>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
+            <Col xs={{span: 24}}>
                 <Divider orientation="left">Apellido</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{lastName}</Paragraph>
+                <Tooltip title="Haz click aquí para editar">
+                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text']}}>{lastName}</Paragraph>
+                </Tooltip>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Telefono</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{phone}</Paragraph>
+            <Col xs={{span: 24}}>
+                <Divider orientation="left">Teléfono</Divider>
+                <Tooltip title="Haz click aquí para editar">
+                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text']}}>{phone}</Paragraph>
+                </Tooltip>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">D.N.I.</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{dni}</Paragraph>
+            <Col xs={{span: 24}}>
+                <Divider orientation="left">DNI</Divider>
+                <Tooltip title="Haz click aquí para editar">
+                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text']}}>{dni}</Paragraph>
+                </Tooltip>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Direccion</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{address}</Paragraph>
+            <Col xs={{span: 24}}>
+                <Divider orientation="left">Dirección</Divider>
+                <Tooltip title="Haz click aquí para editar">
+                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text']}}>{address}</Paragraph>
+                </Tooltip>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Email</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{email}</Paragraph>
+            <Col xs={{span: 24}}>
+            <Divider orientation="left">Correo Electrónico</Divider>
+                <Tooltip title="Haz click aquí para editar">
+                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text']}}>{email}</Paragraph>
+                </Tooltip>
             </Col>
         </Row>
     )

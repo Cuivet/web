@@ -3,7 +3,7 @@
 .show-item{
     height: 30px;
     &:hover{
-        background-color: beige!important;
+        background-color: $third-color!important;
         color: $primary-color!important;
         cursor: pointer;
     }

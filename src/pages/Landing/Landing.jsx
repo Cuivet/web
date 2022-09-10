@@ -1,6 +1,5 @@
 import { Col, Row, Button } from "antd";
 import React from "react";
-//import Home from "../../components/Home";
 import CUIVET_logo from '../../assets/img/png/logo2.png'
 import fondo from '../../assets/img/png/fondo3.jpg'
 import { Link } from "react-router-dom";
@@ -39,13 +38,6 @@ export default function Landing() {
                     </Col>
                 </Row>
             </section>
-            {/* <section>
-                <Row>
-                    <Col span={24}>
-                        <h1> aca va algo pero no se que hola </h1>
-                    </Col>
-                </Row>
-            </section> */}
         </div>
 
     );

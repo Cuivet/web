@@ -23,6 +23,12 @@
 .ant-tooltip-arrow-content{
     background-color: $primary-color;
 }
+.ant-pagination-item-active {
+    border-color: $primary-color!important;
+    a{
+        color: $primary-color!important;
+    }
+}
 
 .appButton { 
     width: 100%;
@@ -31,11 +37,14 @@
     color: $font-light;
     border-radius: 252px!important;
     margin: 0;
+    
     &:hover{
         background-color: $secondary-color!important;
+        color: $primary-color!important;
     }
     &:focus, &:active{
-        background-color: $primary-color;   
+        background-color: $secondary-color!important;   
+        color: $font-light!important;
     }
     @media (min-width: $media-breackpoint-up-sm) {
         font-size: 0em+22px/$defaultFontSize;
@@ -65,6 +74,14 @@
     margin-bottom: 15px;
     @media (min-width: $media-breackpoint-up-lg) {
         // max-height: ;
+    }
+}
+
+.appTableButton{
+    color: $primary-color!important;
+
+    &:hover{
+        color: $secondary-color!important;
     }
 }
 

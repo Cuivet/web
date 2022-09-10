@@ -53,7 +53,7 @@ export default function Vets(){
          if (vets.length){
              vets.forEach(vet => {
                 renderVetList.push(                     
-                         <CardPet item={vet.id }title={vet.name} img={redcross} description={vet.address}></CardPet>
+                         <CardPet item={vet.id }title={vet.name} popTitle={"¿Está seguro que desea borrar la clinica?"} img={redcross} description={vet.address}></CardPet>
                    
                 )});
          };

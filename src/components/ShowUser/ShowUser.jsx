@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Divider, Row, Typography } from "antd";
+import { Col, Divider, Row, Typography, Tooltip } from "antd";
 import {CheckOutlined, EditOutlined} from "@ant-design/icons";
 
 import './ShowUser.scss'
@@ -14,6 +14,7 @@ export default function ShowUser(props){
             <Col xs={{span: 24}} lg={{span:12, offset:6}}>
                 {/* <Title level={4}>Nombre: </Title> */}
                 <Divider orientation="left" plain>Nombre</Divider>
+                <Tooltip title="Editar">
                 <Paragraph 
                     className="show-item" 
                     type="secondary" 
@@ -22,6 +23,8 @@ export default function ShowUser(props){
                         tooltip: `Editar Nombre`,
                         enterIcon: <EditOutlined />,
                         triggerType:['text']}}>{name}</Paragraph>
+                </Tooltip>
+                
             </Col>
             <Col xs={{span: 24}} lg={{span:12, offset:6}}>
                 <Divider orientation="left">Apellido</Divider>

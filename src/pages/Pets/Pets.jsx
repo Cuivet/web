@@ -35,7 +35,7 @@ export default function Pets(){
         if (pets.length) {
             pets.forEach(pet => {
                 renderPetList.push(
-                    <CardPet item={pet.id} title={pet.name} img={paw} description={getAgeContent(pet.birth)}></CardPet>
+                    <CardPet item={pet.id} title={pet.name} popTitle={"¿Está seguro que desea borrar la mascota?" } img={paw} description={getAgeContent(pet.birth)}></CardPet>
                 )
             });
         }

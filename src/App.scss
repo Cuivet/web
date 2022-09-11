@@ -29,13 +29,19 @@
         color: $primary-color!important;
     }
 }
-
+.ant-typography-copy{
+    color: $secondary-color!important;
+}
+.ant-picker-focused {
+    border-color: $secondary-color!important;
+    box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);
+}
 .appButton { 
     width: 100%;
     font-size: 0em+16px/$defaultFontSize;
     background-color: $primary-color;
     color: $font-light;
-    border-radius: 252px!important;
+    border-radius: 252px!important; 
     margin: 0;
     
     &:hover{

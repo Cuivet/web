@@ -1,15 +1,25 @@
-import React from 'react';
+import React,{useState} from 'react';
 import DefaultAvatar from '../../assets/img/jpg/veterinaryAvatar.jpg';
 import Meta from "antd/lib/card/Meta";
-import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip } from 'antd';
-import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import { Col, Row, Typography, Button, Divider, Card,Input, Popconfirm,Modal, message, Tag, Tooltip, Select } from 'antd';
+import Icon,{ EyeOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 const { Title } = Typography;
 
 export default function VeterinariesAssociations(){
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const confirm = (e) => {
         message.success('Mascota borrada exitosamente.' );
       };
+
+      const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const hideModal = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <>   
@@ -19,7 +29,7 @@ export default function VeterinariesAssociations(){
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>}/>
+                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>}  onClick={showModal}/>
                     </Tooltip>
                 </Col>
             </Row>
@@ -39,7 +49,7 @@ export default function VeterinariesAssociations(){
                                             placement="top"
                                             arrowPointAtCenter 
                                             icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <DeleteOutlined key="delete" />
+                                        <Icon><SyncDisabledOutlinedIcon key="delete" /></Icon>
                                     </Popconfirm>,
                                 ]}>
                     <Meta   className=''
@@ -62,7 +72,7 @@ export default function VeterinariesAssociations(){
                                             placement="top"
                                             arrowPointAtCenter 
                                             icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <DeleteOutlined key="delete" />
+                                        <Icon><SyncDisabledOutlinedIcon key="delete" /></Icon>
                                     </Popconfirm>,
                                 ]}>
                     <Meta   className=''
@@ -73,6 +83,43 @@ export default function VeterinariesAssociations(){
                     <Tag color="purple">Roco</Tag>
                 </Card>
             </Row>
+            <Modal  title="Ingresar código de asociacion con Veterinario"
+                    visible={isModalOpen}
+                    onCancel={hideModal}
+                    footer={[
+                        <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
+                            Cancelar
+                        </Button>,                        
+                        <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
+                            Asociar
+                        </Button>
+                    ]}>               
+                
+                <>  
+                    <Row>
+                        <Typography.Title level={5}>Ingrese codigo del Veterinario a asociar:</Typography.Title>
+                    </Row>
+                    <Row>
+                        <Input type="number" name="mp" placeholder="Codigo de asociacion"/>
+                    </Row>
+                    <Row>
+                        <Typography.Title level={5}>Mascota a asociar:</Typography.Title>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Select placeholder='Mascotas' mode='multiple' showSearch allowClear style={{width:'100%',}}>
+                                <Select.Option key={1} value='0'>Lima</Select.Option>
+                                <Select.Option key={2} value='1'>Wendy</Select.Option>
+                                <Select.Option key={3} value='2'>Paton</Select.Option>
+                                <Select.Option key={4} value='3'>Roco</Select.Option>
+                            </Select>
+                        </Col>
+                        
+                    </Row>
+                    
+                </>
+                
+            </Modal>
             
         </>
     );

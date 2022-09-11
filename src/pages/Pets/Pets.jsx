@@ -70,7 +70,7 @@ export default function Pets(){
         <>
             <Row align="middle">
                 <Col span={23}>
-                    <Title className='appTitle'>Mascotas</Title>
+                    <Title className='appTitle'>Mis Mascotas</Title>
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>

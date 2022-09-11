@@ -195,7 +195,23 @@ export default function VeterinariesManagement(){
                     ]}>
                 {
                 generatedCode ?
-                <div>El código generado es '20202461'. El mismo expirará en 10 minutos</div>
+                <><Row>
+                        <Col span={24}>
+                            <Typography.Title level={4}>
+                                El código generado es:
+                            </Typography.Title>
+                        </Col>                        
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>20202461</Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+
+                        </Col>
+                    </Row>El mismo expirará en 10 minutos</>
                 :
                 <>
                     <div>Ingrese la matricula del Veterinario a asociar</div>

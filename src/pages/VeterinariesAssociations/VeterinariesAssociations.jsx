@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import DefaultAvatar from '../../assets/img/jpg/veterinaryAvatar.jpg';
 import Meta from "antd/lib/card/Meta";
-import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip, Modal, Input } from 'antd';
+import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip, Modal, Input, Select } from 'antd';
 import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import { getTemporalAssociationByCode } from '../../services/pet_association.service';
+import { register } from '../../services/pet_association.service';
+import { getPetsByTutorId } from '../../services/pet.service';
+const { Option } = Select;
 const { Title } = Typography;
 
 export default function VeterinariesAssociations(){
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [generatedCode, setTryToAsociateWithCode] = useState(false);
+    const [generatedCode, setGeneratedCode] = useState(false);
+    const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
+    const [petOptions, setPetOptions] = useState(null);
+    const [selectedPetIds, setSelectePetIds] = useState([]);
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
 
     const confirm = (e) => {
         message.success('Mascota borrada exitosamente.' );
@@ -18,12 +26,55 @@ export default function VeterinariesAssociations(){
     };
 
     const tryToAsociate = () => {
-        setTryToAsociateWithCode(true);
+        getTemporalAssociationByCode(generatedCode)
+            .then(temporalAsociation => {
+                getPetsByTutorId(profile.tutor.id).then(pets => {
+                    setCompleteTemporalAssociation(temporalAsociation);
+                    setPetOptions(generatePetOptions(pets));
+                });
+            });
     };
+
+    const createAsociation = () => {
+        const petAssociations = [];
+        selectedPetIds.forEach( petId => {
+            petAssociations.push({petId: Number(petId), veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id})
+        });
+        register(petAssociations)
+            .then(response => {
+                message.success('Asociacion establecida exitosamente');
+                refreshComponent();
+            });
+    }
+
+    function refreshComponent() {
+        setIsModalOpen(false);
+        setGeneratedCode(false);
+        setCompleteTemporalAssociation(null);
+        setPetOptions(null);
+        setSelectePetIds([]);
+    }
+
+    function generatePetOptions(pets) {
+        const renderPetOptions = [];
+        pets.forEach(function eachPet(pet){
+            renderPetOptions.push(<Option key={pet.id}>{pet.name}</Option>)
+        });
+        return renderPetOptions;
+    }
 
     const hideModal = () => {
         setIsModalOpen(false);
-        setTryToAsociateWithCode(false);
+        setGeneratedCode(null);
+        setCompleteTemporalAssociation(null);
+    };
+
+    const refreshCode = e =>{
+        setGeneratedCode(e.target.value);
+    };
+
+    const refreshSelectedPets = (value) => {
+        setSelectePetIds(value);
     };
 
     return (
@@ -91,36 +142,43 @@ export default function VeterinariesAssociations(){
 
             <Modal  title="Asociarse con un profesional"
                     visible={isModalOpen}
-                    onCancel={hideModal}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
                             Cancelar
                         </Button>,
                         <>
                             {
-                            generatedCode ? 
-                            <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
-                                Aceptar
+                            completeTemporalAssociation ? 
+                            <Button htmlType="submit" type="primary" onClick={createAsociation} className="register-form_button-ok-modal" disabled={selectedPetIds.length===0} > 
+                                Asociar
                             </Button>
                             :
                             <Button htmlType="submit" type="primary" onClick={tryToAsociate} className="register-form_button-ok-modal" > 
-                                Asociar
+                                Buscar
                             </Button>
                             }
                         </>
                     ]}>
                 {
-                generatedCode ?
+                completeTemporalAssociation ?
                 <>
-                    <div>¿Quiere generar esta asociacion?</div>
-                    <div>Profesional: Marcos Rivero</div>
-                    <div>Mascota: Lima (ID:2)</div>
-                    <div>Clínica: Veterinaria la Recta</div>
+                    <div>Seleccione que mascotas quiere asociar con el siguiente veterinario:</div>
+                    <div>Profesional: {completeTemporalAssociation.veterinaryData.person.name + ' ' + completeTemporalAssociation.veterinaryData.person.lastName}</div>
+                    <div>Clínica: -</div>
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '100%' }}
+                        placeholder="Seleccione las mascotas a asociar"
+                        onChange={refreshSelectedPets}
+                        >
+                        {petOptions}
+                    </Select>
                 </>
                 :
                 <>
                     <div>Ingrese código de asociacion brindado por el veterinario</div>
-                    <Input type="number" name="phone" placeholder="Código de asociacion"/>
+                    <Input type="number" name="phone" placeholder="Código de asociacion" onChange={refreshCode} />
                 </>
                 }
             </Modal>

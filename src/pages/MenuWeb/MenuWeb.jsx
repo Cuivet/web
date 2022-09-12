@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Row, Col, Descriptions, Typography } from "antd";
+import { Row, Col, Typography, Divider } from "antd";
 import CardMenu from "../../components/CardMenu";
 import clipboard from "../../assets/img/jpg/clipboard.jpg";
 import '../Settings/UserSettings/UserSettings.scss';
@@ -58,10 +58,10 @@ export default function MenuWeb(){
 
     return (
         <Row>
-            <Col xs={{ span: 24}} lg={{ span:12 ,offset:6 }}>
-                <Title className="description-item__title">Inicio</Title>
+            <Col span={24}>
+                <Title className="appTitle">Inicio</Title>
             </Col>
-            <Col  xs={{ span: 0}} lg={{ span:6 }}></Col>
+            <Divider></Divider>
             <Mod></Mod>
         </Row> 
         

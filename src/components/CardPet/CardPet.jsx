@@ -6,7 +6,7 @@ import { deletePet } from "../../services/pet.service";
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardPet(props){
-    const {img, title, description, avatar, item} = props;
+    const {img, title, description, avatar, item, popTitle, } = props;
 
     function AvatarGroup(){
         const group =[]
@@ -27,7 +27,7 @@ export default function CardPet(props){
     };
 
     const confirm = (e) => {
-        message.success('Mascota '+ title + ' borrada exitosamente.' );
+        message.success( title + ' borrada exitosamente.' );
         deletePet(item);
       };
     
@@ -40,7 +40,7 @@ export default function CardPet(props){
             actions={[
             <EyeOutlined key="edit" />,
             <Popconfirm
-                        title="¿Está seguro que desea borrar la mascota?"  
+                        title={popTitle} 
                         onConfirm={confirm}
                         okText="Si"
                         cancelText="No"

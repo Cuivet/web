@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
-import { registerTemporalAssociation } from '../../services/pet_association.service';
+import { registerTemporalAssociation, getAllByVeterinaryId } from '../../services/pet_association.service';
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -11,6 +11,45 @@ export default function PetsManagement(){
     const [tutorDni, setTutorDni] = useState(null);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [data, setData] = useState([]);
+    const [isInit, setIsInit] = useState(false);
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+
+    if(!isInit){
+        refreshComponent();
+        setIsInit(true);
+    }
+
+    function refreshComponent() {
+        getAllByVeterinaryId(profile.veterinary.id)
+            .then(associations => {
+                generateData(associations);
+            }
+        );
+        setIsModalOpen(false);
+        setGeneratedCode(false);
+        setTutorDni(null);
+        setCompleteTemporalAssociation(null);
+        setIsLoading(false);
+    }
+    
+    function generateData(associations){
+        var finalData = [];
+        associations.forEach(association => {
+            finalData.push(
+                {
+                    key: association.pet.id,
+                    id: association.pet.id,
+                    name: association.pet.name,
+                    tutorName: association.tutorData.person.lastName + ' ' + association.tutorData.person.name,
+                    dni: association.tutorData.person.dni,
+                    especie: 'Perro',
+                    raza: 'Sin raza especificada',
+                }
+            )
+        })
+        setData(finalData);
+    }
 
     const columns = [
         {
@@ -49,27 +88,6 @@ export default function PetsManagement(){
             responsive: ['md']
         }
         ];
-
-    const data = [
-        {
-            key: '1',
-            id: '1',
-            name: 'Lima',
-            tutorName: 'Tomás Bardin',
-            dni: 40402461,
-            especie: 'Perro',
-            raza: 'Golden Retriever',
-        },
-        {
-            key: '2',
-            id: '2',
-            name: 'Fufi',
-            tutorName: 'Tomás Bardin',
-            dni: 40402461,
-            especie: 'Gato',
-            raza: 'Sin raza',
-        }
-    ];
 
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);

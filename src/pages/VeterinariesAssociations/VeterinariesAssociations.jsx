@@ -4,7 +4,7 @@ import Meta from "antd/lib/card/Meta";
 import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip, Modal, Input, Select } from 'antd';
 import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
 import { getTemporalAssociationByCode } from '../../services/pet_association.service';
-import { register } from '../../services/pet_association.service';
+import { register, getAllByTutorId } from '../../services/pet_association.service';
 import { getPetsByTutorId } from '../../services/pet.service';
 const { Option } = Select;
 const { Title } = Typography;
@@ -15,7 +15,15 @@ export default function VeterinariesAssociations(){
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [petOptions, setPetOptions] = useState(null);
     const [selectedPetIds, setSelectePetIds] = useState([]);
+    const [associations, setAssociations] = useState([]);
+    const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
+
+    if(!isInit){
+        refreshComponent();
+        setIsInit(true);
+    }
+
 
     const confirm = (e) => {
         message.success('Mascota borrada exitosamente.' );
@@ -35,7 +43,7 @@ export default function VeterinariesAssociations(){
             });
     };
 
-    const createAsociation = () => {
+    const createAssociation = () => {
         const petAssociations = [];
         selectedPetIds.forEach( petId => {
             petAssociations.push({petId: Number(petId), veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id})
@@ -48,6 +56,11 @@ export default function VeterinariesAssociations(){
     }
 
     function refreshComponent() {
+        getAllByTutorId(profile.tutor.id)
+            .then(associations => {
+                setAssociations(associations);
+            }
+        );
         setIsModalOpen(false);
         setGeneratedCode(false);
         setCompleteTemporalAssociation(null);
@@ -56,7 +69,7 @@ export default function VeterinariesAssociations(){
     }
 
     function generatePetOptions(pets) {
-        const renderPetOptions = [];
+        var renderPetOptions = [];
         pets.forEach(function eachPet(pet){
             renderPetOptions.push(<Option key={pet.id}>{pet.name}</Option>)
         });
@@ -77,6 +90,47 @@ export default function VeterinariesAssociations(){
         setSelectePetIds(value);
     };
 
+    function returnAssociationCards(){
+        var renderAssociationCards = [];
+        associations.forEach(association => {
+            renderAssociationCards.push(
+                <Card   className='appCard'
+                        hoverable
+                        style={{width: 300}}
+                        cover={<img alt='required text' src={DefaultAvatar}></img>}
+                        actions={[  <EyeOutlined key="edit" />,
+                                    <Popconfirm title="¿Está seguro que desea desasociar el veterinario?"  
+                                            onConfirm={confirm}
+                                            okText="Si"
+                                            cancelText="No"
+                                            placement="top"
+                                            arrowPointAtCenter 
+                                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
+                                        <DeleteOutlined key="delete" />
+                                    </Popconfirm>,
+                                ]}>
+                    <Meta   className=''
+                            title={ association.veterinaryData.person.name + ' ' + association.veterinaryData.person.lastName }
+                            description={'Veterinaria: -'}/>
+                    <br></br>
+                    {renderPetTags(association.pets)}
+                </Card>
+            )
+        });
+        return renderAssociationCards;
+    };
+
+    
+    function renderPetTags(pets){
+        const renderedPetTags = [];
+        pets.forEach(pet => {
+            renderedPetTags.push(
+            <Tag color="purple">{pet.name}</Tag>
+            );
+        })
+        return renderedPetTags;
+    }
+
     return (
         <>   
             <Row align="middle">
@@ -93,51 +147,12 @@ export default function VeterinariesAssociations(){
             <Divider></Divider>
 
             <Row>
-                <Card   className='appCard'
-                        hoverable
-                        style={{width: 300}}
-                        cover={<img alt='required text' src={DefaultAvatar}></img>}
-                        actions={[  <EyeOutlined key="edit" />,
-                                    <Popconfirm title="¿Está seguro que desea desasociar el veterinario?"  
-                                            onConfirm={confirm}
-                                            okText="Si"
-                                            cancelText="No"
-                                            placement="top"
-                                            arrowPointAtCenter 
-                                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <DeleteOutlined key="delete" />
-                                    </Popconfirm>,
-                                ]}>
-                    <Meta   className=''
-                            title={'Dr. García Nicolás'}
-                            description={'Veterinaria Patitas del Cielo'}/>
-                    <br></br>
-                    <Tag color="purple">Lima</Tag>
-                    <Tag color="purple">Wendy</Tag>
-                    <Tag color="purple">Roco</Tag>
-                </Card>
-                <Card   className='appCard'
-                        hoverable
-                        style={{width: 300}}
-                        cover={<img alt='required text' src={DefaultAvatar}></img>}
-                        actions={[  <EyeOutlined key="edit" />,
-                                    <Popconfirm title="¿Está seguro que desea desasociar el veterinario?"  
-                                            onConfirm={confirm}
-                                            okText="Si"
-                                            cancelText="No"
-                                            placement="top"
-                                            arrowPointAtCenter 
-                                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <DeleteOutlined key="delete" />
-                                    </Popconfirm>,
-                                ]}>
-                    <Meta   className=''
-                            title={'Dr. Argento Pepe'}
-                            description={'Veterinaria Recta Martinolli'}/>
-                    <br></br>
-                    <Tag color="purple">Patón</Tag>
-                    <Tag color="purple">Roco</Tag>
-                </Card>
+                {
+                associations.length ? 
+                returnAssociationCards()
+                :
+                <>Aún no existen veterinarios asociados</>
+                }
             </Row>
 
             <Modal  title="Asociarse con un profesional"
@@ -149,7 +164,7 @@ export default function VeterinariesAssociations(){
                         <>
                             {
                             completeTemporalAssociation ? 
-                            <Button htmlType="submit" type="primary" onClick={createAsociation} className="register-form_button-ok-modal" disabled={selectedPetIds.length===0} > 
+                            <Button htmlType="submit" type="primary" onClick={createAssociation} className="register-form_button-ok-modal" disabled={selectedPetIds.length===0} > 
                                 Asociar
                             </Button>
                             :

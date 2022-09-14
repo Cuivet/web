@@ -37,14 +37,14 @@ export default function VeterinariesManagement(){
         },
         {
             title: 'Clínica Veterinaria',
-            dataIndex: 'veterinary',
-            sorter: (a, b) => a.veterinary.length - b.veterinary.length,
+            dataIndex: 'vet',
+            sorter: (a, b) => a.vet.length - b.vet.length,
             responsive: ['md']
         },
         {
             title: 'Regente',
             dataIndex: 'regent',
-            sorter: (a, b) => a.regent.length - b.regent.length,
+            sorter: (a, b) => a.regent - b.regent,
             responsive: ['md']
         },
         {
@@ -67,7 +67,7 @@ export default function VeterinariesManagement(){
             name: 'Eugenia',
             lastName: 'Frattin',
             phone: 3513026921,
-            veterinary: 'NeoZoo',
+            vet: 'NeoZoo',
             regent: regent[0],
             //en la condicion deberia ir lo que trae el back
             actions: (regent[0] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,            
@@ -79,7 +79,7 @@ export default function VeterinariesManagement(){
             name: 'Jorge Ignacio',
             lastName: 'Barbará',
             phone: 3513020874,
-            veterinary: 'Pecos',
+            vet: 'Pecos',
             regent: regent[1],
             address: 'Arturo M. Bas 345',
             actions: (regent[1] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,
@@ -90,7 +90,7 @@ export default function VeterinariesManagement(){
             name: 'Juan',
             lastName: 'Barella',
             phone: 351739744,
-            veterinary: 'NeoZoo',
+            vet: 'NeoZoo',
             regent: regent[0],
             actions: (regent[0] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,
             address: 'Av. Rafael Núñez 4126',
@@ -101,7 +101,7 @@ export default function VeterinariesManagement(){
             name: 'Martina',
             lastName: 'Aresu',
             phone: 3515521098,
-            veterinary: 'Alem',
+            vet: 'Alem',
             regent: regent[1],
             actions: (regent[1] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,
             address: 'Bv. Los Granaderos 2075',
@@ -129,7 +129,7 @@ export default function VeterinariesManagement(){
         <>   
             <Row align="middle">
                 <Col xs={{span:24}} md={{span:23}}>
-                    <Title className='appTitle'>Mis Veterinarios en Clinicas</Title>
+                    <Title className='appTitle'>Gestion de Veterinarios en Clinicas</Title>
                 </Col>
                 <Col xs={{span:24}} md={{span:1}}>
                     <Tooltip title="Asociar Veterinario Regente" placement='right'>
@@ -172,7 +172,7 @@ export default function VeterinariesManagement(){
             </Row>
             
             <Divider orientation="left"></Divider>
-            <Table columns={columns} dataSource={data} scroll={{x:500,}} onChange={onChange} />
+            <Table columns={columns} dataSource={data} onChange={onChange} />
             <Modal  title="Generar código de asociacion con Veterinario Regente"
                     visible={isModalOpen}
                     onCancel={hideModal}

@@ -27,3 +27,10 @@ Por convencion se usa el framework ant-design para darle estilo a la aplicacion,
 El enrutamiento de paginas se realiza en el archivo 'route.jsx'
 
 Las validaciones en los formularios se realizan con funciones creadas por el equipo de desarrollo y no con funcionalidades del framework, estan son definidas en el archivo 'formValidation.js'
+
+-------------------------------------------------------------------------------------------------------------------------------
+#Otras consideraciones
+
+Gestión de X: tabla de datos (gran volumen)
+Asociación de X: cards (volumen moderado)
+Mis X: abmc (administracion)

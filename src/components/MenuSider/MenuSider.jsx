@@ -48,7 +48,7 @@ export default function MenuSider(props){
                 { tutor ?   
                     <>
                         <Menu.Item key="2">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
@@ -80,7 +80,7 @@ export default function MenuSider(props){
                         </Menu.Item>
 
                         <Menu.Item key="6">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>

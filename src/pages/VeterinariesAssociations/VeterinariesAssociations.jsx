@@ -2,34 +2,38 @@ import React,{useState} from 'react';
 import DefaultAvatar from '../../assets/img/jpg/veterinaryAvatar.jpg';
 import Meta from "antd/lib/card/Meta";
 import { Col, Row, Typography, Button, Divider, Card,Input, Popconfirm,Modal, message, Tag, Tooltip, Select } from 'antd';
-import Icon,{ EyeOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import Icon,{ EyeOutlined, ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 const { Title } = Typography;
 
 export default function VeterinariesAssociations(){
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [validatedCode, setValidCode] = useState(false);
 
     const confirm = (e) => {
         message.success('Mascota borrada exitosamente.' );
-      };
+    };
 
-      const showModal = () => {
+    const showModal = () => {
         setIsModalOpen(true);
     };
 
     const hideModal = () => {
         setIsModalOpen(false);
     };
+    const validCode = () => {
+        setValidCode(true);
+    }
 
     return (
         <>   
             <Row align="middle">
                 <Col span={23}>
-                    <Title className='appTitle'>Profesionales asociados</Title>
+                    <Title className='appTitle'>Asociacion de Profesionales</Title>
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>}  onClick={showModal}/>
+                        <Button type='link' className="appButton" size='large' icon={<SyncOutlined/>}  onClick={showModal}/>
                     </Tooltip>
                 </Col>
             </Row>
@@ -89,36 +93,50 @@ export default function VeterinariesAssociations(){
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
                             Cancelar
-                        </Button>,                        
-                        <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
-                            Asociar
-                        </Button>
-                    ]}>               
-                
-                <>  
-                    <Row>
-                        <Typography.Title level={5}>Ingrese codigo del Veterinario a asociar:</Typography.Title>
-                    </Row>
-                    <Row>
-                        <Input type="number" name="mp" placeholder="Codigo de asociacion"/>
-                    </Row>
-                    <Row>
-                        <Typography.Title level={5}>Mascota a asociar:</Typography.Title>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Select placeholder='Mascotas' mode='multiple' showSearch allowClear style={{width:'100%',}}>
-                                <Select.Option key={1} value='0'>Lima</Select.Option>
-                                <Select.Option key={2} value='1'>Wendy</Select.Option>
-                                <Select.Option key={3} value='2'>Paton</Select.Option>
-                                <Select.Option key={4} value='3'>Roco</Select.Option>
-                            </Select>
-                        </Col>
+                        </Button>,   
+                        <>
+                        {
+                            validatedCode ?
+                            <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
+                                Asociar
+                            </Button>
+                            :
+                            <Button htmlType="submit" type="primary" onClick={validCode} className="register-form_button-ok-modal" > 
+                                Validar
+                            </Button>
+                            
+                        }
+                        </>                     
                         
-                    </Row>
-                    
-                </>
-                
+                    ]}>   
+                    {
+                        validatedCode ?
+                        <>
+                            <Row>
+                                <Typography.Title level={5}>Mascota a asociar:</Typography.Title>
+                            </Row>
+                            <Row>
+                                <Col span={24}>
+                                    <Select placeholder='Mascotas' mode='multiple' showSearch allowClear style={{width:'100%',}}>
+                                        <Select.Option key={1} value='0'>Lima</Select.Option>
+                                        <Select.Option key={2} value='1'>Wendy</Select.Option>
+                                        <Select.Option key={3} value='2'>Paton</Select.Option>
+                                        <Select.Option key={4} value='3'>Roco</Select.Option>
+                                    </Select>
+                                </Col>
+                                
+                            </Row>
+                        </>
+                        :
+                        <>  
+                            <Row>
+                                <Typography.Title level={5}>Ingrese codigo del Veterinario a asociar:</Typography.Title>
+                            </Row>
+                            <Row>
+                                <Input type="number" name="mp" placeholder="Codigo de asociacion"/>
+                            </Row>    
+                        </>
+                    }                   
             </Modal>
             
         </>

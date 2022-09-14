@@ -256,7 +256,7 @@ export default function RegisterPetForm(props){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <DatePicker disabledDate={disabledDate} name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="register-pet-form__datepicker" format={'DD/MM/yyyy'} />
+                        <DatePicker disabledDate={disabledDate} name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="appDatePicker" format={'DD/MM/yyyy'} />
                     </Form.Item>
                 </Col>
                 <Col span={24}>

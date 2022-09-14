@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import DefaultAvatar from '../../assets/img/jpg/veterinaryAvatar.jpg';
 import Meta from "antd/lib/card/Meta";
 import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip, Modal, Input, Select } from 'antd';
-import { EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import Icon,{ EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 import { getTemporalAssociationByCode } from '../../services/pet_association.service';
 import { register, getAllByTutorId } from '../../services/pet_association.service';
 import { getPetsByTutorId } from '../../services/pet.service';
 const { Option } = Select;
+
+
 const { Title } = Typography;
 
 export default function VeterinariesAssociations(){
@@ -24,13 +27,16 @@ export default function VeterinariesAssociations(){
         setIsInit(true);
     }
 
-
     const confirm = (e) => {
         message.success('Mascota borrada exitosamente.' );
-      };
+    };
 
     const showModal = () => {
         setIsModalOpen(true);
+    };
+
+    const hideModal = () => {
+        setIsModalOpen(false);
     };
 
     const tryToAsociate = () => {
@@ -42,6 +48,7 @@ export default function VeterinariesAssociations(){
                 });
             });
     };
+
 
     const createAssociation = () => {
         const petAssociations = [];
@@ -94,6 +101,7 @@ export default function VeterinariesAssociations(){
         var renderAssociationCards = [];
         associations.forEach(association => {
             renderAssociationCards.push(
+
                 <Card   className='appCard'
                         hoverable
                         style={{width: 300}}
@@ -106,7 +114,7 @@ export default function VeterinariesAssociations(){
                                             placement="top"
                                             arrowPointAtCenter 
                                             icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <DeleteOutlined key="delete" />
+                                        <Icon><SyncDisabledOutlinedIcon key="delete" /></Icon>
                                     </Popconfirm>,
                                 ]}>
                     <Meta   className=''
@@ -139,10 +147,10 @@ export default function VeterinariesAssociations(){
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModal}/>
+                        <Button type='link' className="appButton" size='large' icon={<SyncOutlined/>} onClick={showModal}/>
                     </Tooltip>
                 </Col>
-            </Row>
+            </Row>           
 
             <Divider></Divider>
 
@@ -176,25 +184,42 @@ export default function VeterinariesAssociations(){
                     ]}>
                 {
                 completeTemporalAssociation ?
-                <>
-                    <div>Seleccione que mascotas quiere asociar con el siguiente veterinario:</div>
-                    <div>Profesional: {completeTemporalAssociation.veterinaryData.person.name + ' ' + completeTemporalAssociation.veterinaryData.person.lastName}</div>
-                    <div>Clínica: -</div>
-                    <Select
-                        mode="multiple"
-                        allowClear
-                        style={{ width: '100%' }}
-                        placeholder="Seleccione las mascotas a asociar"
-                        onChange={refreshSelectedPets}
-                        >
-                        {petOptions}
-                    </Select>
-                </>
-                :
-                <>
-                    <div>Ingrese código de asociacion brindado por el veterinario</div>
-                    <Input type="number" name="phone" placeholder="Código de asociacion" onChange={refreshCode} />
-                </>
+                      <>
+                            <Row>
+                                <Typography.Title level={5}>Seleccione que mascotas quiere asociar con el siguiente veterinario:</Typography.Title>
+                            </Row>
+                            <Row>
+                                <Typography.Title level={6}>Profesional: {completeTemporalAssociation.veterinaryData.person.name + ' ' + completeTemporalAssociation.veterinaryData.person.lastName}</Typography.Title>   
+
+                             </Row>
+                              <Row>
+                                <Typography.Title level={6}>>Clínica: -</Typography.Title>   
+
+                             </Row>
+                            <Row>
+                                <Col span={24}>
+                                    <Select
+                                      mode="multiple"
+                                      allowClear
+                                      style={{ width: '100%' }}
+                                      placeholder="Seleccione las mascotas a asociar"
+                                      onChange={refreshSelectedPets}
+                                      >
+                                      {petOptions}
+                                  </Select>
+                                </Col>
+                                
+                            </Row>
+                        </>
+                        :
+                        <>  
+                            <Row>
+                                <Typography.Title level={5}>Ingrese código de asociacion brindado por el veterinario:</Typography.Title>
+                            </Row>
+                            <Row>
+                                <Input type="number" name="phone" placeholder="Codigo de asociacion"  onChange={refreshCode}/>
+                            </Row>    
+                        </>
                 }
             </Modal>
             

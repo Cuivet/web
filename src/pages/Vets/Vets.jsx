@@ -23,20 +23,6 @@ export default function Vets(){
                 setVets(response);
             });
     }
-
-    // function registerMockVet(){
-    //     const newVet = {
-    //         name: "Nueva Vet",
-    //         phone: "351",
-    //         address: "Recta Nueva",
-    //         photo: "november.com",
-    //         vetOwnerId: profile.vetOwner.id
-    //     }
-    //     registerVet(newVet)
-    //         .then( res => {
-    //             setWork(true);
-    //         });
-    // };
     
      //para el drawer
      const [visible, setVisible] = useState(false);
@@ -63,21 +49,16 @@ export default function Vets(){
 
     return (
         <>   
-            {/* Estamos en la vista para crear veterinarias
-            <Vet></Vet>
-            <Button type="primary" onClick={registerMockVet}>Registrar nuevo veterinaria</Button>
-            {work ? 
-                <div> Usuario Registrado! </div>
-                : null} */}
-
             <Row>
-                <Col span={24}>
+                <Col span={23}>
                     <Title className="appTitle">
-                        Mis Clinicas Veterinarias
-                        <Tooltip title="Agregar clinica veterinaria" placement='right'>
-                            <Button type='link' className="pets__button-add" size='large' onClick={showDrawer} icon={<PlusCircleOutlined  />} />
-                        </Tooltip>
+                        Mis Clinicas Veterinarias                        
                         </Title>
+                </Col>
+                <Col span={1}>
+                    <Tooltip title="Agregar clinica veterinaria" placement='right'>
+                        <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
+                    </Tooltip>
                 </Col>
             </Row>
             <Divider></Divider>

@@ -185,15 +185,26 @@ export default function PetsManagement(){
                     ]}>
                 {
                 generatedCode ?
-                    <>
-                        <div>
-                            El código generado para el tutor {completeTemporalAssociation.tutorData.person.name + ' ' +
-                            completeTemporalAssociation.tutorData.person.lastName} es {completeTemporalAssociation.code}.
-                        </div>
-                        <div>
-                            El mismo, expirará en 10 minutos
-                        </div>
-                    </>
+
+                <><Row>
+                        <Col span={24}>
+                            <Typography.Title level={4}>
+                                El código generado es:
+                            </Typography.Title>
+                        </Col>                        
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>{completeTemporalAssociation.tutorData.person.name + ' ' +
+                            completeTemporalAssociation.tutorData.person.lastName} es {completeTemporalAssociation.code}</Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+
+                        </Col>
+                    </Row>El mismo expirará en 10 minutos</>
+
                 :
                 <>
                     {

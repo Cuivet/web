@@ -29,13 +29,34 @@
         color: $primary-color!important;
     }
 }
-
+.ant-typography-copy{
+    color: $secondary-color!important;
+}
+.ant-picker-focused {
+    border-color: $secondary-color!important;
+    box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);
+}
+.ant-table-column-sorter{
+    color: $primary-color!important;
+}
+.ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active{
+    color: $secondary-color!important;
+}
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
+    background-color: $primary-color!important;
+}
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before{
+    border-color: $primary-color!important;
+}
+.ant-picker-today-btn{
+    color: $primary-color!important;
+}
 .appButton { 
     width: 100%;
     font-size: 0em+16px/$defaultFontSize;
     background-color: $primary-color;
     color: $font-light;
-    border-radius: 252px!important;
+    border-radius: 252px!important; 
     margin: 0;
     
     &:hover{
@@ -83,6 +104,14 @@
     &:hover{
         color: $secondary-color!important;
     }
+}
+.appDatePicker{
+    font-size: 0em+20px/$defaultFontSize !important;
+    &:hover{
+        border-color: $secondary-color !important;
+    }
+    width: 100%;
+    
 }
 
 .full-width {

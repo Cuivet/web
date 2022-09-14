@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
-import Icon, { HomeOutlined, SettingOutlined, SnippetsOutlined } from '@ant-design/icons';
+import Icon, { HomeOutlined, SettingOutlined } from '@ant-design/icons';
 import PetsIcon from '@mui/icons-material/Pets';
 import ScienceIcon from '@mui/icons-material/Science';
 import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutlined';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
+import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import './MenuSider.scss';
 
 export default function MenuSider(props){
@@ -47,7 +48,7 @@ export default function MenuSider(props){
                 { tutor ?   
                     <>
                         <Menu.Item key="2">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
@@ -73,13 +74,13 @@ export default function MenuSider(props){
                     <>
                         <Menu.Item key="5">
                             <Link to={"/admin"} className='admin-sider__item'>                      
-                                <SnippetsOutlined/>
+                                <Icon><ContentPasteOutlinedIcon /></Icon>
                                 <span className="nav-text"> Consultas </span>
                             </Link>
                         </Menu.Item>
 
                         <Menu.Item key="6">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
@@ -95,7 +96,7 @@ export default function MenuSider(props){
                         <Menu.Item key="8">
                             <Link to={"/vets-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Veterinarias Asociadas </span>
+                                <span className="nav-text"> Clinicas Asociadas </span>
                             </Link>
                         </Menu.Item>
                     </>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DefaultAvatar from '../../assets/img/jpg/veterinaryAvatar.jpg';
 import Meta from "antd/lib/card/Meta";
 import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip, Modal, Input, Select } from 'antd';
-import Icon,{ EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import Icon,{ EyeOutlined, SyncOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 import { getTemporalAssociationByCode } from '../../services/pet_association.service';
 import { register, getAllByTutorId } from '../../services/pet_association.service';
@@ -33,10 +33,6 @@ export default function VeterinariesAssociations(){
 
     const showModal = () => {
         setIsModalOpen(true);
-    };
-
-    const hideModal = () => {
-        setIsModalOpen(false);
     };
 
     const tryToAsociate = () => {
@@ -193,7 +189,7 @@ export default function VeterinariesAssociations(){
 
                              </Row>
                               <Row>
-                                <Typography.Title level={6}>>Clínica: -</Typography.Title>   
+                                <Typography.Title level={6}>Clínica: -</Typography.Title>   
 
                              </Row>
                             <Row>

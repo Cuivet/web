@@ -1,12 +1,55 @@
 import React, {useState} from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
+import { registerTemporalAssociation, getAllByVeterinaryId } from '../../services/pet_association.service';
 const { Option } = Select;
 const { Title } = Typography;
 
 export default function PetsManagement(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
+    const [tutorDni, setTutorDni] = useState(null);
+    const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [data, setData] = useState([]);
+    const [isInit, setIsInit] = useState(false);
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+
+    if(!isInit){
+        refreshComponent();
+        setIsInit(true);
+    }
+
+    function refreshComponent() {
+        getAllByVeterinaryId(profile.veterinary.id)
+            .then(associations => {
+                generateData(associations);
+            }
+        );
+        setIsModalOpen(false);
+        setGeneratedCode(false);
+        setTutorDni(null);
+        setCompleteTemporalAssociation(null);
+        setIsLoading(false);
+    }
+    
+    function generateData(associations){
+        var finalData = [];
+        associations.forEach(association => {
+            finalData.push(
+                {
+                    key: association.pet.id,
+                    id: association.pet.id,
+                    name: association.pet.name,
+                    tutorName: association.tutorData.person.lastName + ' ' + association.tutorData.person.name,
+                    dni: association.tutorData.person.dni,
+                    especie: 'Perro',
+                    raza: 'Sin raza especificada',
+                }
+            )
+        })
+        setData(finalData);
+    }
 
     const columns = [
         {
@@ -46,27 +89,6 @@ export default function PetsManagement(){
         }
         ];
 
-    const data = [
-        {
-            key: '1',
-            id: '1',
-            name: 'Lima',
-            tutorName: 'Tomás Bardin',
-            dni: 40402461,
-            especie: 'Perro',
-            raza: 'Golden Retriever',
-        },
-        {
-            key: '2',
-            id: '2',
-            name: 'Fufi',
-            tutorName: 'Tomás Bardin',
-            dni: 40402461,
-            especie: 'Gato',
-            raza: 'Sin raza',
-        }
-    ];
-
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
@@ -76,12 +98,22 @@ export default function PetsManagement(){
     };
     
     const generateCode = () => {
-        setGeneratedCode(true);
+        setIsLoading(true);
+        registerTemporalAssociation({tutorDni: tutorDni, veterinaryId: JSON.parse(sessionStorage.getItem('profile')).veterinary.id})
+            .then(response => {
+                setCompleteTemporalAssociation(response);
+                setIsLoading(false);
+                setGeneratedCode(true);
+            });
     };
 
     const hideModal = () => {
         setIsModalOpen(false);
         setGeneratedCode(false);
+    };
+
+    const refreshDni = e =>{
+        setTutorDni(e.target.value);
     };
 
     return (
@@ -145,7 +177,7 @@ export default function PetsManagement(){
                                 Aceptar
                             </Button>
                             :
-                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal" > 
+                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal" disabled={isLoading}> 
                                 Generar
                             </Button>
                             }
@@ -153,6 +185,7 @@ export default function PetsManagement(){
                     ]}>
                 {
                 generatedCode ?
+
                 <><Row>
                         <Col span={24}>
                             <Typography.Title level={4}>
@@ -162,7 +195,8 @@ export default function PetsManagement(){
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>20202461</Typography.Title>
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>{completeTemporalAssociation.tutorData.person.name + ' ' +
+                            completeTemporalAssociation.tutorData.person.lastName} es {completeTemporalAssociation.code}</Typography.Title>
                         </Col>
                     </Row>
                     <Row>
@@ -170,10 +204,18 @@ export default function PetsManagement(){
 
                         </Col>
                     </Row>El mismo expirará en 10 minutos</>
+
                 :
                 <>
-                    <div>Ingrese el ID de la mascota a asociar</div>
-                    <Input type="number" name="phone" placeholder="ID de Mascóta"/>
+                    {
+                    isLoading ?
+                    <Spin/>
+                    :
+                    <>
+                        <div>Ingrese el DNI del tutor con mascota/s a asociar</div>
+                        <Input type="number" name="phone" placeholder="DNI del tutor" onChange={refreshDni} />
+                    </>
+                    }
                 </>
                 }
             </Modal>

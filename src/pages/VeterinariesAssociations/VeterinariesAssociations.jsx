@@ -1,14 +1,31 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import DefaultAvatar from '../../assets/img/jpg/veterinaryAvatar.jpg';
 import Meta from "antd/lib/card/Meta";
-import { Col, Row, Typography, Button, Divider, Card,Input, Popconfirm,Modal, message, Tag, Tooltip, Select } from 'antd';
-import Icon,{ EyeOutlined, ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tag, Tooltip, Modal, Input, Select } from 'antd';
+import Icon,{ EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, NodeIndexOutlined } from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
+import { getTemporalAssociationByCode } from '../../services/pet_association.service';
+import { register, getAllByTutorId } from '../../services/pet_association.service';
+import { getPetsByTutorId } from '../../services/pet.service';
+const { Option } = Select;
+
+
 const { Title } = Typography;
 
 export default function VeterinariesAssociations(){
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [validatedCode, setValidCode] = useState(false);
+    const [generatedCode, setGeneratedCode] = useState(false);
+    const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
+    const [petOptions, setPetOptions] = useState(null);
+    const [selectedPetIds, setSelectePetIds] = useState([]);
+    const [associations, setAssociations] = useState([]);
+    const [isInit, setIsInit] = useState(false);
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+
+    if(!isInit){
+        refreshComponent();
+        setIsInit(true);
+    }
 
     const confirm = (e) => {
         message.success('Mascota borrada exitosamente.' );
@@ -21,108 +38,175 @@ export default function VeterinariesAssociations(){
     const hideModal = () => {
         setIsModalOpen(false);
     };
-    const validCode = () => {
-        setValidCode(true);
+
+    const tryToAsociate = () => {
+        getTemporalAssociationByCode(generatedCode)
+            .then(temporalAsociation => {
+                getPetsByTutorId(profile.tutor.id).then(pets => {
+                    setCompleteTemporalAssociation(temporalAsociation);
+                    setPetOptions(generatePetOptions(pets));
+                });
+            });
+    };
+
+
+    const createAssociation = () => {
+        const petAssociations = [];
+        selectedPetIds.forEach( petId => {
+            petAssociations.push({petId: Number(petId), veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id})
+        });
+        register(petAssociations)
+            .then(response => {
+                message.success('Asociacion establecida exitosamente');
+                refreshComponent();
+            });
+    }
+
+    function refreshComponent() {
+        getAllByTutorId(profile.tutor.id)
+            .then(associations => {
+                setAssociations(associations);
+            }
+        );
+        setIsModalOpen(false);
+        setGeneratedCode(false);
+        setCompleteTemporalAssociation(null);
+        setPetOptions(null);
+        setSelectePetIds([]);
+    }
+
+    function generatePetOptions(pets) {
+        var renderPetOptions = [];
+        pets.forEach(function eachPet(pet){
+            renderPetOptions.push(<Option key={pet.id}>{pet.name}</Option>)
+        });
+        return renderPetOptions;
+    }
+
+    const hideModal = () => {
+        setIsModalOpen(false);
+        setGeneratedCode(null);
+        setCompleteTemporalAssociation(null);
+    };
+
+    const refreshCode = e =>{
+        setGeneratedCode(e.target.value);
+    };
+
+    const refreshSelectedPets = (value) => {
+        setSelectePetIds(value);
+    };
+
+    function returnAssociationCards(){
+        var renderAssociationCards = [];
+        associations.forEach(association => {
+            renderAssociationCards.push(
+
+                <Card   className='appCard'
+                        hoverable
+                        style={{width: 300}}
+                        cover={<img alt='required text' src={DefaultAvatar}></img>}
+                        actions={[  <EyeOutlined key="edit" />,
+                                    <Popconfirm title="¿Está seguro que desea desasociar el veterinario?"  
+                                            onConfirm={confirm}
+                                            okText="Si"
+                                            cancelText="No"
+                                            placement="top"
+                                            arrowPointAtCenter 
+                                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
+                                        <Icon><SyncDisabledOutlinedIcon key="delete" /></Icon>
+                                    </Popconfirm>,
+                                ]}>
+                    <Meta   className=''
+                            title={ association.veterinaryData.person.name + ' ' + association.veterinaryData.person.lastName }
+                            description={'Veterinaria: -'}/>
+                    <br></br>
+                    {renderPetTags(association.pets)}
+                </Card>
+            )
+        });
+        return renderAssociationCards;
+    };
+
+    
+    function renderPetTags(pets){
+        const renderedPetTags = [];
+        pets.forEach(pet => {
+            renderedPetTags.push(
+            <Tag color="purple">{pet.name}</Tag>
+            );
+        })
+        return renderedPetTags;
     }
 
     return (
         <>   
             <Row align="middle">
                 <Col span={23}>
-                    <Title className='appTitle'>Asociacion de Profesionales</Title>
+                    <Title className='appTitle'>Profesionales asociados</Title>
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<SyncOutlined/>}  onClick={showModal}/>
+                        <Button type='link' className="appButton" size='large' icon={<SyncOutlined/>} onClick={showModal}/>
                     </Tooltip>
                 </Col>
-            </Row>
+            </Row>           
 
             <Divider></Divider>
 
             <Row>
-                <Card   className='appCard'
-                        hoverable
-                        style={{width: 300}}
-                        cover={<img alt='required text' src={DefaultAvatar}></img>}
-                        actions={[  <EyeOutlined key="edit" />,
-                                    <Popconfirm title="¿Está seguro que desea desasociar el veterinario?"  
-                                            onConfirm={confirm}
-                                            okText="Si"
-                                            cancelText="No"
-                                            placement="top"
-                                            arrowPointAtCenter 
-                                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <Icon><SyncDisabledOutlinedIcon key="delete" /></Icon>
-                                    </Popconfirm>,
-                                ]}>
-                    <Meta   className=''
-                            title={'Dr. García Nicolás'}
-                            description={'Veterinaria Patitas del Cielo'}/>
-                    <br></br>
-                    <Tag color="purple">Lima</Tag>
-                    <Tag color="purple">Wendy</Tag>
-                    <Tag color="purple">Roco</Tag>
-                </Card>
-                <Card   className='appCard'
-                        hoverable
-                        style={{width: 300}}
-                        cover={<img alt='required text' src={DefaultAvatar}></img>}
-                        actions={[  <EyeOutlined key="edit" />,
-                                    <Popconfirm title="¿Está seguro que desea desasociar el veterinario?"  
-                                            onConfirm={confirm}
-                                            okText="Si"
-                                            cancelText="No"
-                                            placement="top"
-                                            arrowPointAtCenter 
-                                            icon={<ExclamationCircleOutlined fontSize="small" style={{color: 'red',}} />}>
-                                        <Icon><SyncDisabledOutlinedIcon key="delete" /></Icon>
-                                    </Popconfirm>,
-                                ]}>
-                    <Meta   className=''
-                            title={'Dr. Argento Pepe'}
-                            description={'Veterinaria Recta Martinolli'}/>
-                    <br></br>
-                    <Tag color="purple">Patón</Tag>
-                    <Tag color="purple">Roco</Tag>
-                </Card>
+                {
+                associations.length ? 
+                returnAssociationCards()
+                :
+                <>Aún no existen veterinarios asociados</>
+                }
             </Row>
-            <Modal  title="Ingresar código de asociacion con Veterinario"
+
+            <Modal  title="Asociarse con un profesional"
                     visible={isModalOpen}
-                    onCancel={hideModal}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
                             Cancelar
-                        </Button>,   
+                        </Button>,
                         <>
-                        {
-                            validatedCode ?
-                            <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
+                            {
+                            completeTemporalAssociation ? 
+                            <Button htmlType="submit" type="primary" onClick={createAssociation} className="register-form_button-ok-modal" disabled={selectedPetIds.length===0} > 
                                 Asociar
                             </Button>
                             :
-                            <Button htmlType="submit" type="primary" onClick={validCode} className="register-form_button-ok-modal" > 
-                                Validar
+                            <Button htmlType="submit" type="primary" onClick={tryToAsociate} className="register-form_button-ok-modal" > 
+                                Buscar
                             </Button>
-                            
-                        }
-                        </>                     
-                        
-                    ]}>   
-                    {
-                        validatedCode ?
-                        <>
+                            }
+                        </>
+                    ]}>
+                {
+                completeTemporalAssociation ?
+                      <>
                             <Row>
-                                <Typography.Title level={5}>Mascota a asociar:</Typography.Title>
+                                <Typography.Title level={5}>Seleccione que mascotas quiere asociar con el siguiente veterinario:</Typography.Title>
                             </Row>
                             <Row>
+                                <Typography.Title level={6}>Profesional: {completeTemporalAssociation.veterinaryData.person.name + ' ' + completeTemporalAssociation.veterinaryData.person.lastName}</Typography.Title>   
+
+                             </Row>
+                              <Row>
+                                <Typography.Title level={6}>>Clínica: -</Typography.Title>   
+
+                             </Row>
+                            <Row>
                                 <Col span={24}>
-                                    <Select placeholder='Mascotas' mode='multiple' showSearch allowClear style={{width:'100%',}}>
-                                        <Select.Option key={1} value='0'>Lima</Select.Option>
-                                        <Select.Option key={2} value='1'>Wendy</Select.Option>
-                                        <Select.Option key={3} value='2'>Paton</Select.Option>
-                                        <Select.Option key={4} value='3'>Roco</Select.Option>
-                                    </Select>
+                                    <Select
+                                      mode="multiple"
+                                      allowClear
+                                      style={{ width: '100%' }}
+                                      placeholder="Seleccione las mascotas a asociar"
+                                      onChange={refreshSelectedPets}
+                                      >
+                                      {petOptions}
+                                  </Select>
                                 </Col>
                                 
                             </Row>
@@ -130,13 +214,13 @@ export default function VeterinariesAssociations(){
                         :
                         <>  
                             <Row>
-                                <Typography.Title level={5}>Ingrese codigo del Veterinario a asociar:</Typography.Title>
+                                <Typography.Title level={5}>Ingrese código de asociacion brindado por el veterinario:</Typography.Title>
                             </Row>
                             <Row>
-                                <Input type="number" name="mp" placeholder="Codigo de asociacion"/>
+                                <Input type="number" name="phone" placeholder="Codigo de asociacion"  onChange={refreshCode}/>
                             </Row>    
                         </>
-                    }                   
+                }
             </Modal>
             
         </>

@@ -31,14 +31,11 @@ export default function Pets(){
 
     function Pet(){
         const renderPetList = [];
-
-        if (pets.length) {
-            pets.forEach(pet => {
-                renderPetList.push(
-                    <CardPet item={pet.id} title={pet.name} popTitle={"¿Está seguro que desea borrar la mascota?" } img={paw} description={getAgeContent(pet.birth)}></CardPet>
-                )
-            });
-        }
+        pets.forEach(pet => {
+            renderPetList.push(
+                <CardPet item={pet.id} title={pet.name} popTitle={"¿Está seguro que desea borrar la mascota?" } img={paw} description={getAgeContent(pet.birth)}></CardPet>
+            )
+        });
         return renderPetList;
     };
 
@@ -85,9 +82,11 @@ export default function Pets(){
                         <RegisterPetForm registeredPet={registeredPet}/>
             </Drawer>
 
+            {pets.length ? 
             <Row>
                 <Pet></Pet>
             </Row> 
+            : null}
         </>
     );
 };

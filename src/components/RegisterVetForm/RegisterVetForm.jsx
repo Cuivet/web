@@ -43,7 +43,6 @@ export default function RegisterVetForm(props){
         name:null,
         mp: null,
         phone: null,
-        vetOwnerId: profile.vetOwner.id,
         address:null,
     });
 
@@ -102,6 +101,7 @@ export default function RegisterVetForm(props){
             mp: null,
             address:input.address,
             phone: input.phone,
+            vetOwnerId: profile.vetOwner.id,
         }
         const nameVal = input.name;
         const addressVal = input.address;

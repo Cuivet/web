@@ -19,9 +19,9 @@ export default function Vets(){
     if (!isInit) {
         setIsInit(true);
         getVetsByVetOwnerId(profile.vetOwner.id)
-            .then(response => {
-                setVets(response);
-            });
+        .then(response => {
+            setVets(response);
+        });
     }
     
      //para el drawer
@@ -39,7 +39,7 @@ export default function Vets(){
          if (vets.length){
              vets.forEach(vet => {
                 renderVetList.push(                     
-                         <CardPet item={vet.id }title={vet.name} popTitle={"¿Está seguro que desea borrar la clinica?"} img={redcross} description={vet.address}></CardPet>
+                         <CardPet item={vet.id} title={vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={redcross} description={vet.address}></CardPet>
                    
                 )});
          };
@@ -52,18 +52,18 @@ export default function Vets(){
             <Row>
                 <Col span={23}>
                     <Title className="appTitle">
-                        Mis Clinicas Veterinarias                        
+                        Mis Clínicas Veterinarias                        
                         </Title>
                 </Col>
                 <Col span={1}>
-                    <Tooltip title="Agregar clinica veterinaria" placement='right'>
+                    <Tooltip title="Agregar clínica veterinaria" placement='right'>
                         <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>
                 </Col>
             </Row>
             <Divider></Divider>
             <Drawer
-            title="Registrar nueva clinica veterinaria"          
+            title="Registrar nueva clínica veterinaria"          
             onClose={onClose}
             visible={visible}
             bodyStyle={{

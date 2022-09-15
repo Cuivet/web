@@ -10,9 +10,10 @@ import './Pets.scss';
 const { Title } = Typography;
 
 export default function Pets(){
-    const [isInit,setIsInit] = useState(false);
-    const [pets,setPets] = useState([]);
+    const [ isInit, setIsInit ] = useState(false);
+    const [ pets, setPets ] = useState([]);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
+    const [ petToDisplay, setPetToDisplay ] = useState(null);
 
     if (!isInit) {
         setIsInit(true);
@@ -20,24 +21,34 @@ export default function Pets(){
             setPets(response);
         });
     }
-    //para el drawer
-    const [visible, setVisible] = useState(false);
+
     const showDrawer = () => {
-        setVisible(true);
+        setPetToDisplay(true);
     }; 
+
     const onClose = () => {
-        setVisible(false);
-    };   
+        setPetToDisplay(null);
+    };
 
     function Pet(){
         const renderPetList = [];
         pets.forEach(pet => {
             renderPetList.push(
-                <CardPet item={pet.id} title={pet.name} popTitle={"¿Está seguro que desea borrar la mascota?" } img={paw} description={getAgeContent(pet.birth)}></CardPet>
+                <CardPet showPet={displayPet} item={pet.id} title={pet.name} popTitle={"¿Está seguro que desea borrar la mascota?" } img={paw} description={getAgeContent(pet.birth)}></CardPet>
             )
         });
         return renderPetList;
     };
+
+    const displayPet = (id) => {
+        setPetToDisplay(pets.find( pet => pet.id === id));
+    };
+
+    function displayDrawer(){
+        return  <Drawer title={petToDisplay ? "Gestionar mi mascota" : "Registrar nueva mascota"} onClose={onClose} visible={true} bodyStyle={{paddingBottom: 80}}>
+                    <RegisterPetForm petToDisplay={petToDisplay} registeredPet={registeredPet}/>
+                </Drawer>
+    }
 
     function getAgeContent(birth){
         var today = new Date();
@@ -60,7 +71,6 @@ export default function Pets(){
 
     const registeredPet = () => {
         setIsInit(false);
-        setVisible(false);
     };
 
     return (
@@ -78,9 +88,9 @@ export default function Pets(){
 
             <Divider></Divider>
             
-            <Drawer title="Registrar nueva mascota" onClose={onClose} visible={visible} bodyStyle={{paddingBottom: 80}}>
-                        <RegisterPetForm registeredPet={registeredPet}/>
-            </Drawer>
+            { petToDisplay ? 
+            displayDrawer() :
+            null }
 
             {pets.length ? 
             <Row>

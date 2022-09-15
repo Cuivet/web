@@ -5,14 +5,14 @@ import { numberValidation } from '../../utils/formValidation';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
 import moment  from "moment";
 import { registerPet } from "../../services/pet.service";
-
 import './RegisterPetForm.scss';
 
 export default function RegisterPetForm(props){
+    const { petToDisplay } = props;
     
-     //saco los datos del tutor que está logueado
-     const profile = JSON.parse(sessionStorage.getItem('profile'));
-     const tutorId = profile.tutor.id;
+    //saco los datos del tutor que está logueado
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+    const tutorId = profile.tutor.id;
 
     const {Dragger} = Upload;
     var petName;
@@ -46,12 +46,12 @@ export default function RegisterPetForm(props){
       };
 
     const [input, setInput]= useState({
-        name:"",
-        species:"Especie",
-        raza:"Raza",
-        birth:null,
-        sex:null,
-        size:"Tamaño",
+        name: petToDisplay === true ? "" : petToDisplay ? petToDisplay.name : "",
+        species: "Especie",
+        raza: "Raza",
+        birth: petToDisplay === true ? "" : petToDisplay ? moment(petToDisplay.birth.slice(0, 10), 'YYYY-MM-DD') : "",
+        sex: null,
+        size: "Tamaño",
     });
 
     const [formValid, setFormValid] = useState({
@@ -114,8 +114,6 @@ export default function RegisterPetForm(props){
 
     const register = e => {
         console.log(input);
-        //console.log(formValid);
-        //const {name, species, raza, dateBirth, sex, size} = formValid;
         const nameVal = input.name;
         const speciesVal = input.species;
         const razaVal = input.raza;
@@ -130,7 +128,6 @@ export default function RegisterPetForm(props){
                 placement: "top"
             })
         } else{
-                //console.log(tutorId);
                 registerPet(input)
                     .then( res => {
                         resetForm();
@@ -236,8 +233,6 @@ export default function RegisterPetForm(props){
     };
 
     const onDateBirthChange = (value, dateString) => {
-        //'2022-08-02' -> dateString
-        //console.log(value, dateString);
         setInput({...input, birth: value});
         setFormValid({...formValid, birth: true});
     };
@@ -256,7 +251,7 @@ export default function RegisterPetForm(props){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <DatePicker disabledDate={disabledDate} name="dateBirth" size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="appDatePicker" format={'DD/MM/yyyy'} />
+                        <DatePicker disabledDate={disabledDate} name="dateBirth" value={input.birth} size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="appDatePicker" format={'DD/MM/yyyy'} />
                     </Form.Item>
                 </Col>
                 <Col span={24}>
@@ -299,15 +294,6 @@ export default function RegisterPetForm(props){
                 <Col span={24}>
                     <Form.Item>
                         <ImgCrop rotate>
-                            {/* <Upload
-                                    action=""
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={onChange}
-                                onPreview={onPreview}
-                            >
-                                {fileList.length < 5 && '+ Cargar'}
-                            </Upload> */}
                             <Dragger {...fields}>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />

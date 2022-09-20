@@ -1,6 +1,5 @@
 import React from "react";
-import { Col, Divider, Row, Typography, Tooltip } from "antd";
-import {CheckOutlined, EditOutlined} from "@ant-design/icons";
+import { Col,  Row, Typography, Tooltip } from "antd";
 
 import './ShowUser.scss'
 
@@ -8,43 +7,80 @@ const {Title, Paragraph} =Typography;
 
 
 export default function ShowUser(props){
-    const {name, lastName, dni, phone,address, email} = props;
+    const {name, lastName, dni, phone, address, email} = props;
     return(
         <Row>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                {/* <Title level={4}>Nombre: </Title> */}
-                <Divider orientation="left" plain>Nombre</Divider>
-                <Tooltip title="Editar">
-                <Paragraph 
-                    className="show-item" 
-                    type="secondary" 
-                    level={5} 
-                    editable={{
-                        tooltip: `Editar Nombre`,
-                        enterIcon: <EditOutlined />,
-                        triggerType:['text']}}>{name}</Paragraph>
-                </Tooltip>
-                
+            <Col xs={{span: 24}}>
+                <Row>
+                    <Col xs={{span: 24}}md={{span: 2}}>
+                        <Title level={5}>Nombre:</Title>
+                    </Col>
+                    <Col  xs={{span: 24}}md={{span: 22}}>
+                    <Tooltip title="Haz click aquí para editar">
+                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{name}</Paragraph></Title>
+                    </Tooltip>
+                    </Col>
+                </Row>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Apellido</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{lastName}</Paragraph>
+            <Col xs={{span: 24}}>
+                <Row>
+                    <Col xs={{span: 24}}md={{span: 2}}>
+                        <Title level={5}>Apellido:</Title>
+                    </Col>
+                    <Col  xs={{span: 24}}md={{span: 22}}>
+                    <Tooltip title="Haz click aquí para editar">
+                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{lastName}</Paragraph></Title>
+                    </Tooltip>
+                    </Col>
+                </Row>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Telefono</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{phone}</Paragraph>
+            <Col xs={{span: 24}}>
+            <Row>
+                    <Col xs={{span: 24}}md={{span: 2}}>
+                        <Title level={5}>Teléfono:</Title>
+                    </Col>
+                    <Col  xs={{span: 24}}md={{span: 22}}>
+                    <Tooltip title="Haz click aquí para editar">
+                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{phone}</Paragraph></Title>
+                    </Tooltip>
+                    </Col>
+                </Row>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">D.N.I.</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{dni}</Paragraph>
+            <Col xs={{span: 24}}>
+            <Row>
+                    <Col xs={{span: 24}}md={{span: 2}}>
+                        <Title level={5}>DNI:</Title>
+                    </Col>
+                    <Col  xs={{span: 24}}md={{span: 22}}>
+                    <Tooltip title="Haz click aquí para editar">
+                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{dni}</Paragraph></Title>
+                    </Tooltip>
+                    </Col>
+                </Row>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Direccion</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{address}</Paragraph>
+            <Col xs={{span: 24}}>
+            <Row>
+                    <Col xs={{span: 24}}md={{span: 2}}>
+                        <Title level={5}>Dirección:</Title>
+                    </Col>
+                    <Col  xs={{span: 24}}md={{span: 22}}>
+                    <Tooltip title="Haz click aquí para editar">
+                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{address}</Paragraph></Title>
+                    </Tooltip>
+                    </Col>
+                </Row>
             </Col>
-            <Col xs={{span: 24}} lg={{span:12, offset:6}}>
-                <Divider orientation="left">Email</Divider>
-                <Paragraph className="show-item" type="secondary" level={5} editable={{triggerType:['text','icon']}}>{email}</Paragraph>
+            <Col xs={{span: 24}}>
+            <Row>
+                    <Col xs={{span: 24}}md={{span: 4}}>
+                        <Title level={5}>Correo Electrónico:</Title>
+                    </Col>
+                    <Col  xs={{span: 24}}md={{span: 20}}>
+                    <Tooltip title="Haz click aquí para editar">
+                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{email}</Paragraph></Title>
+                    </Tooltip>
+                    </Col>
+                </Row>
             </Col>
         </Row>
     )

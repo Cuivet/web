@@ -9,3 +9,16 @@
     }
 
 }
+
+.update-User-form__button{
+    align-items: center;
+    background-color: $primary-color;
+    position: center;
+    color: white;
+
+    &:hover{
+        background-color: $secondary-color!important;
+        color: $font-light;
+        border: 0;
+    }
+}

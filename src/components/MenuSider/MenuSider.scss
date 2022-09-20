@@ -29,7 +29,8 @@
 
     &__item{
         color: $font-grey;
-
+        cursor: pointer!important;
+        
         &:hover{
             color: $primary-color !important;
         }
@@ -69,18 +70,9 @@ a.admin-sider__submenu-item,
     }
     
 }
-// .ant-menu-item-selected a::before{
-// // .ant-menu-item-selected a,
-// // .ant-menu-item-active{
-//     background-color: $secondary-color;
-//     // color: black;
-//     // color: $font-grey!important;
-
-//     // &:hover{
-//     //     color: black;
-//     // }
-// }
-
+.ant-menu-item a::before{
+    cursor: pointer;
+}
 .ant-menu-vertical .ant-menu-item::after,
 .ant-menu-vertical-left .ant-menu-item::after,
 .ant-menu-vertical-right .ant-menu-item::after,

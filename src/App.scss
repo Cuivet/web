@@ -51,6 +51,18 @@
 .ant-picker-today-btn{
     color: $primary-color!important;
 }
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
+.ant-btn:hover,
+.ant-input:hover{
+    border-color: $secondary-color!important;
+}
+
+.ant-btn-default:focus{
+    color: $secondary-color!important;
+    border-color: $secondary-color!important;
+}
 .appButton { 
     width: 100%;
     font-size: 0em+16px/$defaultFontSize;

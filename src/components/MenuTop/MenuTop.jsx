@@ -1,18 +1,25 @@
-import { Badge, Button, Tooltip } from "antd";
+import React, {useState, useEffect} from "react";
+import { Badge,Select, Button, Tooltip } from "antd";
 import AvatarUser from "../AvatarUser/AvatarUser";
 import { Link } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from "@ant-design/icons";
-import React from "react";
 import CUIVET_logo from '../../assets/img/png/logo2.png';
-import User from '../../assets/img/png/tutorUsuario.png'
+import User from '../../assets/img/png/tutorUsuario.png';
 
 import './MenuTop.scss'
 
 export default function MenuTop(props){
     // console.log(props);
     const {menuCollapsed, setMenuCollapsed} = props;
+    const [isVet, setIsVet]=useState(false);
 
     const users = [User, null];
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+    useEffect(()=>{
+        if(profile.veterinary != null){
+            setIsVet(true);
+        };
+    }, [profile.veterinary]);
 
     const logOut = e =>{
         sessionStorage.clear();
@@ -32,6 +39,17 @@ export default function MenuTop(props){
             </div>
             <h3 className="menu-top__center">CUIVET</h3>
             <div className="menu-top__right">
+                {
+                    isVet ?
+                    <Select placeholder='Clinica' className="menu-top__right-select">
+                        <Select.Option value='1'>Boderau</Select.Option>
+                        <Select.Option value='2'>Recta</Select.Option>
+                        <Select.Option value='3'>Pilar</Select.Option>
+                    </Select>
+                    :
+                    null
+                }
+                
                 <Badge dot className="badge">
                     <AvatarUser icon={users[0]} preview={true}></AvatarUser>
                 </Badge>

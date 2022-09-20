@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
@@ -6,8 +6,18 @@ const { Option } = Select;
 const { Title } = Typography;
 
 export default function VeterinariesManagement(){
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalVetOwner, setisModalVetOwner] = useState(false);
+    const [isModalRegent, setIsModalRegent]= useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
+    const [isRegent, setIsRegent] = useState(false);
+
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+
+    useEffect(() =>{
+        if(profile.veterinary != null){
+            setIsRegent(true);
+        }
+    },[profile.veterinary]);
 
     const regent=['Si', 'No'];
     const columns = [
@@ -34,19 +44,7 @@ export default function VeterinariesManagement(){
             dataIndex: 'phone',
             //sorter: (a, b) => a.phone.age - b.phone.age,
             responsive: ['sm']
-        },
-        {
-            title: 'Clínica Veterinaria',
-            dataIndex: 'vet',
-            sorter: (a, b) => a.vet.length - b.vet.length,
-            responsive: ['md']
-        },
-        {
-            title: 'Regente',
-            dataIndex: 'regent',
-            sorter: (a, b) => a.regent - b.regent,
-            responsive: ['md']
-        },
+        },        
         {
             title: 'Dirección',
             dataIndex: 'address',
@@ -60,6 +58,22 @@ export default function VeterinariesManagement(){
             
         }
     ];
+    if(!isRegent){
+        columns.splice(4,0, {
+            title: 'Regente',
+            dataIndex: 'regent',
+            sorter: (a, b) => a.regent - b.regent,
+            responsive: ['md']
+        },
+        {
+            title: 'Clínica Veterinaria',
+            dataIndex: 'vet',
+            sorter: (a, b) => a.vet.length - b.vet.length,
+            responsive: ['md']
+        });
+    };
+    
+
     const data = [
         {
             key: '1',
@@ -112,32 +126,51 @@ export default function VeterinariesManagement(){
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
-    const showModal = () => {
-        setIsModalOpen(true);
+    const showModalOwner = () => {
+        setisModalVetOwner(true);
     };
+    const showModalRegent = () => {
+        setIsModalRegent(true);
+    }
     
     const generateCode = () => {
         setGeneratedCode(true);
     };
 
     const hideModal = () => {
-        setIsModalOpen(false);
+        setisModalVetOwner(false);
         setGeneratedCode(false);
+        setIsModalRegent(false);
     };
 
     return (
         <>   
             <Row align="middle">
-                <Col xs={{span:24}} md={{span:23}}>
-                    <Title className='appTitle'>Gestion de Veterinarios en Clinicas</Title>
-                </Col>
-                <Col xs={{span:24}} md={{span:1}}>
-                    <Tooltip title="Asociar Veterinario Regente" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModal}/>
-                    </Tooltip>
-                </Col>
+                {
+                    isRegent ?
+                    <>
+                        <Col xs={{span:24}} md={{span:23}}>
+                            <Title className='appTitle'>Gestion de Veterinarios</Title>
+                        </Col>
+                        <Col xs={{span:24}} md={{span:1}}>
+                            <Tooltip title="Asociar Co-Veterinarios" placement='right'>
+                                <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModalRegent}/>
+                            </Tooltip>
+                        </Col>
+                    </>
+                    :
+                    <>
+                        <Col xs={{span:24}} md={{span:23}}>
+                            <Title className='appTitle'>Gestion de Veterinarios en Clinicas</Title>
+                        </Col>
+                        <Col xs={{span:24}} md={{span:1}}>
+                            <Tooltip title="Asociar Veterinario Regente" placement='right'>
+                                <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModalOwner}/>
+                            </Tooltip>
+                        </Col>
+                    </>
+                }                
             </Row>
-
             <Divider orientation="left">Filtros</Divider>
             
             <Row gutter={[16, 16]}>
@@ -157,15 +190,27 @@ export default function VeterinariesManagement(){
                         <Option value="Pecos">Pecos</Option>
                     </Select>
                 </Col>
-                <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
-                    <Select placeholder="Regente" showSearch className="select-before full-width">
-                        <Option value="Si">Si</Option>
-                        <Option value="No">No</Option>
-                    </Select>
-                </Col>
-                <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
-                    <Input placeholder='Telefono' />
-                </Col>
+                {
+                    isRegent ?
+                    <>
+                        <Col className="gutter-row" xs={{span:12}} md={{span:8}}>
+                            <Input placeholder='Telefono' />
+                        </Col>
+                    </>
+                    :
+                    <>
+                        <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
+                            <Select placeholder="Regente" showSearch className="select-before full-width">
+                                <Option value="Si">Si</Option>
+                                <Option value="No">No</Option>
+                            </Select>
+                        </Col>
+                        <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
+                            <Input placeholder='Telefono' />
+                        </Col>
+                    </>
+                }
+                
                 <Col className="gutter-row" xs={{span:12}} md={{span:8}}>
                     <Input placeholder='Dirección' />
                 </Col>
@@ -174,7 +219,53 @@ export default function VeterinariesManagement(){
             <Divider orientation="left"></Divider>
             <Table columns={columns} dataSource={data} onChange={onChange} />
             <Modal  title="Generar código de asociacion con Veterinario Regente"
-                    visible={isModalOpen}
+                    visible={isModalVetOwner}
+                    onCancel={hideModal}
+                    footer={[
+                        <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
+                            Cancelar
+                        </Button>,
+                        <>
+                            {
+                            generatedCode ? 
+                            <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
+                                Aceptar
+                            </Button>
+                            :
+                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal" > 
+                                Generar
+                            </Button>
+                            }
+                        </>
+                    ]}>
+                {
+                generatedCode ?
+                <><Row>
+                        <Col span={24}>
+                            <Typography.Title level={4}>
+                                El código generado es:
+                            </Typography.Title>
+                        </Col>                        
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>20202461</Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+
+                        </Col>
+                    </Row>El mismo expirará en 10 minutos</>
+                :
+                <>
+                    <div>Ingrese la matricula del Veterinario a asociar</div>
+                    <Input type="number" name="mp" placeholder="M.P. Veterinario"/>
+                </>
+                }
+            </Modal>
+            <Modal  title="Generar código de asociacion con el Co-Veterinario"
+                    visible={isModalRegent}
                     onCancel={hideModal}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 

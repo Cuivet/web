@@ -8,6 +8,7 @@ import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutl
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import './MenuSider.scss';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 export default function MenuSider(props){
    
@@ -83,6 +84,13 @@ export default function MenuSider(props){
                             <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
+                            </Link>
+                        </Menu.Item>
+                        {/* solo si es regente */}
+                        <Menu.Item key="9">
+                            <Link to={"/veterinaries-management"} className='admin-sider__item'>                      
+                                <Icon component={''}><PeopleAltOutlinedIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Gestion de Veterinarios </span>
                             </Link>
                         </Menu.Item>
 

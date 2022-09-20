@@ -131,7 +131,7 @@ export default function MenuSider(props){
                 <Menu.Item key="11">
                     <Link to={"/settings/user"} className='admin-sider__item'>            
                         <SettingOutlined/>
-                        <span className="nav-text"> Perfil </span>
+                        <span className="nav-text"> Mi Cuenta </span>
                     </Link>
                 </Menu.Item>
             </Menu>

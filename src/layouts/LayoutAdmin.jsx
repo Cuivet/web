@@ -29,7 +29,7 @@ export default function LayoutAdmin(props){
                 <Content className="layout-admin__content">
                     {children}
                 </Content>
-                <Footer className="layout-admin__footer">CUIVET</Footer>
+                <Footer className="layout-admin__footer">CUIVET By Proyecto Final</Footer>
             </Layout> 
         </Layout>
 

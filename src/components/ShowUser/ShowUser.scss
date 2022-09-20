@@ -3,9 +3,22 @@
 .show-item{
     height: 30px;
     &:hover{
-        background-color: beige!important;
+        background-color: $third-color!important;
         color: $primary-color!important;
         cursor: pointer;
     }
 
+}
+
+.update-User-form__button{
+    align-items: center;
+    background-color: $primary-color;
+    position: center;
+    color: white;
+
+    &:hover{
+        background-color: $secondary-color!important;
+        color: $font-light;
+        border: 0;
+    }
 }

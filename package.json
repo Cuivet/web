@@ -22,6 +22,8 @@
     "antd": "^4.20.6",
     "antd-img-crop": "^4.2.4",
     "axios": "^0.27.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.37",
     "node-sass": "^7.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

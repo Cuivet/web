@@ -42,16 +42,21 @@
 .ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active{
     color: $secondary-color!important;
 }
-.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
-    background-color: $primary-color!important;
+// .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
+//     background-color: $primary-color!important;
+// }
+// .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before{
+//     border-color: $primary-color!important;
+// }
+// .ant-picker-today-btn{
+//     color: $primary-color!important;
+// }
+.ant-radio-button-wrapper:hover{
+    color: $secondary-color;
 }
-.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before{
-    border-color: $primary-color!important;
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within{
+    box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);
 }
-.ant-picker-today-btn{
-    color: $primary-color!important;
-}
-
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
 .ant-btn:hover,
@@ -129,3 +134,24 @@
 .full-width {
     width: 100%;
 }
+
+// scrollbar properties
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: $secondary-color; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $primary-color; 
+  }

@@ -15,7 +15,7 @@
         height: 65px;
         background-color: $background-light;
         color: $font-grey;
-        z-index: 1;
+        z-index: 5;
     }
     &__content{
         min-height: calc(100vh - 65px);

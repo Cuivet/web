@@ -18,7 +18,7 @@ export default function VeterinariesAssociations(){
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [petOptions, setPetOptions] = useState(null);
     const [selectedPetIds, setSelectePetIds] = useState([]);
-    const [associations, setAssociations] = useState([]);
+    const [groupedAssociations, setGroupedAssociations] = useState([]);
     const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
@@ -61,7 +61,15 @@ export default function VeterinariesAssociations(){
     function refreshComponent() {
         getAllByTutorId(profile.tutor.id)
             .then(associations => {
-                setAssociations(associations);
+                let groupedAssociations = [];
+                associations.forEach(association => {
+                    const associationsFilterByEachTandV = associations.filter( as => as.tutorData.tutor.id === association.tutorData.tutor.id && as.veterinaryData.veterinary.id === association.veterinaryData.veterinary.id);
+                    const petList = associationsFilterByEachTandV.map(as => as.pet);
+                    if(!groupedAssociations.find(as => as.tutorData.tutor.id === association.tutorData.tutor.id && as.veterinaryData.veterinary.id === association.veterinaryData.veterinary.id)){
+                        groupedAssociations.push({veterinaryData: association.veterinaryData, tutorData: association.tutorData, pets: petList});
+                    }
+                })
+                setGroupedAssociations(groupedAssociations);
             }
         );
         setIsModalOpen(false);
@@ -95,9 +103,8 @@ export default function VeterinariesAssociations(){
 
     function returnAssociationCards(){
         var renderAssociationCards = [];
-        associations.forEach(association => {
+        groupedAssociations.forEach(association => {
             renderAssociationCards.push(
-
                 <Card   className='appCard'
                         hoverable
                         style={{width: 300}}
@@ -152,7 +159,7 @@ export default function VeterinariesAssociations(){
 
             <Row>
                 {
-                associations.length ? 
+                groupedAssociations.length ? 
                 returnAssociationCards()
                 :
                 <>Aún no existen veterinarios asociados</>
@@ -161,6 +168,7 @@ export default function VeterinariesAssociations(){
 
             <Modal  title="Asociarse con un profesional"
                     visible={isModalOpen}
+                    onCancel={hideModal}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
                             Cancelar

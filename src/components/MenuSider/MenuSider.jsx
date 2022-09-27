@@ -74,7 +74,7 @@ export default function MenuSider(props){
                 { veterinary ?
                     <>
                         <Menu.Item key="5">
-                            <Link to={"/admin"} className='admin-sider__item'>                      
+                            <Link to={"/consultation"} className='admin-sider__item'>                      
                                 <Icon><ContentPasteOutlinedIcon /></Icon>
                                 <span className="nav-text"> Consultas </span>
                             </Link>

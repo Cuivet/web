@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
@@ -43,7 +43,8 @@ export default function VeterinariesManagement(){
         );
         setVetOptions(null);
         setSelectedVetId([]);
-        setIsModalOpen(false);
+        setIsModalRegent(false);
+        setisModalVetOwner(false);
         setGeneratedCode(false);
         setMP(null);
         setCompleteTemporalAssociation(null);
@@ -77,6 +78,7 @@ export default function VeterinariesManagement(){
     const refreshSelectedVets = (value) => {
         setSelectedVetId(value);
     };
+
     useEffect(() =>{
         if(profile.veterinary != null){
             setIsRegent(true);
@@ -139,56 +141,6 @@ export default function VeterinariesManagement(){
         });
     };
     
-
-    const data = [
-        {
-            key: '1',
-            mp: '3029',
-            name: 'Eugenia',
-            lastName: 'Frattin',
-            phone: 3513026921,
-            vet: 'NeoZoo',
-            regent: regent[0],
-            //en la condicion deberia ir lo que trae el back
-            actions: (regent[0] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,            
-            address: 'Rodríguez del Busto 4086',
-        },
-        {
-            key: '2',
-            mp: '2041',
-            name: 'Jorge Ignacio',
-            lastName: 'Barbará',
-            phone: 3513020874,
-            vet: 'Pecos',
-            regent: regent[1],
-            address: 'Arturo M. Bas 345',
-            actions: (regent[1] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,
-        },
-        {
-            key: '3',
-            mp: '1098',
-            name: 'Juan',
-            lastName: 'Barella',
-            phone: 351739744,
-            vet: 'NeoZoo',
-            regent: regent[0],
-            actions: (regent[0] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,
-            address: 'Av. Rafael Núñez 4126',
-        },
-        {
-            key: '4',
-            mp: '2270',
-            name: 'Martina',
-            lastName: 'Aresu',
-            phone: 3515521098,
-            vet: 'Alem',
-            regent: regent[1],
-            actions: (regent[1] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null,
-            address: 'Bv. Los Granaderos 2075',
-        }
-
-    ];
-
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };

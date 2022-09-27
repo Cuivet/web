@@ -61,10 +61,15 @@
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
 .ant-btn:hover,
 .ant-input:hover{
-    border-color: $secondary-color!important;
+    border-color: $secondary-color!important; 
+    
+}
+.ant-btn-primary{
+    border-color: $primary-color!important;
+    background-color: $primary-color!important;
 }
 
-.ant-btn-default:focus{
+.ant-btn-default:focus, .ant-btn:hover.ant-btn-default{
     color: $secondary-color!important;
     border-color: $secondary-color!important;
 }

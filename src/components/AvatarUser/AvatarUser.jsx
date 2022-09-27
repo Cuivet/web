@@ -8,8 +8,6 @@ export default function AvatarUser(props){
     let flag1, flag2 = null;
     const {icon, preview} = props;
 
-    // console.log(icon);
-
     if(icon == null){
         flag1 = <UserOutlined />;
     }else{
@@ -18,7 +16,14 @@ export default function AvatarUser(props){
     
     return (
         <Avatar className="avatar" 
-        size={"large"} 
+        size={{
+            xs: 30,
+            sm: 35,
+            md: 45,
+            lg: 45,
+            xl: 55,
+            xxl: 65,
+          }}
         icon={flag1} 
         src={flag2} />
     )

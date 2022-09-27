@@ -63,7 +63,7 @@ export function getAllByTutorId(tutorId){
     var axios = require('axios');
     return axios({
         method: "get",
-        url: `${basePATH}/pet-association/allByTutor/${tutorId}`,
+        url: `${basePATH}/pet-association/allByTutorId/${tutorId}`,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',

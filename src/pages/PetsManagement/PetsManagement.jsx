@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin, message } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
 import { registerTemporalAssociation, getAllByVeterinaryId } from '../../services/pet_association.service';
+import { getTutorDataByDni } from '../../services/tutor.service';
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -9,6 +10,8 @@ export default function PetsManagement(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [tutorDni, setTutorDni] = useState(null);
+    const [isSearchingTutorData, setIsSearchingTutorData] = useState(false);
+    const [searchedTutorData, setSearchedTutorData] = useState(null);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -110,11 +113,27 @@ export default function PetsManagement(){
     const hideModal = () => {
         setIsModalOpen(false);
         setGeneratedCode(false);
+        setSearchedTutorData(null);
+        setTutorDni(null);
     };
 
     const refreshDni = e =>{
+        setSearchedTutorData(null);
         setTutorDni(e.target.value);
     };
+    
+    const searchTutorData = () => {
+        setIsSearchingTutorData(true);
+        getTutorDataByDni(tutorDni)
+            .then(res => {
+                setSearchedTutorData(res);
+                setIsSearchingTutorData(false);
+            })
+            .catch(error => {
+                message.error(error.response.data);
+                setIsSearchingTutorData(false);
+            });
+    }
 
     return (
         <>   
@@ -177,7 +196,7 @@ export default function PetsManagement(){
                                 Aceptar
                             </Button>
                             :
-                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal" disabled={isLoading}> 
+                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal" disabled={isLoading || !searchedTutorData}> 
                                 Generar
                             </Button>
                             }
@@ -212,8 +231,33 @@ export default function PetsManagement(){
                     <Spin/>
                     :
                     <>
-                        <div>Ingrese el DNI del tutor con mascota/s a asociar</div>
-                        <Input type="number" name="phone" placeholder="DNI del tutor" onChange={refreshDni} />
+                        <Divider orientation="left" plain> Ingrese DNI del tutor a asociar </Divider>
+                        <Row>
+                            <Col span={18}>
+                                <Input type="number" name="phone" placeholder="DNI del tutor a asociar" onChange={refreshDni} allowClear/>
+                            </Col>
+                            <Col span={6}>
+                                <Button htmlType="submit" type="primary" onClick={searchTutorData} className="register-form_button-ok-modal" disabled={isLoading}> 
+                                    Buscar tutor
+                                </Button>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <>
+                                <Divider orientation="left" plain> Resultado de la busqueda </Divider>
+                            </>
+                            {
+                            searchedTutorData?
+                            <>
+                                {searchedTutorData.person.name + ' ' + searchedTutorData.person.lastName}
+                            </>
+                            :
+                            isSearchingTutorData?
+                            <><Spin />Buscando...</>
+                            :
+                            <>Debe realizar una busqueda del tutor para poder avanzar</>
+                            }
+                        </Row>
                     </>
                     }
                 </>

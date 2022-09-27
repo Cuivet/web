@@ -1,11 +1,11 @@
-import { UserOutlined } from "@ant-design/icons";
-import { Button, Col, PageHeader, Row, Typography, message, Tag, Steps, Divider } from "antd";
+import { LeftCircleOutlined,RightCircleOutlined,CheckCircleOutlined } from "@ant-design/icons";
+import { Button, Col, PageHeader, Row, Typography, message, Tag, Steps, Divider, Tooltip } from "antd";
 import React, {useState} from "react";
-import User from '../../assets/img/png/tutorUsuario.png';
+// import User from '../../assets/img/png/tutorUsuario.png';
 
 import './Consultation.scss'
 
-const {Title, Paragraph} = Typography;
+const {Title} = Typography;
 
 export default function Consultation(){
     const [editableStr, setEditableStr] = useState('Motivo de consulta...');
@@ -22,35 +22,35 @@ export default function Consultation(){
     const { Step } = Steps;
     const steps = [
     {
-        title: 'Resenia',
-        content: 'First-content',
+        title: 'Reseña',
+        content: 'Componente Reseña',
     },
     {
         title: 'Anamnesis',
-        content: 'Second-content',
+        content: 'Componente Anamnesis',
     },
     {
         title: 'Examen Fisico',
-        content: 'Last-content',
+        content: 'Componente Examen Fisico',
     },
     {
         title: 'Diagnostico Presuntivo',
-        content: 'Last-content',
+        content: 'Componente Diagnostico Presuntivo',
     },
     {
         title: 'Diagnostico',
-        content: 'Last-content',
+        content: 'Componente Diagnostico',
     },
     {
         title: 'Tratamiento',
-        content: 'Last-content',
+        content: 'Componente Tratamiento',
     },{
         title: 'Pronostico',
-        content: 'Last-content',
+        content: 'Componente Pronostico',
     },
     ];
     const IconLink = ({ src, text }) => (
-        <a className="example-link">
+        <a href="www.estudio.com" className="example-link">
           <img className="example-link-icon" src={src} alt={text} />
           {text}
         </a>
@@ -89,7 +89,7 @@ export default function Consultation(){
             className="site-page-header"
             tags={<Tag color="purple">Malu</Tag>}
             extra={[<Button key={1} type='default'>Control</Button>,<Button key={2} type='primary'>Cerrar</Button>]}
-            avatar={{icon:'EF', }} >
+            avatar={{icon:'EF',style:{backgroundColor:'#f56a00'}}} >
                 <Row>
                     <Col span={24}>
                         {content}
@@ -101,35 +101,43 @@ export default function Consultation(){
     <Divider></Divider>
     <Row>
         <Col span={24}>
-        <Steps current={current}>
+        <Steps current={current} labelPlacement='vertical' percent={(current+1)*14.4}>
             {steps.map((item) => (
-            <Step key={item.title} title={item.title} />
+            <Step key={item.title} title={item.title} status={item.status} />
             ))}
         </Steps>
         <div className="steps-content">{steps[current].content}</div>
         <div className="steps-action">
+            {current > 0 && (
+                <Tooltip title='Atras' placement="top">
+                    <Button
+                        style={{
+                        margin: '0 8px',
+                        }}
+                        className="steps-action-back"
+                        onClick={() => prev()}
+                    >
+                        <LeftCircleOutlined />
+                    </Button>
+                </Tooltip>          
+            
+            
+            )}
             {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
-                Next
-            </Button>
+            <Tooltip title='Siguiente' >
+                <Button type="primary" className="steps-action-next" onClick={() => next()}>
+                    <RightCircleOutlined />
+                </Button>
+            </Tooltip>
             )}
             {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                Done
-            </Button>
+            <Tooltip title='Finalizar'>
+                <Button type="primary" className="steps-action-finish" onClick={() => message.success('Consulta Finalizada!')}>
+                    <CheckCircleOutlined />
+                </Button>
+            </Tooltip>
             )}
-        {current > 0 && (
-          <Button
-            style={{
-              margin: '0 8px',
-            }}
-            onClick={() => prev()}
-          >
-            Previous
-          </Button>
-         
-          
-        )}
+        
         </div>
         </Col>
     </Row>

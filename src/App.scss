@@ -73,6 +73,34 @@
     color: $secondary-color!important;
     border-color: $secondary-color!important;
 }
+// el step en el que estoy
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon{
+    background-color: $secondary-color!important;
+}
+.ant-steps-item-process .ant-steps-item-icon{
+    border-color: $secondary-color;
+}
+// el step que dejo por el que ya pase
+.ant-steps-item-finish .ant-steps-item-icon{
+    border-color: $secondary-color;
+}
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon{
+    color: $secondary-color;
+}
+//barra de proceso entre steps
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after{
+    background-color: $secondary-color;
+}
+.ant-steps-with-progress .ant-steps-item .ant-steps-item-tail{
+    top: 12px!important;
+}
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after{
+    background-color: $secondary-color;
+}
+// progreso general, circulo sobre el step
+.ant-progress-inner:not(.ant-progress-circle-gradient) .ant-progress-circle-path{
+    stroke: $secondary-color;
+}
 .appButton { 
     width: 100%;
     font-size: 0em+16px/$defaultFontSize;

@@ -111,7 +111,19 @@ export default function VeterinariesManagement(){
             dataIndex: 'phone',
             //sorter: (a, b) => a.phone.age - b.phone.age,
             responsive: ['sm']
-        },        
+        },
+        {
+            title: 'Clínica Veterinaria',
+            dataIndex: 'vet',
+            sorter: (a, b) => a.vet.length - b.vet.length,
+            responsive: ['md']
+        },
+        {
+            title: 'Regente',
+            dataIndex: 'regent',
+            sorter: (a, b) => a.regent - b.regent,
+            responsive: ['md']
+        },
         {
             title: 'Dirección',
             dataIndex: 'address',
@@ -125,22 +137,7 @@ export default function VeterinariesManagement(){
             
         }
     ];
-      
-    if(!isRegent){
-        columns.splice(4,0, {
-            title: 'Regente',
-            dataIndex: 'regent',
-            sorter: (a, b) => a.regent - b.regent,
-            responsive: ['md']
-        },
-        {
-            title: 'Clínica Veterinaria',
-            dataIndex: 'vet',
-            sorter: (a, b) => a.vet.length - b.vet.length,
-            responsive: ['md']
-        });
-    };
-    
+
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };

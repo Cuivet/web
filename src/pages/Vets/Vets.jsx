@@ -35,13 +35,13 @@ export default function Vets(){
 
      
      function Vet(){
-         const renderVetList = [];
-         if (vets.length){
-             vets.forEach(vet => {
+        const renderVetList = [];
+        if (vets.length){
+            vets.forEach(vet => {
                 renderVetList.push(                     
-                         <CardPet item={vet.id} title={vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={redcross} description={vet.address}></CardPet>
-                   
-                )});
+                    <CardPet item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={redcross} description={vet.vet.address}></CardPet>
+                )
+            });
          };
          return renderVetList;
          

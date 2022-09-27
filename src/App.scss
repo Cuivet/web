@@ -42,14 +42,64 @@
 .ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active{
     color: $secondary-color!important;
 }
-.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
+// .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
+//     background-color: $primary-color!important;
+// }
+// .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before{
+//     border-color: $primary-color!important;
+// }
+// .ant-picker-today-btn{
+//     color: $primary-color!important;
+// }
+.ant-radio-button-wrapper:hover{
+    color: $secondary-color;
+}
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within{
+    box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);
+}
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
+.ant-btn:hover,
+.ant-input:hover{
+    border-color: $secondary-color!important; 
+    
+}
+.ant-btn-primary{
+    border-color: $primary-color!important;
     background-color: $primary-color!important;
 }
-.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before{
-    border-color: $primary-color!important;
+
+.ant-btn-default:focus, .ant-btn:hover.ant-btn-default{
+    color: $secondary-color!important;
+    border-color: $secondary-color!important;
 }
-.ant-picker-today-btn{
-    color: $primary-color!important;
+// el step en el que estoy
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon{
+    background-color: $secondary-color!important;
+}
+.ant-steps-item-process .ant-steps-item-icon{
+    border-color: $secondary-color;
+}
+// el step que dejo por el que ya pase
+.ant-steps-item-finish .ant-steps-item-icon{
+    border-color: $secondary-color;
+}
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon{
+    color: $secondary-color;
+}
+//barra de proceso entre steps
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after{
+    background-color: $secondary-color;
+}
+.ant-steps-with-progress .ant-steps-item .ant-steps-item-tail{
+    top: 12px!important;
+}
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after{
+    background-color: $secondary-color;
+}
+// progreso general, circulo sobre el step
+.ant-progress-inner:not(.ant-progress-circle-gradient) .ant-progress-circle-path{
+    stroke: $secondary-color;
 }
 .appButton { 
     width: 100%;
@@ -117,3 +167,24 @@
 .full-width {
     width: 100%;
 }
+
+// scrollbar properties
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: $secondary-color; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $primary-color; 
+  }

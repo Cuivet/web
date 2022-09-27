@@ -1,5 +1,5 @@
-import React from "react";
-import { Col, Row, Button, Tooltip, Typography, Divider, Table, Select,DatePicker, Input } from 'antd';
+import React, {useState} from "react";
+import { Col, Row, Button, Tooltip,Modal, Typography, Divider, Table, Select,DatePicker, Input } from 'antd';
 import BiotechOutlinedIcon from '@mui/icons-material/BiotechOutlined';
 import {EyeOutlined, DownloadOutlined} from '@ant-design/icons';
 import moment from 'moment';
@@ -8,9 +8,9 @@ const { Title } = Typography;
 const {Option} = Select;
 
 export default function Studies(){
-
     var tutor = false;
     const profile = JSON.parse(sessionStorage.getItem('profile'));
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     if(profile.tutor != null){
         tutor= true;
@@ -110,7 +110,18 @@ export default function Studies(){
     
     const disabledDate =(current) =>{
         return current && current> moment().endOf('day');
-    }
+    };
+
+    const showStudies = () =>{
+        setIsModalOpen(true);
+    };
+    const handleCancel = () => {
+        
+        setIsModalOpen(false);
+    };
+    const algo= () =>{
+        return 'Hola'
+    };
     return (<>
         <Row align="middle">
             <Col span={23}>
@@ -122,7 +133,7 @@ export default function Studies(){
                 :
                 <Col span={1}>
                     <Tooltip title="Agregar Estudio Complementario" placement='right'>
-                        <Button type='link' className="appButton" size='large'  icon={<BiotechOutlinedIcon/>}/>
+                        <Button type='link' className="appButton" size='large'  icon={<BiotechOutlinedIcon/>} onClick={showStudies}/>
                     </Tooltip>
                 </Col>
             }                
@@ -156,5 +167,80 @@ export default function Studies(){
         </Row>
         <Divider orientation="left"></Divider>
         <Table columns={columns} dataSource={data} onChange={onChange} />
+        <Modal title='Pedido de Estudios Complementarios'             
+                visible={isModalOpen} 
+                onCancel={handleCancel}
+                footer={[
+                    <Button key="back" onClick={handleCancel}>
+                        Cancelar
+                    </Button>,
+                    <Button key="submit" type="primary" >
+                        Generar
+                    </Button>,
+                ]}>
+                
+            <Row>
+                <Title level={5}>Ingrese DNI del tutor:</Title>
+            </Row>
+            <Row>
+                <Col span={24}>
+                    <Input.Search type="number" placeholder="DNI" allowClear onSearch={algo} />
+                </Col>
+            </Row><Row>
+                <Title level={5}>Seleccione la mascota a la que desea generar el pedido:</Title>
+            </Row>
+            <Row>
+                <Col span={24}>
+                    <Select placeholder='Mascota'
+                            allowClear
+                            showSearch
+                            className="select-before full-width"
+                            style={{ width: '100%' }} > 
+                    <Option value="1">Malu</Option>
+                    <Option value="2">Lola</Option>
+                    <Option value="3">Wendy</Option>
+                    <Option value="4">Lima</Option>
+                    </Select>
+                </Col>
+            </Row>
+            <Row>
+                <Title level={5}>Tipo de Estudio Complementario:</Title>
+            </Row>
+            <Row>
+                <Col span={24}>
+                    <Select placeholder='Estudios'
+                            allowClear
+                            showSearch
+                            className="select-before full-width"
+                            style={{ width: '100%' }} > 
+                    <Option value="Radiografia">Radiografia</Option>
+                    <Option value="Rayos">Rayos X</Option>
+                    <Option value="Particular">Particular</Option>
+                    <Option value="Ecografia">Ecografia</Option>
+                    </Select>
+                </Col>
+            </Row>
+            <Row>
+                <Title level={5}>Observaciones:</Title>
+            </Row>
+            <Row>
+                <Col span={24}>
+                <Input.TextArea
+                    showCount
+                    allowClear
+                    maxLength={500}
+                    placeholder='Ingrese observacion...'
+                    autoSize={{
+                        minRows: 3,
+                        maxRows: 5,
+                      }}
+                    
+                />
+                </Col>
+            </Row>
+
+        </Modal>
+        
+        
     </>)
 }

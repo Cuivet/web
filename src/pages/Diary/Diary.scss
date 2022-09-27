@@ -1,0 +1,25 @@
+@import '../../scss/index.scss';
+
+
+.events{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// .ant-picker-cell-today{
+//     background-color: red!important;
+// }
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner{
+    background-color: $secondary-color!important;
+}
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-today{
+    border-color: $primary-color!important;
+   
+}
+.ant-picker-calendar-date-value{
+    color: $primary-color!important;
+}
+.ant-picker-calendar-header{
+    margin-right: 2%;
+}

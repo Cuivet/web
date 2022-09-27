@@ -19,7 +19,9 @@ import VetsAssociations from "../pages/VetsAssociations";
 import VeterinariesAssociations from "../pages/VeterinariesAssociations";
 import VeterinariesManagement from "../pages/VeterinariesManagement";
 import Vets from "../pages/Vets";
-import Studies from "../pages/Studies"
+import Studies from "../pages/Studies";
+import Diary from "../pages/Diary";
+import Consultation from "../pages/Consultation"
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -81,6 +83,16 @@ const routesAdmin = [
     {
         path: "/studies",
         component: Studies,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/calendar",
+        component: Diary,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/consultation",
+        component: Consultation,
         layout: LayoutAdmin,
     },
     {

@@ -3,6 +3,7 @@ import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, M
 import { NodeIndexOutlined } from '@ant-design/icons';
 import { registerTemporalAssociation, getAllByVeterinaryId } from '../../services/pet_association.service';
 import { getTutorDataByDni } from '../../services/tutor.service';
+import AvatarSearch from '../../components/AvatarSearch';
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -248,8 +249,8 @@ export default function PetsManagement(){
                             </>
                             {
                             searchedTutorData?
-                            <>
-                                {searchedTutorData.person.name + ' ' + searchedTutorData.person.lastName}
+                            <>  
+                                <AvatarSearch name={searchedTutorData.person.name} lastName={searchedTutorData.person.lastName}></AvatarSearch>
                             </>
                             :
                             isSearchingTutorData?

@@ -6,7 +6,8 @@ export default function AvatarSearch(props){
     const styleBig = {
         display: 'flex',
         justifyContent: 'normal',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%'
     }
     const styleText = {
         marginBottom: '0',

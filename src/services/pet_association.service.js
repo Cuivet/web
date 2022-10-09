@@ -14,9 +14,6 @@ export function registerTemporalAssociation(data){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err; //podriamos hacer que falle voluntariamente si llega un 'errorMessage:' asi usamos el catch (VER DESPUES)
         });
 }
 
@@ -33,9 +30,6 @@ export function getTemporalAssociationByCode(code){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
 }
 
@@ -53,9 +47,6 @@ export function register(petAssociations){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
 }
 
@@ -72,9 +63,6 @@ export function getAllByTutorId(tutorId){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
 }
 
@@ -91,9 +79,6 @@ export function getAllByVeterinaryId(veterinaryId){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
 }
 

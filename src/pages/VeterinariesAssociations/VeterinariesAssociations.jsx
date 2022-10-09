@@ -38,10 +38,14 @@ export default function VeterinariesAssociations(){
     const tryToAsociate = () => {
         getTemporalAssociationByCode(generatedCode)
             .then(temporalAsociation => {
-                getPetsByTutorId(profile.tutor.id).then(pets => {
-                    setCompleteTemporalAssociation(temporalAsociation);
-                    setPetOptions(generatePetOptions(pets));
-                });
+                getPetsByTutorId(profile.tutor.id)
+                    .then(pets => {
+                        setCompleteTemporalAssociation(temporalAsociation);
+                        setPetOptions(generatePetOptions(pets));
+                    });
+            })
+            .catch(error => {
+                message.error(error.response.data);
             });
     };
 

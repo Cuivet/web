@@ -1,290 +1,218 @@
-import React, {useState} from "react";
-import { Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Row, Col } from 'antd';
+import React, {useState, useEffect} from "react";
+import { Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Row, Col, Spin } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { numberValidation } from '../../utils/formValidation';
 import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
 import moment  from "moment";
 import { registerPet } from "../../services/pet.service";
+import { raceService } from "../../services/race.service";
+import { specieService } from "../../services/specie.service";
 import './RegisterPetForm.scss';
 
 export default function RegisterPetForm(props){
-    const { petToDisplay } = props;
-    
-    //saco los datos del tutor que está logueado
-    const profile = JSON.parse(sessionStorage.getItem('profile'));
-    const tutorId = profile.tutor.id;
-
+    const [isInitData, setIsInitData]= useState(false);
+    const [isFetchData, setIsFetchData]= useState(false);
+    const [pet, setPet]= useState(null);
+    const [races, setRaces]= useState([]);
+    const [species, setSpecies]= useState([]);
+    const [formValid, setFormValid] = useState(initFormValid());
     const {Dragger} = Upload;
-    var petName;
 
-    const fields = {
-        name: `pet-${petName}`, //le dejamos el nombre con el que lo sube ?
+    if(!isInitData && isFetchData){
+        initPet();
+        setIsInitData(true);
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await raceService.findAll()
+            .then(response => {
+                setRaces(response);
+            });
+            await specieService.findAll()
+            .then(response => {
+                setSpecies(response);
+            });
+            setIsFetchData(true);
+        };
+        fetchData();
+    }, []);
+
+    function initPet() {
+        const pet = props.pet;
+        setPet({
+            id: pet? pet.id : null,
+            name: pet ? pet.name : null,
+            raceId: pet ? pet.raceId : null,
+            specieId: pet ? pet.raceId ? species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id : null : null,
+            birth: pet ? moment(pet.birth.slice(0, 10), 'YYYY-MM-DD') : null,
+            isMale: pet ? pet.isMale ? '1' : '0' : null,
+            size: null,
+            tutorId: JSON.parse(sessionStorage.getItem('profile')).tutor.id
+        });
+    }
+
+    function initFormValid() {
+        return {
+            name: false,
+            raceId: false,
+            birth: false,
+            isMale: false,
+            size: false
+        }
+    }
+
+    const draggerFields = {
+        name: '',
         multiple: false,
         maxCount:1,
         accept: 'image/png, image/jpeg',
         method: 'post',
-        action: 'localhost', //creo es para llamar el endpoint... 
-      
+        action: 'localhost',
         onChange(info) {
           const { status } = info.file;
-      
+
           if (status !== 'uploading') {
             console.log(info.file, info.fileList);
           }
       
           if (status === 'done') {
             message.success(`${info.file.name} Imagen subida con exito.`);
-            //aca iria lo del back para guardar la img
           } else if (status === 'error') {
             message.error(`${info.file.name} La imagen no se ha podido subir`);
           }
         },
-      
         onDrop(e) {
           console.log('Archivo eliminado', e.dataTransfer.files);
         },
-      };
-
-    const [input, setInput]= useState({
-        name: petToDisplay === true ? "" : petToDisplay ? petToDisplay.name : "",
-        species: "Especie",
-        raza: "Raza",
-        birth: petToDisplay === true ? "" : petToDisplay ? moment(petToDisplay.birth.slice(0, 10), 'YYYY-MM-DD') : "",
-        sex: null,
-        size: "Tamaño",
-    });
-
-    const [formValid, setFormValid] = useState({
-        name:false,
-        species:false,
-        raza:false,
-        birth:false,
-        sex:false,
-        size:false,
-    });
-
-    const changeForm = e =>{
-        //console.log(e.target.name);
-        // setInput({
-        //     ...input,
-        //     [e.target.name]: e.target.value
-        // });
-
-        if(e.target.name === "sex"){
-            setInput({
-                ...input,
-                [e.target.name]: e.target.value
-            });
-        } else {
-            setInput({
-                ...input,
-                [e.target.name]: e.target.value
-            });
-        }
-    };
-    
-    const inputValidation = e =>{
-        //console.log(e.target);
-        const {type, name, value} = e.target;
-
-        if(type ==="radio"){
-            setFormValid({
-                ...formValid,
-                [name]:e.target.checked
-            });
-        };
-
-        if(type === "text"){
-            if(name === "name"){
-                petName = value;
-            }
-            setFormValid({ ...formValid, [name]:(e.target)});
-        };
-
-        if (type === "number"){
-            setFormValid({
-                ...formValid,
-                [name]:numberValidation(e.target)
-            });
-        };
-
-        setInput({...input, tutorId: tutorId});
-        
     };
 
     const register = e => {
-        console.log(input);
-        const nameVal = input.name;
-        const speciesVal = input.species;
-        const razaVal = input.raza;
-        const birthVal = input.birth;
-        const sexVal = input.sex;
-        const sizeVal = input.size;
-
-        if(!nameVal || !speciesVal || !razaVal|| !birthVal|| !sexVal|| !sizeVal){
-            notification['error']({
+        if(!pet.name || !pet.specieId || !pet.raceId || !pet.birth || pet.isMale === null || !pet.size){
+            return notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
                 placement: "top"
             })
-        } else{
-                registerPet(input)
-                    .then( res => {
-                        resetForm();
-                        props.registeredPet();
-                        notification['success']({
-                            message: "Mascota creada correctamente",
-                            placement: "top"
-                        });
+        }
+        pet.isMale = pet.isMale === '1' ? true : false;
+        registerPet(pet)
+            .then( res => {
+                resetForm();
+                props.registeredPet();
+                if(pet.id){
+                     return notification['success']({
+                        message: "Mascota actualizada correctamente",
+                        placement: "top"
                     });
-            }
-    };
-
-    const resetForm = () =>{
-        const inputs = document.getElementsByTagName('input');
-
-        for (let i = 0; i< inputs.length; i++){
-            inputs[i].classList.remove("success");
-            inputs[i].classList.remove("error");
-
-            setInput({
-                name:"",
-                species:"Especie",
-                raza:"Raza",
-                birth:null,
-                sex:null,
-                size:"Tamaño",
+                }
+                notification['success']({
+                    message: "Mascota creada correctamente",
+                    placement: "top"
+                });
             });
-            setFormValid({
-                name:false,
-                responsible:false,
-                raza:false,
-                birth:false,
-                sex:false,
-                size:false,
-            })
-        }
     };
 
-    const onSpeciesChange = (val) => {
-        switch(val){
-            case '1':
-                setInput({...input, species:"1"});
-                setFormValid({...formValid, species: true});
-                break;
-            case '2':
-                setInput({...input, species: "2"});
-                setFormValid({...formValid, species: true});
-                break;
-            case '3':
-                setInput({...input, species: "3"});
-                setFormValid({...formValid, species: true});
-                break;
-            case '4':
-                setInput({...input, species: "4"});
-                setFormValid({...formValid, species: true});
-                break;
-            default:
-                break;
-        }
+    const resetForm = () => {
+        initPet(null);
+        setFormValid(initFormValid);
     };
 
-
-    const onRazaChange = (val) => {
-        switch(val){
-            case '1':
-                setInput({...input, raza:"1"});
-                setFormValid({...formValid, raza: true});
-                break;
-            case '2':
-                setInput({...input, raza: "2"});
-                setFormValid({...formValid, raza: true});
-                break;
-            case '3':
-                setInput({...input, raza: "3"});
-                setFormValid({...formValid, raza: true});
-                break;
-            case '4':
-                setInput({...input, raza: "4"});
-                setFormValid({...formValid, raza: true});
-                break;
-            default:
-                break;
-        }
+    const onSpeciesChange = (specieId) => {
+        setPet({...pet, specieId: specieId, raceId: null});
+        setFormValid({...formValid, specieId: true});
     };
 
-    const onSizeChange = (val) => {
-        switch(val){
-            case '1':
-                setInput({...input, size:"1"});
-                setFormValid({...formValid, size: true});
-                break;
-            case '2':
-                setInput({...input, size: "2"});
-                setFormValid({...formValid, size: true});
-                break;
-            case '3':
-                setInput({...input, size: "3"});
-                setFormValid({...formValid, size: true});
-                break;
-            default:
-                break;
-        }
+    const onRazaChange = (raceId) => {
+        setPet({...pet, raceId: raceId});
+        setFormValid({...formValid, raceId: true});
     };
 
-    const onDateBirthChange = (value, dateString) => {
-        setInput({...input, birth: value});
-        setFormValid({...formValid, birth: true});
+    const onSizeChange = (size) => {
+        setPet({...pet, size: size});
+        setFormValid({...formValid, size: true});
+    }
+
+    const onDateBirthChange = (date) => {
+        setPet({...pet, birth: date});
+        setFormValid({...formValid, birth: date});
     };
-    const disabledDate =(current) =>{
+
+    const onSexChange = (isMale) => {
+        setPet({...pet, isMale: isMale.target.value});
+        setFormValid({...formValid, isMale: true});
+    };
+
+    const changeForm = e =>{
+        setPet({
+            ...pet,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const disabledDate = (current) =>{
         return current && current> moment().endOf('day');
     }
 
+    function renderSpecies() {
+        let list = [];
+        species.forEach(specie => {
+            list.push(<Select.Option value={specie.id}>{specie.name}</Select.Option>);
+        })
+        return list;
+    }
 
-    return (        
+    function renderRaces() {
+        let list = [];
+        races.forEach(race => {
+            if(race.specieId === pet.specieId){
+                list.push(<Select.Option value={race.id}>{race.name}</Select.Option>);
+            }
+        })
+        return list;
+    }
+
+    return (
+        !isInitData ? 
+        <Spin tip="Cargando..."></Spin>
+        :
         <Form className="register-pet-form"  onFinish={register} onChange={changeForm}>           
             <Row gutter={16}>
                 <Col span={24}>
                     <Form.Item>
-                        <Input type="text" name="name" onChange={inputValidation} value={input.name} placeholder="Nombre" className="register-pet-form__input" onSelect={inputValidation}/>
+                        <Input type="text" name="name" value={pet.name} placeholder="Nombre" className="register-pet-form__input"/>
                     </Form.Item>
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <DatePicker disabledDate={disabledDate} name="dateBirth" value={input.birth} size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="appDatePicker" format={'DD/MM/yyyy'} />
+                        <DatePicker disabledDate={disabledDate} name="dateBirth" value={pet.birth} size="large" onChange={onDateBirthChange} placeholder="Fecha de nacimiento" className="appDatePicker" format={'DD/MM/yyyy'} />
                     </Form.Item>
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <Select name="species" className="register-pet-form__select" value={input.species} onChange={onSpeciesChange} allowClear > 
-                            <Select.Option value="1">Perro</Select.Option>
-                            <Select.Option value="2">Gato</Select.Option>
-                            <Select.Option value="3">Roedor</Select.Option>
-                            <Select.Option value="4">Otro</Select.Option>
+                        <Select name="species" placeholder="Especie" className="register-pet-form__select" value={pet.specieId} onChange={onSpeciesChange} allowClear >
+                            {renderSpecies()}
                         </Select>
                     </Form.Item>
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <Select name="raza"  className="register-pet-form__select" value={input.raza} onChange={onRazaChange} allowClear > 
-                            <Select.Option value="1">Labrador</Select.Option>
-                            <Select.Option value="2">Golden</Select.Option>
-                            <Select.Option value="3">Caniche</Select.Option>
-                            <Select.Option value="4">Sin Raza</Select.Option>
+                        <Select showSearch name="races" optionFilterProp="children" placeholder="Raza" className="register-pet-form__select" value={pet.raceId} onChange={onRazaChange} allowClear 
+                        filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}> 
+                            {renderRaces()}
                         </Select>
                     </Form.Item>
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <Radio.Group optionType="button" name="sex" size="large" className="register-pet-form__radio" onChange={inputValidation} value={input.sex}>
-                            <Radio value="1" className="register-pet-form__radio-item">Macho</Radio>
-                            <Radio value="2"  className="register-pet-form__radio-item">Hembra</Radio>
+                        <Radio.Group optionType="button" name="isMale" size="large" className="register-pet-form__radio" onChange={onSexChange} value={pet.isMale}>
+                            <Radio value='1' className="register-pet-form__radio-item">Macho</Radio>
+                            <Radio value='0' className="register-pet-form__radio-item">Hembra</Radio>
                         </Radio.Group>
                     </Form.Item>
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <Select name="size" className="register-pet-form__select" value={input.size} onChange={onSizeChange} allowClear > 
+                        <Select name="size" className="register-pet-form__select" value={pet.size} onChange={onSizeChange} allowClear > 
                             <Select.Option value="1">Chico</Select.Option>
                             <Select.Option value="2">Mediano</Select.Option>
                             <Select.Option value="3">Grande</Select.Option>
@@ -294,7 +222,7 @@ export default function RegisterPetForm(props){
                 <Col span={24}>
                     <Form.Item>
                         <ImgCrop rotate>
-                            <Dragger {...fields}>
+                            <Dragger {...draggerFields}>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
                                 </p>

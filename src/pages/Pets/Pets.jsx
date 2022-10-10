@@ -14,6 +14,7 @@ export default function Pets(){
     const [ pets, setPets ] = useState([]);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
     const [ petToDisplay, setPetToDisplay ] = useState(null);
+    const [ displayDrawer, setDisplayDrawer ] = useState(false);
 
     if (!isInit) {
         setIsInit(true);
@@ -23,11 +24,12 @@ export default function Pets(){
     }
 
     const showDrawer = () => {
-        setPetToDisplay(true);
+        setDisplayDrawer(true);
     }; 
 
     const onClose = () => {
         setPetToDisplay(null);
+        setDisplayDrawer(false);
     };
 
     function Pet(){
@@ -42,11 +44,12 @@ export default function Pets(){
 
     const displayPet = (id) => {
         setPetToDisplay(pets.find( pet => pet.id === id));
+        setDisplayDrawer(true);
     };
 
-    function displayDrawer(){
-        return  <Drawer title={petToDisplay ? "Gestionar mi mascota" : "Registrar nueva mascota"} onClose={onClose} visible={true} bodyStyle={{paddingBottom: 80}}>
-                    <RegisterPetForm petToDisplay={petToDisplay} registeredPet={registeredPet}/>
+    function renderDrawer(){
+        return  <Drawer title={petToDisplay ? "Editar mi mascota" : "Registrar nueva mascota"} onClose={onClose} visible={true} bodyStyle={{paddingBottom: 80}}>
+                    <RegisterPetForm pet={petToDisplay} registeredPet={registeredPet}/>
                 </Drawer>
     }
 
@@ -71,6 +74,8 @@ export default function Pets(){
 
     const registeredPet = () => {
         setIsInit(false);
+        setPetToDisplay(null);
+        setDisplayDrawer(false);
     };
 
     return (
@@ -80,16 +85,16 @@ export default function Pets(){
                     <Title className='appTitle'>Mis Mascotas</Title>
                 </Col>
                 <Col span={1}>
-                    <Tooltip title="Asociar Veterinario" placement='right'>
-                    <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
+                    <Tooltip title="Crear Mascota" placement='right'>
+                        <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>
                 </Col>
             </Row>
 
             <Divider></Divider>
             
-            { petToDisplay ? 
-            displayDrawer() :
+            { displayDrawer ? 
+            renderDrawer() :
             null }
 
             {pets.length ? 

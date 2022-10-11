@@ -126,7 +126,7 @@ export default function VetsAssociations(){
             <>Aún no existen clínicas asociadas</>
             }
             </Row>
-            <Modal  title="Asociarse con una clínica veterinaria como Veterinario Regente"
+            <Modal  title="Asociarse con una clínica veterinaria"
                     visible={isModalOpen}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
@@ -161,10 +161,10 @@ export default function VetsAssociations(){
                         :
                         <>  
                             <Row>
-                                <Typography.Title level={5}>Ingrese código de asociación brindado por el propietario de la clínica veterinaria:</Typography.Title>
+                                <Typography.Title level={5}>Ingrese código de asociación:</Typography.Title>
                             </Row>
                             <Row>
-                                <Input type="number" name="phone" placeholder="Código de asociación"  onChange={refreshCode}/>
+                                <Input type="number" name="phone" placeholder="Código de asociación" onChange={refreshCode}/>
                             </Row>    
                         </>
                 }

@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin, message } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
-import {getVetsByVetOwnerId, registerTemporalAssociation} from '../../services/vet.service';
+import {getVetsByVetOwnerId, registerTemporalAssociation, getAllByRegentId} from '../../services/vet.service';
+import {getVeterinaryDataByMP} from '../../services/veterinary.service';
+import {veterinaryAssociationService} from '../../services/veterinary_association.service';
+import AvatarSearch from '../../components/AvatarSearch';
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -10,7 +13,6 @@ const { Title } = Typography;
 export default function VeterinariesManagement(){
     const profile = JSON.parse(sessionStorage.getItem('profile'));
     const [isInit, setIsInit] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [vetOptions, setVetOptions] = useState(null);
     const [selectedVetId, setSelectedVetId] = useState([]);
@@ -18,35 +20,56 @@ export default function VeterinariesManagement(){
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [isOwner, setIsOwner] = useState(false);
+    const [isSearchingVeterinaryData, setIsSearchingVeterinaryData] = useState(false);
+    const [searchedVeterinaryData, setSearchedVeterinaryData] = useState(null);
+    const [isModalVetOwner, setIsModalVetOwner] = useState(false);
+    const [isModalRegent, setIsModalRegent]= useState(false);
 
     if(!isInit){
         refreshComponent();
         setIsInit(true);
-    }
+    };
 
     function generateVetOptions(vets) {
         var renderVetOptions = [];
-        vets.forEach(function eachVet(vet){
-            renderVetOptions.push(<Option key={vet.vet.id}>{vet.vet.name}</Option>)
-        });
+        if (isOwner){
+            vets.forEach(function eachVet(vet){
+                renderVetOptions.push(<Option key={vet.vet.id}>{vet.vet.name}</Option>)
+            });
+        } else {
+            vets.forEach(function eachVet(vet){
+                renderVetOptions.push(<Option key={vet.id}>{vet.name}</Option>)
+            });
+        }
         return renderVetOptions;
-    }
+    };
 
     function refreshComponent() {
-        getVetsByVetOwnerId(profile.vetOwner.id)
+        if(profile.vetOwner != null){
+            setIsOwner(true);
+            getVetsByVetOwnerId(profile.vetOwner.id)
             .then(vets => {
                 setVetOptions(generateVetOptions(vets));
                 generateData(vets);
-            }
-        );
+            });
+        } else {
+            setIsOwner(false);
+            getAllByRegentId(profile.veterinary.id)
+            .then(vets => {
+                setVetOptions(generateVetOptions(vets));
+                generateData(vets);
+            });
+        }
         setVetOptions(null);
         setSelectedVetId([]);
-        setIsModalOpen(false);
+        setIsModalRegent(false);
+        setIsModalVetOwner(false);
         setGeneratedCode(false);
         setMP(null);
         setCompleteTemporalAssociation(null);
         setIsLoading(false);
-    }
+    };
 
     function generateData(vets){
         var finalData = [];
@@ -70,7 +93,7 @@ export default function VeterinariesManagement(){
             )
         })
         setData(finalData);
-    }
+    };
 
     const refreshSelectedVets = (value) => {
         setSelectedVetId(value);
@@ -84,7 +107,6 @@ export default function VeterinariesManagement(){
             dataIndex: 'matricula',
             defaultSortOrder: 'ascend',
             sorter: (a, b) => a.mp - b.mp,
-            
         },
         {
             title: 'Nombre',
@@ -100,20 +122,7 @@ export default function VeterinariesManagement(){
         {
             title: 'Teléfono',
             dataIndex: 'phone',
-            //sorter: (a, b) => a.phone.age - b.phone.age,
             responsive: ['sm']
-        },
-        {
-            title: 'Clínica Veterinaria',
-            dataIndex: 'vet',
-            sorter: (a, b) => a.vet.length - b.vet.length,
-            responsive: ['md']
-        },
-        {
-            title: 'Regente',
-            dataIndex: 'regent',
-            sorter: (a, b) => a.regent - b.regent,
-            responsive: ['md']
         },
         {
             title: 'Dirección',
@@ -129,48 +138,107 @@ export default function VeterinariesManagement(){
         }
     ];
 
+    if(isOwner){
+        columns.splice(4,0, {
+            title: 'Regente',
+            dataIndex: 'regent',
+            sorter: (a, b) => a.regent - b.regent,
+            responsive: ['md']
+        },
+        {
+            title: 'Clínica Veterinaria',
+            dataIndex: 'vet',
+            sorter: (a, b) => a.vet.length - b.vet.length,
+            responsive: ['md']
+        });
+    };
+
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
 
-    const showModal = () => {
-        setIsModalOpen(true);
+    const showModalOwner = () => {
+        setIsModalVetOwner(true);
+    };
+
+    const showModalRegent = () => {
+        setIsModalRegent(true);
     };
     
     const generateCode = () => {
         setIsLoading(true);
-        registerTemporalAssociation({mp: mp, vetId: selectedVetId})
+        if (isOwner) {
+            registerTemporalAssociation({mp: mp, vetId: selectedVetId})
             .then(response => {
                 setCompleteTemporalAssociation(response);
                 setIsLoading(false);
                 setGeneratedCode(true);
             });
+        } else {
+            veterinaryAssociationService.registerTemporalAssociation({mp: mp, vetId: selectedVetId})
+            .then(response => {
+                setCompleteTemporalAssociation(response);
+                setIsLoading(false);
+                setGeneratedCode(true);
+            });
+        }
+
     }; 
 
     const hideModal = () => {
-        setIsModalOpen(false);
+        setIsModalVetOwner(false);
         setGeneratedCode(false);
+        setIsModalRegent(false);
     };
 
     const refreshMP = e =>{
+        setSearchedVeterinaryData(null)
         setMP(e.target.value);
     };
+
+    const searchVeterinaryData = () => {
+        setIsSearchingVeterinaryData(true);
+        getVeterinaryDataByMP(mp)
+            .then(res => {
+                setSearchedVeterinaryData(res);
+                setIsSearchingVeterinaryData(false);
+            })
+            .catch(error => {
+                message.error(error.response.data);
+                setIsSearchingVeterinaryData(false);
+            });
+    }
 
     return (
         <>   
             <Row align="middle">
-                <Col xs={{span:24}} md={{span:23}}>
-                    <Title className='appTitle'>Gestión de Veterinarios en Mis Clínicas</Title>
-                </Col>
-                <Col xs={{span:24}} md={{span:1}}>
-                    <Tooltip title="Asociar Veterinario Regente" placement='right'>
-                        <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModal}/>
-                    </Tooltip>
-                </Col>
+                {
+                    !isOwner ?
+                    <>
+                        <Col xs={{span:24}} md={{span:23}}>
+                            <Title className='appTitle'>Gestión de Veterinarios</Title>
+                        </Col>
+                        <Col xs={{span:24}} md={{span:1}}>
+                            <Tooltip title="Asociar Co-Veterinarios" placement='right'>
+                                <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModalRegent}/>
+                            </Tooltip>
+                        </Col>
+                    </>
+                    :
+                    <>
+                        <Col xs={{span:24}} md={{span:23}}>
+                            <Title className='appTitle'>Gestión de Veterinarios en Clinicas</Title>
+                        </Col>
+                        <Col xs={{span:24}} md={{span:1}}>
+                            <Tooltip title="Asociar Veterinario Regente" placement='right'>
+                                <Button type='link' className="appButton" size='large' icon={<NodeIndexOutlined/>} onClick={showModalOwner}/>
+                            </Tooltip>
+                        </Col>
+                    </>
+                }                
             </Row>
 
             <Divider orientation="left">Filtros</Divider>
-            
             <Row gutter={[16, 16]}>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
                     <Input placeholder="M.P. del veterinario" />
@@ -201,12 +269,12 @@ export default function VeterinariesManagement(){
                     <Input placeholder='Dirección' />
                 </Col>
             </Row>
-            
             <Divider orientation="left"></Divider>
-            <Table columns={columns} dataSource={data} onChange={onChange} />
+            <Table columns={columns} dataSource={data} onChange={onChange}/>
 
+            {/* modal para owner */}
             <Modal  title="Generar código de asociación con Veterinario Regente"
-                    visible={isModalOpen}
+                    visible={isModalVetOwner}
                     onCancel={hideModal}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
@@ -219,7 +287,7 @@ export default function VeterinariesManagement(){
                                 Aceptar
                             </Button>
                             :
-                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal"  disabled={isLoading} > 
+                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal"  disabled={isLoading || !searchedVeterinaryData}> 
                                 Generar
                             </Button>
                             }
@@ -260,21 +328,136 @@ export default function VeterinariesManagement(){
                                 <div>Ingrese la MP del Veterinario Regente a asociar</div>
                                 <Input type="number" name="mp" placeholder="M.P. Veterinario" onChange={refreshMP}/>
                             </Col>
+                            <Col span={6}>
+                                <Button htmlType="submit" type="primary" onClick={searchVeterinaryData} className="register-form_button-ok-modal" disabled={isLoading}> 
+                                    Buscar Veterinario
+                                </Button>
+                            </Col>
                         </Row>
-                        <br></br>
                         <Row>
-                            <Col span={24}>
-                                <div>Seleccione con que clínica veterinaria desea asociarlo</div>
+                            <>
+                                <Divider orientation="left" plain> Resultado de la búsqueda </Divider>
+                            </>
+                            {
+                            searchedVeterinaryData?
+                            <>  
+                                <AvatarSearch name={searchedVeterinaryData.person.name} lastName={searchedVeterinaryData.person.lastName}></AvatarSearch>
+                                <Divider orientation="left" plain> Seleccione con que clínica veterinaria desea asociarlo </Divider>
                                 <Select
                                     allowClear
                                     style={{ width: '100%' }}
                                     placeholder="Clínicas Veteriarias"
                                     onChange={refreshSelectedVets}
-                                    >
+                                >
                                     {vetOptions}
                                 </Select>
+
+                            </>
+                            :
+                            isSearchingVeterinaryData?
+                            <><Spin />Buscando...</>
+                            :
+                            <>Debe realizar una búsqueda del veterinario para poder avanzar</>
+                            }
+                        </Row>
+                        <br></br>
+                        
+                    </>
+                    }
+                </>
+                }
+            </Modal>
+            
+            {/* modal para regente */}
+            <Modal  title="Generar código de asociación con Veterinario"
+                    visible={isModalRegent}
+                    onCancel={hideModal}
+                    footer={[
+                        <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
+                            Cancelar
+                        </Button>,
+                        <>
+                            {
+                            generatedCode ? 
+                            <Button htmlType="submit" type="primary" onClick={hideModal} className="register-form_button-ok-modal" > 
+                                Aceptar
+                            </Button>
+                            :
+                            <Button htmlType="submit" type="primary" onClick={generateCode} className="register-form_button-ok-modal"  disabled={isLoading || !searchedVeterinaryData}> 
+                                Generar
+                            </Button>
+                            }
+                        </>
+                    ]}>
+                {
+                generatedCode ?
+
+                <><Row>
+                        <Col span={24}>
+                            <Typography.Title level={4}>
+                                El código generado para {completeTemporalAssociation.veterinaryData.person.name} {completeTemporalAssociation.veterinaryData.person.lastName} MP: {completeTemporalAssociation.veterinaryData.veterinary.mp} es:
+                            </Typography.Title>
+                        </Col>                        
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['Click para copiar código', 'Código copiado']}}>
+                            {completeTemporalAssociation.code}
+                            </Typography.Title>                        
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+
+                        </Col>
+                    </Row>El mismo expirará en 10 minutos</>
+
+                :
+                <>  
+                    {
+                    isLoading ?
+                    <Spin />
+                    :
+                    <>  
+                        <Row>
+                            <Col span={24}>
+                                <div>Ingrese la MP del Veterinario a asociar</div>
+                                <Input type="number" name="mp" placeholder="M.P. Veterinario" onChange={refreshMP}/>
+                            </Col>
+                            <Col span={6}>
+                                <Button htmlType="submit" type="primary" onClick={searchVeterinaryData} className="register-form_button-ok-modal" disabled={isLoading}> 
+                                    Buscar Veterinario
+                                </Button>
                             </Col>
                         </Row>
+                        <Row>
+                            <>
+                                <Divider orientation="left" plain> Resultado de la búsqueda </Divider>
+                            </>
+                            {
+                            searchedVeterinaryData?
+                            <>  
+                                <AvatarSearch name={searchedVeterinaryData.person.name} lastName={searchedVeterinaryData.person.lastName}></AvatarSearch>
+                                <Divider orientation="left" plain> Seleccione con que clínica veterinaria desea asociarlo </Divider>
+                                <Select
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                    placeholder="Clínicas Veteriarias"
+                                    onChange={refreshSelectedVets}
+                                >
+                                    {vetOptions}
+                                </Select>
+
+                            </>
+                            :
+                            isSearchingVeterinaryData?
+                            <><Spin />Buscando...</>
+                            :
+                            <>Debe realizar una búsqueda del veterinario para poder avanzar</>
+                            }
+                        </Row>
+                        <br></br>
+                        
                     </>
                     }
                 </>

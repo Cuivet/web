@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu} from "antd";
 import Icon, { HomeOutlined, SettingOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import FolderOpenOutlined from '@mui/icons-material/FolderOpenOutlined';
 import './MenuSider.scss';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import {getAllByRegentId} from '../../services/vet.service';
 
 export default function MenuSider(props){
    
@@ -18,24 +19,40 @@ export default function MenuSider(props){
     var tutor = false;
     var veterinary = false;
     var vetOwner = false;
-
+    const [regent, setRegent] = useState(false);
+    const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile')) ;
+
+    if(profile === undefined){
+        tutor = false;
+        vetOwner = false;
+        veterinary = false;
+    }; 
 
     if(profile.tutor != null){
         tutor= true;
     };
+
     if(profile.veterinary != null){
         veterinary = true;
     };
+
     if(profile.vetOwner != null){
         vetOwner = true;
+    }; 
+    
+    if(!isInit){
+        if (veterinary){
+            getAllByRegentId(profile.veterinary.id)
+            .then(res => {
+                if (res.length !== 0) {
+                    setRegent(true);
+                };
+            });
+        };
+        setIsInit(true);
     };
-   if(profile === undefined){
-        tutor = false;
-        vetOwner = false;
-        veterinary = false;
-    };
-  
+
     return (
         <Sider trigger={null} collapsible className="admin-sider" collapsed={menuCollapsed}>
             <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}> 
@@ -70,7 +87,7 @@ export default function MenuSider(props){
                             </Link>
                         </Menu.Item>
                     </> 
-                    : null}
+                : null}
 
                 { veterinary ?
                     <>
@@ -95,12 +112,14 @@ export default function MenuSider(props){
                             </Link>
                         </Menu.Item>
 
+                        { regent ?
                         <Menu.Item key="veterinaryVeterinariesManagement">
                             <Link to={"/veterinaries-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><PeopleAltOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Gestion de Veterinarios </span>
                             </Link>
                         </Menu.Item>
+                        : null }
 
                         <Menu.Item key="veterinaryPetsManagement">
                             <Link to={"/pets-management"} className='admin-sider__item'>                      
@@ -116,7 +135,7 @@ export default function MenuSider(props){
                             </Link>
                         </Menu.Item>
                     </>
-                    : null }
+                : null }
 
                 { vetOwner ? 
                     <>
@@ -134,7 +153,7 @@ export default function MenuSider(props){
                             </Link>
                         </Menu.Item>   
                     </> 
-                    : null}
+                : null}
 
                 <Menu.Item key="user">
                     <Link to={"/settings/user"} className='admin-sider__item'>            
@@ -143,7 +162,6 @@ export default function MenuSider(props){
                     </Link>
                 </Menu.Item>
             </Menu>
-
         </Sider>
     );
 }

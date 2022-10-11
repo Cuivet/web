@@ -19,7 +19,7 @@ export function registerVet(data){
         .catch((err) => {
             return err;
         });
-};
+}
 
 export function getVetsByVetOwnerId(vetOwnerId) {
     var axios = require('axios');
@@ -118,5 +118,5 @@ export function getAllByRegentId(id){
         .catch((err) => {
             return err;
         });
-};
+}
 

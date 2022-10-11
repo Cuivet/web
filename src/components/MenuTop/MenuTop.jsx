@@ -5,39 +5,24 @@ import { Link } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from "@ant-design/icons";
 import CUIVET_logo from '../../assets/img/png/logo2.png';
 import User from '../../assets/img/png/tutorUsuario.png';
-import {getAllByRegentId} from '../../services/vet.service.js';
-import './MenuTop.scss'
-const { Option } = Select;
 
+import './MenuTop.scss'
 
 export default function MenuTop(props){
     // console.log(props);
     const {menuCollapsed, setMenuCollapsed} = props;
     const [isVet, setIsVet]=useState(false);
-    const [vetOptions, setVetOptions] = useState();
+
     const users = [User, null];
     const profile = JSON.parse(sessionStorage.getItem('profile'));
-
     useEffect(()=>{
         if(profile.veterinary != null){
             setIsVet(true);
-            if (!vetOptions) {
-                getAllByRegentId(profile.veterinary.id).then(response =>{setVetOptions(generateVetOptions(response))});
-            }
         };
-    },[profile.veterinary, vetOptions]);
-
+    }, [profile.veterinary]);
 
     const logOut = e =>{
         sessionStorage.clear();
-    };
-    
-    function generateVetOptions(vets) {
-        var renderVetOptions = [];
-        vets.forEach(function eachVet(vet){
-            renderVetOptions.push(<Option key={vet.id}>{vet.name}</Option>)
-        });
-        return renderVetOptions;
     };
 
     return (
@@ -56,9 +41,10 @@ export default function MenuTop(props){
             <div className="menu-top__right">
                 {
                     isVet ?
-                    <Select placeholder='Clínica' className="menu-top__right-select"
-                    >
-                        {vetOptions}
+                    <Select placeholder='Clinica' className="menu-top__right-select">
+                        <Select.Option value='1'>Boderau</Select.Option>
+                        <Select.Option value='2'>Recta</Select.Option>
+                        <Select.Option value='3'>Pilar</Select.Option>
                     </Select>
                     :
                     null

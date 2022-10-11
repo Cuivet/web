@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress, Spin } from 'antd';
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { FilePdfOutlined, PlayCircleOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { Title } = Typography;
 
 export default function ClinicalRecordsManagement(){
+    const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
     const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
@@ -19,6 +20,7 @@ export default function ClinicalRecordsManagement(){
         clinicalRecordService.findAllByVeterinaryId(profile.veterinary.id)
             .then(clinicalRecords => {
                 generateData(clinicalRecords);
+                setIsLoading(false);
             }
         );
     }
@@ -140,7 +142,8 @@ export default function ClinicalRecordsManagement(){
             </Row>
             
             <Divider orientation="left"></Divider>
-            <Table columns={columns} dataSource={data} onChange={onChange} />
+
+            <Table columns={columns} dataSource={data} onChange={onChange} loading={isLoading}/>
         </>
     );
 };

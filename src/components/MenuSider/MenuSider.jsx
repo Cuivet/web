@@ -7,6 +7,7 @@ import ScienceIcon from '@mui/icons-material/Science';
 import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutlined';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
+import FolderOpenOutlined from '@mui/icons-material/FolderOpenOutlined';
 import './MenuSider.scss';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
@@ -39,7 +40,7 @@ export default function MenuSider(props){
         <Sider trigger={null} collapsible className="admin-sider" collapsed={menuCollapsed}>
             <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}> 
                 
-                <Menu.Item key="1">
+                <Menu.Item key="menu">
                     <Link to={"/menu"} className='admin-sider__item'>
                         <HomeOutlined/>
                         <span className="nav-text"> Inicio </span>
@@ -48,21 +49,21 @@ export default function MenuSider(props){
 
                 { tutor ?   
                     <>
-                        <Menu.Item key="2">
+                        <Menu.Item key="tutorStudies">
                             <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="3">
+                        <Menu.Item key="tutorPets">
                             <Link to={"/pets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis mascotas </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="4">
+                        <Menu.Item key="tutorVeterinariesAssociations">
                             <Link to={"/veterinaries-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Veterinarios Asociados </span>
@@ -73,35 +74,42 @@ export default function MenuSider(props){
 
                 { veterinary ?
                     <>
-                        <Menu.Item key="5">
+                        <Menu.Item key="veterinaryConsultation">
                             <Link to={"/consultation"} className='admin-sider__item'>                      
                                 <Icon><ContentPasteOutlinedIcon /></Icon>
                                 <span className="nav-text"> Consultas </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="6">
+                        <Menu.Item key="veterinaryStudies">
                             <Link to={"/studies"} className='admin-sider__item'>                      
                                 <Icon component={''}><ScienceIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Estudios </span>
                             </Link>
                         </Menu.Item>
-                        {/* solo si es regente */}
-                        <Menu.Item key="9">
+
+                        <Menu.Item key="veterinaryClinicalRecordManagement">
+                            <Link to={"/clinical-records-management"} className='admin-sider__item'>                      
+                                <Icon component={''}><FolderOpenOutlined fontSize="small" /></Icon>
+                                <span className="nav-text"> Historial Clínico </span>
+                            </Link>
+                        </Menu.Item>
+
+                        <Menu.Item key="veterinaryVeterinariesManagement">
                             <Link to={"/veterinaries-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><PeopleAltOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Gestion de Veterinarios </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="7">
+                        <Menu.Item key="veterinaryPetsManagement">
                             <Link to={"/pets-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Pacientes </span>
                             </Link>
                         </Menu.Item>
 
-                        <Menu.Item key="8">
+                        <Menu.Item key="veterinaryVetsManagement">
                             <Link to={"/vets-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Clinicas Asociadas </span>
@@ -112,14 +120,14 @@ export default function MenuSider(props){
 
                 { vetOwner ? 
                     <>
-                        <Menu.Item key="9">
+                        <Menu.Item key="vetOwnerVeterinariesManagement">
                             <Link to={"/veterinaries-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><MedicalServicesOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Veterinarios </span>
                             </Link>
                         </Menu.Item>
                         
-                        <Menu.Item key="10">
+                        <Menu.Item key="vetOwnerVets">
                             <Link to={"/vets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
                                 <span className="nav-text"> Mis Clinicas </span>
@@ -128,7 +136,7 @@ export default function MenuSider(props){
                     </> 
                     : null}
 
-                <Menu.Item key="11">
+                <Menu.Item key="user">
                     <Link to={"/settings/user"} className='admin-sider__item'>            
                         <SettingOutlined/>
                         <span className="nav-text"> Mi Cuenta </span>

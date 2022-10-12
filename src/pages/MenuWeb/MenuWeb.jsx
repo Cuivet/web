@@ -8,6 +8,7 @@ import calendario from "../../assets/img/jpg/calendario.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import '../Settings/UserSettings/UserSettings.scss';
+import {Link} from "react-router-dom";
 
 const {Title} = Typography;
 
@@ -44,6 +45,7 @@ export default function MenuWeb(){
         description:['Iniciar Atención Clínica a la Mascota','Visualizá próximos eventos','Ver esta, se repite para mi',],
         disabled:[false,true],
         img:[atencion,calendario,clipboard,],
+        routes:['/admin','/admin','/admin'],
     }
 
     const modulesTut = {
@@ -51,6 +53,7 @@ export default function MenuWeb(){
         description:['Visualizá tus Mascotas registradas','Visualizá próximos eventos','Registrá una reseña a tus Veterinarios asociados','Visualizá el Historial Clínico de tus Mascotas',],
         disabled:[false,true],
         img:[huella,calendario,valorar,atencion],
+        routes:['/admin','/admin','/admin'],
     }
 
     const modulesVetOw = {
@@ -68,7 +71,7 @@ export default function MenuWeb(){
                 console.log(modulesVet.text[i]);
                 mod.push(            
                     <Col xs={{ span: 24}} lg={{ span: 6 }}>
-                        <CardMenu key={i} text={cantMod()[0][i]} description={modulesVet.description[i]} disabled={modulesVet.disabled[0]} img={modulesVet.img[i]} ></CardMenu>
+                        <CardMenu key={i} text={cantMod()[0][i]} description={modulesVet.description[i]} disabled={modulesVet.disabled[0]} img={modulesVet.img[i]}><Link to={modulesVet.routes[i]}>Hace click</Link></CardMenu>
                     </Col>
                 ); 
             }
@@ -76,7 +79,7 @@ export default function MenuWeb(){
                 console.log(modulesTut.text[i]);
                 mod.push(            
                     <Col xs={{ span: 24}} lg={{ span: 6 }}>
-                        <CardMenu key={i} text={cantMod()[0][i]} description={modulesTut.description[i]} disabled={modulesTut.disabled[0]} img={modulesTut.img[i]} ></CardMenu>
+                        <CardMenu key={i} text={cantMod()[0][i]} description={modulesTut.description[i]} disabled={modulesTut.disabled[0]} img={modulesTut.img[i]}></CardMenu>
                     </Col>
                 ); 
             }
@@ -100,7 +103,6 @@ export default function MenuWeb(){
             <Divider></Divider>
             <Mod></Mod>
         </Row> 
-        
         
     )
 };

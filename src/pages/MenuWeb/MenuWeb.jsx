@@ -31,11 +31,11 @@ export default function MenuWeb(){
     };
 
     const vetOwner = {
-        module:['Veterinaria','Calendario',],
+        module:['Mis Clínicas Veterinarias','Calendario',],
         description:['Visualizá los datos de tu/s Veterinaria/s','Visualizá próximos eventos',],
         disabled:[false,true],
         img:[clinica,calendario,],
-        routes:['/admin','/calendar']
+        routes:['/vets','/calendar']
     };
 
     function cantMod(){

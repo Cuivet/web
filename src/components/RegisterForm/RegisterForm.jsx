@@ -8,7 +8,6 @@ import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined
 import Terms from "../Terms/Terms";
 
 
-const {Link} = Typography;
 //componente formulario del LogIn para nuevos usuarios
 export default function RegisterForm(props){ 
     //donde almacena los datos del formulario

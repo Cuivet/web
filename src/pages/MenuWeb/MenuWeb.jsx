@@ -25,8 +25,7 @@ export default function MenuWeb(){
     };
     const vetOwner = {
         module: ['Veterinaria','Calendario'],
-        description: [''],
-        
+        description: [''],        
         img: [clipboard],
         routes:['/vets','/calendar']
     };

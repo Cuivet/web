@@ -14,6 +14,7 @@ import Menu from "../pages/MenuWeb/MenuWeb";
 import UserSettings from "../pages/Settings/UserSettings";
 import Pets from "../pages/Pets/Pets";
 import PetsManagement from "../pages/PetsManagement/PetsManagement";
+import ClinicalRecordsManagement from "../pages/ClinicalRecordsManagement/ClinicalRecordsManagement";
 import Error404 from "../pages/Error/Error404/Error404";
 import VetsAssociations from "../pages/VetsAssociations";
 import VeterinariesAssociations from "../pages/VeterinariesAssociations";
@@ -48,7 +49,6 @@ const routesAdmin = [
         path: "/settings/user",
         component: UserSettings,
         layout: LayoutAdmin,
-
     },
     {
         path: "/pets",
@@ -58,6 +58,11 @@ const routesAdmin = [
     {
         path: "/pets-management",
         component: PetsManagement,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/clinical-records-management",
+        component: ClinicalRecordsManagement,
         layout: LayoutAdmin,
     },
     {

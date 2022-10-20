@@ -80,7 +80,7 @@ export default function Review(props) {
       <Row justify="center" gutter={24}>
         <Col span={24}>
           <Typography.Title className="" level={4}>
-            {" "}
+            
             Reseña
           </Typography.Title>
         </Col>

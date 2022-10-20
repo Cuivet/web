@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, Input, Button, Checkbox, Select, notification, Typography, Modal} from 'antd';
+import {Form, Input, Button, Select, notification, Modal} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service";
 

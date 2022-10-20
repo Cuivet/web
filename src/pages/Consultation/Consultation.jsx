@@ -23,6 +23,9 @@ import "./Consultation.scss";
 import Review from "../../components/Review/Review";
 import Anamnesis from "../../components/Anamnesis/Anamnesis";
 import PhysicalExam from "../../components/PhysicalExam/PhysicalExam";
+import PresumptiveDiagnosis from "../../components/PresumptiveDiagnosis/PresumptiveDiagnosis";
+import Diagnosis from "../../components/Diagnosis/Diagnosis";
+import Prognosis from "../../components/Prognosis/Prognosis";
 
 const { Title } = Typography;
 
@@ -67,9 +70,10 @@ export default function Consultation() {
       id: 1,
       name: "Lima",
       birth: "2018-07-09T19:00:43.000Z",
-      isMale: null,
+      isMale: false,
       tutorId: 1,
-      raceId: null,
+      raceId: 1,
+      specieId: 2,
     },
     vet: {
       id: 1,
@@ -195,16 +199,17 @@ export default function Consultation() {
       id: 2,
       visitId: 3,
       diagnosisItems: [
-        {
+        { //va a ser un solo objeto por defecto
           id: 4,
           diagnosisId: 2,
-          diagnosisTypeId: 2,
+          diagnosisResult: 'Gastroenteritis aguda',
+          diagnosisTypeId: 2,//reemplazaria por diagnosisResult
           diagnosisItemTreatments: [
             {
               id: 5,
               diagnosisItemId: 4,
               drugId: 3,
-              treatmentTypeId: 2,
+              treatmentOptionId: 2, 
               frecuencyInterval: 24,
               frecuencyDuration: 7,
             },
@@ -212,7 +217,7 @@ export default function Consultation() {
               id: 6,
               diagnosisItemId: 4,
               drugId: 4,
-              treatmentTypeId: 4,
+              treatmentOptionId: 4,
               frecuencyInterval: 12,
               frecuencyDuration: 3,
             },
@@ -254,15 +259,16 @@ export default function Consultation() {
     }
   }
   function Visits(step) {
-    for (let i in cRecord.visits) {
-      for (let j in cRecord.visits[i]) {
-        return cRecord.visits[i]["id"] === step.visitId
-          ? cRecord.visits[i]["date"]
-          : null;
-      }
-    }
+    if(step !== null){
+      // console.log(cRecord.visits)   ; 
+      const date = cRecord.visits.map ((visit)=>{
+        // console.log(visit)
+        return visit.id === step.visitId ? visit.date : null;
+      });
+      return date;
+    }       
   }
-  // console.log(Visits(cRecord.review));
+  // console.log(Visits(cRecord.presumptiveDiagnosis));
   const { Step } = Steps;
   //weight={cRecord.review.weight} temperature={cRecord.review.temperature}
   const steps = [
@@ -279,51 +285,70 @@ export default function Consultation() {
     {
       title: "Anamnesis",
       content: (
-        // <Anamnesis
-        //   id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
-        //   answers={cRecord.anamnesis.anamnesisItems}
-        // />
-        <Anamnesis id={null} answers={null} />
+        <Anamnesis
+          id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
+          answers={cRecord.anamnesis.anamnesisItems}
+        />
+        // <Anamnesis id={null} answers={null} />
       ),
+      subTitle: Visits(cRecord.anamnesis),
     },
     {
       title: "Examen Físico",
       content: (
-        // <PhysicalExam
-        //   id={Exists(cRecord.physcalExam, cRecord.physcalExam.id)}
-        //   weight={Exists(cRecord.physcalExam, cRecord.physcalExam.weight)}
-        //   temperature={Exists(cRecord.physcalExam, cRecord.physcalExam.temperature)}
-        //   pulse={Exists(cRecord.physcalExam, cRecord.physcalExam.pulse)}
-        //   mucousMembrane={Exists(cRecord.physcalExam, cRecord.physcalExam.mucousMembrane)}
-        //   bodyCondition={Exists(cRecord.physcalExam, cRecord.physcalExam.bodyCondition)}
-        //   observation={Exists(cRecord.physcalExam, cRecord.physcalExam.observation)}
-        // />
         <PhysicalExam
-          id={null}
-          weight={null}
-          temperature={null}
-          pulse={null}
-          mucousMembrane={null}
-          bodyCondition={null}
-          observation={null}
+          id={Exists(cRecord.physcalExam, cRecord.physcalExam.id)}
+          weight={Exists(cRecord.physcalExam, cRecord.physcalExam.weight)}
+          temperature={Exists(cRecord.physcalExam, cRecord.physcalExam.temperature)}
+          pulse={Exists(cRecord.physcalExam, cRecord.physcalExam.pulse)}
+          mucousMembrane={Exists(cRecord.physcalExam, cRecord.physcalExam.mucousMembrane)}
+          bodyCondition={Exists(cRecord.physcalExam, cRecord.physcalExam.bodyCondition)}
+          observation={Exists(cRecord.physcalExam, cRecord.physcalExam.observation)}
+        />
+        // <PhysicalExam
+        //   id={null}
+        //   weight={null}
+        //   temperature={null}
+        //   pulse={null}
+        //   mucousMembrane={null}
+        //   bodyCondition={null}
+        //   observation={null}
+        // />
+      ),
+      subTitle: Visits(cRecord.physcalExam),
+    },
+    {
+      title: "Diagnóstico Presuntivo",
+      content: (<PresumptiveDiagnosis 
+                id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)} 
+                />),
+      subTitle: Visits(cRecord.presumptiveDiagnosis),
+    },
+    {
+      title: "Diagnóstico Final",
+      content: (
+                <Diagnosis 
+                  id={Exists(cRecord.diagnosis, cRecord.diagnosis.id)}
+                   treatments={Exists(cRecord.diagnosis, cRecord.diagnosis.diagnosisItems)}
+                />
+                // <Diagnosis 
+                //   id={null}
+                //   treatments={null}
+                // />
+                ),
+      subTitle: Visits(cRecord.diagnosis),
+    },
+    {
+      title: "Pronóstico",
+      content: (
+          // <Prognosis 
+          //   id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)} 
+          // />
+        <Prognosis 
+          id={null} 
         />
       ),
-    },
-    {
-      title: "Diagnostico Presuntivo",
-      content: "Componente Diagnostico Presuntivo",
-    },
-    {
-      title: "Diagnostico",
-      content: "Componente Diagnostico",
-    },
-    {
-      title: "Tratamiento",
-      content: "Componente Tratamiento",
-    },
-    {
-      title: "Pronostico",
-      content: "Componente Pronostico",
+      subTitle: Visits(cRecord.prognosis),
     },
   ];
   const IconLink = ({ src, text }) => (
@@ -402,7 +427,7 @@ export default function Consultation() {
             current={current}
             className="steps"
             labelPlacement="vertical"
-            percent={(current + 1) * 14.4}
+            percent={(current + 1) * 16.7}
             responsive
           >
             {steps.map((item) => (

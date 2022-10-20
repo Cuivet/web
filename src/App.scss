@@ -74,7 +74,7 @@
     background-color: $primary-color!important;
 }
 
-.ant-btn-default:focus, .ant-btn:hover.ant-btn-default{
+.ant-btn-default:focus, .ant-btn:hover.ant-btn-default, .ant-btn-dashed:hover, .ant-btn-dashed:focus{
     color: $secondary-color!important;
     border-color: $secondary-color!important;
 }
@@ -125,6 +125,11 @@
 .ant-back-top-content:hover{
     background-color: $secondary-color;
     color: $primary-color;
+}
+.stepSave .ant-btn-primary[disabled]{
+    background-color: #f5f5f5 !important;
+    color: #00000040!important; 
+    border-color: #00000040!important;
 }
 .appButton { 
     width: 100%;

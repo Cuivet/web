@@ -111,27 +111,27 @@ export default function PhysicalExam(props) {
         break;
     }
   };
-  
+
   //validacion de los tipos de datos
   //no esta funcionando
   const inputValidation = (e) => {
-    console.log('e')
+    console.log("e");
     if (
       e.target.name === "weight" ||
       e.target.name === "temperature" ||
       e.target.name === "pulse"
     ) {
-        console.log('Entre')
-        setFormValid({
-            ...formValid,
-            [e.targe.name]: numberValidation(e.target),
-        });
+      console.log("Entre");
+      setFormValid({
+        ...formValid,
+        [e.targe.name]: numberValidation(e.target),
+      });
     } else {
       setFormValid({
         ...formValid,
         [e.targe.name]: true,
       });
-    };
+    }
   };
 
   const register = (e) => {
@@ -141,7 +141,7 @@ export default function PhysicalExam(props) {
     <>
       <Row justify="center" gutter={24}>
         <Col span={24}>
-          <Typography.Title className="" level={4}>            
+          <Typography.Title className="" level={4}>
             Examen Físico
           </Typography.Title>
         </Col>
@@ -273,6 +273,7 @@ export default function PhysicalExam(props) {
                 allowClear
                 onChange={inputValidation}
                 placeholder="Ingrese alguna observacion"
+                maxLength={500}
                 showCount
                 autoSize={{ minRows: 4, maxRows: 5 }}
               />
@@ -281,7 +282,13 @@ export default function PhysicalExam(props) {
           <Col>
             <Form.Item>
               <Tooltip title={"Guardar"}>
-                <Button htmlType="submit" disabled={disabled} type="primary">
+                <Button
+                  htmlType="submit"
+                  shape="round"
+                  className="stepSave"
+                  disabled={disabled}
+                  type="primary"
+                >
                   <CheckOutlined />
                 </Button>
               </Tooltip>

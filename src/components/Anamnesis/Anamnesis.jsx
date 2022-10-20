@@ -1,5 +1,15 @@
-import { Form, Row, Col, Typography, Radio, Input, Button } from "antd";
+import {
+  Form,
+  Row,
+  Col,
+  Typography,
+  Radio,
+  Input,
+  Button,
+  Tooltip,
+} from "antd";
 import React, { useState, useEffect } from "react";
+import { CheckOutlined } from "@ant-design/icons";
 
 export default function Anamnesis(props) {
   const { answers } = props;
@@ -7,7 +17,7 @@ export default function Anamnesis(props) {
   // const [radioValue, setRadioValue] = useState([null]);
   const [radiosValues, setRadiosValues] = useState([null]);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
- 
+
   const questions = [
     {
       id: 1,
@@ -35,12 +45,16 @@ export default function Anamnesis(props) {
     },
   ];
 
-  const [input, setInput] = useState(questions.map((question)=> {
-        return {anamnesisId: props.id,
+  const [input, setInput] = useState(
+    questions.map((question) => {
+      return {
+        anamnesisId: props.id,
         anamnesisQuestionId: question.id,
         booleanResponse: null,
-        textResponse: null}
-  }));
+        textResponse: null,
+      };
+    })
+  );
 
   // const onChange = (e) => {
   //   // setRadioValue(e.target.value);
@@ -58,7 +72,7 @@ export default function Anamnesis(props) {
       setIsDisabled(true);
       console.log(props.answers[0].anamnesisQuestionId);
       const newAnswers = props.answers.map((answer) => {
-        //tipo pregunta 1: texto + radio 
+        //tipo pregunta 1: texto + radio
         if (answer.booleanResponse !== null && answer.textResponse !== null) {
           return {
             name: answer.anamnesisQuestionId,
@@ -80,169 +94,152 @@ export default function Anamnesis(props) {
       });
 
       setInitValue(newAnswers);
-      // setInitValue(props.answers.map(question =>  ({
-      //     name: question.anamnesisQuestionId,
-      //     value: question.booleanRespons  ? question.booleanResponse : question.textResponse,
-      // })));
     } else {
-        setIsDisabled(false);
-
-        // const newQuestions = questions.map((question,index) => {
-        //     return {
-        //         anamnesisId: props.id,
-        //         anamnesisQuestionId: question.id,
-        //         booleanResponse: null,
-        //         textResponse: null};
-        // }) 
-        // setInput(newQuestions);
-        // console.log(newQuestions)
+      setIsDisabled(false);
     }
   }, [props]);
 
-function RenderQ() {
+  function RenderQ() {
     const render = [];
     for (let i in questions) {
-        //caso2: creo los campos para cargar las respuestas a las preguntas
-        // newInput.push({
-        //         anamnesisId: props.id,
-        //         anamnesisQuestionId: null,
-        //         booleanResponse: null,
-        //         textResponse: null
-        // });
+      //caso2: creo los campos para cargar las respuestas a las preguntas
+      // newInput.push({
+      //         anamnesisId: props.id,
+      //         anamnesisQuestionId: null,
+      //         booleanResponse: null,
+      //         textResponse: null
+      // });
 
-        
-                    
-        // console.log(newInput);
+      // console.log(newInput);
 
-        if (questions[i]["isBooleanResponse"] && questions[i]["isTextResponse"]) {
-            // console.log(initValue[i]);
-            if (initValue[i] === undefined || initValue.length === 1) {
-            //mapear pregunta vacia
-                render.push(
-                    <Col span={24} key={i}>
-                    <Form.Item label={questions[i]["question"]}>
-                        <Radio.Group
-                        disabled={disabled}
-                        optionType="button"
-                        name={`booleanResponse${questions[i].id}`}
-                        >
-                            <Radio value={true}>Si</Radio>
-                            <Radio value={false}>No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item name={questions[i]["id"]}>
-                        <Input
-                        type="text"
-                        name={`textResponse${questions[i].id}`}
-                        placeholder={"Ingrese su respuesta"}
-                        disabled={disabled}
-                        />
-                    </Form.Item>
-                    </Col>
-                );
-            } else {
-            //tipo pregunta 1: texto + radio
-            if (
-                initValue[i]["name"] === questions[i]["id"] &&
-                initValue[i]["value"] !== null &&
-                typeof initValue[i]["value"] === "string"
-            ) {
-                render.push(
-                <Col span={24} key={i}>
-                    <Form.Item label={questions[i]["question"]}>
-                    <Radio.Group
-                        disabled={disabled}
-                        value={answers[i].booleanResponse}
-                        optionType="button"
-                    >
-                        <Radio value={true}>Si</Radio>
-                        <Radio value={false}>No</Radio>
-                    </Radio.Group>
-                    </Form.Item>
-                    <Form.Item name={questions[i]["id"]}>
-                    <Input
-                        placeholder={"Ingrese su respuesta"}
-                        disabled={disabled}
-                    />
-                    </Form.Item>
-                </Col>
-                );
-            }
-            }
+      if (questions[i]["isBooleanResponse"] && questions[i]["isTextResponse"]) {
+        // console.log(initValue[i]);
+        if (initValue[i] === undefined || initValue.length === 1) {
+          //mapear pregunta vacia
+          render.push(
+            <Col span={24} key={i}>
+              <Form.Item label={questions[i]["question"]}>
+                <Radio.Group
+                  disabled={disabled}
+                  optionType="button"
+                  name={`booleanResponse${questions[i].id}`}
+                >
+                  <Radio value={true}>Si</Radio>
+                  <Radio value={false}>No</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item name={questions[i]["id"]}>
+                <Input
+                  type="text"
+                  name={`textResponse${questions[i].id}`}
+                  placeholder={"Ingrese su respuesta"}
+                  disabled={disabled}
+                />
+              </Form.Item>
+            </Col>
+          );
         } else {
-            if (questions[i]["isBooleanResponse"]) {
-            //esto para traer cuando esta cargado
-            if (initValue[i] === undefined) {
-            } else {
-                if (initValue[i]["name"] === questions[i]["id"]) {
-                render.push(
-                    <Col span={24}>
-                    <Form.Item
-                        name={questions[i]["id"]}
-                        label={questions[i]["question"]}
-                    >
-                        <Radio.Group disabled={disabled} optionType="button">
-                        <Radio value={true}>Si</Radio>
-                        <Radio value={false}>No</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    </Col>
-                );
-                }
-            }
-            }
-            if (questions[i]["isTextResponse"]) {
-            if (initValue[i] === undefined) {
-            } else {
-                render.push(
+          //tipo pregunta 1: texto + radio
+          if (
+            initValue[i]["name"] === questions[i]["id"] &&
+            initValue[i]["value"] !== null &&
+            typeof initValue[i]["value"] === "string"
+          ) {
+            render.push(
+              <Col span={24} key={i}>
+                <Form.Item label={questions[i]["question"]}>
+                  <Radio.Group
+                    disabled={disabled}
+                    value={answers[i].booleanResponse}
+                    optionType="button"
+                  >
+                    <Radio value={true}>Si</Radio>
+                    <Radio value={false}>No</Radio>
+                  </Radio.Group>
+                </Form.Item>
+                <Form.Item name={questions[i]["id"]}>
+                  <Input
+                    placeholder={"Ingrese su respuesta"}
+                    disabled={disabled}
+                  />
+                </Form.Item>
+              </Col>
+            );
+          }
+        }
+      } else {
+        if (questions[i]["isBooleanResponse"]) {
+          //esto para traer cuando esta cargado
+          if (initValue[i] === undefined) {
+          } else {
+            if (initValue[i]["name"] === questions[i]["id"]) {
+              render.push(
                 <Col span={24}>
-                    <Form.Item
+                  <Form.Item
                     name={questions[i]["id"]}
                     label={questions[i]["question"]}
-                    >
-                    <Input
-                        disabled={disabled}
-                        placeholder="Ingrese su respuesta"
-                    />
-                    </Form.Item>
+                  >
+                    <Radio.Group disabled={disabled} optionType="button">
+                      <Radio value={true}>Si</Radio>
+                      <Radio value={false}>No</Radio>
+                    </Radio.Group>
+                  </Form.Item>
                 </Col>
-                );
+              );
             }
-            }
-        };
-    };
+          }
+        }
+        if (questions[i]["isTextResponse"]) {
+          if (initValue[i] === undefined) {
+          } else {
+            render.push(
+              <Col span={24}>
+                <Form.Item
+                  name={questions[i]["id"]}
+                  label={questions[i]["question"]}
+                >
+                  <Input
+                    disabled={disabled}
+                    placeholder="Ingrese su respuesta"
+                  />
+                </Form.Item>
+              </Col>
+            );
+          }
+        }
+      }
+    }
     return render;
-};
-// console.log(input);
-const [test, setTest] = useState({
-  anamnesisId: null,
-  anamnesisQuestionId: null,
-  booleanResponse: null,
-  textResponse: null
-}) 
-//cada vez que cambia el formulario
-//texto no deja ingresar mas de un caracter por vez
-    //probar de hacer la carga en el onfinish
-const changeForm = e =>{    
-  if(e.target.name.slice(0,15) === 'booleanResponse'){
-    setTest({ 
-      ...test, 
-      anamnesisQuestionId: parseInt(e.target.name.slice(15)),
-      [e.target.name.slice(0,15)]: e.target.value,
-    });
-    
   }
-  // if(e.target.name.slice(0,12) === 'textResponse'){
-  //   setTest({ 
-  //     ...test, 
-  //     [e.target.name.slice(0,12)]: e.target.value});
-  // }
-  // setInput(input.map(i => {
-  //   if (i.anamnesisQuestionId === parseInt(e.target.name.slice(15))){
-  //     return test;
-  //   }
-  //   return i;
-  // }))
+  // console.log(input);
+  const [test, setTest] = useState({
+    anamnesisId: null,
+    anamnesisQuestionId: null,
+    booleanResponse: null,
+    textResponse: null,
+  });
+  //cada vez que cambia el formulario
+  //texto no deja ingresar mas de un caracter por vez
+  //probar de hacer la carga en el onfinish
+  const changeForm = (e) => {
+    if (e.target.name.slice(0, 15) === "booleanResponse") {
+      setTest({
+        ...test,
+        anamnesisQuestionId: parseInt(e.target.name.slice(15)),
+        [e.target.name.slice(0, 15)]: e.target.value,
+      });
+    }
+    // if(e.target.name.slice(0,12) === 'textResponse'){
+    //   setTest({
+    //     ...test,
+    //     [e.target.name.slice(0,12)]: e.target.value});
+    // }
+    // setInput(input.map(i => {
+    //   if (i.anamnesisQuestionId === parseInt(e.target.name.slice(15))){
+    //     return test;
+    //   }
+    //   return i;
+    // }))
     // setInput(input.map( i => {
     //         if(e.target.name.slice(0,4) === 'bool' && i.anamnesisQuestionId === parseInt(e.target.name.slice(4))){
     //             return {...i, booleanResponse: e.target.value,};
@@ -254,23 +251,25 @@ const changeForm = e =>{
     //             return {...i};
     //         }
     // }));
-    
+
     console.log(test);
     console.log(input);
   };
 
-  const register = e => {
-    console.log(e)
+  const register = (e) => {
+    console.log(e);
     const keys = Object.keys(e);
-    for (let j in keys){
-      setInput(input.map( i => {   
-        console.log(e[keys[j]]);
-        if (i.anamnesisQuestionId === keys[j]){
-          // console.log( e);
-          return {...i, textResponse:e[keys[j]]}
-        }
-        return {...i}
-      }))
+    for (let j in keys) {
+      setInput(
+        input.map((i) => {
+          console.log(e[keys[j]]);
+          if (i.anamnesisQuestionId === keys[j]) {
+            // console.log( e);
+            return { ...i, textResponse: e[keys[j]] };
+          }
+          return { ...i };
+        })
+      );
     }
     console.log(input);
     // setInput(input.map( i => {
@@ -278,13 +277,12 @@ const changeForm = e =>{
     //     console.log(j)
     //     if (i.anamnesisQuestionId == keys[j]){
     //       // return{ ...i, textResponse: 'algo'}
-          
+
     //     }
     //   }
-      
 
     // }))
-  }
+  };
 
   return (
     <>
@@ -292,11 +290,27 @@ const changeForm = e =>{
         <Col span={24}>
           <Typography.Title level={4}>Anamnesis</Typography.Title>
         </Col>
-        <Form layout="vertical" labelCol={{ span: 24 }} onFinish={register}  fields={initValue} onChange={changeForm}>
+        <Form
+          layout="vertical"
+          labelCol={{ span: 24 }}
+          onFinish={register}
+          fields={initValue}
+          onChange={changeForm}
+        >
           <RenderQ />
           <Col>
             <Form.Item>
-              <Button htmlType="submit"  type="primary">Guardar</Button>
+              <Tooltip title={"Guardar"}>
+                <Button
+                  htmlType="submit"
+                  className="stepSave"
+                  shape="round"
+                  disabled={disabled}
+                  type="primary"
+                >
+                  <CheckOutlined />
+                </Button>
+              </Tooltip>
             </Form.Item>
           </Col>
         </Form>

@@ -1,3 +1,4 @@
+//MARTINA
 import React, { useState } from 'react';
 import Meta from "antd/lib/card/Meta";
 import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tooltip, Modal, Input } from 'antd';
@@ -5,14 +6,15 @@ import Icon,{SyncOutlined, EyeOutlined, ExclamationCircleOutlined} from '@ant-de
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 import vett from '../../assets/img/jpg/vet.jpg';
 import {getTemporalAssociationByCode, registerRegentOnVet, getAllByRegentId} from '../../services/vet.service';
-
+import {veterinaryAssociationService} from '../../services/veterinary_association.service'
 const { Title } = Typography;
 export default function VetsAssociations(){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
-    const [associations, setAssociations] = useState([]);
+    const [regentAssociations, setRegentAssociations] = useState([]);
+    const [veterinaryAssociations, setVeterinaryAssociations] = useState([]);
     const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
@@ -41,12 +43,34 @@ export default function VetsAssociations(){
     };
 
     const tryToAsociate = () => {
-        getTemporalAssociationByCode(generatedCode)
+        if (generatedCode[0]==="V") {
+            //TO DO: asociación de veterinario y veterinaria
+            veterinaryAssociationService.getTemporalAssociationByCode(generatedCode)
             .then(temporalAsociation => {
                 setCompleteTemporalAssociation(temporalAsociation);
+            })
+            .catch(error => {
+                message.error(error.response.data);
             });
+        } else{
+            getTemporalAssociationByCode(generatedCode)
+            .then(temporalAsociation => {
+                setCompleteTemporalAssociation(temporalAsociation);
+            })
+            .catch(error => {
+                message.error(error.response.data);
+            });
+        }
     };
 
+    const createAssociation = () => {
+        if (generatedCode[0]==="R") {
+            createRegentAssociation();
+        } else {
+            createVeterinaryAssociation();
+        }
+    };
+    
     const createRegentAssociation = () => {
         const regentAssociation = {
             id: completeTemporalAssociation.vetData.vet.id,
@@ -62,22 +86,39 @@ export default function VetsAssociations(){
             refreshComponent();
         });
     }
+    
+    const createVeterinaryAssociation = () => {
+        const veterinaryAssociations = [];
+        const veterinaryAssociation = {
+            vetId: completeTemporalAssociation.vetData.vet.id,
+            veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id
+        }
+        veterinaryAssociations.push(veterinaryAssociation);
+        veterinaryAssociationService.register(veterinaryAssociations)
+            .then(response => {
+                message.success('Asociacion establecida exitosamente');
+                refreshComponent();
+            });
+    }
 
     function refreshComponent() {
         getAllByRegentId(profile.veterinary.id)
-            .then(associations => {
-                setAssociations(associations);
-            }
-        );
+        .then(associations => {
+            setRegentAssociations(associations);
+        });
+        // veterinaryAssociationService.getAllByVeterinaryId(profile.veterinary.id)
+        // .then(associations => {
+        //     setVeterinaryAssociations(associations)
+        // });
         setIsModalOpen(false);
         setGeneratedCode(false);
         setCompleteTemporalAssociation(null);
     }
 
-    function returnAssociationCards(){
-        var renderAssociationCards = [];
-        associations.forEach(association => {
-            renderAssociationCards.push(
+    function returnRegentAssociationCards(){
+        var renderRegentAssociationCards = [];
+        regentAssociations.forEach(association => {
+            renderRegentAssociationCards.push(
                 <Card   className='appCard'
                         hoverable
                         style={{width: 300}}
@@ -100,8 +141,9 @@ export default function VetsAssociations(){
                 </Card>
             )
         });
-        return renderAssociationCards;
+        return renderRegentAssociationCards;
     };
+
 
     return (
         <>   
@@ -120,13 +162,13 @@ export default function VetsAssociations(){
 
         <Row>
             {
-            associations.length ? 
-            returnAssociationCards()
+            regentAssociations.length ? 
+            returnRegentAssociationCards()
             :
             <>Aún no existen clínicas asociadas</>
-            }
+            }            
             </Row>
-            <Modal  title="Asociarse con una clínica veterinaria como Veterinario Regente"
+            <Modal  title="Asociarse con una clínica veterinaria"
                     visible={isModalOpen}
                     footer={[
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
@@ -135,7 +177,7 @@ export default function VetsAssociations(){
                         <>
                             {
                             completeTemporalAssociation ? 
-                            <Button htmlType="submit" type="primary" onClick={createRegentAssociation} className="register-form_button-ok-modal" > 
+                            <Button htmlType="submit" type="primary" onClick={createAssociation} className="register-form_button-ok-modal" > 
                                 Asociar
                             </Button>
                             :
@@ -161,10 +203,10 @@ export default function VetsAssociations(){
                         :
                         <>  
                             <Row>
-                                <Typography.Title level={5}>Ingrese código de asociación brindado por el propietario de la clínica veterinaria:</Typography.Title>
+                                <Typography.Title level={5}>Ingrese código de asociación:</Typography.Title>
                             </Row>
                             <Row>
-                                <Input type="number" name="phone" placeholder="Código de asociación"  onChange={refreshCode}/>
+                                <Input type="string" name="phone" placeholder="Código de asociación" onChange={refreshCode}/>
                             </Row>    
                         </>
                 }

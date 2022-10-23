@@ -206,7 +206,7 @@ export default function VetsAssociations(){
                                 <Typography.Title level={5}>Ingrese código de asociación:</Typography.Title>
                             </Row>
                             <Row>
-                                <Input type="string" name="phone" placeholder="Código de asociación" onChange={refreshCode}/>
+                                <Input name="phone" placeholder="Código de asociación"  onChange={refreshCode}/>
                             </Row>    
                         </>
                 }

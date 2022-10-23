@@ -1,7 +1,11 @@
 import React from "react";
 import { Row, Col, Typography, Divider } from "antd";
 import CardMenu from "../../components/CardMenu";
-import clipboard from "../../assets/img/jpg/clipboard.jpg";
+import huella from "../../assets/img/jpg/Huella1.jpg";
+import atencion from "../../assets/img/jpg/AtencionClinica.jpg";
+import calendario from "../../assets/img/jpg/calendario.jpg";
+import valorar from "../../assets/img/jpg/valorar.jpg";
+import clinica from "../../assets/img/jpg/clinica.jpg";
 import '../Settings/UserSettings/UserSettings.scss';
 
 const {Title} = Typography;
@@ -9,25 +13,28 @@ const {Title} = Typography;
 export default function MenuWeb(){
 
     const profile = JSON.parse(sessionStorage.getItem('profile')) ;
-    
-    //verificar nombres de los modulos
+
     const veterinary = {
-        module: ['Consulta','Calendario','Ficha Clinica'],
-        description: [''],
-        img: [clipboard],
-        routes:['/admin','/calendar','/admin']
+        module:['Consulta Médica','Calendario','Mascotas asociadas',],
+        description:['Iniciar Consulta para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas',],
+        disabled:[false,true],
+        img:[atencion,calendario,huella,],
+        routes:['/consultation','/calendar','/pets-management']
     };
+
     const tutor = {
-        module:  ['Mascotas','Calendario','Valorar','Historial Clinico'],
-        description: [''],
-        img: [clipboard],
-        routes:['/pets','/calendar','/value','/admin']
+        module:['Mis Mascotas','Calendario','Valorar Veterinarios','Historial Clínico',],
+        description:['Visualizá tus Mascotas registradas','Visualizá próximos eventos','Registrá una reseña a tus Veterinarios asociados','Visualizá el Historial Clínico de tus Mascotas',],
+        disabled:[false,true],
+        img:[huella,calendario,valorar,atencion],
+        routes:['/pets','/calendar','/admin','/admin']
     };
+
     const vetOwner = {
-        module: ['Veterinaria','Calendario'],
-        description: [''],
-        
-        img: [clipboard],
+        module:['Mis Clínicas Veterinarias','Calendario',],
+        description:['Visualizá los datos de tu/s Veterinaria/s','Visualizá próximos eventos',],
+        disabled:[false,true],
+        img:[clinica,calendario,],
         routes:['/vets','/calendar']
     };
 
@@ -35,7 +42,7 @@ export default function MenuWeb(){
         //definir modulos comunes en todos los perfiles, calendar por ejemplo
         let cards = {
             module: [],
-            description:['Modulo del sistema'],
+            description:[],
             disabled: [false,true],
             img: [],
             routes:[]
@@ -65,18 +72,18 @@ export default function MenuWeb(){
     //fijo 4 modulos por fila 
     function Mod(){
         const renderModules = [];
-         for(let i = 0; i < cantMod().module[0].length; i++ ){
-            renderModules.push(            
-                <Col xs={{ span: 24}} lg={{ span: 6 }}>
-                    <CardMenu key={i} 
-                    route={cantMod().routes[0][i]} 
-                    text={cantMod().module[0][i]} 
-                    description={cantMod().description[0]} 
-                    disabled={cantMod().disabled[0]} 
-                    img={cantMod().img[0]} ></CardMenu>
+        for(let i = 0; i < cantMod().module[0].length; i++ ){
+            renderModules.push(
+                <Col xs={{span: 24 }} lg={{span: 6 }}>
+                    <CardMenu kei={i}
+                    route={cantMod().routes[0][i]}
+                    text={cantMod().module[0][i]}
+                    description={cantMod().description[0][i]}
+                    disabled={cantMod().disabled[0]}
+                    img={cantMod().img[0][i]}></CardMenu>
                 </Col>
-            ); 
-        }                
+            )
+        };               
         return renderModules;
     };
 
@@ -88,7 +95,6 @@ export default function MenuWeb(){
             <Divider></Divider>
             <Mod></Mod>
         </Row> 
-        
         
     )
 };

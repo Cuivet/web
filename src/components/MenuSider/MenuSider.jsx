@@ -54,7 +54,14 @@ export default function MenuSider(props){
     };
 
     return (
-        <Sider trigger={null} collapsible className="admin-sider" collapsed={menuCollapsed}>
+        <Sider trigger={null} collapsible className="admin-sider" collapsed={menuCollapsed} 
+            style={{ 
+                overflow: 'auto',
+                height: '100vh',
+                position: 'fixed',
+                left: 0,
+                zIndex:5
+            }}>
             <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}> 
                 
                 <Menu.Item key="menu">

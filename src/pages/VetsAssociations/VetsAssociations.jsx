@@ -1,20 +1,21 @@
 //MARTINA
 import React, { useState } from 'react';
 import Meta from "antd/lib/card/Meta";
-import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tooltip, Modal, Input } from 'antd';
+import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Tooltip, Modal, Input, Badge } from 'antd';
 import Icon,{SyncOutlined, EyeOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 import vett from '../../assets/img/jpg/vet.jpg';
 import {getTemporalAssociationByCode, registerRegentOnVet, getAllByRegentId} from '../../services/vet.service';
 import {veterinaryAssociationService} from '../../services/veterinary_association.service'
 const { Title } = Typography;
+
 export default function VetsAssociations(){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [regentAssociations, setRegentAssociations] = useState([]);
-    const [veterinaryAssociations, setVeterinaryAssociations] = useState([]);
+    const [veterinaryAssociationDataList, setVeterinaryAssociationDataList] = useState([]);
     const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
@@ -77,7 +78,7 @@ export default function VetsAssociations(){
             name: completeTemporalAssociation.vetData.vet.name,
             phone: completeTemporalAssociation.vetData.vet.phone,
             address: completeTemporalAssociation.vetData.vet.address,
-            vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId,
+            vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId, //para que usa todos estos datos??
             veterinaryId: profile.veterinary.id,
         };
         registerRegentOnVet(regentAssociation)
@@ -106,20 +107,24 @@ export default function VetsAssociations(){
         .then(associations => {
             setRegentAssociations(associations);
         });
-        // veterinaryAssociationService.getAllByVeterinaryId(profile.veterinary.id)
-        // .then(associations => {
-        //     setVeterinaryAssociations(associations)
-        // });
+        veterinaryAssociationService.getAllDataByRegentOrVeterinary(profile.veterinary.id)
+            .then( assocData => {
+                setVeterinaryAssociationDataList(assocData);
+            });
         setIsModalOpen(false);
         setGeneratedCode(false);
         setCompleteTemporalAssociation(null);
     }
 
     function returnRegentAssociationCards(){
-        var renderRegentAssociationCards = [];
-        regentAssociations.forEach(association => {
-            renderRegentAssociationCards.push(
-                <Card   className='appCard'
+        var renderAssociationCards = [];
+        veterinaryAssociationDataList.forEach(association => {
+            const isRegent = association.vetData.regentData.veterinary.id === profile.veterinary.id
+                ? true 
+                : false;
+            renderAssociationCards.push(
+                <Badge.Ribbon text={isRegent ? 'Regente' : 'Co-Veterinario'} color={isRegent ? 'pink' : 'purple'}>
+                    <Card   className='appCard'
                         hoverable
                         style={{width: 300}}
                         cover={<img alt='required text' src={vett}></img>}
@@ -135,13 +140,22 @@ export default function VetsAssociations(){
                                     </Popconfirm>,
                                 ]}>
                     <Meta   className=''
-                            title={ association.name }
-                            description={'Regente: ' +  profile.person.name + ' ' +  profile.person.lastName + '. MP: ' + profile.veterinary.mp }/>
-                    <br></br>
-                </Card>
+                            title={ association.vetData.vet.name }
+                            description={
+                                <>
+                                    <Row>
+                                        <Typography.Text type="secondary">{ 'Veterinario Regente: ' +  association.vetData.regentData.person.name + ' ' +  association.vetData.regentData.person.lastName }</Typography.Text>
+                                    </Row>
+                                    <Row>
+                                        <Typography.Text type="secondary">{ 'Dirección: ' +  association.vetData.vet.address }</Typography.Text>
+                                    </Row>
+                                </>
+                                }/>
+                    </Card>
+                </Badge.Ribbon>
             )
         });
-        return renderRegentAssociationCards;
+        return renderAssociationCards;
     };
 
 
@@ -197,7 +211,6 @@ export default function VetsAssociations(){
                              </Row>
                               <Row>
                                 <Typography.Title level={6}>Dirección: {completeTemporalAssociation.vetData.vet.address}</Typography.Title>   
-
                              </Row>
                         </>
                         :

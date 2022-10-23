@@ -64,9 +64,12 @@ export default function Consultation(){
     const content = (<>
         <Row>
             <Typography.Text type="secondary">Ficha Nro: 76531732</Typography.Text>
-        </Row>        
+        </Row>
         <Row>
-            <Typography.Text strong>Tutor: Tomas Bardin</Typography.Text>
+            <Typography.Text type="secondary">Iniciada el: 22/10/2022</Typography.Text>
+        </Row>      
+        <Row>
+            <Typography.Text type="secondary">Tutor principal: Tomas Bardin</Typography.Text>
         </Row>
         <Row>
             <Title level={5} className='motive' editable={{tooltip: 'click to edit text',onChange: setEditableStr,triggerType: 'text',}}>
@@ -84,7 +87,7 @@ export default function Consultation(){
     return(<>
     <Row>
         <Col span={24}>
-            <Title className='appTitle'>Consulta Medica</Title>
+            <Title className='appTitle'>Consulta Médica</Title>
         </Col>
     </Row>
     <Divider></Divider>
@@ -94,7 +97,7 @@ export default function Consultation(){
             ghost={false}
             className="site-page-header"
             tags={<Tag color="purple">Malu</Tag>}
-            extra={[<Button key={2} type='primary'>Cerrar</Button>]}
+            extra={[<Button key={2} type='primary'>Cerrar ficha clínica</Button>]}
             avatar={{icon:'EF',style:{backgroundColor:'#f56a00'}}} >
                 <Row>
                     <Col span={24}>
@@ -112,8 +115,11 @@ export default function Consultation(){
                 <Row>
                     <Col span={14}>
                         {   
-                            <>Pasos comprendidos: <Tag color="purple">TRATAMIENTO</Tag><Tag color="purple">PRONOSTICO</Tag>
-                                {showControl ? <Tag color="green">CONTROL</Tag> : <Tag color="red">SIN CONTROL</Tag>}
+                            <> 
+                                <Typography.Text strong>PASOS COMPRENDIDOS: </Typography.Text>
+                                <Tag color="purple">RESEÑA</Tag>
+                                <Tag color="purple">ANAMNESIS</Tag>
+                                {showControl ? <Tag color="green">CON CONTROL</Tag> : <Tag color="red">SIN CONTROL</Tag>}
                             </>
                         } 
                         
@@ -122,10 +128,17 @@ export default function Consultation(){
                         <Col span={10} style={{display: 'flex', justifyContent: 'flex-end'}}>
                             <div>
                                 <Button className="margin-right" onClick={toggleControl}>{showControl ? 'Editar control' : 'Ingresar control'}</Button>
-                                <Button>Guardar visita</Button>
+                                <Button type='primary'>Guardar visita</Button>
                             </div>
                         </Col>
                     }
+                </Row>
+
+                <Row>
+                    <Typography.Text type="secondary">Realizada el: 22/10/2022</Typography.Text>
+                </Row>      
+                <Row>
+                    <Typography.Text type="secondary">Tutor presente: Francisco Bardin</Typography.Text>
                 </Row>
             </Card>
         </Col>

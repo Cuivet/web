@@ -1,8 +1,6 @@
 import { LeftCircleOutlined,RightCircleOutlined,CheckCircleOutlined } from "@ant-design/icons";
-import { Button, Col, PageHeader, Row, Typography, message, Tag, Steps, Divider, Tooltip } from "antd";
+import { Button, Col, PageHeader, Row, Typography, message, Tag, Steps, Divider, Tooltip, Card } from "antd";
 import React, {useState} from "react";
-import AvatarSearch from "../../components/AvatarSearch/AvatarSearch";
-import User from '../../assets/img/png/tutorUsuario.png';
 
 import './Consultation.scss'
 
@@ -11,6 +9,11 @@ const {Title} = Typography;
 export default function Consultation(){
     const [editableStr, setEditableStr] = useState('Motivo de consulta...');
     const [current, setCurrent] = useState(0);
+    const [showControl, setShowControl] = useState(false);
+
+    const toggleControl = () => {
+        showControl === true ? setShowControl(false) : setShowControl(true);
+    }
 
     const next = () => {
         setCurrent(current + 1);
@@ -25,8 +28,8 @@ export default function Consultation(){
     {
         title: 'Reseña',
         content: 'Componente Reseña',
-        description: 'Visita 1',
-        subTitle: 'Visita 1'
+        description: '22/10',
+        subTitle: 'Visita N°1'
     },
     {
         title: 'Anamnesis',
@@ -87,11 +90,11 @@ export default function Consultation(){
     <Divider></Divider>
     <Row>
         <Col span={24}>
-            <PageHeader title='Eugenia Frattin' subTitle='Visita Nro: 1' 
+            <PageHeader title='Eugenia Frattin'
             ghost={false}
             className="site-page-header"
             tags={<Tag color="purple">Malu</Tag>}
-            extra={[<Button key={1} type='default'>Control</Button>,<Button key={2} type='primary'>Cerrar</Button>]}
+            extra={[<Button key={2} type='primary'>Cerrar</Button>]}
             avatar={{icon:'EF',style:{backgroundColor:'#f56a00'}}} >
                 <Row>
                     <Col span={24}>
@@ -104,7 +107,33 @@ export default function Consultation(){
     <Divider></Divider>
     <Row>
         <Col span={24}>
-            <Steps current={current} className='steps' labelPlacement='vertical' percent={(current+1)*14.4} responsive>
+            <Card title={'Visita N°1 - 22/10/2022' } 
+                bordered={false}>
+                <Row>
+                    <Col span={14}>
+                        {   
+                            <>Pasos comprendidos: <Tag color="purple">TRATAMIENTO</Tag><Tag color="purple">PRONOSTICO</Tag>
+                                {showControl ? <Tag color="green">CONTROL</Tag> : <Tag color="red">SIN CONTROL</Tag>}
+                            </>
+                        } 
+                        
+                    </Col>
+                    {
+                        <Col span={10} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <div>
+                                <Button className="margin-right" onClick={toggleControl}>{showControl ? 'Editar control' : 'Ingresar control'}</Button>
+                                <Button>Guardar visita</Button>
+                            </div>
+                        </Col>
+                    }
+                </Row>
+            </Card>
+        </Col>
+    </Row>
+    <Divider></Divider>
+    <Row>
+        <Col span={24}>
+            <Steps current={current > 4 ? current - 1 : current} className='steps' labelPlacement='vertical' percent={(current+1)*14.4} responsive>
                 {steps.map((item) => (
                 <Step key={item.title} title={item.title} status={item.status} description={item.description} subTitle={item.subTitle} />
                 ))}

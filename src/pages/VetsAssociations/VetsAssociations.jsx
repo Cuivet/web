@@ -37,7 +37,7 @@ export default function VetsAssociations(){
     };
 
     const refreshCode = e =>{
-        setGeneratedCode(e.target.value);
+        setGeneratedCode('R' + e.target.value);
     };
 
     const tryToAsociate = () => {
@@ -164,7 +164,7 @@ export default function VetsAssociations(){
                                 <Typography.Title level={5}>Ingrese código de asociación brindado por el propietario de la clínica veterinaria:</Typography.Title>
                             </Row>
                             <Row>
-                                <Input type="number" name="phone" placeholder="Código de asociación"  onChange={refreshCode}/>
+                                <Input addonBefore="R" type="number" name="phone" placeholder="Código de asociación"  onChange={refreshCode}/>
                             </Row>    
                         </>
                 }

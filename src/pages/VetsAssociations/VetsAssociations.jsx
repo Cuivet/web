@@ -5,7 +5,7 @@ import { Col, Row, Typography, Button, Divider, Card, Popconfirm, message, Toolt
 import Icon,{SyncOutlined, EyeOutlined, ExclamationCircleOutlined} from '@ant-design/icons';
 import SyncDisabledOutlinedIcon from '@mui/icons-material/SyncDisabledOutlined';
 import vett from '../../assets/img/jpg/vet.jpg';
-import {getTemporalAssociationByCode, registerRegentOnVet, getAllByRegentId} from '../../services/vet.service';
+import {getTemporalAssociationByCode, registerRegentOnVet} from '../../services/vet.service';
 import {veterinaryAssociationService} from '../../services/veterinary_association.service'
 const { Title } = Typography;
 
@@ -14,7 +14,6 @@ export default function VetsAssociations(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
-    const [regentAssociations, setRegentAssociations] = useState([]);
     const [veterinaryAssociationDataList, setVeterinaryAssociationDataList] = useState([]);
     const [isInit, setIsInit] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
@@ -103,10 +102,6 @@ export default function VetsAssociations(){
     }
 
     function refreshComponent() {
-        getAllByRegentId(profile.veterinary.id)
-        .then(associations => {
-            setRegentAssociations(associations);
-        });
         veterinaryAssociationService.getAllDataByRegentOrVeterinary(profile.veterinary.id)
             .then( assocData => {
                 setVeterinaryAssociationDataList(assocData);
@@ -176,7 +171,7 @@ export default function VetsAssociations(){
 
         <Row>
             {
-            regentAssociations.length ? 
+            veterinaryAssociationDataList.length ? 
             returnRegentAssociationCards()
             :
             <>Aún no existen clínicas asociadas</>

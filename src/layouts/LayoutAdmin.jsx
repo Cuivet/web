@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
+import { Layout, Divider, Typography, Row } from "antd";
 import MenuTop from "../components/MenuTop";
 import MenuSider from "../components/MenuSider/MenuSider";
 import "./LayoutsAdmin.scss";
@@ -29,7 +29,12 @@ export default function LayoutAdmin(props){
                 <Content className="layout-admin__content">
                     {children}
                 </Content>
-                <Footer className="layout-admin__footer">CUIVET By Proyecto Final</Footer>
+                <Footer className="layout-admin__footer">
+                    <Divider />
+                    <Row style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <Typography.Title type="secondary" level={5}>Made with ❤ by Cuivet</Typography.Title>
+                    </Row>
+                </Footer>
             </Layout> 
         </Layout>
 

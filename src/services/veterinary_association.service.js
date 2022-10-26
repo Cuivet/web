@@ -1,32 +1,19 @@
 import { basePATH } from "./config";
 
-export function registerVet(data){
+export var veterinaryAssociationService = {
+    registerTemporalAssociation: registerTemporalAssociation,
+    getTemporalAssociationByCode: getTemporalAssociationByCode,
+    register: register,
+    getAllByVeterinaryId: getAllByVeterinaryId,
+    getAllDataByRegentOrVeterinary: getAllDataByRegentOrVeterinary
+}
+
+async function registerTemporalAssociation(data){
     var axios = require('axios');
     return axios({
         method: "post",
-        url: `${basePATH}/vet/`,
+        url: `${basePATH}/veterinary-association/registerTemporalAssociation`,
         data: data,
-        timeout: 1000 * 5, // Wait for 5 seconds
-        headers: {
-            "Content-Type": "application/json",
-            Accept: 'application/json',
-            "token": sessionStorage.getItem('token'),
-        }
-        })
-        .then((response) => {
-            return response;
-        })
-        .catch((err) => {
-            return err;
-        });
-};
-
-export function getVetsByVetOwnerId(vetOwnerId) {
-    var axios = require('axios');
-    return axios({
-        method: "get",
-        url: `${basePATH}/vet/allByVetOwnerId/${vetOwnerId}`,
-        timeout: 1000 * 5, // Wait for 5 seconds
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',
@@ -35,18 +22,31 @@ export function getVetsByVetOwnerId(vetOwnerId) {
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
-};
+}
 
-export function registerTemporalAssociation(data){
+async function getTemporalAssociationByCode(code){
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/veterinary-association/temporalAssociationByCode/${code}`,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        });
+}
+
+async function register(veterinaryAssociations){
     var axios = require('axios');
     return axios({
         method: "post",
-        url: `${basePATH}/vet/registerTemporalAssociation`,
-        data: data,
+        url: `${basePATH}/veterinary-association/register`,
+        data: veterinaryAssociations,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',
@@ -55,17 +55,14 @@ export function registerTemporalAssociation(data){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err; 
         });
-};
+}
 
-export function getTemporalAssociationByCode(code){
+async function getAllByVeterinaryId(veterinaryId){
     var axios = require('axios');
     return axios({
         method: "get",
-        url: `${basePATH}/vet/temporalAssociationByCode/${code}`,
+        url: `${basePATH}/veterinary-association/allByVeterinaryId/${veterinaryId}`,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',
@@ -74,38 +71,14 @@ export function getTemporalAssociationByCode(code){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
-};
+}
 
-export function registerRegentOnVet(data){
-    var axios = require('axios');
-    return axios({
-        method: "put",
-        url: `${basePATH}/vet/`,
-        data: data,
-        timeout: 1000 * 60, // Wait for 5 seconds
-        headers: {
-            "Content-Type": "application/json",
-            Accept: 'application/json',
-            "token": sessionStorage.getItem('token'),
-        }
-        })
-        .then((response) => {
-            return response;
-        })
-        .catch((err) => {
-            return err;
-        });
-};
-
-export function getAllByRegentId(id){
+async function getAllDataByRegentOrVeterinary(veterinaryId){
     var axios = require('axios');
     return axios({
         method: "get",
-        url: `${basePATH}/vet/allByRegentId/${id}`,
+        url: `${basePATH}/veterinary-association/allDataByRegentOrVeterinary/${veterinaryId}`,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',
@@ -114,8 +87,5 @@ export function getAllByRegentId(id){
         })
         .then((response) => {
             return response.data;
-        })
-        .catch((err) => {
-            return err;
         });
-};
+}

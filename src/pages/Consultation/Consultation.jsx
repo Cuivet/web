@@ -116,8 +116,11 @@ export default function Consultation() {
     review: {
       id: 12,
       visitId: 1,
-      weight: 22.3,
-      temperature: 37,
+      name: "Lima",
+      birth: "2018-07-09T19:00:43.000Z",
+      isMale: false,
+      raceId: 1,
+      specieId: 2,
     },
     anamnesis: {
       id: 10,
@@ -159,9 +162,10 @@ export default function Consultation() {
       temperature: 36.2,
       weight: 21,
       pulse: 222,
-      mucousMembrane: 'Verde y un poco inflamado',
-      bodyCondition: '4',
-      observation: 'Se palpa en el torax derecho que el animal sufre de cortes y golpes'
+      mucousMembrane: "Verde y un poco inflamado",
+      bodyCondition: "4",
+      observation:
+        "Se palpa en el torax derecho que el animal sufre de cortes y golpes",
     },
     presumptiveDiagnosis: {
       id: 4,
@@ -176,8 +180,8 @@ export default function Consultation() {
         {
           id: 4,
           presumptiveDiagnosisId: 4,
-          diagnosisTypeId: 3,
-          observation: null,
+          diagnosisTypeId: 3, //no se va a usar o va a ser fijo
+          observation: "Gastroenteritis", //no debe venir null
         },
       ],
       complementaryStudies: [
@@ -199,27 +203,49 @@ export default function Consultation() {
       id: 2,
       visitId: 3,
       diagnosisItems: [
-        { //va a ser un solo objeto por defecto
+        {
+          //va a ser un solo objeto por defecto
           id: 4,
           diagnosisId: 2,
-          diagnosisResult: 'Gastroenteritis aguda',
-          diagnosisTypeId: 2,//reemplazaria por diagnosisResult
+          diagnosisResult: "Gastroenteritis aguda",
+          observation: "Costo mucho",
+          diagnosisTypeId: 2, //
           diagnosisItemTreatments: [
             {
               id: 5,
               diagnosisItemId: 4,
-              drugId: 3,
-              treatmentOptionId: 2, 
-              frecuencyInterval: 24,
-              frecuencyDuration: 7,
+              drugId: 3, //medicamento, no depende del Option
+              treatmentTypeId: 1, //tipo tratamiento
+              treatmentOptionId: 2, //tratamiento medico: tipo de medicamento(que efecto cubre esa droga)
+              frecuencyInterval: 24, //horas,estos solo si son tipo medicos
+              frecuencyDuration: 7, //dias, estos solo si son tipo medicos
             },
             {
               id: 6,
               diagnosisItemId: 4,
-              drugId: 4,
-              treatmentOptionId: 4,
-              frecuencyInterval: 12,
-              frecuencyDuration: 3,
+              drugId: null,
+              treatmentTypeId: 2, //quirurgico
+              treatmentOptionId: 4, //
+              frecuencyInterval: null,
+              frecuencyDuration: null,
+            },
+            {
+              id: 7,
+              diagnosisItemId: 4,
+              drugId: 2,
+              treatmentTypeId: 1, //
+              treatmentOptionId: 2, //
+              frecuencyInterval: 2,
+              frecuencyDuration: 12,
+            },
+            {
+              id: 7,
+              diagnosisItemId: 4,
+              drugId: null,
+              treatmentTypeId: 3, //
+              treatmentOptionId: 3, //
+              frecuencyInterval: null,
+              frecuencyDuration: null,
             },
           ],
         },
@@ -240,7 +266,11 @@ export default function Consultation() {
         },
       ],
     },
-    prognosis: null,
+    prognosis: {
+      id: 2,
+      visitId: 3,
+      observation: "Se va a recuperar bien",
+    },
   };
 
   const next = () => {
@@ -259,14 +289,14 @@ export default function Consultation() {
     }
   }
   function Visits(step) {
-    if(step !== null){
-      // console.log(cRecord.visits)   ; 
-      const date = cRecord.visits.map ((visit)=>{
+    if (step !== null) {
+      // console.log(cRecord.visits)   ;
+      const date = cRecord.visits.map((visit) => {
         // console.log(visit)
         return visit.id === step.visitId ? visit.date : null;
       });
       return date;
-    }       
+    }
   }
   // console.log(Visits(cRecord.presumptiveDiagnosis));
   const { Step } = Steps;
@@ -277,7 +307,7 @@ export default function Consultation() {
       content: (
         <Review
           id={Exists(cRecord.review, cRecord.review.id)}
-          pet={cRecord.pet}         
+          pet={cRecord.pet}
         />
       ),
       subTitle: Visits(cRecord.review),
@@ -299,11 +329,23 @@ export default function Consultation() {
         <PhysicalExam
           id={Exists(cRecord.physcalExam, cRecord.physcalExam.id)}
           weight={Exists(cRecord.physcalExam, cRecord.physcalExam.weight)}
-          temperature={Exists(cRecord.physcalExam, cRecord.physcalExam.temperature)}
+          temperature={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.temperature
+          )}
           pulse={Exists(cRecord.physcalExam, cRecord.physcalExam.pulse)}
-          mucousMembrane={Exists(cRecord.physcalExam, cRecord.physcalExam.mucousMembrane)}
-          bodyCondition={Exists(cRecord.physcalExam, cRecord.physcalExam.bodyCondition)}
-          observation={Exists(cRecord.physcalExam, cRecord.physcalExam.observation)}
+          mucousMembrane={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.mucousMembrane
+          )}
+          bodyCondition={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.bodyCondition
+          )}
+          observation={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.observation
+          )}
         />
         // <PhysicalExam
         //   id={null}
@@ -319,34 +361,39 @@ export default function Consultation() {
     },
     {
       title: "Diagnóstico Presuntivo",
-      content: (<PresumptiveDiagnosis 
-                id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)} 
-                />),
+      content: (
+        // <PresumptiveDiagnosis
+        //   id={Exists(
+        //     cRecord.presumptiveDiagnosis,
+        //     cRecord.presumptiveDiagnosis.id
+        //   )}
+        //   presumptiveDiagnosisItem={Exists(
+        //     cRecord.presumptiveDiagnosis,
+        //     cRecord.presumptiveDiagnosis.presumptiveDiagnosisItem
+        //   )}
+        // />
+        <PresumptiveDiagnosis id={null} presumptiveDiagnosis={null} />
+      ),
       subTitle: Visits(cRecord.presumptiveDiagnosis),
     },
     {
       title: "Diagnóstico Final",
       content: (
-                <Diagnosis 
-                  id={Exists(cRecord.diagnosis, cRecord.diagnosis.id)}
-                   treatments={Exists(cRecord.diagnosis, cRecord.diagnosis.diagnosisItems)}
-                />
-                // <Diagnosis 
-                //   id={null}
-                //   treatments={null}
-                // />
-                ),
+        // <Diagnosis
+        //   id={Exists(cRecord.diagnosis, cRecord.diagnosis.id)}
+        //   diagnosis={Exists(cRecord.diagnosis, cRecord.diagnosis.diagnosisItems[0])}
+        // />
+        <Diagnosis id={null} treatments={null} />
+      ),
       subTitle: Visits(cRecord.diagnosis),
     },
     {
       title: "Pronóstico",
       content: (
-          // <Prognosis 
-          //   id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)} 
-          // />
-        <Prognosis 
-          id={null} 
-        />
+        // <Prognosis
+        //   id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)}
+        // />
+        <Prognosis id={null} />
       ),
       subTitle: Visits(cRecord.prognosis),
     },

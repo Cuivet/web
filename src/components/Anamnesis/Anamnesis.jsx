@@ -103,14 +103,6 @@ export default function Anamnesis(props) {
     const render = [];
     for (let i in questions) {
       //caso2: creo los campos para cargar las respuestas a las preguntas
-      // newInput.push({
-      //         anamnesisId: props.id,
-      //         anamnesisQuestionId: null,
-      //         booleanResponse: null,
-      //         textResponse: null
-      // });
-
-      // console.log(newInput);
 
       if (questions[i]["isBooleanResponse"] && questions[i]["isTextResponse"]) {
         // console.log(initValue[i]);

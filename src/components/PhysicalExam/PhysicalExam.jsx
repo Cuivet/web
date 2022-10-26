@@ -48,6 +48,12 @@ export default function PhysicalExam(props) {
     bodyCondition: false,
     observation: false,
   });
+  const wrapper = {
+    sm: { offset: 0, span: 14 },
+    xs: {
+      offset: 0,
+    },
+  };
 
   //debemos diferenciar el valor que queda vacio por eleccion
   //del que aun no ha se ha cargado.
@@ -145,156 +151,156 @@ export default function PhysicalExam(props) {
             Examen Físico
           </Typography.Title>
         </Col>
-        <Form
-          layout="horizontal"
-          labelCol={{ span: 8 }}
-          onFinish={register}
-          onChange={changeForm}
-          fields={initValue}
-        >
-          <Col span={24}>
-            <Form.Item
-              name="weight"
-              label="Peso"
-              tooltip={{
-                title: "peso en Kilogramos",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <InputNumber
+        <Col xs={{ span: 24 }} md={{ span: 10 }}>
+          <Form
+            layout="horizontal"
+            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            wrapperCol={wrapper}
+            onFinish={register}
+            onChange={changeForm}
+            fields={initValue}
+          >
+            <Col span={24}>
+              <Form.Item
                 name="weight"
-                min={1}
-                disabled={disabled}
-                onChange={inputValidation}
-                keyboard="false"
-                style={{ width: 300 }}
-                placeholder="Ingrese el peso"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="temperature"
-              label="Temperatura"
-              tooltip={{
-                title: "temperatura en °C",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <InputNumber
-                name="temperature"
-                disabled={disabled}
-                min={30}
-                max={50}
-                keyboard="false"
-                onChange={inputValidation}
-                style={{ width: 300 }}
-                placeholder="Ingrese la temperatura"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="pulse"
-              label="Pulso"
-              tooltip={{
-                title: "latidos por minuto",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <InputNumber
-                name="pulse"
-                disabled={disabled}
-                min={30}
-                onChange={inputValidation}
-                keyboard="false"
-                style={{ width: 300 }}
-                placeholder="Ingrese el pulso"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="mucousMembrane"
-              label="Mucosa"
-              tooltip={{
-                title: "informacion relacionada con la mucosa",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Input
-                name="mucousMembrane"
-                style={{ width: 300 }}
-                allowClear
-                disabled={disabled}
-                onChange={inputValidation}
-                placeholder={"Ingrese mucosa"}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="bodyCondition"
-              label="Condicion corporal"
-              tooltip={{
-                title: "",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Select
-                name="bodyCondition"
-                style={{ width: 300 }}
-                disabled={disabled}
-                onChange={selectChange}
-                placeholder={"Seleccione condicion corporal"}
+                label="Peso"
+                tooltip={{
+                  title: "peso en Kilogramos",
+                  icon: <InfoCircleOutlined />,
+                }}
               >
-                <Select.Option value="1">Muy Flaco</Select.Option>
-                <Select.Option value="2">Flaco</Select.Option>
-                <Select.Option value="3">Normal</Select.Option>
-                <Select.Option value="4">Exceso de Peso</Select.Option>
-                <Select.Option value="5">Obeso</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="observation"
-              label="Observacion"
-              tooltip={{
-                title: "algo",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Input.TextArea
-                style={{ width: 300 }}
-                disabled={disabled}
-                name="observation"
-                rows={4}
-                allowClear
-                onChange={inputValidation}
-                placeholder="Ingrese alguna observacion"
-                maxLength={500}
-                showCount
-                autoSize={{ minRows: 4, maxRows: 5 }}
-              />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item>
-              <Tooltip title={"Guardar"}>
-                <Button
-                  htmlType="submit"
-                  shape="round"
-                  className="stepSave"
+                <InputNumber
+                  name="weight"
+                  min={1}
+                  style={{ width: "100%" }}
                   disabled={disabled}
-                  type="primary"
+                  onChange={inputValidation}
+                  keyboard="false"
+                  placeholder="Ingrese el peso"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="temperature"
+                label="Temperatura"
+                tooltip={{
+                  title: "temperatura en °C",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <InputNumber
+                  name="temperature"
+                  disabled={disabled}
+                  style={{ width: "100%" }}
+                  min={30}
+                  max={50}
+                  keyboard="false"
+                  onChange={inputValidation}
+                  placeholder="Ingrese la temperatura"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="pulse"
+                label="Pulso"
+                tooltip={{
+                  title: "latidos por minuto",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <InputNumber
+                  name="pulse"
+                  disabled={disabled}
+                  style={{ width: "100%" }}
+                  min={30}
+                  onChange={inputValidation}
+                  keyboard="false"
+                  placeholder="Ingrese el pulso"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="mucousMembrane"
+                label="Mucosa"
+                tooltip={{
+                  title: "informacion relacionada con la mucosa",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input
+                  name="mucousMembrane"
+                  allowClear
+                  disabled={disabled}
+                  onChange={inputValidation}
+                  placeholder={"Ingrese mucosa"}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="bodyCondition"
+                label="Condicion corporal"
+                tooltip={{
+                  title: "",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Select
+                  name="bodyCondition"
+                  disabled={disabled}
+                  onChange={selectChange}
+                  placeholder={"Seleccione condicion corporal"}
                 >
-                  <CheckOutlined />
-                </Button>
-              </Tooltip>
-            </Form.Item>
-          </Col>
-        </Form>
+                  <Select.Option value="1">Muy Flaco</Select.Option>
+                  <Select.Option value="2">Flaco</Select.Option>
+                  <Select.Option value="3">Normal</Select.Option>
+                  <Select.Option value="4">Exceso de Peso</Select.Option>
+                  <Select.Option value="5">Obeso</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="observation"
+                label="Observacion"
+                tooltip={{
+                  title: "algo",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input.TextArea
+                  disabled={disabled}
+                  name="observation"
+                  rows={4}
+                  allowClear
+                  onChange={inputValidation}
+                  placeholder="Ingrese alguna observacion"
+                  maxLength={500}
+                  showCount
+                  autoSize={{ minRows: 4, maxRows: 5 }}
+                />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item>
+                <Tooltip title={"Guardar"}>
+                  <Button
+                    htmlType="submit"
+                    shape="round"
+                    className="stepSave"
+                    disabled={disabled}
+                    type="primary"
+                  >
+                    <CheckOutlined />
+                  </Button>
+                </Tooltip>
+              </Form.Item>
+            </Col>
+          </Form>
+        </Col>
       </Row>
     </>
   );

@@ -30,6 +30,12 @@ export default function Review(props) {
   const [isFetchData, setIsFetchData] = useState(false);
   const [races, setRaces] = useState([]);
   const [species, setSpecies] = useState([]);
+  const wrapper = {
+    sm: { offset: 0, span: 14 },
+    xs: {
+      offset: 0,
+    },
+  };
 
   //debemos diferenciar el valor que queda vacio por eleccion
   //del que aun no ha se ha cargado.
@@ -80,139 +86,136 @@ export default function Review(props) {
       <Row justify="center" gutter={24}>
         <Col span={24}>
           <Typography.Title className="" level={4}>
-            
             Reseña
           </Typography.Title>
         </Col>
-        <Form
-          layout="horizontal"
-          labelCol={{ span: 6 }}
-          labelAlign="right"
-          labelWrap
-          fields={initValue}
-        >
-          <Col span={24}>
-            <Form.Item
-              name="name"
-              label="Paciente"
-              tooltip={{
-                title: "nombre del paciente",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Input
-                disabled={disabled}
-                keyboard="false"
-                style={{ width: 300 }}
-                placeholder="Ingrese el nombre del paciente"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="birth"
-              label="Fecha de Nacimiento"
-              tooltip={{
-                title: "fecha en la que nacio el paciente",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              {/* <DatePicker
+        <Col xs={{ span: 24 }} md={{ span: 10 }}>
+          <Form
+            layout="horizontal"
+            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            wrapperCol={wrapper}
+            labelAlign="right"
+            labelWrap
+            fields={initValue}
+          >
+            <Col span={24}>
+              <Form.Item
+                name="name"
+                label="Paciente"
+                tooltip={{
+                  title: "nombre del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input
+                  disabled={disabled}
+                  keyboard="false"
+                  placeholder="Ingrese el nombre del paciente"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="birth"
+                label="Fecha de Nacimiento"
+                tooltip={{
+                  title: "fecha en la que nacio el paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                {/* <DatePicker
                 disabled={disabled}
                 placeholder={"Ingrese fecha de naciemiento"}
                 style={{ width: 300 }}
                 value={'2018-07-09'}
               /> */}
-              <Input
-                disabled={disabled}
-                style={{ width: 300 }}
-                placeholder="Ingrese la fecha de naciemiento"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="isMale"
-              label="Sexo"
-              tooltip={{
-                title: "sexo del paciente",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Radio.Group
-                optionType="button"
-                disabled={disabled}
-                style={{ width: 300 }}
-                className="register-pet-form__radio"
-              >
-                <Radio style={{ width: "50%" }} value={true}>
-                  Macho
-                </Radio>
-                <Radio style={{ width: "50%" }} value={false}>
-                  Hembra
-                </Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="specieId"
-              label="Especie"
-              tooltip={{
-                title: "especie a la que pertenece el paciente",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Select
-                name="speciesId"
-                placeholder="Seleccione la especie"
-                style={{ width: 300 }}
-                value={pet.specieId}
-                disabled={disabled}
-                allowClear
-              >
-                <Select.Option value={2}>Canino</Select.Option>
-                {/* {renderSpecies()} */}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name="raceId"
-              label="Sexo"
-              tooltip={{
-                title: "sexo del paciente",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Select
-                placeholder="Seleccione la raza"
-                value={pet.raceId}
-                style={{ width: 300 }}
-                disabled={disabled}
-                allowClear
-              >
-                <Select.Option value={1}>Golden Retriever</Select.Option>
-                {/* {renderRaces()} */}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item>
-              <Tooltip title={"Guardar"}>
-                <Button
-                  htmlType="submit"
-                  shape="round"
-                  className="stepSave"
+                <Input
                   disabled={disabled}
-                  type="primary"
+                  placeholder="Ingrese la fecha de naciemiento"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="isMale"
+                label="Sexo"
+                tooltip={{
+                  title: "sexo del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Radio.Group
+                  optionType="button"
+                  disabled={disabled}
+                  className="register-pet-form__radio"
                 >
-                  <CheckOutlined />
-                </Button>
-              </Tooltip>
-            </Form.Item>
-          </Col>
-        </Form>
+                  <Radio style={{ width: "50%" }} value={true}>
+                    Macho
+                  </Radio>
+                  <Radio style={{ width: "50%" }} value={false}>
+                    Hembra
+                  </Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="specieId"
+                label="Especie"
+                tooltip={{
+                  title: "especie a la que pertenece el paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Select
+                  name="speciesId"
+                  placeholder="Seleccione la especie"
+                  value={pet.specieId}
+                  disabled={disabled}
+                  allowClear
+                >
+                  <Select.Option value={2}>Canino</Select.Option>
+                  {/* {renderSpecies()} */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="raceId"
+                label="Sexo"
+                tooltip={{
+                  title: "sexo del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Select
+                  placeholder="Seleccione la raza"
+                  value={pet.raceId}
+                  disabled={disabled}
+                  allowClear
+                >
+                  <Select.Option value={1}>Golden Retriever</Select.Option>
+                  {/* {renderRaces()} */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item wrapperCol={{ span: 24 }}>
+                <Tooltip title={"Guardar"}>
+                  <Button
+                    htmlType="submit"
+                    shape="round"
+                    className="stepSave"
+                    disabled={disabled}
+                    type="primary"
+                  >
+                    <CheckOutlined />
+                  </Button>
+                </Tooltip>
+              </Form.Item>
+            </Col>
+          </Form>
+        </Col>
       </Row>
     </>
   );

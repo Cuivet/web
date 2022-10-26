@@ -55,6 +55,12 @@ export default function Anamnesis(props) {
       };
     })
   );
+  const wrapper = {
+    sm: { offset: 5, span: 14 },
+    xs: {
+      offset: 0,
+    },
+  };
 
   // const onChange = (e) => {
   //   // setRadioValue(e.target.value);
@@ -102,22 +108,21 @@ export default function Anamnesis(props) {
   function RenderQ() {
     const render = [];
     for (let i in questions) {
-      //caso2: creo los campos para cargar las respuestas a las preguntas
-
+      //caso2: creo los campos para responder a las preguntas
       if (questions[i]["isBooleanResponse"] && questions[i]["isTextResponse"]) {
-        // console.log(initValue[i]);
         if (initValue[i] === undefined || initValue.length === 1) {
           //mapear pregunta vacia
+          //texto + radio
           render.push(
-            <Col span={24} key={i}>
+            <Col key={i}>
               <Form.Item label={questions[i]["question"]}>
                 <Radio.Group
                   disabled={disabled}
                   optionType="button"
                   name={`booleanResponse${questions[i].id}`}
                 >
-                  <Radio value={true}>Si</Radio>
-                  <Radio value={false}>No</Radio>
+                  <Radio  style={{ width: "50%" }} value={true}>Si</Radio>
+                  <Radio  style={{ width: "50%" }} value={false}>No</Radio>
                 </Radio.Group>
               </Form.Item>
               <Form.Item name={questions[i]["id"]}>
@@ -138,15 +143,15 @@ export default function Anamnesis(props) {
             typeof initValue[i]["value"] === "string"
           ) {
             render.push(
-              <Col span={24} key={i}>
+              <Col key={i}>
                 <Form.Item label={questions[i]["question"]}>
                   <Radio.Group
                     disabled={disabled}
                     value={answers[i].booleanResponse}
                     optionType="button"
                   >
-                    <Radio value={true}>Si</Radio>
-                    <Radio value={false}>No</Radio>
+                    <Radio style={{ width: "50%" }} value={true}>Si</Radio>
+                    <Radio style={{ width: "50%" }} value={false}>No</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name={questions[i]["id"]}>
@@ -161,19 +166,34 @@ export default function Anamnesis(props) {
         }
       } else {
         if (questions[i]["isBooleanResponse"]) {
-          //esto para traer cuando esta cargado
+          //mapear pregunta para respoder
+          //radio
           if (initValue[i] === undefined) {
+            render.push(
+              <Col>
+                  <Form.Item
+                    name={questions[i]["id"]}
+                    label={questions[i]["question"]}
+                  >
+                    <Radio.Group disabled={disabled} name='booleanResponse' optionType="button">
+                      <Radio style={{ width: "50%" }} value={true}>Si</Radio>
+                      <Radio style={{ width: "50%" }} value={false}>No</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </Col>
+            )
           } else {
+            //pregunta respondida
             if (initValue[i]["name"] === questions[i]["id"]) {
               render.push(
-                <Col span={24}>
+                <Col>
                   <Form.Item
                     name={questions[i]["id"]}
                     label={questions[i]["question"]}
                   >
                     <Radio.Group disabled={disabled} optionType="button">
-                      <Radio value={true}>Si</Radio>
-                      <Radio value={false}>No</Radio>
+                      <Radio style={{ width: "50%" }} value={true}>Si</Radio>
+                      <Radio style={{ width: "50%" }} value={false}>No</Radio>
                     </Radio.Group>
                   </Form.Item>
                 </Col>
@@ -183,9 +203,25 @@ export default function Anamnesis(props) {
         }
         if (questions[i]["isTextResponse"]) {
           if (initValue[i] === undefined) {
+            //mapear pregunta para responder
+            //texto
+            render.push(
+              <Col>
+                <Form.Item
+                  name={questions[i]["id"]}
+                  label={questions[i]["question"]}
+                >
+                  <Input
+                    name="textResponse"
+                    disabled={disabled}
+                    placeholder="Ingrese su respuesta"
+                  />
+                </Form.Item>
+              </Col>
+            )
           } else {
             render.push(
-              <Col span={24}>
+              <Col>
                 <Form.Item
                   name={questions[i]["id"]}
                   label={questions[i]["question"]}
@@ -250,20 +286,20 @@ export default function Anamnesis(props) {
 
   const register = (e) => {
     console.log(e);
-    const keys = Object.keys(e);
-    for (let j in keys) {
-      setInput(
-        input.map((i) => {
-          console.log(e[keys[j]]);
-          if (i.anamnesisQuestionId === keys[j]) {
-            // console.log( e);
-            return { ...i, textResponse: e[keys[j]] };
-          }
-          return { ...i };
-        })
-      );
-    }
-    console.log(input);
+    // const keys = Object.keys(e);
+    // for (let j in keys) {
+    //   setInput(
+    //     input.map((i) => {
+    //       console.log(e[keys[j]]);
+    //       if (i.anamnesisQuestionId === keys[j]) {
+    //         // console.log( e);
+    //         return { ...i, textResponse: e[keys[j]] };
+    //       }
+    //       return { ...i };
+    //     })
+    //   );
+    // }
+    // console.log(input);
     // setInput(input.map( i => {
     //   for (let j in keys){
     //     console.log(j)
@@ -282,30 +318,33 @@ export default function Anamnesis(props) {
         <Col span={24}>
           <Typography.Title level={4}>Anamnesis</Typography.Title>
         </Col>
-        <Form
-          layout="vertical"
-          labelCol={{ span: 24 }}
-          onFinish={register}
-          fields={initValue}
-          onChange={changeForm}
-        >
-          <RenderQ />
-          <Col>
-            <Form.Item>
-              <Tooltip title={"Guardar"}>
-                <Button
-                  htmlType="submit"
-                  className="stepSave"
-                  shape="round"
-                  disabled={disabled}
-                  type="primary"
-                >
-                  <CheckOutlined />
-                </Button>
-              </Tooltip>
-            </Form.Item>
-          </Col>
-        </Form>
+        <Col xs={{ span: 24 }} md={{ span: 10 }}>
+          <Form
+            layout="vertical"
+            labelCol={{ sm: { span: 14, offset:5 }, xs: { span: 5 } }}
+            wrapperCol={wrapper}
+            onFinish={register}
+            fields={initValue}
+            onChange={changeForm}
+          >
+            <RenderQ />
+            <Col>
+              <Form.Item wrapperCol={{ span: 24 }}>
+                <Tooltip title={"Guardar"}>
+                  <Button
+                    htmlType="submit"
+                    className="stepSave"
+                    shape="round"
+                    disabled={disabled}
+                    type="primary"
+                  >
+                    <CheckOutlined />
+                  </Button>
+                </Tooltip>
+              </Form.Item>
+            </Col>
+          </Form>
+        </Col>
       </Row>
     </>
   );

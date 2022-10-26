@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Row,
-  Col,
-  InputNumber,
-  Typography,
-  Select,
-  Button,
-  Input,
-  Tooltip,
-} from "antd";
+import { Form, Row, Col, Typography, Button, Input, Tooltip } from "antd";
 import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
 
 export default function Prognosis(props) {
@@ -18,6 +8,13 @@ export default function Prognosis(props) {
   const [input, setInput] = useState({
     visitId: null,
   });
+
+  const wrapper = {
+    sm: { offset: 0, span: 14 },
+    xs: {
+      offset: 0,
+    },
+  };
 
   useEffect(() => {
     //caso1: trae TODOS los datos cargados
@@ -54,51 +51,53 @@ export default function Prognosis(props) {
             Pronostico
           </Typography.Title>
         </Col>
-        <Form
-          layout="horizontal"
-          labelCol={{ span: 8 }}
-          onFinish={register}
-          onChange={changeForm}
-          fields={initValue}
-        >
-          <Col>
-            <Form.Item
-              name="observation"
-              label="Observacion"
-              tooltip={{
-                title: "algo",
-                icon: <InfoCircleOutlined />,
-              }}
-            >
-              <Input.TextArea
-                style={{ width: 300 }}
-                disabled={disabled}
+        <Col  xs={{ span: 24 }} md={{ span: 10 }}>
+          <Form
+            layout="horizontal"
+            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            wrapperCol={wrapper}
+            onFinish={register}
+            onChange={changeForm}
+            fields={initValue}
+          >
+            <Col>
+              <Form.Item
                 name="observation"
-                rows={4}
-                allowClear
-                placeholder="Ingrese el pronostico..."
-                maxLength={500}
-                showCount
-                autoSize={{ minRows: 4, maxRows: 5 }}
-              />
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item>
-              <Tooltip title={"Guardar"}>
-                <Button
-                  htmlType="submit"
-                  className="stepSave"
-                  shape="round"
+                label="Observacion"
+                tooltip={{
+                  title: "algo",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input.TextArea
                   disabled={disabled}
-                  type="primary"
-                >
-                  <CheckOutlined />
-                </Button>
-              </Tooltip>
-            </Form.Item>
-          </Col>
-        </Form>
+                  name="observation"
+                  rows={4}
+                  allowClear
+                  placeholder="Ingrese el pronostico..."
+                  maxLength={500}
+                  showCount
+                  autoSize={{ minRows: 4, maxRows: 5 }}
+                />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item wrapperCol={{ span: 24 }}>
+                <Tooltip title={"Guardar"}>
+                  <Button
+                    htmlType="submit"
+                    className="stepSave"
+                    shape="round"
+                    disabled={disabled}
+                    type="primary"
+                  >
+                    <CheckOutlined />
+                  </Button>
+                </Tooltip>
+              </Form.Item>
+            </Col>
+          </Form>
+        </Col>
       </Row>
     </>
   );

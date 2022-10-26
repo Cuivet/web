@@ -488,10 +488,9 @@ export default function Diagnosis(props) {
                       //   </Space>
                     ))}
                     <Col>
-                      <Form.Item wrapperCol={{ span: 20, offset: 2 }}>
+                      <Form.Item wrapperCol={{ xs:{ span:24},sm:{span: 20, offset: 2} }}>
                         <Button
                           type="dashed"
-                          style={{ width: 300 }}
                           onClick={() => add()}
                           block
                           icon={<PlusOutlined />}

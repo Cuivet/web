@@ -315,11 +315,11 @@ export default function Consultation() {
     {
       title: "Anamnesis",
       content: (
-        <Anamnesis
-          id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
-          answers={cRecord.anamnesis.anamnesisItems}
-        />
-        // <Anamnesis id={null} answers={null} />
+        // <Anamnesis
+        //   id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
+        //   answers={cRecord.anamnesis.anamnesisItems}
+        // />
+        <Anamnesis id={null} answers={null} />
       ),
       subTitle: Visits(cRecord.anamnesis),
     },
@@ -445,6 +445,7 @@ export default function Consultation() {
       <Divider></Divider>
       <Row>
         <Col span={24}>
+          {/* back */}
           <PageHeader
             title="Eugenia Frattin"
             subTitle="Visita Nro: 1"
@@ -459,6 +460,7 @@ export default function Consultation() {
                 Cerrar
               </Button>,
             ]}
+            // reemplazar con nombre del back
             avatar={{ icon: "EF", style: { backgroundColor: "#f56a00" } }}
           >
             <Row>

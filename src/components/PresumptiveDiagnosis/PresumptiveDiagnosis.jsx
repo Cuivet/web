@@ -3,12 +3,9 @@ import {
   Form,
   Row,
   Col,
-  InputNumber,
   Typography,
-  Select,
   Button,
   Input,
-  Space,
   Divider,
   Tooltip,
 } from "antd";
@@ -96,7 +93,7 @@ export default function PresumptiveDiagnosis(props) {
   const register = (e) => {
     //guardado de datos, sin validaciones
     //recibo los datos cargados en el form, capas no haga falta hace el guardado en el cambio
-    
+
     console.log("Received values of form:", e.presumptiveDiagnosisItem);
   };
 
@@ -181,10 +178,9 @@ export default function PresumptiveDiagnosis(props) {
                         //   </Space>
                       ))}
                       <Col>
-                        <Form.Item wrapperCol={{ span: 20, offset: 2 }}>
+                        <Form.Item wrapperCol={{ xs:{ span:24},sm:{span: 20, offset: 2} }}>
                           <Button
-                            type="dashed"
-                            style={{ width: 300 }}
+                            type="dashed"                           
                             onClick={() => add()}
                             block
                             icon={<PlusOutlined />}

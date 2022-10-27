@@ -19,7 +19,6 @@ import {
 } from "@ant-design/icons";
 
 export default function Diagnosis(props) {
-  const { diagnosis } = props;
   const [disabled, setIsDisabled] = useState(false);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
   const [input, setInput] = useState({

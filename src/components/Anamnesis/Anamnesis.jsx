@@ -119,7 +119,7 @@ export default function Anamnesis(props) {
                 <Radio.Group
                   disabled={disabled}
                   optionType="button"
-                  name={`booleanResponse${questions[i].id}`}
+                  name={`booleanResponse`}
                 >
                   <Radio  style={{ width: "50%" }} value={true}>Si</Radio>
                   <Radio  style={{ width: "50%" }} value={false}>No</Radio>
@@ -128,7 +128,7 @@ export default function Anamnesis(props) {
               <Form.Item name={questions[i]["id"]}>
                 <Input
                   type="text"
-                  name={`textResponse${questions[i].id}`}
+                  name={`textResponse`}
                   placeholder={"Ingrese su respuesta"}
                   disabled={disabled}
                 />
@@ -238,25 +238,25 @@ export default function Anamnesis(props) {
       }
     }
     return render;
-  }
+  };
   // console.log(input);
-  const [test, setTest] = useState({
-    anamnesisId: null,
-    anamnesisQuestionId: null,
-    booleanResponse: null,
-    textResponse: null,
-  });
+  // const [test, setTest] = useState({
+  //   anamnesisId: null,
+  //   anamnesisQuestionId: null,
+  //   booleanResponse: null,
+  //   textResponse: null,
+  // });
   //cada vez que cambia el formulario
   //texto no deja ingresar mas de un caracter por vez
   //probar de hacer la carga en el onfinish
   const changeForm = (e) => {
-    if (e.target.name.slice(0, 15) === "booleanResponse") {
-      setTest({
-        ...test,
-        anamnesisQuestionId: parseInt(e.target.name.slice(15)),
-        [e.target.name.slice(0, 15)]: e.target.value,
-      });
-    }
+    // if (e.target.name.slice(0, 15) === "booleanResponse") {
+    //   setTest({
+    //     ...test,
+    //     anamnesisQuestionId: parseInt(e.target.name.slice(15)),
+    //     [e.target.name.slice(0, 15)]: e.target.value,
+    //   });
+    // }
     // if(e.target.name.slice(0,12) === 'textResponse'){
     //   setTest({
     //     ...test,
@@ -280,8 +280,8 @@ export default function Anamnesis(props) {
     //         }
     // }));
 
-    console.log(test);
-    console.log(input);
+    // console.log(test);
+    // console.log(input);
   };
 
   const register = (e) => {

@@ -13,9 +13,6 @@ import {
 } from "antd";
 import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-// import moment  from "moment";
-import { raceService } from "../../services/race.service";
-import { specieService } from "../../services/specie.service";
 
 export default function Review(props) {
   const { pet } = props;
@@ -27,9 +24,9 @@ export default function Review(props) {
     { name: ["raceId"], value: pet.raceId },
     { name: ["specieId"], value: pet.specieId },
   ]);
-  const [isFetchData, setIsFetchData] = useState(false);
-  const [races, setRaces] = useState([]);
-  const [species, setSpecies] = useState([]);
+  // const [isFetchData, setIsFetchData] = useState(false);
+  // const [races, setRaces] = useState([]);
+  // const [species, setSpecies] = useState([]);
   const wrapper = {
     sm: { offset: 0, span: 14 },
     xs: {

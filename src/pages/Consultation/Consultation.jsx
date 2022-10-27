@@ -2,6 +2,8 @@ import {
   LeftCircleOutlined,
   RightCircleOutlined,
   CheckCircleOutlined,
+  IssuesCloseOutlined,
+  CloseSquareOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -32,7 +34,10 @@ const { Title } = Typography;
 export default function Consultation() {
   const [editableStr, setEditableStr] = useState("Motivo de la consulta...");
   const [current, setCurrent] = useState(0);
-
+  const [showControl, setShowControl] = useState(false);
+  const toggleControl = () => {
+    showControl === true ? setShowControl(false) : setShowControl(true);
+  };
   const cRecord = {
     id: 1,
     veterinaryData: {
@@ -453,18 +458,53 @@ export default function Consultation() {
             className="site-page-header"
             tags={<Tag color="purple">Malu</Tag>}
             extra={[
-              <Button key={1} type="default">
-                Control
-              </Button>,
-              <Button key={2} type="primary">
-                Cerrar
-              </Button>,
+              <Tooltip title='Cerrar Consulta'>
+                <Button shape="circle" key={2} type="primary">
+                  <IssuesCloseOutlined />
+                </Button>
+              </Tooltip>,
             ]}
             // reemplazar con nombre del back
             avatar={{ icon: "EF", style: { backgroundColor: "#f56a00" } }}
           >
             <Row>
               <Col span={24}>{content}</Col>
+            </Row>
+          </PageHeader>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <PageHeader
+            title="Visita N°1"
+            subTitle="22/10/2022"
+            style={{ marginTop: "2%" }}
+            ghost={false}
+            tags={[
+              <Tag color="geekblue">RESEÑA</Tag>,
+              <Tag color="geekblue">ANAMNESIS</Tag>,
+            ]}
+            extra={[
+              <Button
+                shape="round"
+                className="margin-right"
+                onClick={toggleControl}
+              >
+                {showControl ? "Editar control" : "Ingresar control"}
+              </Button>,
+              <Button type="dashed" shape="round">
+                Guardar visita
+              </Button>,
+            ]}
+          >
+            <Row>
+              <Col span={24}>
+                {showControl ? (
+                  <Tag color="green">Control</Tag>
+                ) : (
+                  <Tag color="red">Sin Control</Tag>
+                )}
+              </Col>
             </Row>
           </PageHeader>
         </Col>

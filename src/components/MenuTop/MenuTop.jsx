@@ -3,7 +3,7 @@ import { Select, Button, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import { MenuFoldOutlined, MenuUnfoldOutlined, LogoutOutlined } from "@ant-design/icons";
 import CUIVET_logo from '../../assets/img/png/logo2.png';
-import {getAllByRegentId} from '../../services/vet.service.js';
+import {veterinaryAssociationService} from '../../services/veterinary_association.service';
 import './MenuTop.scss'
 const { Option } = Select;
 
@@ -14,13 +14,15 @@ export default function MenuTop(props){
     const [isVet, setIsVet]=useState(false);
     const [vetOptions, setVetOptions] = useState();
     const profile = JSON.parse(sessionStorage.getItem('profile'));
+
     
 
     useEffect(()=>{
         if(profile.veterinary != null){
             setIsVet(true);
             if (!vetOptions) {
-                getAllByRegentId(profile.veterinary.id).then(response =>{setVetOptions(generateVetOptions(response))});
+                veterinaryAssociationService.getAllDataByRegentOrVeterinary(profile.veterinary.id)
+                .then(response =>{setVetOptions(generateVetOptions(response))});
             }
         };
     },[profile.veterinary, vetOptions]);
@@ -33,7 +35,7 @@ export default function MenuTop(props){
     function generateVetOptions(vets) {
         var renderVetOptions = [];
         vets.forEach(function eachVet(vet){
-            renderVetOptions.push(<Option key={vet.id}>{vet.name}</Option>)
+            renderVetOptions.push(<Option key={vet.vetData.vet.id}>{vet.vetData.vet.name}</Option>)
         });
         return renderVetOptions;
     };
@@ -54,8 +56,7 @@ export default function MenuTop(props){
             <div className="menu-top__right">
                 {
                     isVet ?
-                    <Select placeholder='Clínica' className="menu-top__right-select"
-                    >
+                    <Select placeholder='Clínica' className="menu-top__right-select">
                         {vetOptions}
                     </Select>
                     :

@@ -285,7 +285,7 @@ export default function PhysicalExam(props) {
               </Form.Item>
             </Col>
             <Col>
-              <Form.Item>
+              <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
                     htmlType="submit"

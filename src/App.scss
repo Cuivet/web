@@ -132,6 +132,11 @@
     color: #00000040!important; 
     border-color: #00000040!important;
 }
+.ant-btn-primary.primaryDisabled[disabled]{
+    background-color: #f5f5f5 !important;
+    color: #00000040!important; 
+    border-color: #00000040!important;
+}
 //timepicker en step diagnosis
 .ant-picker-time-panel-column{
     width: 300px;

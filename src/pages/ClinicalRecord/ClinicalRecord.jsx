@@ -15,8 +15,11 @@ import {
   message,
   Tag,
   Steps,
+  Modal,
   Divider,
-  Tooltip
+  Form,
+  Tooltip,
+  Input,
 } from "antd";
 import React, { useState, useEffect } from "react";
 // import User from '../../assets/img/png/tutorUsuario.png';
@@ -64,8 +67,20 @@ export default function ClinicalRecord() {
   const [editableStr, setEditableStr] = useState("Motivo de la consulta...");
   const [current, setCurrent] = useState(0);
   const [showControl, setShowControl] = useState(false);
-  const toggleControl = () => {
-    showControl === true ? setShowControl(false) : setShowControl(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    console.log(isModalOpen);
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const handleControl = () => {
+    //funcion para guardar el control en la visita
+    setIsModalOpen(false);
+    setShowControl(true);
   };
 
   const cRecord = {
@@ -109,6 +124,12 @@ export default function ClinicalRecord() {
       tutorId: 1,
       raceId: 1,
       specieId: 2,
+      castrationDate: "2020-07-03T19:00:43.000Z",
+      haveChip: true,
+      aspects: "Cicatriz en oreja derecha",
+      hairColorId: 1,
+      hairLengthId: 3,
+      petSizeId: 2,
     },
     vet: {
       id: 1,
@@ -488,7 +509,7 @@ export default function ClinicalRecord() {
             className="site-page-header"
             tags={<Tag color="purple">Malu</Tag>}
             extra={[
-              <Tooltip title='Cerrar Consulta'>
+              <Tooltip title="Cerrar Consulta">
                 <Button shape="circle" key={2} type="primary">
                   <IssuesCloseOutlined />
                 </Button>
@@ -515,14 +536,10 @@ export default function ClinicalRecord() {
               <Tag color="geekblue">ANAMNESIS</Tag>,
             ]}
             extra={[
-              <Button
-                shape="round"
-                className="margin-right"
-                onClick={toggleControl}
-              >
-                {showControl ? "Editar control" : "Ingresar control"}
+              <Button shape="round" type="default" onClick={showModal}>                
+                {showControl ? "Ver control" : "Ingresar control"}
               </Button>,
-              <Button type="dashed" shape="round">
+              <Button type="dashed" style={{borderColor:'#57266a'}} shape="round">
                 Guardar visita
               </Button>,
             ]}
@@ -538,6 +555,38 @@ export default function ClinicalRecord() {
             </Row>
           </PageHeader>
         </Col>
+        <Modal
+          title="Control"
+          visible={isModalOpen}
+          onCancel={handleCancel}
+          footer={[
+            <Button type="default" onClick={handleCancel}>
+              Cancelar
+            </Button>,
+            <Button type="primary" className="primaryDisabled" disabled={showControl} onClick={handleControl}>
+              Guardar
+            </Button>,
+          ]}
+        >
+          <Row>
+            <Col span={24}>
+              <Form>
+                <Form.Item>
+                  <Input.TextArea
+                    disabled={showControl}
+                    name="control"
+                    rows={4}
+                    allowClear
+                    placeholder="Ingrese el control..."
+                    maxLength={500}
+                    showCount
+                    autoSize={{ minRows: 4, maxRows: 5 }}
+                  />
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
+        </Modal>
       </Row>
       <Divider></Divider>
       <Row>
@@ -599,6 +648,7 @@ export default function ClinicalRecord() {
           </div>
         </Col>
       </Row>
+
       <BackTop style={{ color: "#ffff", borderRadius: "20px" }} />
       {/* <Divider></Divider> */}
     </>

@@ -158,6 +158,7 @@ export default function Diagnosis(props) {
   const [flag, setFlag] = useState(false);
 
   function renderTreatmentTypes() {
+    let list = []
     treatmentTypes.forEach(treatmentType => {
         list.push(<Select.Option value={treatmentType.id}>{treatmentType.name}</Select.Option>);
     })

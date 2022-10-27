@@ -183,7 +183,7 @@ export default function PetsManagement(){
             <Divider orientation="left"></Divider>
             <Table columns={columns} dataSource={data} onChange={onChange} />
 
-            <Modal  title="Generar código de asociacion con mascota"
+            <Modal  title="Generar código de asociación con mascota"
                     visible={isModalOpen}
                     onCancel={hideModal}
                     footer={[
@@ -209,14 +209,14 @@ export default function PetsManagement(){
                 <><Row>
                         <Col span={24}>
                             <Typography.Title level={4}>
-                                El código generado es:
+                                El código generado para {completeTemporalAssociation.tutorData.person.name + ' ' +
+                            completeTemporalAssociation.tutorData.person.lastName} es:
                             </Typography.Title>
                         </Col>                        
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>{completeTemporalAssociation.tutorData.person.name + ' ' +
-                            completeTemporalAssociation.tutorData.person.lastName} es {completeTemporalAssociation.code}</Typography.Title>
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['Click para copiar', 'Código copiado']}}>{completeTemporalAssociation.code}</Typography.Title>
                         </Col>
                     </Row>
                     <Row>
@@ -245,7 +245,7 @@ export default function PetsManagement(){
                         </Row>
                         <Row>
                             <>
-                                <Divider orientation="left" plain> Resultado de la busqueda </Divider>
+                                <Divider orientation="left" plain> Resultado de la búsqueda </Divider>
                             </>
                             {
                             searchedTutorData?
@@ -256,7 +256,7 @@ export default function PetsManagement(){
                             isSearchingTutorData?
                             <><Spin />Buscando...</>
                             :
-                            <>Debe realizar una busqueda del tutor para poder avanzar</>
+                            <>Debe realizar una búsqueda del tutor para poder avanzar</>
                             }
                         </Row>
                     </>

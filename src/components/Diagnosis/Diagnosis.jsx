@@ -17,8 +17,16 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import {treatmentTypeService} from '../../services/treatment_type.service';
+import {treatmentOptionService} from '../../services/treatment_option.service';
+import {drugService} from '../../services/drug.service';
 
 export default function Diagnosis(props) {
+  const [treatmentTypes, setTreatmentTypes]= useState([]);
+  const [selectedTreatmentTypeId, setSelectedTreatmentTypeId]= useState(null);
+  const [treatmentOptions, setTreatmentOptions]= useState([]);
+  const [selectedTreatmentOptionId, setSelectedTreatmentOptionId]= useState(null);
+  const [drugs, setDrugs]= useState([]);
   const [disabled, setIsDisabled] = useState(false);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
   const [input, setInput] = useState({
@@ -40,6 +48,25 @@ export default function Diagnosis(props) {
       offset: 0,
     },
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+        await treatmentOptionService.findAll()
+        .then(response => {
+          setTreatmentOptions(response);
+        });
+        await treatmentTypeService.findAll()
+        .then(response => {
+          setTreatmentTypes(response);
+        });
+        await drugService.findAll()
+        .then(response => {
+          setDrugs(response)
+        })
+    };
+    fetchData();
+}, []);
+
   //   console.log(props);
   useEffect(() => {
     //caso1: trae TODOS los datos cargados
@@ -130,6 +157,34 @@ export default function Diagnosis(props) {
   console.log(initValue);
   const [flag, setFlag] = useState(false);
 
+  function renderTreatmentTypes() {
+    let list = []
+    treatmentTypes.forEach(treatmentType => {
+        list.push(<Select.Option value={treatmentType.id}>{treatmentType.name}</Select.Option>);
+    })
+    return list;
+  }
+
+function renderTreatmentOptions() {
+    let list = [];
+    if(selectedTreatmentTypeId!==null){
+      treatmentOptions.forEach(treatmentOption => {
+        if(treatmentOption.treatmentTypeId === selectedTreatmentTypeId){
+            list.push(<Select.Option value={treatmentOption.id}>{treatmentOption.name}</Select.Option>);
+        }
+      })
+    }
+    return list;
+  }
+
+  function renderDrugs() {
+    let list = [];
+    drugs.forEach(drug => {
+        list.push(<Select.Option value={drug.id}>{drug.name}</Select.Option>);
+    })
+    return list;
+  }
+
   function RenderT() {
     const render = [];
     for (let i in initValue) {
@@ -151,9 +206,7 @@ export default function Diagnosis(props) {
                   placeholder={"Seleccione tipo de tratamiento"}
                 >
                   {/* Martina */}
-                  <Select.Option value={1}>Medico</Select.Option>
-                  <Select.Option value={2}>Quirurgico</Select.Option>
-                  <Select.Option value={3}>Preventivo</Select.Option>
+                  {renderTreatmentTypes()}
                 </Select>
               </Form.Item>
             </Col>
@@ -179,10 +232,7 @@ export default function Diagnosis(props) {
                   placeholder={"Seleccione tratamiento"}
                 >
                   {/* Martina */}
-                  <Select.Option value={1}>Vacuna desparacitaria</Select.Option>
-                  <Select.Option value={2}>Antiflamatorio</Select.Option>
-                  <Select.Option value={3}>Sedante</Select.Option>
-                  <Select.Option value={4}>Castracion</Select.Option>
+                  {renderTreatmentOptions()}
                 </Select>
               </Form.Item>
             </Col>
@@ -197,7 +247,7 @@ export default function Diagnosis(props) {
                   label={"Intervalo"}
                   //   wrapperCol={wrapper}
                   tooltip={{
-                    title: "intervalo en horas del tratamiento",
+                    title: "Intervalo en horas del tratamiento",
                     icon: <InfoCircleOutlined />,
                   }}
                 >
@@ -219,18 +269,18 @@ export default function Diagnosis(props) {
               <Col span={24}>
                 <Form.Item
                   name={initValue[i]["name"]}
-                  label={"Duracion"}
+                  label={"Duración"}
                   //   wrapperCol={wrapper}
                   tooltip={{
-                    title: "duracion en dias del tratamiento",
+                    title: "Duración en días del tratamiento",
                     icon: <InfoCircleOutlined />,
                   }}
                 >
                   <InputNumber
                     min={0}
-                    placeholder="Ingrese duracion"
+                    placeholder="Ingrese duración"
                     className="appDataFieldStep"
-                    addonAfter={"dias"}
+                    addonAfter={"Días"}
                     disabled={disabled}
                   />
                 </Form.Item>
@@ -245,7 +295,7 @@ export default function Diagnosis(props) {
                   //   wrapperCol={wrapper}
                   label={"Droga"}
                   tooltip={{
-                    title: "droga del tratamiento",
+                    title: "Droga del tratamiento",
                     icon: <InfoCircleOutlined />,
                   }}
                 >
@@ -255,9 +305,7 @@ export default function Diagnosis(props) {
                     placeholder={"Seleccione droga"}
                   >
                     {/* Martina */}
-                    <Select.Option value={1}>Certal 20mg</Select.Option>
-                    <Select.Option value={2}>Actron 1000mg</Select.Option>
-                    <Select.Option value={3}>Ibuprofeno 100mg</Select.Option>
+                    {renderDrugs()}
                   </Select>
                 </Form.Item>
               </Col>
@@ -272,9 +320,25 @@ export default function Diagnosis(props) {
 
   const [medic, setMedic] = useState(false);
   //trigger cuando carga tratamiento tipo medico
-  const handleChange = (value) => {
-    value === 1 ? setMedic(true) : setMedic(false);
+
+  // const handleChange = (value) => {
+  //   value === 1 ? setMedic(true) : setMedic(false);
+  // };
+
+  const onTreatmentTypeChange = (treatmentTypeId) => {
+    setSelectedTreatmentTypeId(treatmentTypeId)
+    setSelectedTreatmentOptionId(null);
+    if (treatmentTypeId === 1) {
+      setMedic(true);
+    } else {
+      setMedic(false);
+    }
   };
+
+  const onTreatmentOptionChange = (treatmentOptionId) => {
+    setSelectedTreatmentOptionId(treatmentOptionId)
+  }; 
+  
 
   //carga de datos en las variables
   const changeForm = (e) => {
@@ -299,7 +363,7 @@ export default function Diagnosis(props) {
       <Row justify="center" gutter={24}>
         <Col span={24}>
           <Typography.Title className="" level={4}>
-            Diagnostico Final
+            Diagnóstico Final
           </Typography.Title>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
@@ -314,9 +378,9 @@ export default function Diagnosis(props) {
             <Col>
               <Form.Item
                 name="diagnosisResult"
-                label="Diagnostico"
+                label="Diagnóstico"
                 tooltip={{
-                  title: "diagnostico directo final",
+                  title: "Diagnóstico directo final",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -325,16 +389,16 @@ export default function Diagnosis(props) {
                   disabled={disabled}
                   keyboard="false"
                   className="appDataFieldStep"
-                  placeholder="Ingrese el diagnostico"
+                  placeholder="Ingrese el diagnóstico"
                 />
               </Form.Item>
             </Col>
             <Col>
               <Form.Item
                 name={"observation"}
-                label={"Observacion"}
+                label={"Observación"}
                 tooltip={{
-                  title: "observacion sobre el diagnostico",
+                  title: "Observación sobre el diagnóstico",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -343,7 +407,7 @@ export default function Diagnosis(props) {
                   name="observation"
                   rows={3}
                   allowClear
-                  placeholder="Ingrese observacion"
+                  placeholder="Ingrese observación"
                   maxLength={500}
                   showCount
                   autoSize={{ minRows: 3, maxRows: 5 }}
@@ -367,7 +431,7 @@ export default function Diagnosis(props) {
                             name={[name, "treatmentTypeId"]}
                             label={"Tipo Tratamiento"}
                             tooltip={{
-                              title: "tipo de tratamiento",
+                              title: "Tipo de tratamiento",
                               icon: <InfoCircleOutlined />,
                             }}
                           >
@@ -377,12 +441,9 @@ export default function Diagnosis(props) {
                               placeholder={"Seleccione tipo de tratamiento"}
                               disabled={disabled}
                               name="treatmentTypeId"
-                              onChange={handleChange}
+                              onChange={onTreatmentTypeChange}
                             >
-                              <Select.Option value={1}>Medico</Select.Option>
-                              <Select.Option value={2}>
-                                Quirurgico
-                              </Select.Option>
+                              {renderTreatmentTypes()}
                             </Select>
                           </Form.Item>
                         </Col>
@@ -394,10 +455,12 @@ export default function Diagnosis(props) {
                           >
                             {/* Martina */}
                             <Select
+                              onChange={onTreatmentOptionChange}
                               placeholder={"Tratamiento"}
                               disabled={disabled}
+                              allowClear
                             >
-                              <Select.Option>Algo</Select.Option>
+                              {renderTreatmentOptions()}
                             </Select>
                           </Form.Item>
                         </Col>
@@ -409,7 +472,7 @@ export default function Diagnosis(props) {
                                 label={"Intervalo"}
                                 //   wrapperCol={wrapper}
                                 tooltip={{
-                                  title: "intervalo en horas del tratamiento",
+                                  title: "Intervalo en horas del tratamiento",
                                   icon: <InfoCircleOutlined />,
                                 }}
                               >
@@ -418,7 +481,7 @@ export default function Diagnosis(props) {
                                   max={24}
                                   placeholder={"Ingrese intervalo"}
                                   className="appDataFieldStep"
-                                  addonAfter={"horas"}
+                                  addonAfter={"Horas"}
                                   disabled={disabled}
                                 />
                               </Form.Item>
@@ -426,17 +489,17 @@ export default function Diagnosis(props) {
                             <Col span={24}>
                               <Form.Item
                                 name={"frecuencyDuration"}
-                                label={"Duracion"}
+                                label={"Duración"}
                                 tooltip={{
-                                  title: "duracion en dias del tratamiento",
+                                  title: "Duración en días del tratamiento",
                                   icon: <InfoCircleOutlined />,
                                 }}
                               >
                                 <InputNumber
                                   min={0}
-                                  placeholder="Ingrese duracion"
+                                  placeholder="Ingrese duración"
                                   className="appDataFieldStep"
-                                  addonAfter={"dias"}
+                                  addonAfter={"Días"}
                                   disabled={disabled}
                                 />
                               </Form.Item>
@@ -446,7 +509,7 @@ export default function Diagnosis(props) {
                                 name={'drugId'}
                                 label={"Droga"}
                                 tooltip={{
-                                  title: "droga del tratamiento",
+                                  title: "Droga del tratamiento",
                                   icon: <InfoCircleOutlined />,
                                 }}
                               >
@@ -456,15 +519,7 @@ export default function Diagnosis(props) {
                                   placeholder={"Seleccione droga"}
                                 >
                                   {/* Martina */}
-                                  <Select.Option value={1}>
-                                    Certal 20mg
-                                  </Select.Option>
-                                  <Select.Option value={2}>
-                                    Actron 1000mg
-                                  </Select.Option>
-                                  <Select.Option value={3}>
-                                    Ibuprofeno 100mg
-                                  </Select.Option>
+                                  {renderDrugs()}
                                 </Select>
                               </Form.Item>
                             </Col>

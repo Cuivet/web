@@ -15,6 +15,7 @@ import {
   message,
   Tag,
   Steps,
+  Modal,
   Divider,
   Tooltip,
 } from "antd";
@@ -35,9 +36,17 @@ export default function Consultation() {
   const [editableStr, setEditableStr] = useState("Motivo de la consulta...");
   const [current, setCurrent] = useState(0);
   const [showControl, setShowControl] = useState(false);
-  const toggleControl = () => {
-    showControl === true ? setShowControl(false) : setShowControl(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+    showControl  ? setShowControl(false) : setShowControl(true);
   };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+
   const cRecord = {
     id: 1,
     veterinaryData: {
@@ -488,7 +497,7 @@ export default function Consultation() {
               <Button
                 shape="round"
                 className="margin-right"
-                onClick={toggleControl}
+                onClick={showModal}
               >
                 {showControl ? "Editar control" : "Ingresar control"}
               </Button>,
@@ -569,6 +578,11 @@ export default function Consultation() {
           </div>
         </Col>
       </Row>
+      <Modal title="Basic Modal" open={isModalOpen} onCancel={handleCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
       <BackTop style={{ color: "#ffff", borderRadius: "20px" }} />
       {/* <Divider></Divider> */}
     </>

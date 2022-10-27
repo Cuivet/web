@@ -22,7 +22,8 @@ import VeterinariesManagement from "../pages/VeterinariesManagement";
 import Vets from "../pages/Vets";
 import Studies from "../pages/Studies";
 import Diary from "../pages/Diary";
-import Consultation from "../pages/Consultation"
+import ClinicalRecord from "../pages/ClinicalRecord/ClinicalRecord";
+import ClinicalRecordMenu from "../pages/ClinicalRecordMenu/ClinicalRecordMenu";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -96,8 +97,13 @@ const routesAdmin = [
         layout: LayoutAdmin,
     },
     {
-        path: "/consultation",
-        component: Consultation,
+        path: "/clinical-record-menu",
+        component: ClinicalRecordMenu,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/clinical-record",
+        component: ClinicalRecord,
         layout: LayoutAdmin,
     },
     {

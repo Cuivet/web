@@ -1,14 +1,49 @@
 import { basePATH } from "./config";
 
 export var clinicalRecordService = {
-    findAllByVeterinaryId: findAllByVeterinaryId
+    findOneById: findOneById,
+    findAllByVeterinaryId: findAllByVeterinaryId,
+    registerClinicalRecord: registerClinicalRecord
 }
+
+async function findOneById(id) {
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/clinical-record/${id}`,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+};
 
 async function findAllByVeterinaryId(veterinaryId) {
     var axios = require('axios');
     return axios({
         method: "get",
         url: `${basePATH}/clinical-record/allByVeterinaryId/${veterinaryId}`,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+};
+
+async function registerClinicalRecord(clinicalRecord) {
+    var axios = require('axios');
+    return axios({
+        method: "post",
+        url: `${basePATH}/clinical-record`,
+        data: clinicalRecord,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',

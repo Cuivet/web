@@ -20,20 +20,49 @@ import {
   Tooltip,
   Input,
 } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import User from '../../assets/img/png/tutorUsuario.png';
 
-import "./Consultation.scss";
+import "./ClinicalRecord.scss";
 import Review from "../../components/Review/Review";
 import Anamnesis from "../../components/Anamnesis/Anamnesis";
 import PhysicalExam from "../../components/PhysicalExam/PhysicalExam";
 import PresumptiveDiagnosis from "../../components/PresumptiveDiagnosis/PresumptiveDiagnosis";
 import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
+import { useLocation } from "react-router-dom";
+import { clinicalRecordService } from "../../services/clinical_record.service";
 
 const { Title } = Typography;
 
-export default function Consultation() {
+export default function ClinicalRecord() {
+  const location = useLocation();
+  useEffect(() => {
+    if(location.state.clinicalRecordId){
+      clinicalRecordService.findOneById(location.state.clinicalRecordId)
+        .then( res =>{
+          setClinicalRecord(res);
+        })
+        .catch(error => {
+          message.error(error.response.data);
+        });
+    } else{
+      const clinicalRecord = {
+        veterinaryId: JSON.parse(sessionStorage.getItem('profile')).veterinary.id,
+        petId: location.state.petId,
+        vetId: 1 // cuando desarrollemos lo de vets habria que mandarlo bien
+      };
+      clinicalRecordService.registerClinicalRecord(clinicalRecord)
+            .then( res => {
+              setClinicalRecord(res);
+            })
+            .catch(error => {
+                message.error(error.response.data);
+            });
+    }
+  }, [location]);
+
+  const [clinicalRecord, setClinicalRecord] = useState(null);
   const [editableStr, setEditableStr] = useState("Motivo de la consulta...");
   const [current, setCurrent] = useState(0);
   const [showControl, setShowControl] = useState(false);

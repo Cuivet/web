@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress, Spin } from 'antd';
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { FilePdfOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { useNavigate } from "react-router";
 const { Option } = Select;
 const { Title } = Typography;
 
 export default function ClinicalRecordsManagement(){
+    let navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
     const [isInit, setIsInit] = useState(false);
@@ -97,7 +99,7 @@ export default function ClinicalRecordsManagement(){
             render: (_, { indexIdForButton }) => (
                 <>
                     <Button className='margin-right'><FilePdfOutlined /></Button>
-                    <Button><PlayCircleOutlined /></Button>
+                    <Button onClick={(e)=> goToClinicalRecord(indexIdForButton)}><PlayCircleOutlined /></Button>
                 </>
               )
         }
@@ -106,6 +108,10 @@ export default function ClinicalRecordsManagement(){
     const onChange = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
+
+    function goToClinicalRecord(clinicalRecordId) {
+        navigate('/clinical-record', { state: { clinicalRecordId: clinicalRecordId, petId: null } });
+    }
 
     return (
         <>   

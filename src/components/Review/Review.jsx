@@ -13,26 +13,29 @@ import {
 } from "antd";
 import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
+import {raceService} from '../../services/race.service';
+import {specieService} from '../../services/specie.service';
+
 
 export default function Review(props) {
   const { pet } = props;
   const [disabled, setIsDisabled] = useState(false);
-  const [initValue, setInitValue] = useState([
-    { name: ["name"], value: pet.name },
-    { name: ["birth"], value: pet.birth.slice(0, 10) },
-    { name: ["isMale"], value: pet.isMale },
-    { name: ["raceId"], value: pet.raceId },
-    { name: ["specieId"], value: pet.specieId },
-  ]);
-  // const [isFetchData, setIsFetchData] = useState(false);
-  // const [races, setRaces] = useState([]);
-  // const [species, setSpecies] = useState([]);
+  const [initValue, setInitValue] = useState([]);
+  const [races, setRaces] = useState([]);
+  const [species, setSpecies] = useState([]);
+  const [isInitData, setIsInitData]= useState(false);
+  const [isFetchData, setIsFetchData] = useState(false);
   const wrapper = {
     sm: { offset: 0, span: 14 },
     xs: {
       offset: 0,
     },
   };
+  
+  if(!isInitData && isFetchData){
+    initPet();
+    setIsInitData(true);
+  } 
 
   //debemos diferenciar el valor que queda vacio por eleccion
   //del que aun no ha se ha cargado.
@@ -41,16 +44,16 @@ export default function Review(props) {
     //caso1: trae TODOS los datos cargados
     if (props.id !== null) {
       setIsDisabled(true);
-      //   const fetchData = async () => {
-      //     await raceService.findAll().then((response) => {
-      //       setRaces(response);
-      //     });
-      //     await specieService.findAll().then((response) => {
-      //       setSpecies(response);
-      //     });
-      //     setIsFetchData(true);
-      //   };
-      //   fetchData();
+        const fetchData = async () => {
+          await raceService.findAll().then((response) => {
+            setRaces(response);
+          });
+          await specieService.findAll().then((response) => {
+            setSpecies(response);
+          });
+          setIsFetchData(true);
+        };
+        fetchData();
     } else {
       //caso2: carga los datos en los campos
       //habilita campo
@@ -60,23 +63,33 @@ export default function Review(props) {
     }
   }, [props]);
 
-  //   function renderSpecies() {
-  //     let list = [];
-  //     species.forEach((specie) => {
-  //       list.push(<Select.Option value={specie.id}>{specie.name}</Select.Option>);
-  //     });
-  //     return list;
-  //   }
+  function initPet() {
+    setInitValue([
+      { name: ["name"], value: pet.name },
+      { name: ["birth"], value: pet.birth.slice(0, 10) },
+      { name: ["isMale"], value: pet.isMale },
+      { name: ["raceId"], value: pet.raceId },
+      { name: ["specieId"], value: species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id},
+    ]);
+}
 
-  //   function renderRaces() {
-  //     let list = [];
-  //     races.forEach((race) => {
-  //       if (race.specieId === pet.specieId) {
-  //         list.push(<Select.Option value={race.id}>{race.name}</Select.Option>);
-  //       }
-  //     });
-  //     return list;
-  //   }
+    function renderSpecies() {
+      let list = [];
+      species.forEach((specie) => {
+        list.push(<Select.Option value={specie.id}>{specie.name}</Select.Option>);
+      });
+      return list;
+    }
+
+    function renderRaces() {
+      let list = [];
+      races.forEach((race) => {
+        if (race.specieId) {
+          list.push(<Select.Option value={race.id}>{race.name}</Select.Option>);
+        }
+      });
+      return list;
+    }
 
   return (
     <>
@@ -100,7 +113,7 @@ export default function Review(props) {
                 name="name"
                 label="Paciente"
                 tooltip={{
-                  title: "nombre del paciente",
+                  title: "Nombre del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -116,7 +129,7 @@ export default function Review(props) {
                 name="birth"
                 label="Fecha de Nacimiento"
                 tooltip={{
-                  title: "fecha en la que nacio el paciente",
+                  title: "Fecha en la que nació el paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -137,7 +150,7 @@ export default function Review(props) {
                 name="isMale"
                 label="Sexo"
                 tooltip={{
-                  title: "sexo del paciente",
+                  title: "Sexo del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -160,7 +173,7 @@ export default function Review(props) {
                 name="specieId"
                 label="Especie"
                 tooltip={{
-                  title: "especie a la que pertenece el paciente",
+                  title: "Especie a la que pertenece el paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -171,17 +184,16 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={2}>Canino</Select.Option>
-                  {/* {renderSpecies()} */}
+                  {renderSpecies()}
                 </Select>
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
                 name="raceId"
-                label="Sexo"
+                label="Raza"
                 tooltip={{
-                  title: "sexo del paciente",
+                  title: "Raza del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -191,8 +203,7 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={1}>Golden Retriever</Select.Option>
-                  {/* {renderRaces()} */}
+                  {renderRaces()}
                 </Select>
               </Form.Item>
             </Col>

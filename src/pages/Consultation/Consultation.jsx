@@ -3,7 +3,6 @@ import {
   RightCircleOutlined,
   CheckCircleOutlined,
   IssuesCloseOutlined,
-  CloseSquareOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -39,6 +38,7 @@ export default function Consultation() {
   const [current, setCurrent] = useState(0);
   const [showControl, setShowControl] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [studies, setStudies] = useState(false);
 
   const showModal = () => {
     console.log(isModalOpen);
@@ -325,9 +325,7 @@ export default function Consultation() {
       return date;
     }
   }
-  // console.log(Visits(cRecord.presumptiveDiagnosis));
   const { Step } = Steps;
-  //weight={cRecord.review.weight} temperature={cRecord.review.temperature}
   const steps = [
     {
       title: "Reseña",
@@ -453,13 +451,13 @@ export default function Consultation() {
           {editableStr}
         </Title>
       </Row>
-
-      <div>
+      {studies ? <div>
         <IconLink
           src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
           text=" Estudio complementario"
         />
-      </div>
+      </div>: null }
+      
     </>
   );
   return (

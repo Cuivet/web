@@ -41,7 +41,7 @@ export default function MenuTop(props){
             <div className="menu-top__right">
                 {
                     isVet ?
-                    <Select placeholder='Clinica' className="menu-top__right-select">
+                    <Select placeholder='Clínica' className="menu-top__right-select">
                         <Select.Option value='1'>Boderau</Select.Option>
                         <Select.Option value='2'>Recta</Select.Option>
                         <Select.Option value='3'>Pilar</Select.Option>

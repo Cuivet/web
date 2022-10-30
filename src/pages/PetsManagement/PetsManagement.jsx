@@ -4,8 +4,12 @@ import { NodeIndexOutlined } from '@ant-design/icons';
 import { registerTemporalAssociation, getAllByVeterinaryId } from '../../services/pet_association.service';
 import { getTutorDataByDni } from '../../services/tutor.service';
 import AvatarSearch from '../../components/AvatarSearch';
+import FolderOpenOutlined from '@mui/icons-material/FolderOpenOutlined';
+import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
+import { Link } from "react-router-dom";
 const { Option } = Select;
 const { Title } = Typography;
+
 
 export default function PetsManagement(){
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,6 +94,20 @@ export default function PetsManagement(){
             dataIndex: 'raza',
             sorter: (a, b) => a.tutorName.length - b.tutorName.length,
             responsive: ['md']
+        },
+        {
+            title: 'Acciones',
+            dataIndex: 'actions',
+            responsive: ['md'],
+            render: (_, record) => (
+                <>
+                <Link to={"/clinical-records-management"} className='admin-sider__item'>                      
+                <Tooltip placement='top' title="Ver Historial Clínico"><Button type='link' className='appTableButton' icon={<FolderOpenOutlined />}></Button></Tooltip>
+                </Link>
+                <Link to={"/consultation"} className='admin-sider__item'>                      
+                <Tooltip placement='top' title="Registrar nueva consulta"><Button type='link' className='appTableButton' icon={<ContentPasteOutlinedIcon />}></Button></Tooltip>
+                </Link>
+                </>),
         }
         ];
 
@@ -140,7 +158,7 @@ export default function PetsManagement(){
         <>   
             <Row align="middle">
                 <Col span={23}>
-                    <Title className='appTitle'>Mis pacientes asociados</Title>
+                    <Title className='appTitle'>Mis Pacientes Asociados</Title>
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar nueva mascota" placement='right'>
@@ -162,7 +180,7 @@ export default function PetsManagement(){
                     <Input placeholder="Nombre del Tutor..." />
                 </Col>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
-                    <Input placeholder="Dni del Tutor..." />
+                    <Input placeholder="DNI del Tutor..." />
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
                     <Select defaultValue="http://" className="select-before full-width">
@@ -183,7 +201,7 @@ export default function PetsManagement(){
             <Divider orientation="left"></Divider>
             <Table columns={columns} dataSource={data} onChange={onChange} />
 
-            <Modal  title="Generar código de asociacion con mascota"
+            <Modal  title="Generar código de asociación con mascota"
                     visible={isModalOpen}
                     onCancel={hideModal}
                     footer={[
@@ -215,7 +233,7 @@ export default function PetsManagement(){
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['click para copiar', 'codigo copiado']}}>{completeTemporalAssociation.tutorData.person.name + ' ' +
+                            <Typography.Title style={{display:'flex', justifyContent:'center'}} copyable={{tooltips:['Click para copiar', 'codigo copiado']}}>{completeTemporalAssociation.tutorData.person.name + ' ' +
                             completeTemporalAssociation.tutorData.person.lastName} es {completeTemporalAssociation.code}</Typography.Title>
                         </Col>
                     </Row>
@@ -245,7 +263,7 @@ export default function PetsManagement(){
                         </Row>
                         <Row>
                             <>
-                                <Divider orientation="left" plain> Resultado de la busqueda </Divider>
+                                <Divider orientation="left" plain> Resultado de la búsqueda </Divider>
                             </>
                             {
                             searchedTutorData?

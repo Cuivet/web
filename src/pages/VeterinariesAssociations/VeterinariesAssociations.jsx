@@ -150,7 +150,7 @@ export default function VeterinariesAssociations(){
         <>   
             <Row align="middle">
                 <Col span={23}>
-                    <Title className='appTitle'>Profesionales asociados</Title>
+                    <Title className='appTitle'>Veterinarios Asociados</Title>
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>

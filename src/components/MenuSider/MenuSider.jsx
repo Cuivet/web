@@ -43,7 +43,7 @@ export default function MenuSider(props){
                 <Menu.Item key="menu">
                     <Link to={"/menu"} className='admin-sider__item'>
                         <HomeOutlined/>
-                        <span className="nav-text"> Inicio </span>
+                        <span className="nav-text"> Inicio  </span>
                     </Link>
                 </Menu.Item>
 
@@ -59,7 +59,7 @@ export default function MenuSider(props){
                         <Menu.Item key="tutorPets">
                             <Link to={"/pets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PetsIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Mis mascotas </span>
+                                <span className="nav-text"> Mis Mascotas </span>
                             </Link>
                         </Menu.Item>
 
@@ -91,14 +91,14 @@ export default function MenuSider(props){
                         <Menu.Item key="veterinaryClinicalRecordManagement">
                             <Link to={"/clinical-records-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><FolderOpenOutlined fontSize="small" /></Icon>
-                                <span className="nav-text"> Historial Clínico </span>
+                                <span className="nav-text"> Historiales Clínicos </span>
                             </Link>
                         </Menu.Item>
 
                         <Menu.Item key="veterinaryVeterinariesManagement">
                             <Link to={"/veterinaries-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><PeopleAltOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Gestion de Veterinarios </span>
+                                <span className="nav-text"> Gestión de Veterinarios </span>
                             </Link>
                         </Menu.Item>
 
@@ -112,7 +112,7 @@ export default function MenuSider(props){
                         <Menu.Item key="veterinaryVetsManagement">
                             <Link to={"/vets-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Clinicas Asociadas </span>
+                                <span className="nav-text"> Clínicas Asociadas </span>
                             </Link>
                         </Menu.Item>
                     </>
@@ -130,7 +130,7 @@ export default function MenuSider(props){
                         <Menu.Item key="vetOwnerVets">
                             <Link to={"/vets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Mis Clinicas </span>
+                                <span className="nav-text"> Mis Clínicas </span>
                             </Link>
                         </Menu.Item>   
                     </> 

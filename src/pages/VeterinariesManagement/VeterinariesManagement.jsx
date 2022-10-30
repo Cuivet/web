@@ -182,7 +182,7 @@ export default function VeterinariesManagement(){
                     <Input placeholder="Apellido" />
                 </Col>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
-                    <Select placeholder="Clinica Veterinaria" showSearch className="select-before full-width">
+                    <Select placeholder="Clínica Veterinaria" showSearch className="select-before full-width">
                         <Option value="NeoZoo">NeoZoo</Option>
                         <Option value="Chocos">Chocos</Option>
                         <Option value="Pecos">Pecos</Option>
@@ -195,7 +195,7 @@ export default function VeterinariesManagement(){
                     </Select>
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
-                    <Input placeholder='Telefono' />
+                    <Input placeholder='Teléfono' />
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:8}}>
                     <Input placeholder='Dirección' />

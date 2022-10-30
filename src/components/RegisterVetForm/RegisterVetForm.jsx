@@ -25,10 +25,10 @@ export default function RegisterVetForm(props){
           }
       
           if (status === 'done') {
-            message.success(`${info.file.name} Imagen subida con exito.`);
+            message.success(`${info.file.name} Imágen subida con éxito.`);
             //aca iria lo del back para guardar la img
           } else if (status === 'error') {
-            message.error(`${info.file.name} La imagen no se ha podido subir`);
+            message.error(`${info.file.name} La imágen no se ha podido subir`);
           }
         },
       
@@ -111,7 +111,7 @@ export default function RegisterVetForm(props){
         if(!nameVal || !addressVal || !phoneVal){
             notification['error']({
                 message: "Todos los campos son obligatorios",
-                description: "Debe completar todos los campos para poder registrar una Clinica",
+                description: "Debe completar todos los campos para poder registrar una Clínica",
                 placement: "top"
             })
         } else{
@@ -119,7 +119,7 @@ export default function RegisterVetForm(props){
                     .then( res => {
                         resetForm();
                         notification['success']({
-                            message: "Clinica creada correctamente",
+                            message: "Clínica creada correctamente",
                             placement: "top"
                         });
                 })               

@@ -85,7 +85,7 @@ export default function Pets(){
                     <Title className='appTitle'>Mis Mascotas</Title>
                 </Col>
                 <Col span={1}>
-                    <Tooltip title="Crear Mascota" placement='right'>
+                    <Tooltip title="Registrar Mascota" placement='right'>
                         <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>
                 </Col>

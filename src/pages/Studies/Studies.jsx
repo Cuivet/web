@@ -19,7 +19,7 @@ export default function Studies(){
     
     const columns = [
         {
-            title: 'Numero',
+            title: 'Número',
             dataIndex: 'nro',
             defaultSortOrder: 'ascend',
             sorter: (a, b) => a.nro - b.nro,
@@ -75,7 +75,7 @@ export default function Studies(){
             pet: 'Malu',
             veterinary: 'Eugenia Frattin',
             lab: 'Lasse',
-            study: 'Ecografia',
+            study: 'Ecografía',
         },{
             key: '2',
             nro: 2,
@@ -83,7 +83,7 @@ export default function Studies(){
             pet: 'Malu',
             veterinary: 'Eugenia Frattin',
             lab: 'Particular',
-            study: 'Radiografia',
+            study: 'Radiografía',
         },{
             key: '3',
             nro: 3,
@@ -125,7 +125,7 @@ export default function Studies(){
     return (<>
         <Row align="middle">
             <Col span={23}>
-                <Title className='appTitle'>Gestion de Estudios Complementarios</Title>
+                <Title className='appTitle'>Gestión de Estudios Complementarios</Title>
             </Col>
             {
                 tutor ?
@@ -141,7 +141,7 @@ export default function Studies(){
         <Divider orientation="left">Filtros</Divider>
         <Row gutter={[16, 16]}>
             <Col className="gutter-row" xs={{span:24}} md={{span:4}}>
-                <Input placeholder="Numero de estudio" />
+                <Input placeholder="Número de estudio" />
             </Col>
             <Col className="gutter-row" xs={{span:24}} md={{span:6}}>
             <DatePicker disabledDate={disabledDate} name="date" placeholder="Fecha de estudio" className="appDatePicker" format={'DD/MM/yyyy'} />
@@ -157,10 +157,10 @@ export default function Studies(){
             </Col>
             <Col className="gutter-row" xs={{span:12}} md={{span:12}}>
                 <Select placeholder="Estudios" showSearch mode="multiple" className="select-before full-width">
-                    <Option value="1">Radiografia</Option>
+                    <Option value="1">Radiografía</Option>
                     <Option value="2">Rayos X</Option>
                     <Option value="3">Particular</Option>
-                    <Option value="4">Ecografia</Option>
+                    <Option value="4">Ecografía</Option>
                 </Select>
             </Col>
             

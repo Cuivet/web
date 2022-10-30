@@ -33,22 +33,22 @@ export default function Consultation(){
         content: 'Componente Anamnesis',
     },
     {
-        title: 'Examen Fisico',
+        title: 'Exámen Físico',
         content: 'Componente Examen Fisico',
     },
     {
-        title: 'Diagnostico Presuntivo',
+        title: 'Diagnóstico Presuntivo',
         content: 'Componente Diagnostico Presuntivo',
     },
     {
-        title: 'Diagnostico',
+        title: 'Diagnóstico',
         content: 'Componente Diagnostico',
     },
     {
         title: 'Tratamiento',
         content: 'Componente Tratamiento',
     },{
-        title: 'Pronostico',
+        title: 'Pronóstico',
         content: 'Componente Pronostico',
     },
     ];
@@ -81,7 +81,7 @@ export default function Consultation(){
     return(<>
     <Row>
         <Col span={24}>
-            <Title className='appTitle'>Consulta Medica</Title>
+            <Title className='appTitle'>Consulta Médica</Title>
         </Col>
     </Row>
     <Divider></Divider>

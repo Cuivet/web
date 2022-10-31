@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Checkbox, Typography, Space, Modal, Row, Col } from 'antd';
+import { Button, Form, Input, Checkbox, Typography, Space, Modal, Row, Col, notification } from 'antd';
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { auth } from '../../services/auth.service';
 import {emailValidation, minLengthValidation} from '../../utils/formValidation';
@@ -43,6 +43,20 @@ export default function SignInForm(props){
     };
 
     const tryToLogIn = e => {
+        if (!input.email) {
+            return notification['error']({
+                message: "El correo electrónico es obligatorio",
+                description: "Debe ingresar el correo electrónico para poder iniciar sesión",
+                placement: "top"
+            })  
+        }
+        if (!input.password) {
+            return notification['error']({
+                message: "La contraseña es obligatoria",
+                description: "Debe ingresar la contraseña para poder iniciar sesión",
+                placement: "top"
+            })  
+        }
         setIsLogging(true);
         auth(input.email,input.password)
             .then(res => {

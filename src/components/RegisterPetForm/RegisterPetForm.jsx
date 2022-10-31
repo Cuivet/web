@@ -67,8 +67,10 @@ export default function RegisterPetForm(props){
             petSizeId: pet ? pet.petSizeId : null,
             tutorId: JSON.parse(sessionStorage.getItem('profile')).tutor.id, 
             hairColorId: pet ? pet.hairColorId : null,
-            hairLengthId: pet ? pet.hairLengthId : null
-
+            hairLengthId: pet ? pet.hairLengthId : null,
+            castrationDate: pet ? pet.castrationDate ? moment(pet.castrationDate.slice(0, 10), 'YYYY-MM-DD') : null : null,
+            haveChip: pet ? pet.haveChip ? '1' : '0' : null,
+            aspects: pet ? pet.aspects : null
         });
     }
 
@@ -80,7 +82,9 @@ export default function RegisterPetForm(props){
             isMale: false,
             petSizeId: false, 
             hairColorId: false,
-            hairLengthId: false
+            hairLengthId: false,
+            haveChip: false,
+            aspects: false
         }
     }
 
@@ -110,7 +114,7 @@ export default function RegisterPetForm(props){
     };
 
     const register = e => {
-        if(!pet.name || !pet.specieId || !pet.raceId || !pet.birth || pet.isMale === null || !pet.petSizeId|| !pet.hairColorId|| !pet.hairLengthId){
+        if(!pet.name || !pet.specieId || !pet.raceId || !pet.birth || pet.isMale === null || !pet.petSizeId|| !pet.hairColorId|| !pet.hairLengthId || pet.haveChip === null){
             return notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
@@ -160,18 +164,30 @@ export default function RegisterPetForm(props){
         setFormValid({...formValid, birth: date});
     };
 
+    const onCastrationDateChange = (date) => {
+        setPet({...pet, castrationDate: date});
+        setFormValid({...formValid, castrationDate: date});
+    };
+
     const onSexChange = (isMale) => {
         setPet({...pet, isMale: isMale.target.value});
         setFormValid({...formValid, isMale: true});
     };
+
+    const onHaveChipChange = (haveChip) => {
+        setPet({...pet, haveChip: haveChip.target.value});
+        setFormValid({...formValid, haveChip: true});
+    };
+
     const onHairColorChange = (hairColorId) => {
         setPet({...pet, hairColorId: hairColorId});
         setFormValid({...formValid, hairColorId: true});
-    }
+    };
+
     const onHairLengthChange = (hairLengthId) => {
         setPet({...pet, hairLengthId: hairLengthId});
         setFormValid({...formValid, hairLengthId: true});
-    }
+    };
 
     const changeForm = e =>{
         setPet({
@@ -269,6 +285,19 @@ export default function RegisterPetForm(props){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
+                        <DatePicker disabledDate={disabledDate} name="castrationDate" value={pet.castrationDate} size="large" onChange={onCastrationDateChange} placeholder="Fecha de castración" className="appDatePicker" format={'DD/MM/yyyy'} />
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Radio.Group optionType="button" name="haveChip" size="large" className="register-pet-form__radio" onChange={onHaveChipChange} value={pet.haveChip}>
+                            <Radio value='1' className="register-pet-form__radio-item">Tiene chip</Radio>
+                            <Radio value='0' className="register-pet-form__radio-item">No tiene chip</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
                         <Select name="petSize" placeholder="Tamaño" className="register-pet-form__select" value={pet.petSizeId} onChange={onPetSizeChange} allowClear >
                             {renderPetSize()}
                         </Select>
@@ -287,6 +316,11 @@ export default function RegisterPetForm(props){
                         <Select name="petSize" placeholder="Largo de pelaje" className="register-pet-form__select" value={pet.hairLengthId} onChange={onHairLengthChange} allowClear >
                             {renderHairLength()}
                         </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Input type="text" name="aspects" value={pet.aspects} placeholder="Otras características físicas" className="register-pet-form__input"/>
                     </Form.Item>
                 </Col>
                 <Col span={24}>

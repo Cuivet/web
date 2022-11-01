@@ -51,11 +51,16 @@
 // .ant-picker-today-btn{
 //     color: $primary-color!important;
 // }
+
+//radiobtns del sistema
 .ant-radio-button-wrapper:hover{
     color: $secondary-color;
 }
 .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within{
     box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);
+}
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before{
+    background-color: $secondary-color!important;
 }
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
@@ -69,7 +74,7 @@
     background-color: $primary-color!important;
 }
 
-.ant-btn-default:focus, .ant-btn:hover.ant-btn-default{
+.ant-btn-default:focus, .ant-btn:hover.ant-btn-default, .ant-btn-dashed:hover, .ant-btn-dashed:focus{
     color: $secondary-color!important;
     border-color: $secondary-color!important;
 }
@@ -80,7 +85,7 @@
 .ant-steps-item-process .ant-steps-item-icon{
     border-color: $secondary-color;
 }
-// el step que dejo por el que ya pase
+// el step que dejo atras, por el que ya pase
 .ant-steps-item-finish .ant-steps-item-icon{
     border-color: $secondary-color;
 }
@@ -100,6 +105,45 @@
 // progreso general, circulo sobre el step
 .ant-progress-inner:not(.ant-progress-circle-gradient) .ant-progress-circle-path{
     stroke: $secondary-color;
+}
+//inputs de tipo number de antd
+.ant-input-number-focused{
+    border-color: $secondary-color;
+    box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);;
+}
+.ant-input-number:hover{
+    border-color: $secondary-color;
+}
+//arrows dentro del input number para incrementar/decrementar cantidad
+.ant-input-number-handler:hover .ant-input-number-handler-up-inner, .ant-input-number-handler:hover .ant-input-number-handler-down-inner{
+    color: $secondary-color;
+}
+//backtop button
+.ant-back-top-content{
+    background-color: $primary-color;
+}
+.ant-back-top-content:hover{
+    background-color: $secondary-color;
+    color: $primary-color;
+}
+//btn de guardado en cada step
+.stepSave .ant-btn-primary[disabled]{
+    background-color: #f5f5f5 !important;
+    color: #00000040!important; 
+    border-color: #00000040!important;
+}
+.ant-btn-primary.primaryDisabled[disabled]{
+    background-color: #f5f5f5 !important;
+    color: #00000040!important; 
+    border-color: #00000040!important;
+}
+//timepicker en step diagnosis
+.ant-picker-time-panel-column{
+    width: 300px;
+    text-align: center;
+}
+.ant-picker-time-panel-column::after{
+    height: 0!important;
 }
 .appButton { 
     width: 100%;
@@ -163,6 +207,13 @@
     width: 100%;
     
 }
+.appDataFieldStep{
+    width: 100%;
+    // @media (min-width: $media-breackpoint-up-lg) {
+    //     width: 300px!important;
+    // }
+    
+}
 
 .full-width {
     width: 100%;
@@ -170,6 +221,10 @@
 
 .margin-right{
     margin-right: 4px;
+}
+
+.margin-left-spinner{
+    margin-left: 16px;
 }
 
 // scrollbar properties

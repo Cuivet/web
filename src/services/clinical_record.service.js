@@ -3,7 +3,7 @@ import { basePATH } from "./config";
 export var clinicalRecordService = {
     findOneById: findOneById,
     findAllByVeterinaryId: findAllByVeterinaryId,
-    registerClinicalRecord: registerClinicalRecord
+    registerClinicalRecord: registerClinicalRecord,
     updateClinicalRecord: updateClinicalRecord
 }
 

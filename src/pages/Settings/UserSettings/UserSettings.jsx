@@ -1,15 +1,14 @@
 import React, {useState} from "react";
-import { Row, Col, Typography, Button, Tooltip,  Divider } from "antd";
+import { Row, Col, Typography, Button, Tooltip,  Divider, message } from "antd";
 import { DeleteOutlined, SaveOutlined, LockOutlined } from "@ant-design/icons";
 import { emailValidation, minLengthValidation, numberValidation } from '../../../utils/formValidation';
-
+import { personService } from "../../../services/person.service";
 import './UserSettings.scss'
 import ShowUser from "../../../components/ShowUser";
-
+ 
 const {Title} = Typography;
-
+ 
 export default function UserSettings(){
-    const [editable, setEditable] =useState(false);
     //validaciones en el formulario
     const [formValid, setFormValid] = useState({
         email: false,
@@ -23,22 +22,30 @@ export default function UserSettings(){
         mp: false,
         privacyPolicy:false
     });
+ 
+    var veterinary = false;
 
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
+    if(profile.veterinary != null){
+        veterinary = true;
+    };
+ 
     const [formData, setFormData] = useState({
+        id: profile.person.id,
         name: profile.person.name,
         lastName: profile.person.lastName,
         phone: profile.person.phone,
         dni: profile.person.dni,
         address: profile.person.address,
-        email: sessionStorage.getItem('email')
+        email: sessionStorage.getItem('email'),
+        mp: veterinary ? profile.veterinary.mp : null,
     });
-
+ 
     const inputValidation = e =>{
-        
+       
         const {type, name} = e.target;
-
+ 
         if(type === "email"){
             setFormValid({
                 ...formValid,
@@ -61,26 +68,31 @@ export default function UserSettings(){
             });
         };
         if (type === "number"){
-            setFormValid({
+           setFormValid({
                 ...formValid,
                 [name]:numberValidation(e.target)
             });
         }
-        
+       
     }
-
-    function Edit(){
-        setEditable(true);
+ 
+    const changeForm = fd => {
+        setFormData({
+            ...formData,
+            [fd.target.name]: fd.target.value
+        });
+    };
+ 
+    function updatePerson(){
+        personService.update(formData)
+            .then(res => {
+                let updatedProfile = JSON.parse(sessionStorage.getItem('profile'));
+                updatedProfile.person = res;
+                sessionStorage.setItem('profile',JSON.stringify(updatedProfile));
+                message.success(`El cambio se ha realizado con éxito.`);
+            });
     }
-
-    function Save(){
-        setEditable(false);
-    }
-
-    function closeEditable(){
-        setEditable(false);
-    }
-
+ 
     return (
         <>
             <Row align="middle">
@@ -96,14 +108,15 @@ export default function UserSettings(){
                 <Divider orientation="left">Información del Usuario</Divider>
                 </Col>
             </Row>
-            <ShowUser name={formData.name} lastName={formData.lastName}phone={formData.phone}dni={formData.dni}address={formData.address} email={formData.email}></ShowUser>
+            <ShowUser formData={formData} refreshUser={changeForm}></ShowUser>
             <Row align="middle">
                 <Col xs={{span: 24}}md={{span: 24}}>
                     <Button htmlType="submit" className="update-User-form__button" icon={<LockOutlined />}> Cambiar Contraseña </Button>
-                    <Button htmlType="submit" className="update-User-form__button" icon={<SaveOutlined />}> Guardar </Button>
+                    <Button htmlType="submit" className="update-User-form__button" icon={<SaveOutlined />} onClick={updatePerson}> Guardar </Button>
                 </Col>
             </Row>
         </>
-    
+   
     )
 };
+ 

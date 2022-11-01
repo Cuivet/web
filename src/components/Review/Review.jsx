@@ -13,29 +13,29 @@ import {
 } from "antd";
 import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
+import {raceService} from '../../services/race.service';
+import {specieService} from '../../services/specie.service';
+
 
 export default function Review(props) {
   const { pet } = props;
   const [disabled, setIsDisabled] = useState(false);
-  const [initValue, setInitValue] = useState([
-    { name: ["name"], value: pet.name },
-    { name: ["birth"], value: pet.birth.slice(0, 10) },
-    { name: ["isMale"], value: pet.isMale },
-    { name: ["raceId"], value: pet.raceId },
-    { name: ["specieId"], value: pet.specieId },
-    { name: ["castrationDate"], value: pet.castrationDate },
-    { name: ["haveChip"], value: pet.haveChip },
-    { name: ["aspects"], value: pet.aspects },
-    { name: ["hairColorId"], value: pet.hairColorId },
-    { name: ["hairLengthId"], value: pet.hairLengthId },
-    { name: ["petSizeId"], value: pet.petSizeId },
-  ]);
+  const [initValue, setInitValue] = useState([]);
+  const [races, setRaces] = useState([]);
+  const [species, setSpecies] = useState([]);
+  const [isInitData, setIsInitData]= useState(false);
+  const [isFetchData, setIsFetchData] = useState(false);
   const wrapper = {
     sm: { offset: 0, span: 14 },
     xs: {
       offset: 0,
     },
   };
+  
+  if(!isInitData && isFetchData){
+    initPet();
+    setIsInitData(true);
+  } 
 
   //debemos diferenciar el valor que queda vacio por eleccion
   //del que aun no ha se ha cargado.
@@ -44,6 +44,16 @@ export default function Review(props) {
     //caso1: trae TODOS los datos cargados
     if (props.id !== null) {
       setIsDisabled(true);
+        const fetchData = async () => {
+          await raceService.findAll().then((response) => {
+            setRaces(response);
+          });
+          await specieService.findAll().then((response) => {
+            setSpecies(response);
+          });
+          setIsFetchData(true);
+        };
+        fetchData();
     } else {
       //caso2: carga los datos en los campos
       //habilita campo
@@ -52,6 +62,40 @@ export default function Review(props) {
       setInitValue([{ name: "empty", value: null }]);
     }
   }, [props]);
+
+  function initPet() {
+    setInitValue([
+      { name: ["name"], value: pet.name },
+      { name: ["birth"], value: pet.birth.slice(0, 10) },
+      { name: ["isMale"], value: pet.isMale },
+      { name: ["raceId"], value: pet.raceId },
+      { name: ["specieId"], value: species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id},
+      { name: ["castrationDate"], value: pet.castrationDate },
+      { name: ["haveChip"], value: pet.haveChip },
+      { name: ["aspects"], value: pet.aspects },
+      { name: ["hairColorId"], value: pet.hairColorId },
+      { name: ["hairLengthId"], value: pet.hairLengthId },
+      { name: ["petSizeId"], value: pet.petSizeId },
+    ]);
+}
+
+    function renderSpecies() {
+      let list = [];
+      species.forEach((specie) => {
+        list.push(<Select.Option value={specie.id}>{specie.name}</Select.Option>);
+      });
+      return list;
+    }
+
+    function renderRaces() {
+      let list = [];
+      races.forEach((race) => {
+        if (race.specieId) {
+          list.push(<Select.Option value={race.id}>{race.name}</Select.Option>);
+        }
+      });
+      return list;
+    }
 
   return (
     <>
@@ -75,7 +119,7 @@ export default function Review(props) {
                 name="name"
                 label="Paciente"
                 tooltip={{
-                  title: "nombre del paciente",
+                  title: "Nombre del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -91,7 +135,7 @@ export default function Review(props) {
                 name="birth"
                 label="Fecha de Nacimiento"
                 tooltip={{
-                  title: "fecha en la que nacio el paciente",
+                  title: "Fecha en la que nació el paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -106,7 +150,7 @@ export default function Review(props) {
                 name="isMale"
                 label="Sexo"
                 tooltip={{
-                  title: "sexo del paciente",
+                  title: "Sexo del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -129,7 +173,7 @@ export default function Review(props) {
                 name="specieId"
                 label="Especie"
                 tooltip={{
-                  title: "especie a la que pertenece el paciente",
+                  title: "Especie a la que pertenece el paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -140,8 +184,7 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={2}>Canino</Select.Option>
-                  {/* {renderSpecies()} */}
+                  {renderSpecies()}
                 </Select>
               </Form.Item>
             </Col>
@@ -150,7 +193,7 @@ export default function Review(props) {
                 name="raceId"
                 label="Raza"
                 tooltip={{
-                  title: "raza del paciente",
+                  title: "Raza del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -160,7 +203,124 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={1}>Golden Retriever</Select.Option>
+                  {renderRaces()}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="castratioDate"
+                label="Castracion"
+                tooltip={{
+                  title: "fecha de castracion del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input
+                  disabled={disabled}
+                  placeholder="Ingrese fecha castracion"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="haveChip"
+                label="CHIP"
+                tooltip={{
+                  title: "posee chip identificador",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Radio.Group
+                  disabled={disabled}
+                  optionType="button"
+                  className="register-pet-form__radio"
+                >
+                  <Radio style={{ width: "50%" }} value={true}>
+                    Si
+                  </Radio>
+                  <Radio style={{ width: "50%" }} value={false}>
+                    No
+                  </Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="aspects"
+                label="Aspecto"
+                tooltip={{
+                  title: "rasgos distintivos del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input.TextArea
+                  disabled={disabled}
+                  name="aspects"
+                  placeholder={"Ingrese aspecto de la mascote"}
+                  rows={2}
+                  allowClear
+                  maxLength={500}
+                  showCount
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="hairColorId"
+                label="Color pelaje"
+                tooltip={{
+                  title: "color del pelaje del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Select
+                  placeholder="Seleccione el color"
+                  value={pet.hairColorId}
+                  disabled={disabled}
+                  allowClear
+                >
+                  <Select.Option value={1}>Palido</Select.Option>
+                  {/*Martina */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="hairLengthId"
+                label="Largo pelaje"
+                tooltip={{
+                  title: "largo del pelaje del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Select
+                  placeholder="Seleccione el largo"
+                  value={pet.hairLengthId}
+                  disabled={disabled}
+                  allowClear
+                >
+                  <Select.Option value={3}>Corto</Select.Option>
+                  {/* {renderRaces()} */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="petSizeId"
+                label="Tamaño"
+                tooltip={{
+                  title: "tamaño del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Select
+                  placeholder="Seleccione el tamaño"
+                  value={pet.petSizeId}
+                  disabled={disabled}
+                  allowClear
+                >
+                  <Select.Option value={2}>Mediano</Select.Option>
                   {/* {renderRaces()} */}
                 </Select>
               </Form.Item>

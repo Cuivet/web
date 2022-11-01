@@ -1,88 +1,92 @@
 import React from "react";
-import { Col,  Row, Typography, Tooltip } from "antd";
+import { Typography, Input, Form } from "antd";
+import './ShowUser.scss';
 
-import './ShowUser.scss'
-
-const {Title, Paragraph} =Typography;
-
-
+const { Title } =Typography;
+ 
 export default function ShowUser(props){
-    const {name, lastName, dni, phone, address, email} = props;
+    const {formData} = props;
+    var veterinary = false;
+    const profile = JSON.parse(sessionStorage.getItem('profile')) ;
+
+    if(profile.veterinary != null){
+        veterinary = true;
+    };
+
+    const changeForm = e =>{
+        props.refreshUser(e);
+    };
+ 
     return(
-        <Row>
-            <Col xs={{span: 24}}>
-                <Row>
-                    <Col xs={{span: 24}}md={{span: 2}}>
-                        <Title level={5}>Nombre:</Title>
-                    </Col>
-                    <Col  xs={{span: 24}}md={{span: 22}}>
-                    <Tooltip title="Haz click aquí para editar">
-                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{name}</Paragraph></Title>
-                    </Tooltip>
-                    </Col>
-                </Row>
-            </Col>
-            <Col xs={{span: 24}}>
-                <Row>
-                    <Col xs={{span: 24}}md={{span: 2}}>
-                        <Title level={5}>Apellido:</Title>
-                    </Col>
-                    <Col  xs={{span: 24}}md={{span: 22}}>
-                    <Tooltip title="Haz click aquí para editar">
-                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{lastName}</Paragraph></Title>
-                    </Tooltip>
-                    </Col>
-                </Row>
-            </Col>
-            <Col xs={{span: 24}}>
-            <Row>
-                    <Col xs={{span: 24}}md={{span: 2}}>
-                        <Title level={5}>Teléfono:</Title>
-                    </Col>
-                    <Col  xs={{span: 24}}md={{span: 22}}>
-                    <Tooltip title="Haz click aquí para editar">
-                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{phone}</Paragraph></Title>
-                    </Tooltip>
-                    </Col>
-                </Row>
-            </Col>
-            <Col xs={{span: 24}}>
-            <Row>
-                    <Col xs={{span: 24}}md={{span: 2}}>
-                        <Title level={5}>DNI:</Title>
-                    </Col>
-                    <Col  xs={{span: 24}}md={{span: 22}}>
-                    <Tooltip title="Haz click aquí para editar">
-                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{dni}</Paragraph></Title>
-                    </Tooltip>
-                    </Col>
-                </Row>
-            </Col>
-            <Col xs={{span: 24}}>
-            <Row>
-                    <Col xs={{span: 24}}md={{span: 2}}>
-                        <Title level={5}>Dirección:</Title>
-                    </Col>
-                    <Col  xs={{span: 24}}md={{span: 22}}>
-                    <Tooltip title="Haz click aquí para editar">
-                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{address}</Paragraph></Title>
-                    </Tooltip>
-                    </Col>
-                </Row>
-            </Col>
-            <Col xs={{span: 24}}>
-            <Row>
-                    <Col xs={{span: 24}}md={{span: 4}}>
-                        <Title level={5}>Correo Electrónico:</Title>
-                    </Col>
-                    <Col  xs={{span: 24}}md={{span: 20}}>
-                    <Tooltip title="Haz click aquí para editar">
-                        <Title level={5}><Paragraph className="show-item" type="secondary" level={3} editable={{triggerType:['text']}} >{email}</Paragraph></Title>
-                    </Tooltip>
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
+        <Form className="register-form" onChange={changeForm}>
+            <Title level={5}>Nombre:
+                <Form.Item>
+                    <Input  type="name"
+                            name="name"
+                            placeholder="Nombre"
+                            className="register-form__input"
+                            value={formData.name}/>
+                </Form.Item>
+            </Title>
+            <Title level={5}>Apellido:
+                <Form.Item>
+                    <Input  type="lastName"
+                            name="lastName"
+                            placeholder="Apellido"
+                            className="register-form__input"
+                            value={formData.lastName}/>
+                </Form.Item>
+            </Title>
+            <Title level={5}>Teléfono:
+                <Form.Item>
+                    <Input  type="phone"
+                            name="phone"
+                            placeholder="Teléfono"
+                            className="register-form__input"
+                            value={formData.phone}/>
+                </Form.Item>
+            </Title>
+            <Title level={5}>Dirección:
+                <Form.Item>
+                    <Input  type="address"
+                            name="address"
+                            placeholder="Dirección"
+                            className="register-form__input"
+                            value={formData.address}/>
+                </Form.Item>
+            </Title>
+            <Title level={5}>DNI:
+                <Form.Item>
+                    <Input  type="dni"
+                            name="dni"
+                            placeholder="DNI"
+                            className="register-form__input"
+                            value={formData.dni}/>
+                </Form.Item>
+            </Title>
+            { veterinary ?
+            <>
+                <Title level={5}>Matrícula Profesional:
+                    <Form.Item>
+                        <Input  type="mp"
+                                name="mp"
+                                placeholder="MP"
+                                className="register-form__input"
+                                value={formData.mp}
+                                disabled/>
+                    </Form.Item>
+                </Title>
+            </>
+            : null }
+            <Title level={5}>Email:
+                <Form.Item>
+                    <Input  type="email"
+                            name="email"
+                            placeholder="Email"
+                            className="register-form__input"
+                            value={formData.email}/>
+                </Form.Item>
+            </Title>
+        </Form>
     )
-       
 }

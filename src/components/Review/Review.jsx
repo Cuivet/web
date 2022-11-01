@@ -189,7 +189,11 @@ export default function Review(props) {
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Radio.Group disabled={disabled} optionType="button" className="register-pet-form__radio">
+                <Radio.Group
+                  disabled={disabled}
+                  optionType="button"
+                  className="register-pet-form__radio"
+                >
                   <Radio style={{ width: "50%" }} value={true}>
                     Si
                   </Radio>
@@ -210,7 +214,7 @@ export default function Review(props) {
               >
                 <Input.TextArea
                   disabled={disabled}
-                  name='aspects'
+                  name="aspects"
                   placeholder={"Ingrese aspecto de la mascote"}
                   rows={2}
                   allowClear

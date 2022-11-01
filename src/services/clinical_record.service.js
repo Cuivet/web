@@ -4,6 +4,7 @@ export var clinicalRecordService = {
     findOneById: findOneById,
     findAllByVeterinaryId: findAllByVeterinaryId,
     registerClinicalRecord: registerClinicalRecord
+    updateClinicalRecord: updateClinicalRecord
 }
 
 async function findOneById(id) {
@@ -53,4 +54,24 @@ async function registerClinicalRecord(clinicalRecord) {
         .then((response) => {
             return response.data;
         })
+};
+
+async function updateClinicalRecord(data) {
+    var axios = require('axios');
+    return axios({
+        method: "put",
+        url: `${basePATH}/clinical-record/`,
+        data: data,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response;
+        })
+        .catch((err) => {
+            return err;
+        });
 };

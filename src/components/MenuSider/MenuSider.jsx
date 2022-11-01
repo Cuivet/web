@@ -98,10 +98,10 @@ export default function MenuSider(props){
 
                 { veterinary ?
                     <>
-                        <Menu.Item key="veterinaryConsultation">
-                            <Link to={"/consultation"} className='admin-sider__item'>                      
+                        <Menu.Item key="ClinicalRecordMenu">
+                            <Link to={"/clinical-record-menu"} className='admin-sider__item'>                      
                                 <Icon><ContentPasteOutlinedIcon /></Icon>
-                                <span className="nav-text"> Consultas </span>
+                                <span className="nav-text"> Menú de fichas clínicas </span>
                             </Link>
                         </Menu.Item>
 

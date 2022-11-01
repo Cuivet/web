@@ -6,6 +6,9 @@ import moment  from "moment";
 import { registerPet } from "../../services/pet.service";
 import { raceService } from "../../services/race.service";
 import { specieService } from "../../services/specie.service";
+import { petSizeService } from "../../services/pet_size.service";
+import { hairColorService } from "../../services/hair_color.service";
+import { hairLengthService } from "../../services/hair_length.service";
 import './RegisterPetForm.scss';
 
 export default function RegisterPetForm(props){
@@ -14,6 +17,9 @@ export default function RegisterPetForm(props){
     const [pet, setPet]= useState(null);
     const [races, setRaces]= useState([]);
     const [species, setSpecies]= useState([]);
+    const [petSizes, setPetSizes]= useState([]);
+    const [hairColors, sethairColors]= useState([]);
+    const [hairLenghts, sethairLenghts]= useState([]);
     const [formValid, setFormValid] = useState(initFormValid());
     const {Dragger} = Upload;
 
@@ -27,6 +33,18 @@ export default function RegisterPetForm(props){
             await raceService.findAll()
             .then(response => {
                 setRaces(response);
+            });
+            await petSizeService.findAll()
+            .then(response => {
+                setPetSizes(response);
+            });
+            await hairColorService.findAll()
+            .then(response => {
+                sethairColors(response);
+            });
+            await hairLengthService.findAll()
+            .then(response => {
+                sethairLenghts(response);
             });
             await specieService.findAll()
             .then(response => {
@@ -46,8 +64,13 @@ export default function RegisterPetForm(props){
             specieId: pet ? pet.raceId ? species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id : null : null,
             birth: pet ? moment(pet.birth.slice(0, 10), 'YYYY-MM-DD') : null,
             isMale: pet ? pet.isMale ? '1' : '0' : null,
-            size: null,
-            tutorId: JSON.parse(sessionStorage.getItem('profile')).tutor.id
+            petSizeId: pet ? pet.petSizeId : null,
+            tutorId: JSON.parse(sessionStorage.getItem('profile')).tutor.id, 
+            hairColorId: pet ? pet.hairColorId : null,
+            hairLengthId: pet ? pet.hairLengthId : null,
+            castrationDate: pet ? pet.castrationDate ? moment(pet.castrationDate.slice(0, 10), 'YYYY-MM-DD') : null : null,
+            haveChip: pet ? pet.haveChip ? '1' : '0' : null,
+            aspects: pet ? pet.aspects : null
         });
     }
 
@@ -57,7 +80,11 @@ export default function RegisterPetForm(props){
             raceId: false,
             birth: false,
             isMale: false,
-            size: false
+            petSizeId: false, 
+            hairColorId: false,
+            hairLengthId: false,
+            haveChip: false,
+            aspects: false
         }
     }
 
@@ -87,7 +114,7 @@ export default function RegisterPetForm(props){
     };
 
     const register = e => {
-        if(!pet.name || !pet.specieId || !pet.raceId || !pet.birth || pet.isMale === null || !pet.size){
+        if(!pet.name || !pet.specieId || !pet.raceId || !pet.birth || pet.isMale === null || !pet.petSizeId|| !pet.hairColorId|| !pet.hairLengthId || pet.haveChip === null){
             return notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
@@ -127,9 +154,9 @@ export default function RegisterPetForm(props){
         setFormValid({...formValid, raceId: true});
     };
 
-    const onSizeChange = (size) => {
-        setPet({...pet, size: size});
-        setFormValid({...formValid, size: true});
+    const onPetSizeChange = (petSizeId) => {
+        setPet({...pet, petSizeId: petSizeId});
+        setFormValid({...formValid, petSizeId: true});
     }
 
     const onDateBirthChange = (date) => {
@@ -137,9 +164,29 @@ export default function RegisterPetForm(props){
         setFormValid({...formValid, birth: date});
     };
 
+    const onCastrationDateChange = (date) => {
+        setPet({...pet, castrationDate: date});
+        setFormValid({...formValid, castrationDate: date});
+    };
+
     const onSexChange = (isMale) => {
         setPet({...pet, isMale: isMale.target.value});
         setFormValid({...formValid, isMale: true});
+    };
+
+    const onHaveChipChange = (haveChip) => {
+        setPet({...pet, haveChip: haveChip.target.value});
+        setFormValid({...formValid, haveChip: true});
+    };
+
+    const onHairColorChange = (hairColorId) => {
+        setPet({...pet, hairColorId: hairColorId});
+        setFormValid({...formValid, hairColorId: true});
+    };
+
+    const onHairLengthChange = (hairLengthId) => {
+        setPet({...pet, hairLengthId: hairLengthId});
+        setFormValid({...formValid, hairLengthId: true});
     };
 
     const changeForm = e =>{
@@ -170,6 +217,32 @@ export default function RegisterPetForm(props){
         })
         return list;
     }
+
+    function renderPetSize() {
+        let list = [];
+        petSizes.forEach(petSize => {
+            list.push(<Select.Option value={petSize.id}>{petSize.name}</Select.Option>);
+        })
+        return list;
+    }
+
+    function renderHairColor() {
+        let list = [];
+        hairColors.forEach(hairColor => {
+            list.push(<Select.Option value={hairColor.id}>{hairColor.name}</Select.Option>);
+        })
+        return list;
+    }
+
+
+    function renderHairLength() {
+        let list = [];
+        hairLenghts.forEach(hairLength => {
+            list.push(<Select.Option value={hairLength.id}>{hairLength.name}</Select.Option>);
+        })
+        return list;
+    }
+
 
     return (
         !isInitData ? 
@@ -212,13 +285,44 @@ export default function RegisterPetForm(props){
                 </Col>
                 <Col span={24}>
                     <Form.Item>
-                        <Select name="size" className="register-pet-form__select" value={pet.size} onChange={onSizeChange} allowClear > 
-                            <Select.Option value="1">Chico</Select.Option>
-                            <Select.Option value="2">Mediano</Select.Option>
-                            <Select.Option value="3">Grande</Select.Option>
+                        <DatePicker disabledDate={disabledDate} name="castrationDate" value={pet.castrationDate} size="large" onChange={onCastrationDateChange} placeholder="Fecha de castración" className="appDatePicker" format={'DD/MM/yyyy'} />
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Radio.Group optionType="button" name="haveChip" size="large" className="register-pet-form__radio" onChange={onHaveChipChange} value={pet.haveChip}>
+                            <Radio value='1' className="register-pet-form__radio-item">Tiene chip</Radio>
+                            <Radio value='0' className="register-pet-form__radio-item">No tiene chip</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Select name="petSize" placeholder="Tamaño" className="register-pet-form__select" value={pet.petSizeId} onChange={onPetSizeChange} allowClear >
+                            {renderPetSize()}
                         </Select>
                     </Form.Item>
-                </Col> 
+                </Col>
+
+                <Col span={24}>
+                    <Form.Item>
+                        <Select name="hairColor" placeholder="Color de Pelaje" className="register-pet-form__select" value={pet.hairColorId} onChange={onHairColorChange} allowClear >
+                            {renderHairColor()}
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Select name="petSize" placeholder="Largo de pelaje" className="register-pet-form__select" value={pet.hairLengthId} onChange={onHairLengthChange} allowClear >
+                            {renderHairLength()}
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <Col span={24}>
+                    <Form.Item>
+                        <Input type="text" name="aspects" value={pet.aspects} placeholder="Otras características físicas" className="register-pet-form__input"/>
+                    </Form.Item>
+                </Col>
                 <Col span={24}>
                     <Form.Item>
                         <ImgCrop rotate>

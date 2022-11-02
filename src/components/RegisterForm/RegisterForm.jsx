@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, Input, Button, Checkbox, Select, notification, Typography, Modal} from 'antd';
+import {Form, Input, Button, Select, notification, Modal} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service";
 
@@ -8,7 +8,6 @@ import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined
 import Terms from "../Terms/Terms";
 
 
-const {Link} = Typography;
 //componente formulario del LogIn para nuevos usuarios
 export default function RegisterForm(props){ 
     //donde almacena los datos del formulario

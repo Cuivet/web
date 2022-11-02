@@ -5,7 +5,8 @@ export var veterinaryAssociationService = {
     getTemporalAssociationByCode: getTemporalAssociationByCode,
     register: register,
     getAllByVeterinaryId: getAllByVeterinaryId,
-    getAllDataByRegentOrVeterinary: getAllDataByRegentOrVeterinary
+    getAllDataByRegentOrVeterinary: getAllDataByRegentOrVeterinary,
+    getAllCoVeterinariesDataByRegent: getAllCoVeterinariesDataByRegent
 }
 
 async function registerTemporalAssociation(data){
@@ -79,6 +80,22 @@ async function getAllDataByRegentOrVeterinary(veterinaryId){
     return axios({
         method: "get",
         url: `${basePATH}/veterinary-association/allDataByRegentOrVeterinary/${veterinaryId}`,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        });
+}
+
+async function getAllCoVeterinariesDataByRegent(veterinaryId){
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/veterinary-association/allCoVeterinariesDataByRegent/${veterinaryId}`,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',

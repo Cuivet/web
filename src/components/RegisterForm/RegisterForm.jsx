@@ -136,6 +136,15 @@ export default function RegisterForm(props){
                 placement: "top"
             })
         } else{
+            if(vet){
+                if (!input.mp) {
+                    return notification['error']({
+                        message: "La matrícula profesional es obligatoria",
+                        description: "Debe ingresar su matrícula profesional para poder registrarse",
+                        placement: "top"
+                    })
+                }
+            }
             if(passwordVal !== repeatPasswordVal){
                 notification['error']({
                     message: "Las constraseñas deben ser iguales",

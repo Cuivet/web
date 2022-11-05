@@ -48,7 +48,7 @@ export default function Prognosis(props) {
       <Row justify="center" gutter={24}>
         <Col span={24}>
           <Typography.Title className="" level={4}>
-            Pronostico
+            Pronóstico
           </Typography.Title>
         </Col>
         <Col  xs={{ span: 24 }} md={{ span: 10 }}>
@@ -63,7 +63,7 @@ export default function Prognosis(props) {
             <Col>
               <Form.Item
                 name="observation"
-                label="Observacion"
+                label="Observación"
                 tooltip={{
                   title: "algo",
                   icon: <InfoCircleOutlined />,
@@ -74,7 +74,7 @@ export default function Prognosis(props) {
                   name="observation"
                   rows={4}
                   allowClear
-                  placeholder="Ingrese el pronostico..."
+                  placeholder="Ingrese el pronóstico..."
                   maxLength={500}
                   showCount
                   autoSize={{ minRows: 4, maxRows: 5 }}

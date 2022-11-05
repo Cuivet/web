@@ -60,11 +60,11 @@ return (
   <>
     <Row align="middle">
         <Col span={24}>
-            <Title className='appTitle'>Menu de ficha clínica</Title>
+            <Title className='appTitle'>Ficha Clínica</Title>
         </Col>
     </Row>
 
-    <Divider orientation="left">Crear nueva ficha clinica</Divider>
+    <Divider orientation="left">Crear nueva ficha clínica</Divider>
 
     <>
       <Divider orientation="left" plain> Ingrese DNI del tutor de la mascota </Divider>
@@ -90,7 +90,7 @@ return (
             <><Spin />Buscando...</>
             :
             <>  
-              <Alert message="En este momento no tienes ningun tutor seleccionado" type="warning" />
+              <Alert message="En este momento no tienes ningún tutor seleccionado" type="warning" />
             </>
             }
       </Row>
@@ -122,7 +122,7 @@ return (
               <>
                 <Row>
                   <SettingTwoTone twoToneColor="#ff00ff" spin/>
-                  <Title level={5} className='margin-left-spinner'>Seleccione una MASCOTA para poder crear la ficha</Title>
+                  <Title level={5} className='margin-left-spinner'>Seleccione una mascota para poder crear la ficha clínica</Title>
                 </Row>
                 </>
             }
@@ -131,7 +131,7 @@ return (
           :
           <>
             <SettingTwoTone twoToneColor="#ff00ff" spin/>
-            <Title level={5} className='margin-left-spinner'>Debe encontrar un TUTOR para poder avanzar con la creación de la ficha</Title>
+            <Title level={5} className='margin-left-spinner'>Debe encontrar un tutor para poder avanzar con la creación de la ficha clínica</Title>
           </>
         }
       </Row>

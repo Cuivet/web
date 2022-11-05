@@ -71,9 +71,9 @@ export default function PresumptiveDiagnosis(props) {
             <Col>
               <Form.Item
                 name={initValue[i]["name"]}
-                label="Diagnostico"
+                label="Diagnóstico"
                 tooltip={{
-                  title: "diagnostico presuntivo",
+                  title: "diagnóstico presuntivo",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -82,7 +82,7 @@ export default function PresumptiveDiagnosis(props) {
                   disabled={disabled}
                   keyboard="false"
                   className="appDataFieldStep"
-                  placeholder="Ingrese el diagnostico"
+                  placeholder="Ingrese el diagnóstico"
                 />
               </Form.Item>
             </Col>
@@ -148,9 +148,9 @@ export default function PresumptiveDiagnosis(props) {
                 <Col>
                   <Form.Item
                     name="observation"
-                    label="Diagnostico"
+                    label="Diagnóstico"
                     tooltip={{
-                      title: "diagnostico presuntivo",
+                      title: "diagnóstico presuntivo",
                       icon: <InfoCircleOutlined />,
                     }}
                   >
@@ -159,12 +159,12 @@ export default function PresumptiveDiagnosis(props) {
                       disabled={disabled}
                       keyboard="false"
                       className="appDataFieldStep"
-                      placeholder="Ingrese el diagnostico"
+                      placeholder="Ingrese el diagnóstico"
                     />
                   </Form.Item>
                 </Col>
                 <Col>
-                  <Divider>Diagnostico Diferencial</Divider>
+                  <Divider>Diagnóstico Diferencial</Divider>
                 </Col>
 
                 <Form.List name="presumptiveDiagnosisItem">
@@ -176,21 +176,21 @@ export default function PresumptiveDiagnosis(props) {
                             <Form.Item
                               {...restField}
                               name={[name, `observation`]}
-                              label={"Diagnostico"}
+                              label={"Diagnóstico"}
                               tooltip={{
-                                title: "diagnostico diferencial",
+                                title: "diagnóstico diferencial",
                                 icon: <InfoCircleOutlined />,
                               }}
                             >
                               <Input
                                 disabled={disabled}
                                 name={`observation`}
-                                placeholder="Ingrese su diagnostico"
+                                placeholder="Ingrese el diagnóstico"
                               />
                             </Form.Item>
                           </Col>
                           <Col style={{ marginBottom: "2%" }}>
-                            <Tooltip title={"Borrar tratamiento"} align="left">
+                            <Tooltip title={"Borrar diagnóstico"} align="left">
                               <Button
                                 type="primary"
                                 shape="circle"
@@ -216,7 +216,7 @@ export default function PresumptiveDiagnosis(props) {
                             block
                             icon={<PlusOutlined />}
                           >
-                            Agregar diagnostico
+                            Agregar diagnóstico
                           </Button>
                         </Form.Item>
                       </Col>

@@ -148,7 +148,7 @@ export default function PhysicalExam(props) {
       <Row justify="center" gutter={24}>
         <Col span={24}>
           <Typography.Title className="" level={4}>
-            Examen Físico
+            Exámen Físico
           </Typography.Title>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
@@ -165,7 +165,7 @@ export default function PhysicalExam(props) {
                 name="weight"
                 label="Peso"
                 tooltip={{
-                  title: "peso en Kilogramos",
+                  title: "Peso en Kilogramos",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -185,7 +185,7 @@ export default function PhysicalExam(props) {
                 name="temperature"
                 label="Temperatura"
                 tooltip={{
-                  title: "temperatura en °C",
+                  title: "Temperatura en °C",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -206,7 +206,7 @@ export default function PhysicalExam(props) {
                 name="pulse"
                 label="Pulso"
                 tooltip={{
-                  title: "latidos por minuto",
+                  title: "Latidos por minuto",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -226,7 +226,7 @@ export default function PhysicalExam(props) {
                 name="mucousMembrane"
                 label="Mucosa"
                 tooltip={{
-                  title: "informacion relacionada con la mucosa",
+                  title: "información relacionada con la mucosa",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -242,7 +242,7 @@ export default function PhysicalExam(props) {
             <Col span={24}>
               <Form.Item
                 name="bodyCondition"
-                label="Condicion corporal"
+                label="Condición corporal"
                 tooltip={{
                   title: "",
                   icon: <InfoCircleOutlined />,
@@ -252,7 +252,7 @@ export default function PhysicalExam(props) {
                   name="bodyCondition"
                   disabled={disabled}
                   onChange={selectChange}
-                  placeholder={"Seleccione condicion corporal"}
+                  placeholder={"Seleccione condición corporal"}
                 >
                   <Select.Option value="1">Muy Flaco</Select.Option>
                   <Select.Option value="2">Flaco</Select.Option>
@@ -265,7 +265,7 @@ export default function PhysicalExam(props) {
             <Col span={24}>
               <Form.Item
                 name="observation"
-                label="Observacion"
+                label="Observación"
                 tooltip={{
                   title: "algo",
                   icon: <InfoCircleOutlined />,
@@ -277,7 +277,7 @@ export default function PhysicalExam(props) {
                   rows={4}
                   allowClear
                   onChange={inputValidation}
-                  placeholder="Ingrese alguna observacion"
+                  placeholder="Ingrese alguna observación"
                   maxLength={500}
                   showCount
                   autoSize={{ minRows: 4, maxRows: 5 }}

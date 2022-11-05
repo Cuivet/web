@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress, Spin } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress, Tooltip, Spin } from 'antd';
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { FilePdfOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router";
@@ -98,8 +98,8 @@ export default function ClinicalRecordsManagement(){
             responsive: ['md'],
             render: (_, { indexIdForButton }) => (
                 <>
-                    <Button className='margin-right'><FilePdfOutlined /></Button>
-                    <Button onClick={(e)=> goToClinicalRecord(indexIdForButton)}><PlayCircleOutlined /></Button>
+                    <Tooltip placement='top' title="Descargar en pdf"><Button className='margin-right'><FilePdfOutlined /></Button></Tooltip>
+                    <Tooltip placement='top' title="Continuar la Ficha Clínica"><Button onClick={(e)=> goToClinicalRecord(indexIdForButton)}><PlayCircleOutlined /></Button></Tooltip>
                 </>
               )
         }
@@ -117,7 +117,7 @@ export default function ClinicalRecordsManagement(){
         <>   
             <Row align="middle">
                 <Col span={24}>
-                    <Title className='appTitle'>Historial Clínico</Title>
+                    <Title className='appTitle'>Historiales Clínico</Title>
                 </Col>
             </Row>
 
@@ -153,4 +153,6 @@ export default function ClinicalRecordsManagement(){
         </>
     );
 };
+
+
 

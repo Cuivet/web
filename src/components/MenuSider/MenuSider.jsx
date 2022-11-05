@@ -101,7 +101,7 @@ export default function MenuSider(props){
                         <Menu.Item key="ClinicalRecordMenu">
                             <Link to={"/clinical-record-menu"} className='admin-sider__item'>                      
                                 <Icon><ContentPasteOutlinedIcon /></Icon>
-                                <span className="nav-text"> Menú de fichas clínicas </span>
+                                <span className="nav-text"> Ficha Clínica </span>
                             </Link>
                         </Menu.Item>
 
@@ -115,7 +115,7 @@ export default function MenuSider(props){
                         <Menu.Item key="veterinaryClinicalRecordManagement">
                             <Link to={"/clinical-records-management"} className='admin-sider__item'>                      
                                 <Icon component={''}><FolderOpenOutlined fontSize="small" /></Icon>
-                                <span className="nav-text"> Historial Clínico </span>
+                                <span className="nav-text"> Historiales Clínicos </span>
                             </Link>
                         </Menu.Item>
 
@@ -138,7 +138,7 @@ export default function MenuSider(props){
                         <Menu.Item key="veterinaryVetsManagement">
                             <Link to={"/vets-associations"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Clinicas Asociadas </span>
+                                <span className="nav-text"> Clínicas Asociadas </span>
                             </Link>
                         </Menu.Item>
                     </>
@@ -156,7 +156,7 @@ export default function MenuSider(props){
                         <Menu.Item key="vetOwnerVets">
                             <Link to={"/vets"} className='admin-sider__item'>                      
                                 <Icon component={''}><PersonPinCircleOutlinedIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Mis Clinicas </span>
+                                <span className="nav-text"> Mis Clínicas </span>
                             </Link>
                         </Menu.Item>   
                     </> 

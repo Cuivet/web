@@ -3,7 +3,7 @@ import { getVetsByVetOwnerId } from '../../services/vet.service';
 import {Row, Col, Typography, Tooltip, Button, Drawer, Divider} from 'antd';
 import{PlusCircleOutlined} from '@ant-design/icons';
 // import clinic from '../../assets/img/jpg/clinic.jpg';
-import redcross from '../../assets/img/jpg/red-cross.jpg';
+import clinica from '../../assets/img/jpg/clinica.jpg';
 // import '../UserSettings/UserSettings.scss'
 import CardPet from "../../components/CardPet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
@@ -39,7 +39,7 @@ export default function Vets(){
         if (vets.length){
             vets.forEach(vet => {
                 renderVetList.push(                     
-                    <CardPet item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={redcross} description={vet.vet.address}></CardPet>
+                    <CardPet item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={clinica} description={vet.vet.address}></CardPet>
                 )
             });
          };

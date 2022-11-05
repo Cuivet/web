@@ -57,7 +57,7 @@ export default function VeterinariesAssociations(){
         });
         register(petAssociations)
             .then(response => {
-                message.success('Asociacion establecida exitosamente');
+                message.success('Asociación establecida exitosamente');
                 refreshComponent();
             });
     }
@@ -150,7 +150,7 @@ export default function VeterinariesAssociations(){
         <>   
             <Row align="middle">
                 <Col span={23}>
-                    <Title className='appTitle'>Profesionales asociados</Title>
+                    <Title className='appTitle'>Veterinarios Asociados</Title>
                 </Col>
                 <Col span={1}>
                     <Tooltip title="Asociar Veterinario" placement='right'>
@@ -170,7 +170,7 @@ export default function VeterinariesAssociations(){
                 }
             </Row>
 
-            <Modal  title="Asociarse con un profesional"
+            <Modal  title="Asociarse con un veterinario"
                     visible={isModalOpen}
                     onCancel={hideModal}
                     footer={[
@@ -225,7 +225,7 @@ export default function VeterinariesAssociations(){
                                 <Typography.Title level={5}>Ingrese código de asociacion brindado por el veterinario:</Typography.Title>
                             </Row>
                             <Row>
-                                <Input type="number" name="phone" placeholder="Codigo de asociacion"  onChange={refreshCode}/>
+                                <Input type="number" name="phone" placeholder="Código de asociacion"  onChange={refreshCode}/>
                             </Row>    
                         </>
                 }

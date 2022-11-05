@@ -30,7 +30,7 @@ export default function Pets(){
     const onClose = () => {
         setPetToDisplay(null);
         setDisplayDrawer(false);
-    };
+    }; 
 
     function Pet(){
         const renderPetList = [];

@@ -96,7 +96,7 @@ export default function VetsAssociations(){
         veterinaryAssociations.push(veterinaryAssociation);
         veterinaryAssociationService.register(veterinaryAssociations)
             .then(response => {
-                message.success('Asociacion establecida exitosamente');
+                message.success('Asociación establecida exitosamente');
                 refreshComponent();
             });
     }

@@ -132,7 +132,7 @@ export default function ClinicalRecord() {
     },
     vet: {
       id: 1,
-      name: "Clinica La Recta",
+      name: "Clínica La Recta",
       phone: "03543-429312",
       address: "Recta Martinolli 8520",
       photo: null,
@@ -164,7 +164,7 @@ export default function ClinicalRecord() {
         id: 4,
         clinicalRecordId: 1,
         control:
-          "El paciente se acercó a la clinica para controlar las lastimaduras y todo ok",
+          "El paciente se acercó a la clínica para controlar las lastimaduras y todo ok",
         date: "18/05/2020",
       },
     ],
@@ -200,14 +200,14 @@ export default function ClinicalRecord() {
           anamnesisId: 10,
           anamnesisQuestionId: 3,
           booleanResponse: null,
-          textResponse: "Algun comentario..",
+          textResponse: "Algún comentario..",
         },
         {
           id: 23,
           anamnesisId: 10,
           anamnesisQuestionId: 4,
           booleanResponse: false,
-          textResponse: "algo",
+          textResponse: "comentario...",
         },
       ],
     },
@@ -220,7 +220,7 @@ export default function ClinicalRecord() {
       mucousMembrane: "Verde y un poco inflamado",
       bodyCondition: "4",
       observation:
-        "Se palpa en el torax derecho que el animal sufre de cortes y golpes",
+        "Se palpa en el tórax derecho que el animal sufre de cortes y golpes",
     },
     presumptiveDiagnosis: {
       id: 4,
@@ -377,7 +377,7 @@ export default function ClinicalRecord() {
       subTitle: Visits(cRecord.anamnesis),
     },
     {
-      title: "Examen Físico",
+      title: "Exámen Físico",
       content: (
         <PhysicalExam
           id={Exists(cRecord.physcalExam, cRecord.physcalExam.id)}
@@ -482,7 +482,7 @@ export default function ClinicalRecord() {
       {studies ? <div>
         <IconLink
           src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
-          text=" Estudio complementario"
+          text="Estudio complementario"
         />
       </div>: null }
       
@@ -492,7 +492,7 @@ export default function ClinicalRecord() {
     <>
       <Row>
         <Col span={24}>
-          <Title className="appTitle">Consulta Medica</Title>
+          <Title className="appTitle">Consulta Médica</Title>
         </Col>
       </Row>
       <Divider></Divider>

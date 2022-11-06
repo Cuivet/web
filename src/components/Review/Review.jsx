@@ -237,34 +237,15 @@ export default function Review(props) {
                   className="register-pet-form__radio"
                 >
                   <Radio style={{ width: "50%" }} value={true}>
-                    Si
+                    Tiene chip
                   </Radio>
                   <Radio style={{ width: "50%" }} value={false}>
-                    No
+                    No tiene
                   </Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
-            <Col span={24}>
-              <Form.Item
-                name="aspects"
-                label="Aspecto"
-                tooltip={{
-                  title: "rasgos distintivos del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Input.TextArea
-                  disabled={disabled}
-                  name="aspects"
-                  placeholder={"Ingrese aspecto de la mascote"}
-                  rows={2}
-                  allowClear
-                  maxLength={500}
-                  showCount
-                />
-              </Form.Item>
-            </Col>
+            
             <Col span={24}>
               <Form.Item
                 name="hairColorId"
@@ -327,44 +308,6 @@ export default function Review(props) {
             </Col>
             <Col span={24}>
               <Form.Item
-                name="castratioDate"
-                label="Castracion"
-                tooltip={{
-                  title: "fecha de castracion del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Input
-                  disabled={disabled}
-                  placeholder="Ingrese fecha castracion"
-                />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="haveChip"
-                label="CHIP"
-                tooltip={{
-                  title: "posee chip identificador",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Radio.Group
-                  disabled={disabled}
-                  optionType="button"
-                  className="register-pet-form__radio"
-                >
-                  <Radio style={{ width: "50%" }} value={true}>
-                    Si
-                  </Radio>
-                  <Radio style={{ width: "50%" }} value={false}>
-                    No
-                  </Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
                 name="aspects"
                 label="Aspecto"
                 tooltip={{
@@ -381,66 +324,6 @@ export default function Review(props) {
                   maxLength={500}
                   showCount
                 />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="hairColorId"
-                label="Color pelaje"
-                tooltip={{
-                  title: "color del pelaje del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Select
-                  placeholder="Seleccione el color"
-                  value={pet.hairColorId}
-                  disabled={disabled}
-                  allowClear
-                >
-                  <Select.Option value={1}>Palido</Select.Option>
-                  {/*Martina */}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="hairLengthId"
-                label="Largo pelaje"
-                tooltip={{
-                  title: "largo del pelaje del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Select
-                  placeholder="Seleccione el largo"
-                  value={pet.hairLengthId}
-                  disabled={disabled}
-                  allowClear
-                >
-                  <Select.Option value={3}>Corto</Select.Option>
-                  {/* {renderRaces()} */}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="petSizeId"
-                label="Tamaño"
-                tooltip={{
-                  title: "tamaño del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Select
-                  placeholder="Seleccione el tamaño"
-                  value={pet.petSizeId}
-                  disabled={disabled}
-                  allowClear
-                >
-                  <Select.Option value={2}>Mediano</Select.Option>
-                  {/* {renderRaces()} */}
-                </Select>
               </Form.Item>
             </Col>
             <Col>

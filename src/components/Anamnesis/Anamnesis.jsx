@@ -250,6 +250,7 @@ export default function Anamnesis(props) {
   //texto no deja ingresar mas de un caracter por vez
   //probar de hacer la carga en el onfinish
   const changeForm = (e) => {
+    props.stepSave(e);
     // if (e.target.name.slice(0, 15) === "booleanResponse") {
     //   setTest({
     //     ...test,

@@ -75,12 +75,9 @@ export default function PhysicalExam(props) {
   }, [props]);
 
   const changeForm = (e) => {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
-    // console.log(input);
+    props.stepSave(e);
   };
+
   const selectChange = (value) => {
     switch (value) {
       case "1":
@@ -174,6 +171,7 @@ export default function PhysicalExam(props) {
                   min={1}
                   style={{ width: "100%" }}
                   disabled={disabled}
+                  addonAfter={'Kg'}
                   onChange={inputValidation}
                   keyboard="false"
                   placeholder="Ingrese el peso"
@@ -185,7 +183,7 @@ export default function PhysicalExam(props) {
                 name="temperature"
                 label="Temperatura"
                 tooltip={{
-                  title: "temperatura en °C",
+                  title: "temperatura en grados Celsius",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -196,6 +194,7 @@ export default function PhysicalExam(props) {
                   min={30}
                   max={50}
                   keyboard="false"
+                  addonAfter={'°C'}
                   onChange={inputValidation}
                   placeholder="Ingrese la temperatura"
                 />
@@ -216,6 +215,7 @@ export default function PhysicalExam(props) {
                   style={{ width: "100%" }}
                   min={30}
                   onChange={inputValidation}
+                  addonAfter={'lpm'}
                   keyboard="false"
                   placeholder="Ingrese el pulso"
                 />

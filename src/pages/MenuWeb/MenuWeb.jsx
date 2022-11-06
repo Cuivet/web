@@ -19,7 +19,7 @@ export default function MenuWeb(){
         description:['Iniciar Consulta para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas',],
         disabled:[false,true],
         img:[atencion,calendario,huella,],
-        routes:['clinical-record-menu','/calendar','/pets-management']
+        routes:['/clinical-record-menu','/calendar','/pets-management']
     };
 
     const tutor = {

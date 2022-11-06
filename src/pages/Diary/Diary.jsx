@@ -12,7 +12,7 @@ export default function Diary(){
 
     const appointments = {
         start: ['30/8/2022','27/8/2022','2/9/2022','1/9/2022', '13/9/2022','31/9/2022','5/10/2022'],
-        description: ['Primer recordatorio', 'Cirugia','Cita con Eugenia','Castracion','Control post-operacion','Castracion','Control post-operacion'],
+        description: ['Primer recordatorio', 'Cirugía','Cita con Eugenia','Castración','Control post-operación','Castración','Control post-operación'],
         type: ['reminder', 'reminder','appointment', 'appointment','reminder', 'appointment','reminder']
     };
 

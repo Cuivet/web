@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Table, Button, Col, Row, Divider, Input, Select, Typography, Tooltip, Modal, Spin, message } from 'antd';
 import { NodeIndexOutlined } from '@ant-design/icons';
 import { registerTemporalAssociation, getAllByVeterinaryId } from '../../services/pet_association.service';
@@ -6,6 +6,8 @@ import { getTutorDataByDni } from '../../services/tutor.service';
 import AvatarSearch from '../../components/AvatarSearch';
 import FolderOpenOutlined from '@mui/icons-material/FolderOpenOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
+import { raceService } from "../../services/race.service";
+import { specieService } from "../../services/specie.service";
 import { Link } from "react-router-dom";
 const { Option } = Select;
 const { Title } = Typography;
@@ -20,12 +22,30 @@ export default function PetsManagement(){
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState([]);
     const [isInit, setIsInit] = useState(false);
+    const [races, setRaces]= useState([]);
+    const [species, setSpecies]= useState([]);
+    const [isFetchData, setIsFetchData]= useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
-    if(!isInit){
+    if(!isInit && isFetchData){
         refreshComponent();
         setIsInit(true);
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await raceService.findAll()
+            .then(response => {
+                setRaces(response);
+            });
+            await specieService.findAll()
+            .then(response => {
+                setSpecies(response);
+            });
+            setIsFetchData(true);
+        };
+        fetchData();
+    }, []);
 
     function refreshComponent() {
         getAllByVeterinaryId(profile.veterinary.id)
@@ -50,8 +70,8 @@ export default function PetsManagement(){
                     name: association.pet.name,
                     tutorName: association.tutorData.person.lastName + ' ' + association.tutorData.person.name,
                     dni: association.tutorData.person.dni,
-                    especie: 'Perro',
-                    raza: 'Sin raza especificada',
+                    especie: species.find(specie => specie.id === (races.find(race => race.id === association.pet.raceId).specieId)).name,
+                    raza: races.find(race => race.id === association.pet.raceId).name
                 }
             )
         })

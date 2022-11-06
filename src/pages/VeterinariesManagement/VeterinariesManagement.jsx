@@ -252,7 +252,7 @@ export default function VeterinariesManagement(){
                     :
                     <>
                         <Col xs={{span:24}} md={{span:23}}>
-                            <Title className='appTitle'>Gestión de Veterinarios en Clinicas</Title>
+                            <Title className='appTitle'>Gestión de Veterinarios en Clínicas</Title>
                         </Col>
                         <Col xs={{span:24}} md={{span:1}}>
                             <Tooltip title="Asociar Veterinario Regente" placement='right'>
@@ -266,7 +266,7 @@ export default function VeterinariesManagement(){
             <Divider orientation="left">Filtros</Divider>
             <Row gutter={[16, 16]}>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
-                    <Input placeholder="M.P. del veterinario" />
+                    <Input placeholder="MP del veterinario" />
                 </Col>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
                     <Input placeholder="Nombre" />
@@ -275,7 +275,7 @@ export default function VeterinariesManagement(){
                     <Input placeholder="Apellido" />
                 </Col>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
-                    <Select placeholder="Clinica Veterinaria" showSearch className="select-before full-width">
+                    <Select placeholder="Clínica Veterinaria" showSearch className="select-before full-width">
                         <Option value="NeoZoo">NeoZoo</Option>
                         <Option value="Chocos">Chocos</Option>
                         <Option value="Pecos">Pecos</Option>
@@ -288,7 +288,7 @@ export default function VeterinariesManagement(){
                     </Select>
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
-                    <Input placeholder='Telefono' />
+                    <Input placeholder='Telpefono' />
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:8}}>
                     <Input placeholder='Dirección' />

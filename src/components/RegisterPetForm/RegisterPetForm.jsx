@@ -103,9 +103,9 @@ export default function RegisterPetForm(props){
           }
       
           if (status === 'done') {
-            message.success(`${info.file.name} Imagen subida con exito.`);
+            message.success(`${info.file.name} Imágen subida con éxito.`);
           } else if (status === 'error') {
-            message.error(`${info.file.name} La imagen no se ha podido subir`);
+            message.error(`${info.file.name} La imágen no se ha podido subir`);
           }
         },
         onDrop(e) {

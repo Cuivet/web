@@ -39,7 +39,7 @@ export default function Anamnesis(props) {
     },
     {
       id: 4,
-      question: "¿Presenta algo? Describa cuales",
+      question: "¿Presenta algo? Describa que",
       isBooleanResponse: true,
       isTextResponse: true,
     },

@@ -141,7 +141,7 @@ export default function Review(props) {
               >
                 <Input
                   disabled={disabled}
-                  placeholder="Ingrese la fecha de naciemiento"
+                  placeholder="Ingrese la fecha de nacimiento"
                 />
               </Form.Item>
             </Col>
@@ -210,15 +210,15 @@ export default function Review(props) {
             <Col span={24}>
               <Form.Item
                 name="castratioDate"
-                label="Castracion"
+                label="Castración"
                 tooltip={{
-                  title: "fecha de castracion del paciente",
+                  title: "Fecha de castración del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
                 <Input
                   disabled={disabled}
-                  placeholder="Ingrese fecha castracion"
+                  placeholder="Ingrese fecha castración"
                 />
               </Form.Item>
             </Col>
@@ -227,7 +227,7 @@ export default function Review(props) {
                 name="haveChip"
                 label="CHIP"
                 tooltip={{
-                  title: "posee chip identificador",
+                  title: "Posee chip identificador",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -245,23 +245,42 @@ export default function Review(props) {
                 </Radio.Group>
               </Form.Item>
             </Col>
-            
+            <Col span={24}>
+              <Form.Item
+                name="aspects"
+                label="Aspecto"
+                tooltip={{
+                  title: "Rasgos distintivos del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input.TextArea
+                  disabled={disabled}
+                  name="aspects"
+                  placeholder={"Ingrese aspecto de la mascote"}
+                  rows={2}
+                  allowClear
+                  maxLength={500}
+                  showCount
+                />
+              </Form.Item>
+            </Col>
             <Col span={24}>
               <Form.Item
                 name="hairColorId"
                 label="Color pelaje"
                 tooltip={{
-                  title: "color del pelaje del paciente",
+                  title: "Color de pelaje del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
                 <Select
-                  placeholder="Seleccione el color"
+                  placeholder="Seleccione color"
                   value={pet.hairColorId}
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={1}>Palido</Select.Option>
+                  <Select.Option value={1}>Pálido</Select.Option>
                   {/*Martina */}
                 </Select>
               </Form.Item>
@@ -271,7 +290,7 @@ export default function Review(props) {
                 name="hairLengthId"
                 label="Largo pelaje"
                 tooltip={{
-                  title: "largo del pelaje del paciente",
+                  title: "Largo del pelaje del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -291,7 +310,7 @@ export default function Review(props) {
                 name="petSizeId"
                 label="Tamaño"
                 tooltip={{
-                  title: "tamaño del paciente",
+                  title: "Tamaño del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -308,10 +327,48 @@ export default function Review(props) {
             </Col>
             <Col span={24}>
               <Form.Item
+                name="castratioDate"
+                label="Castración"
+                tooltip={{
+                  title: "Fecha de castración del paciente",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Input
+                  disabled={disabled}
+                  placeholder="Ingrese fecha castración"
+                />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                name="haveChip"
+                label="CHIP"
+                tooltip={{
+                  title: "Posee chip identificador",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Radio.Group
+                  disabled={disabled}
+                  optionType="button"
+                  className="register-pet-form__radio"
+                >
+                  <Radio style={{ width: "50%" }} value={true}>
+                    Si
+                  </Radio>
+                  <Radio style={{ width: "50%" }} value={false}>
+                    No
+                  </Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
                 name="aspects"
                 label="Aspecto"
                 tooltip={{
-                  title: "rasgos distintivos del paciente",
+                  title: "Rasgos distintivos del paciente",
                   icon: <InfoCircleOutlined />,
                 }}
               >

@@ -15,8 +15,8 @@ export default function MenuWeb(){
     const profile = JSON.parse(sessionStorage.getItem('profile')) ;
 
     const veterinary = {
-        module:['Consulta Médica','Calendario','Mascotas asociadas',],
-        description:['Iniciar Consulta para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas',],
+        module:['Ficha Clínica','Calendario','Mascotas asociadas',],
+        description:['Iniciar ficha clínica para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas',],
         disabled:[false,true],
         img:[atencion,calendario,huella,],
         routes:['/clinical-record-menu','/calendar','/pets-management']

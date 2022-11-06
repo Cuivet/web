@@ -80,31 +80,31 @@
 }
 // el step en el que estoy
 .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon{
-    background-color: $secondary-color!important;
+    background-color: $primary-color-hover!important;
 }
 .ant-steps-item-process .ant-steps-item-icon{
-    border-color: $secondary-color;
+    border-color: $primary-color-hover;
 }
 // el step que dejo atras, por el que ya pase
 .ant-steps-item-finish .ant-steps-item-icon{
-    border-color: $secondary-color;
+    border-color: $primary-color-hover;
 }
 .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon{
-    color: $secondary-color;
+    color: $primary-color-hover;
 }
 //barra de proceso entre steps
 .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title::after{
-    background-color: $secondary-color;
+    background-color:$primary-color-hover;
 }
 .ant-steps-with-progress .ant-steps-item .ant-steps-item-tail{
     top: 12px!important;
 }
 .ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail::after{
-    background-color: $secondary-color;
+    background-color: $primary-color-hover;
 }
 // progreso general, circulo sobre el step
 .ant-progress-inner:not(.ant-progress-circle-gradient) .ant-progress-circle-path{
-    stroke: $secondary-color;
+    stroke: $primary-color-hover;
 }
 //inputs de tipo number de antd
 .ant-input-number-focused{
@@ -144,6 +144,9 @@
 }
 .ant-picker-time-panel-column::after{
     height: 0!important;
+}
+.stepForm .ant-input[disabled], .stepForm  .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+    color: $primary-color!important;
 }
 .appButton { 
     width: 100%;

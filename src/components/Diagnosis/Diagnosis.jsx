@@ -342,16 +342,17 @@ function renderTreatmentOptions() {
 
   //carga de datos en las variables
   const changeForm = (e) => {
+    props.stepSave(e);
     // no esta andando como deberia
-    let test = input.diagnosisItem.map((i) => {
-      return { ...i, [e.target.name]: e.target.value };
-    });
-    setInput({
-      ...input,
-      diagnosisItem: [{ [e.target.name]: e.target.value }],
-    });
-    console.log(test);
-    console.log(input);
+    // let test = input.diagnosisItem.map((i) => {
+    //   return { ...i, [e.target.name]: e.target.value };
+    // });
+    // setInput({
+    //   ...input,
+    //   diagnosisItem: [{ [e.target.name]: e.target.value }],
+    // });
+    // console.log(test);
+    // console.log(input);
   };
 
   const register = (e) => {
@@ -435,8 +436,6 @@ function renderTreatmentOptions() {
                               icon: <InfoCircleOutlined />,
                             }}
                           >
-                            {/* Martina */}
-                            {/* cargar servicio que trae del back */}
                             <Select
                               placeholder={"Seleccione tipo de tratamiento"}
                               disabled={disabled}
@@ -453,7 +452,6 @@ function renderTreatmentOptions() {
                             name={[name, "treatmentOptionId"]}
                             label={"Tratamiento"}
                           >
-                            {/* Martina */}
                             <Select
                               onChange={onTreatmentOptionChange}
                               placeholder={"Tratamiento"}

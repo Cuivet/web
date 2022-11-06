@@ -18,6 +18,7 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import BiotechOutlinedIcon from '@mui/icons-material/BiotechOutlined';
+import { Link } from "react-router-dom";
 
 const {Title} =Typography;
 const {Option}= Select;
@@ -95,20 +96,20 @@ export default function PresumptiveDiagnosis(props) {
   const [item, setItem] = useState([{}]);
 
   const changeForm = (e) => {
-    console.log(e);
+    props.stepSave(e);
     // console.log(e.target.value)
-    setItem([...item, { [e.target.name]: e.target.value }]);
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
-    console.log(item);
+    // setItem([...item, { [e.target.name]: e.target.value }]);
+    // setInput({
+    //   ...input,
+    //   [e.target.name]: e.target.value,
+    // });
+    // console.log(item);
   };
 
   const register = (e) => {
     //guardado de datos, sin validaciones
-    //recibo los datos cargados en el form, capas no haga falta hace el guardado en el cambio
-
+    //recibo los datos cargados en el form
+    props.stepSave(e);
     console.log("Received values of form:", e.presumptiveDiagnosisItem);
   };
 
@@ -250,9 +251,9 @@ export default function PresumptiveDiagnosis(props) {
                     <Button key="back" onClick={handleCancel}>
                         Cancelar
                     </Button>,
-                    <Button key="submit" type="primary" >
-                        Generar
-                    </Button>,
+                    <Link to={'/studies-request'} ><Button key="submit" type="primary" >
+                    Generar
+                </Button></Link>,
                 ]}>
             <Row>
                 <Title level={5}>Tipo de Estudio Complementario:</Title>

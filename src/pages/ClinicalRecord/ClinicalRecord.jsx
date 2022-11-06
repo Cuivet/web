@@ -359,7 +359,7 @@ export default function ClinicalRecord() {
     } else {
       return datafield;
     }
-  };
+  }
   function Visits(step) {
     if (step !== null) {
       // console.log(cRecord.visits)   ;
@@ -369,7 +369,7 @@ export default function ClinicalRecord() {
       });
       return date;
     }
-  };
+  }
   const { Step } = Steps;
 
   const changeForm = (fd) => {
@@ -380,37 +380,81 @@ export default function ClinicalRecord() {
   };
 
   const [physcalExam, setPhysicalExam] = useState({
-      id: null,
-      visitId: null,
-      temperature: null,
-      weight: null,
-      pulse: null,
-      mucousMembrane: null,
-      bodyCondition: null,
-      observation: null,
-  })
+    id: null,
+    visitId: null,
+    temperature: null,
+    weight: null,
+    pulse: null,
+    mucousMembrane: null,
+    bodyCondition: null,
+    observation: null,
+  });
 
-  const [presumptiveDiagnosis, setPresumptiveDiagnosis]= useState({
+  const [presumptiveDiagnosis, setPresumptiveDiagnosis] = useState({
     id: 4,
     visitId: 2,
     presumptiveDiagnosisItem: [],
-  })
+  });
 
-  const presumptiveDiagnosisChangeForm = pd => {
-    setPresumptiveDiagnosis({
-      ...presumptiveDiagnosis,
-      [pd.target.name]: pd.target.value,
-    })
-  }
+  //faltan los tratamientos
+  const [diagnosisItem, setDiagnosisItem] = useState({
+    id: null,
+    diagnosisId: null,
+    diagnosisResult: null,
+    observation: null,
+    diagnosisTypeId: 2, //???
+    diagnosisItemTreatments: [],
+  });
+  const [diagnosis, setDiagnosis] = useState({
+    id: null,
+    visitId: null,
+    diagnosisItems: [diagnosisItem],
+  });
 
-  const physicalExamChangeForm = pe => {
+  const [prognosis, setPrognosis] = useState({
+    id: null,
+    visitId: null,
+    observation: null,
+  });
+
+  const physicalExamChangeForm = (pe) => {
     setPhysicalExam({
       ...physcalExam,
       [pe.target.name]: pe.target.value,
-    })
-  }
+    });
+  };
 
-  console.log(physcalExam);
+  //sin terminar el presuntivo
+  const [pDI, setPDI] = useState([]);
+  const presumptiveDiagnosisChangeForm = (pd) => {
+    console.log(pd.presumptiveDiagnosisItem);
+    const test = pd.presumptiveDiagnosisItem;
+    for (let i in pd.presumptiveDiagnosisItem) {
+      console.log(i);
+      setPDI([...pDI, { id: 1, observation: test[i].observation }]);
+    }
+    console.log(pDI);
+    // setPresumptiveDiagnosis({
+    //   ...presumptiveDiagnosis,
+    //   [pd.target.name]: pd.target.value,
+    // })
+  };
+
+  const diagnosisChangeForm = (d) => {
+    if (
+      d.target.name === "diagnosisResult" ||
+      d.target.name === "observation"
+    ) {
+      setDiagnosisItem({ ...diagnosisItem, [d.target.name]: d.target.value });
+    }
+    setDiagnosis({ ...diagnosis, diagnosisItems: diagnosisItem });
+  };
+
+  const prognosisChangeForm = (p) => {
+    setPrognosis({ ...prognosis, [p.target.name]: p.target.value });
+  };
+
+  console.log(prognosis);
 
   const steps = [
     {
@@ -442,38 +486,38 @@ export default function ClinicalRecord() {
     {
       title: "Exámen Físico",
       content: (
-        // <PhysicalExam
-        //   id={Exists(cRecord.physcalExam, cRecord.physcalExam.id)}
-        //   weight={Exists(cRecord.physcalExam, cRecord.physcalExam.weight)}
-        //   temperature={Exists(
-        //     cRecord.physcalExam,
-        //     cRecord.physcalExam.temperature
-        //   )}
-        //   pulse={Exists(cRecord.physcalExam, cRecord.physcalExam.pulse)}
-        //   mucousMembrane={Exists(
-        //     cRecord.physcalExam,
-        //     cRecord.physcalExam.mucousMembrane
-        //   )}
-        //   bodyCondition={Exists(
-        //     cRecord.physcalExam,
-        //     cRecord.physcalExam.bodyCondition
-        //   )}
-        //   observation={Exists(
-        //     cRecord.physcalExam,
-        //     cRecord.physcalExam.observation
-        //   )}
-        //   stepSave={changeForm}
-        // />
         <PhysicalExam
-          id={null}
-          weight={null}
-          temperature={null}
-          pulse={null}
-          mucousMembrane={null}
-          bodyCondition={null}
-          observation={null}
-          stepSave={physicalExamChangeForm} 
+          id={Exists(cRecord.physcalExam, cRecord.physcalExam.id)}
+          weight={Exists(cRecord.physcalExam, cRecord.physcalExam.weight)}
+          temperature={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.temperature
+          )}
+          pulse={Exists(cRecord.physcalExam, cRecord.physcalExam.pulse)}
+          mucousMembrane={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.mucousMembrane
+          )}
+          bodyCondition={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.bodyCondition
+          )}
+          observation={Exists(
+            cRecord.physcalExam,
+            cRecord.physcalExam.observation
+          )}
+          stepSave={changeForm}
         />
+        // <PhysicalExam
+        //   id={null}
+        //   weight={null}
+        //   temperature={null}
+        //   pulse={null}
+        //   mucousMembrane={null}
+        //   bodyCondition={null}
+        //   observation={null}
+        //   stepSave={physicalExamChangeForm}
+        // />
       ),
       subTitle: Visits(cRecord.physcalExam),
     },
@@ -491,7 +535,11 @@ export default function ClinicalRecord() {
         //   )}
         //  stepSave={presumptiveDiagnosisChangeForm}
         // />
-        <PresumptiveDiagnosis id={null} presumptiveDiagnosis={null} stepSave={presumptiveDiagnosisChangeForm}/>
+        <PresumptiveDiagnosis
+          id={null}
+          presumptiveDiagnosis={null}
+          stepSave={presumptiveDiagnosisChangeForm}
+        />
       ),
       subTitle: Visits(cRecord.presumptiveDiagnosis),
     },
@@ -501,8 +549,9 @@ export default function ClinicalRecord() {
         // <Diagnosis
         //   id={Exists(cRecord.diagnosis, cRecord.diagnosis.id)}
         //   diagnosis={Exists(cRecord.diagnosis, cRecord.diagnosis.diagnosisItems[0])}
+        //    stepSave={diagnosisChangeForm}
         // />
-        <Diagnosis id={null} treatments={null} />
+        <Diagnosis id={null} treatments={null} stepSave={diagnosisChangeForm} />
       ),
       subTitle: Visits(cRecord.diagnosis),
     },
@@ -511,8 +560,9 @@ export default function ClinicalRecord() {
       content: (
         // <Prognosis
         //   id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)}
+        //  stepSave={prognosisChangeForm}
         // />
-        <Prognosis id={null} />
+        <Prognosis id={null} stepSave={prognosisChangeForm} />
       ),
       subTitle: Visits(cRecord.prognosis),
     },
@@ -548,13 +598,14 @@ export default function ClinicalRecord() {
           {editableStr}
         </Title>
       </Row>
-      {studies ? <div>
-        <IconLink
-          src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
-          text="Estudio complementario"
-        />
-      </div>: null }
-      
+      {studies ? (
+        <div>
+          <IconLink
+            src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
+            text="Estudio complementario"
+          />
+        </div>
+      ) : null}
     </>
   );
   return (

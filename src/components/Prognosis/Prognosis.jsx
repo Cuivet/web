@@ -33,10 +33,11 @@ export default function Prognosis(props) {
   }, [props]);
 
   const changeForm = (e) => {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
+    props.stepSave(e);
+    // setInput({
+    //   ...input,
+    //   [e.target.name]: e.target.value,
+    // });
     // console.log(input);
   };
 

@@ -111,6 +111,7 @@ export default function Review(props) {
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             labelAlign="right"
+            className="stepForm"
             labelWrap
             fields={initValue}
           >
@@ -245,26 +246,7 @@ export default function Review(props) {
                 </Radio.Group>
               </Form.Item>
             </Col>
-            <Col span={24}>
-              <Form.Item
-                name="aspects"
-                label="Aspecto"
-                tooltip={{
-                  title: "Rasgos distintivos del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Input.TextArea
-                  disabled={disabled}
-                  name="aspects"
-                  placeholder={"Ingrese aspecto de la mascote"}
-                  rows={2}
-                  allowClear
-                  maxLength={500}
-                  showCount
-                />
-              </Form.Item>
-            </Col>
+            
             <Col span={24}>
               <Form.Item
                 name="hairColorId"
@@ -301,7 +283,7 @@ export default function Review(props) {
                   allowClear
                 >
                   <Select.Option value={3}>Corto</Select.Option>
-                  {/* {renderRaces()} */}
+                  {/* {renderRaces()} Martina */}
                 </Select>
               </Form.Item>
             </Col>
@@ -321,46 +303,8 @@ export default function Review(props) {
                   allowClear
                 >
                   <Select.Option value={2}>Mediano</Select.Option>
-                  {/* {renderRaces()} */}
+                  {/* {renderRaces()} Martina*/}
                 </Select>
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="castratioDate"
-                label="Castración"
-                tooltip={{
-                  title: "Fecha de castración del paciente",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Input
-                  disabled={disabled}
-                  placeholder="Ingrese fecha castración"
-                />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
-                name="haveChip"
-                label="CHIP"
-                tooltip={{
-                  title: "Posee chip identificador",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Radio.Group
-                  disabled={disabled}
-                  optionType="button"
-                  className="register-pet-form__radio"
-                >
-                  <Radio style={{ width: "50%" }} value={true}>
-                    Si
-                  </Radio>
-                  <Radio style={{ width: "50%" }} value={false}>
-                    No
-                  </Radio>
-                </Radio.Group>
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -383,7 +327,7 @@ export default function Review(props) {
                 />
               </Form.Item>
             </Col>
-            <Col>
+            {/* <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
@@ -397,7 +341,7 @@ export default function Review(props) {
                   </Button>
                 </Tooltip>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Form>
         </Col>
       </Row>

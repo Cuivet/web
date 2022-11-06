@@ -75,9 +75,6 @@ export function getTemporalAssociationByCode(code){
         .then((response) => {
             return response.data;
         })
-        .catch((err) => {
-            return err;
-        });
 };
 
 export function registerRegentOnVet(data){

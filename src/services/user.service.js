@@ -6,7 +6,6 @@ export function signUpApi(data){
         method: "post",
         url: `${basePATH}/user/register`,
         data: data,
-        timeout: 1000 * 5, // Wait for 5 seconds
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json'
@@ -15,9 +14,6 @@ export function signUpApi(data){
         .then((response) => {
             return response;
         })
-        .catch((err) => {
-            return err;
-        });
 }
 
 export function getProfile() {

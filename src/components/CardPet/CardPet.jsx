@@ -25,6 +25,7 @@ export default function CardPet(props){
     const confirm = (e) => {
         message.success( title + ' borrada exitosamente.' );
         deletePet(item);
+        window.location.replace('');
     };
 
     const displayPet = () => {

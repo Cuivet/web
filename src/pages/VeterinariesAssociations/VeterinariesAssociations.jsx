@@ -33,6 +33,7 @@ export default function VeterinariesAssociations(){
         })
         message.success('Profesional desasociado correctamente', 5);
         refreshComponent();
+        window.location.replace('');
     };
 
     const showModal = () => {
@@ -62,7 +63,9 @@ export default function VeterinariesAssociations(){
         register(petAssociations)
             .then(response => {
                 message.success('Asociación establecida exitosamente');
+                window.location.replace('');
                 refreshComponent();
+                
             });
     }
 

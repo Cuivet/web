@@ -214,6 +214,7 @@ export default function VeterinariesManagement(){
         setIsModalVetOwner(false);
         setGeneratedCode(false);
         setIsModalRegent(false);
+        window.location.replace(''); 
     };
 
     const refreshMP = e =>{

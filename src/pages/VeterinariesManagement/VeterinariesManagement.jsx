@@ -15,7 +15,7 @@ export default function VeterinariesManagement(){
     const [isInit, setIsInit] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [vetOptions, setVetOptions] = useState(null);
-    const [selectedVetId, setSelectedVetId] = useState([]);
+    const [selectedVetId, setSelectedVetId] = useState(null);
     const [mp, setMP] = useState(null);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +71,7 @@ export default function VeterinariesManagement(){
 
     function refreshComponent() {
         setVetOptions(null);
-        setSelectedVetId([]);
+        setSelectedVetId(null);
         setIsModalRegent(false);
         setIsModalVetOwner(false);
         setGeneratedCode(false);

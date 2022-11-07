@@ -123,8 +123,8 @@ export default function PetsManagement(){
                 <Link to={"/clinical-records-management"} className='admin-sider__item'>                      
                 <Tooltip placement='top' title="Ver Historial Clínico"><Button type='link' className='appTableButton' icon={<FolderOpenOutlined />}></Button></Tooltip>
                 </Link>
-                <Link to={"/consultation"} className='admin-sider__item'>                      
-                <Tooltip placement='top' title="Registrar nueva consulta"><Button type='link' className='appTableButton' icon={<ContentPasteOutlinedIcon />}></Button></Tooltip>
+                <Link to={"/clinical-record-menu"} className='admin-sider__item'>                      
+                <Tooltip placement='top' title="Registrar Nueva Consulta"><Button type='link' className='appTableButton' icon={<ContentPasteOutlinedIcon />}></Button></Tooltip>
                 </Link>
                 </>),
         }
@@ -153,6 +153,7 @@ export default function PetsManagement(){
         setGeneratedCode(false);
         setSearchedTutorData(null);
         setTutorDni(null);
+        window.location.replace('');
     };
 
     const refreshDni = e =>{

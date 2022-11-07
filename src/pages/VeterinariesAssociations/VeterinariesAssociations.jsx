@@ -58,7 +58,9 @@ export default function VeterinariesAssociations(){
         register(petAssociations)
             .then(response => {
                 message.success('Asociación establecida exitosamente');
+                window.location.replace('');
                 refreshComponent();
+                
             });
     }
 

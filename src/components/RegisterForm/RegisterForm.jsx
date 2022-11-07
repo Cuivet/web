@@ -1,16 +1,12 @@
 import React, {useState} from "react";
-import {Form, Input, Button, Select, notification, Modal} from 'antd';
+import {Form, Input, Button, Select, notification, Spin, Modal} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service";
-
 import './RegisterForm.scss';
 import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined} from "@ant-design/icons";
 import Terms from "../Terms/Terms";
 
-
-//componente formulario del LogIn para nuevos usuarios
-export default function RegisterForm(props){ 
-    //donde almacena los datos del formulario
+export default function RegisterForm(props){
     const [input, setInput]= useState({
         email:"",
         password:"",
@@ -24,8 +20,6 @@ export default function RegisterForm(props){
         privacyPolicy:false,
         address: "",
     });
-
-    //validaciones en el formulario
     const [formValid, setFormValid] = useState({
         email: false,
         password: false,
@@ -39,10 +33,13 @@ export default function RegisterForm(props){
         privacyPolicy:false,
         address: false
     });
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [registeredUser, setRegisteredUser] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [catchReason, setCatchReason] = useState(null);
+    const [vet, setVet] =  useState(false);
 
-    //setea los valores del form a la variable input
     const changeForm = e =>{
-        // console.log(e.target.name);
         if(e.target.name === "privacyPolicy"){
             setInput({
                 ...input,
@@ -57,7 +54,6 @@ export default function RegisterForm(props){
         }
     };
 
-    //validacion de datos en el formulario
     const inputValidation = e =>{
         
         const {type, name} = e.target;
@@ -92,7 +88,13 @@ export default function RegisterForm(props){
         
     }
 
+    const goToLogin = () => {
+        resetForm();
+        props.successRegister();
+    }
+
     const register = e => {
+        setIsRegistering(true);
         const person = {
             name: input.name,
             lastName: input.lastName,
@@ -127,7 +129,6 @@ export default function RegisterForm(props){
         const phoneVal = input.phone;
         const profileVal = input.profile;
         const addressVal = input.address;
-        // const privacyPolicyVal = input.privacyPolicy;
 
         if(!emailVal || !passwordVal ||!repeatPasswordVal|| !nameVal|| !lastNameVal|| !phoneVal|| !dniVal|| !profileVal || !addressVal){
             notification['error']({
@@ -154,24 +155,24 @@ export default function RegisterForm(props){
             } else{
                 signUpApi(completeProfile)
                     .then(res => {
-                        notification['success']({
-                            message: "Usuario creado correctamente",
-                            placement: "top"
-                        });
-                        props.successRegister();
+                        setIsRegistering(false);
+                        setRegisteredUser(res);
                     })
-                    .catch(e => {
-                        console.error(e)
+                    .catch(error => {
+                        setCatchReason(error.response.data);
+                        setIsRegistering(false);
                     });
-                
-                resetForm();
             }      
         }
-        setIsModalVisible(false);
     };
 
     const resetForm = () =>{
         const inputs = document.getElementsByTagName('input');
+        setIsRegistering(false);
+        setRegisteredUser(null);
+        setIsModalVisible(false);
+        setVet(false);
+        setCatchReason(null);
 
         for (let i = 0; i< inputs.length; i++){
             inputs[i].classList.remove("success");
@@ -206,9 +207,11 @@ export default function RegisterForm(props){
         }
     }
 
-    //para mostrar/ocultar campo de matricula segun perfil 
-    //setea el valor de profile en input
-    const [vet, setVet] =  useState(false);
+    const returnFromError = () =>{
+        setIsModalVisible(false);
+        setIsRegistering(false);
+        setCatchReason(null);
+    }
     
     const onProfileChange = (val) => {
         switch(val){
@@ -230,14 +233,12 @@ export default function RegisterForm(props){
             default:
                 break;
         }
-        
-       
     }
-    const [ isModalVisible, setIsModalVisible] = useState(false);
 
     const showModal = () => {
         setIsModalVisible(true);
     };
+
     const hideModal = () =>{
         setIsModalVisible(false);
     }
@@ -279,28 +280,59 @@ export default function RegisterForm(props){
                 <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Número de Matrícula" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item></div>
             : null}          
-            
-            {/* <Form.Item>
-                <Checkbox name="privacyPolicy" onChange={inputValidation} checked={input.privacyPolicy}>
-                    He leído y acepto los <Link >terminos y condiciones</Link>
-                </Checkbox>
-            </Form.Item> */}
             <Form.Item>
                 <Button type="submit" htmlType="submit" className="register-form__button" onClick={showModal} > 
                   Registrarme
                 </Button>
-                {/* hacerlo de un tamanio fijo pero scrolleable */}
-                <Modal title="Términos y Condiciones"
+                <Modal title={ isRegistering || catchReason || registeredUser ? "Registro de usuario" : "Términos y Condiciones"}
                     visible={isModalVisible}
                     onCancel={hideModal}
                     footer={[
+                        registeredUser ?
+                        null
+                        :
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
                             Cancelar
                         </Button>,
-                        <Button htmlType="submit" type="primary" onClick={register} className="register-form_button-ok-modal" > 
-                            Aceptar
+                        catchReason ? 
+                        <Button htmlType="submit" type="primary" onClick={returnFromError} className="register-form_button-ok-modal">
+                            Reveer datos
                         </Button>
-                    ]}><Terms></Terms></Modal>
+                        :
+                        registeredUser ? 
+                        <Button htmlType="submit" type="primary" onClick={goToLogin} className="register-form_button-ok-modal" >
+                            Ir al Inicio de Sesión
+                        </Button>
+                        :
+                        <Button htmlType="submit" type="primary" onClick={register} className="register-form_button-ok-modal" >
+                            {
+                                isRegistering ?
+                                <Spin></Spin>
+                                :
+                                <>Aceptar y registrar</>
+                            }
+                        </Button>
+                        
+                    ]}>
+                        {
+                            isRegistering ? 
+                            <>
+                                Registrando usuario, este proceso hace algunas validaciones de tus datos y por lo tanto puede demorar unos segundos
+                            </>
+                            :
+                            registeredUser ? 
+                            <>
+                                Usuario registrado con éxito!
+                            </>
+                            :
+                            catchReason ? 
+                            <>
+                                Ups! Hubo un error: {catchReason}
+                            </>
+                            :
+                            <Terms></Terms>
+                        }
+                    </Modal>
             </Form.Item>
         </Form>
     );  

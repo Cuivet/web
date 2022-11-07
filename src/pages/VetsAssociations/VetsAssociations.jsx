@@ -104,6 +104,7 @@ export default function VetsAssociations(){
             .then(response => {
                 message.success('Asociación establecida exitosamente');
                 refreshComponent();
+                window.location.replace('');
             });
     }
 

@@ -275,10 +275,13 @@ export default function RegisterForm(props){
                 <Button type="submit" htmlType="submit" className="register-form__button" onClick={showModal} > 
                   Registrarme
                 </Button>
-                <Modal title={ isRegistering || catchReason ? "Registro de usuario" : "Terminos y Condiciones"}
+                <Modal title={ isRegistering || catchReason || registeredUser ? "Registro de usuario" : "Terminos y Condiciones"}
                     visible={isModalVisible}
                     onCancel={hideModal}
                     footer={[
+                        registeredUser ?
+                        null
+                        :
                         <Button type="default" onClick={hideModal} className="register-form__button-cancel-modal" > 
                             Cancelar
                         </Button>,

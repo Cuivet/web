@@ -137,6 +137,7 @@ export default function PresumptiveDiagnosis(props) {
             onFinish={register}
             autoComplete="off"
             layout="horizontal"
+            className="stepForm"
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             fields={initValue}

@@ -50,12 +50,12 @@ export default function Vets(){
     return (
         <>   
             <Row>
-                <Col span={23}>
+                <Col span={22}>
                     <Title className="appTitle">
                         Mis Clínicas Veterinarias                        
                         </Title>
                 </Col>
-                <Col span={1}>
+                <Col span={2}>
                     <Tooltip title="Agregar clínica veterinaria" placement='right'>
                         <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
                     </Tooltip>

@@ -154,6 +154,7 @@ export default function PhysicalExam(props) {
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             onFinish={register}
+            className="stepForm"
             onChange={changeForm}
             fields={initValue}
           >
@@ -284,7 +285,7 @@ export default function PhysicalExam(props) {
                 />
               </Form.Item>
             </Col>
-            <Col>
+            {/* <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
@@ -298,7 +299,7 @@ export default function PhysicalExam(props) {
                   </Button>
                 </Tooltip>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Form>
         </Col>
       </Row>

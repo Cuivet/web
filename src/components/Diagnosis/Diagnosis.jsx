@@ -373,6 +373,7 @@ function renderTreatmentOptions() {
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             onFinish={register}
+            className="stepForm"
             onChange={changeForm}
             fields={initValue}
           >

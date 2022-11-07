@@ -63,6 +63,7 @@ export default function ClinicalRecordsManagement(){
             title: 'Código de Ficha',
             dataIndex: 'clinicalRecordId',
             defaultSortOrder: 'descend',
+            responsive: ['md'],
             sorter: (a, b) => a.age - b.age,
         },
         {
@@ -74,12 +75,12 @@ export default function ClinicalRecordsManagement(){
             title: 'Veterinaria',
             dataIndex: 'vetName',
             sorter: (a, b) => a.tutorName.length - b.tutorName.length,
-            responsive: ['sm']
+            // responsive: ['sm']
         },
         {
             title: '% Completado',
             dataIndex: 'progressObject',
-            responsive: ['sm'],
+            responsive: ['md'],
             render: (_, { progressObject }) => (
                 <>
                     <Progress percent={progressObject.percentage} size="small" strokeColor={{from: progressObject.fromColor, to: progressObject.toColor,}} />
@@ -90,12 +91,13 @@ export default function ClinicalRecordsManagement(){
             title: 'Fecha',
             dataIndex: 'date',
             sorter: (a, b) => a.tutorName.length - b.tutorName.length,
-            responsive: ['md']
+            // responsive: ['md']
         },
         {
             title: 'Acciones',
             dataIndex: 'indexIdForButton',
-            responsive: ['md'],
+            // responsive: ['md'],
+            fixed: 'right',
             render: (_, { indexIdForButton }) => (
                 <>
                     <Tooltip placement='top' title="Descargar en pdf"><Button className='margin-right'><FilePdfOutlined /></Button></Tooltip>
@@ -149,7 +151,7 @@ export default function ClinicalRecordsManagement(){
             
             <Divider orientation="left"></Divider>
 
-            <Table columns={columns} dataSource={data} onChange={onChange} loading={isLoading}/>
+            <Table columns={columns} dataSource={data} scroll={{x:500}} onChange={onChange} loading={isLoading}/>
         </>
     );
 };

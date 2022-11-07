@@ -3,6 +3,9 @@ import {
   RightCircleOutlined,
   CheckCircleOutlined,
   IssuesCloseOutlined,
+  SaveOutlined,
+  ContainerOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -659,16 +662,20 @@ export default function ClinicalRecord() {
               <Tag color="geekblue">ANAMNESIS</Tag>,
             ]}
             extra={[
-              <Button shape="round" type="default" onClick={showModal}>
-                {showControl ? "Ver control" : "Ingresar control"}
-              </Button>,
-              <Button
-                type="dashed"
-                style={{ borderColor: "#57266a" }}
-                shape="round"
-              >
-                Guardar visita
-              </Button>,
+              <Tooltip title={showControl ? "Ver control" : "Ingresar control"}>
+                <Button shape="round" type="default" onClick={showModal}>
+                  {showControl ? <EyeOutlined /> : <ContainerOutlined />}
+                </Button>
+              </Tooltip>,
+              <Tooltip title={"Guardar visita"}>
+                <Button
+                  type="dashed"
+                  style={{ borderColor: "#57266a" }}
+                  shape="round"
+                >
+                  <SaveOutlined />
+                </Button>
+              </Tooltip>,
             ]}
           >
             <Row>

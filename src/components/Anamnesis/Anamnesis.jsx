@@ -325,6 +325,7 @@ export default function Anamnesis(props) {
             labelCol={{ sm: { span: 14, offset:5 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             onFinish={register}
+            className="stepForm"
             fields={initValue}
             onChange={changeForm}
           >

@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
-import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress, Spin } from 'antd';
+import { Table, Button, Col, Row, Divider, Input, Select, Typography, Progress, Tooltip, Spin } from 'antd';
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { FilePdfOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { useNavigate } from "react-router";
 const { Option } = Select;
 const { Title } = Typography;
 
 export default function ClinicalRecordsManagement(){
+    let navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
     const [isInit, setIsInit] = useState(false);
@@ -96,8 +98,8 @@ export default function ClinicalRecordsManagement(){
             responsive: ['md'],
             render: (_, { indexIdForButton }) => (
                 <>
-                    <Button className='margin-right'><FilePdfOutlined /></Button>
-                    <Button><PlayCircleOutlined /></Button>
+                    <Tooltip placement='top' title="Descargar en pdf"><Button className='margin-right'><FilePdfOutlined /></Button></Tooltip>
+                    <Tooltip placement='top' title="Continuar la Ficha Clínica"><Button onClick={(e)=> goToClinicalRecord(indexIdForButton)}><PlayCircleOutlined /></Button></Tooltip>
                 </>
               )
         }
@@ -107,11 +109,15 @@ export default function ClinicalRecordsManagement(){
         console.log('params', pagination, filters, sorter, extra);
     };
 
+    function goToClinicalRecord(clinicalRecordId) {
+        navigate('/clinical-record', { state: { clinicalRecordId: clinicalRecordId, petId: null } });
+    }
+
     return (
         <>   
             <Row align="middle">
                 <Col span={24}>
-                    <Title className='appTitle'>Historial Clínico</Title>
+                    <Title className='appTitle'>Historiales Clínico</Title>
                 </Col>
             </Row>
 
@@ -147,4 +153,6 @@ export default function ClinicalRecordsManagement(){
         </>
     );
 };
+
+
 

@@ -137,6 +137,15 @@ export default function RegisterForm(props){
                 placement: "top"
             })
         } else{
+            if(vet){
+                if (!input.mp) {
+                    return notification['error']({
+                        message: "La matrícula profesional es obligatoria",
+                        description: "Debe ingresar su matrícula profesional para poder registrarse",
+                        placement: "top"
+                    })
+                }
+            }
             if(passwordVal !== repeatPasswordVal){
                 notification['error']({
                     message: "Las constraseñas deben ser iguales",
@@ -252,7 +261,7 @@ export default function RegisterForm(props){
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="lastName" onChange={inputValidation} value={input.lastName} placeholder="Apellido" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="D.N.I." className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="DNI" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
             </Form.Item>
             <Form.Item>
                 <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Teléfono" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
@@ -275,7 +284,7 @@ export default function RegisterForm(props){
                 <Button type="submit" htmlType="submit" className="register-form__button" onClick={showModal} > 
                   Registrarme
                 </Button>
-                <Modal title={ isRegistering || catchReason || registeredUser ? "Registro de usuario" : "Terminos y Condiciones"}
+                <Modal title={ isRegistering || catchReason || registeredUser ? "Registro de usuario" : "Términos y Condiciones"}
                     visible={isModalVisible}
                     onCancel={hideModal}
                     footer={[

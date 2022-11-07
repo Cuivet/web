@@ -43,24 +43,30 @@ export default function VetsAssociations(){
     };
 
     const tryToAsociate = () => {
-        if (generatedCode[0]==="V") {
-            //TO DO: asociación de veterinario y veterinaria
-            veterinaryAssociationService.getTemporalAssociationByCode(generatedCode)
-            .then(temporalAsociation => {
-                setCompleteTemporalAssociation(temporalAsociation);
-            })
-            .catch(error => {
-                message.error(error.response.data);
-            });
-        } else{
-            getTemporalAssociationByCode(generatedCode)
-            .then(temporalAsociation => {
-                setCompleteTemporalAssociation(temporalAsociation);
-            })
-            .catch(error => {
-                message.error(error.response.data);
-            });
+        if (generatedCode === null || generatedCode === "" || !generatedCode) {
+            return message.error("Debe ingresar un código para asociarse");
+        } else {
+            if (generatedCode[0]==="V") {
+                veterinaryAssociationService.getTemporalAssociationByCode(generatedCode)
+                .then(temporalAsociation => {
+                    setCompleteTemporalAssociation(temporalAsociation);
+                })
+                .catch(error => {
+                    return message.error(error.response.data);
+                });
+            } else if (generatedCode[0]==="R") {
+                getTemporalAssociationByCode(generatedCode)
+                .then(temporalAsociation => {
+                    setCompleteTemporalAssociation(temporalAsociation);
+                })
+                .catch(error => {
+                    return message.error(error.response.data);
+                });
+            } else {
+                return message.error("El código ingresado es erróneo")
+            }
         }
+        
     };
 
     const createAssociation = () => {
@@ -96,7 +102,7 @@ export default function VetsAssociations(){
         veterinaryAssociations.push(veterinaryAssociation);
         veterinaryAssociationService.register(veterinaryAssociations)
             .then(response => {
-                message.success('Asociacion establecida exitosamente');
+                message.success('Asociación establecida exitosamente');
                 refreshComponent();
             });
     }

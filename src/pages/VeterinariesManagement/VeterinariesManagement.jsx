@@ -15,7 +15,7 @@ export default function VeterinariesManagement(){
     const [isInit, setIsInit] = useState(false);
     const [generatedCode, setGeneratedCode] = useState(false);
     const [vetOptions, setVetOptions] = useState(null);
-    const [selectedVetId, setSelectedVetId] = useState([]);
+    const [selectedVetId, setSelectedVetId] = useState(null);
     const [mp, setMP] = useState(null);
     const [completeTemporalAssociation, setCompleteTemporalAssociation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -41,8 +41,13 @@ export default function VeterinariesManagement(){
             getAllByRegentId(profile.veterinary.id)
             .then(vets => {
                 setVetOptions(generateVetOptionsForRegent(vets));
-                // generateData(vets);
             });
+            veterinaryAssociationService.getAllCoVeterinariesDataByRegent(profile.veterinary.id)
+            .then(associations => {
+                generateDataRegent(associations);
+            }
+        );
+    
         }
         refreshComponent();
         setIsInit(true);
@@ -66,14 +71,13 @@ export default function VeterinariesManagement(){
 
     function refreshComponent() {
         setVetOptions(null);
-        setSelectedVetId([]);
+        setSelectedVetId(null);
         setIsModalRegent(false);
         setIsModalVetOwner(false);
         setGeneratedCode(false);
         setMP(null);
         setCompleteTemporalAssociation(null);
-        setIsLoading(false);
-    };
+        setIsLoading(false);    };
 
     function generateDataOwner(vets){
         var finalData = [];
@@ -98,6 +102,24 @@ export default function VeterinariesManagement(){
         })
         setData(finalData);
     };
+
+    function generateDataRegent(associations){
+        var finalData = [];
+        associations.forEach(association => {
+            finalData.push(
+                {
+                    matricula: association.coveterinaryData.veterinary.mp,
+                    name: association.coveterinaryData.person.name,
+                    lastName: association.coveterinaryData.person.lastName,
+                    phone: association.coveterinaryData.person.phone,
+                    vet: association.vetData.vet.name,
+                    address: association.vetData.vet.address,
+                    actions: (regent[0] === 'Si') ? (<Tooltip placement='top' title="Desvincular"><Button type='link' className='appTableButton' icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}></Button></Tooltip>) : null
+                }
+            )
+        })
+        setData(finalData);
+    }
 
     const refreshSelectedVets = (value) => {
         setSelectedVetId(value);
@@ -129,6 +151,12 @@ export default function VeterinariesManagement(){
             responsive: ['sm']
         },
         {
+            title: 'Clínica Veterinaria',
+            dataIndex: 'vet',
+            sorter: (a, b) => a.vet.length - b.vet.length,
+            responsive: ['md']
+        },
+        {
             title: 'Dirección',
             dataIndex: 'address',
             sorter: (a, b) => a.address.length - b.address.length,
@@ -138,7 +166,6 @@ export default function VeterinariesManagement(){
             title: 'Acciones',
             dataIndex: 'actions',
             responsive: ['md'],
-            
         }
     ];
 
@@ -149,12 +176,7 @@ export default function VeterinariesManagement(){
             sorter: (a, b) => a.regent - b.regent,
             responsive: ['md']
         },
-        {
-            title: 'Clínica Veterinaria',
-            dataIndex: 'vet',
-            sorter: (a, b) => a.vet.length - b.vet.length,
-            responsive: ['md']
-        });
+        );
     };
 
     const onChange = (pagination, filters, sorter, extra) => {
@@ -219,7 +241,7 @@ export default function VeterinariesManagement(){
                     !isOwner ?
                     <>
                         <Col xs={{span:24}} md={{span:23}}>
-                            <Title className='appTitle'>Gestión de Veterinarios</Title>
+                            <Title className='appTitle'>Gestión de  Co-Veterinarios</Title>
                         </Col>
                         <Col xs={{span:24}} md={{span:1}}>
                             <Tooltip title="Asociar Co-Veterinarios" placement='right'>
@@ -230,7 +252,7 @@ export default function VeterinariesManagement(){
                     :
                     <>
                         <Col xs={{span:24}} md={{span:23}}>
-                            <Title className='appTitle'>Gestión de Veterinarios en Clinicas</Title>
+                            <Title className='appTitle'>Gestión de Veterinarios en Clínicas</Title>
                         </Col>
                         <Col xs={{span:24}} md={{span:1}}>
                             <Tooltip title="Asociar Veterinario Regente" placement='right'>
@@ -244,7 +266,7 @@ export default function VeterinariesManagement(){
             <Divider orientation="left">Filtros</Divider>
             <Row gutter={[16, 16]}>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
-                    <Input placeholder="M.P. del veterinario" />
+                    <Input placeholder="MP del veterinario" />
                 </Col>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
                     <Input placeholder="Nombre" />
@@ -253,7 +275,7 @@ export default function VeterinariesManagement(){
                     <Input placeholder="Apellido" />
                 </Col>
                 <Col className="gutter-row" xs={{span:24}} md={{span:8}}>
-                    <Select placeholder="Clinica Veterinaria" showSearch className="select-before full-width">
+                    <Select placeholder="Clínica Veterinaria" showSearch className="select-before full-width">
                         <Option value="NeoZoo">NeoZoo</Option>
                         <Option value="Chocos">Chocos</Option>
                         <Option value="Pecos">Pecos</Option>
@@ -266,7 +288,7 @@ export default function VeterinariesManagement(){
                     </Select>
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:4}}>
-                    <Input placeholder='Telefono' />
+                    <Input placeholder='Telpefono' />
                 </Col>
                 <Col className="gutter-row" xs={{span:12}} md={{span:8}}>
                     <Input placeholder='Dirección' />

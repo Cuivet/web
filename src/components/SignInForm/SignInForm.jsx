@@ -116,7 +116,7 @@ export default function SignInForm(props){
             </Form.Item>
 
             <Form.Item>
-                <Input  prefix={<LockOutlined className="site-form-item-icon" />} 
+                <Input.Password  prefix={<LockOutlined className="site-form-item-icon" />} 
                         type="password" 
                         name="password" 
                         placeholder="Contraseña" 
@@ -152,12 +152,11 @@ export default function SignInForm(props){
                     
                         <Row>
                             <Col span={24}>
-                                <Paragraph >Algo que te diga que vas a recuperar la cuenta ingresando tu email.</Paragraph>
+                                <Paragraph >Ingresa tu correo electrónico para recuperar tu cuenta</Paragraph>
                             </Col>
                             <Col span={24}>
-                                <Input className='register-form__input' placeholder='Ingrese la cuenta a recuperar'></Input>
+                                <Input className='register-form__input' placeholder='Correo electrónico'></Input>
                             </Col>
-
                         </Row>
                     </Modal>
                 </Space>

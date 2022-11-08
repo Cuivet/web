@@ -63,7 +63,8 @@ export default function ShowUser(props){
                             name="dni"
                             placeholder="DNI"
                             className="register-form__input"
-                            value={formData.dni}/>
+                            value={formData.dni}
+                            disabled/>
                 </Form.Item>
             </Title>
             { veterinary ?
@@ -86,7 +87,8 @@ export default function ShowUser(props){
                             name="email"
                             placeholder="Email"
                             className="register-form__input"
-                            value={formData.email}/>
+                            value={formData.email}
+                            disabled/>
                 </Form.Item>
             </Title>
         </Form>

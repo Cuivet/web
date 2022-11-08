@@ -6,6 +6,7 @@ import atencion from "../../assets/img/jpg/AtencionClinica.jpg";
 import calendario from "../../assets/img/jpg/calendario.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
+import visitsReports from "../../assets/img/jpg/reportes.jpg";
 import '../Settings/UserSettings/UserSettings.scss';
 
 const {Title} = Typography;
@@ -15,11 +16,11 @@ export default function MenuWeb(){
     const profile = JSON.parse(sessionStorage.getItem('profile')) ;
 
     const veterinary = {
-        module:['Ficha Clínica','Calendario','Mascotas asociadas',],
-        description:['Iniciar ficha clínica para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas',],
+        module:['Ficha Clínica','Calendario','Mascotas asociadas', 'Reportes'],
+        description:['Iniciar ficha clínica para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas','Visualizá tus reportes'],
         disabled:[false,true],
-        img:[atencion,calendario,huella,],
-        routes:['/clinical-record-menu','/calendar','/pets-management']
+        img:[atencion,calendario,huella,visitsReports],
+        routes:['/clinical-record-menu','/calendar','/pets-management','/reports']
     };
 
     const tutor = {

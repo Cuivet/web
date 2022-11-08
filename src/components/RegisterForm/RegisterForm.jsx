@@ -3,7 +3,8 @@ import {Form, Input, Button, Select, notification, Spin, Modal} from 'antd';
 import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
 import { signUpApi } from "../../services/user.service";
 import './RegisterForm.scss';
-import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined} from "@ant-design/icons";
+import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined, EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
+
 import Terms from "../Terms/Terms";
 
 export default function RegisterForm(props){
@@ -38,6 +39,7 @@ export default function RegisterForm(props){
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [catchReason, setCatchReason] = useState(null);
     const [vet, setVet] =  useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const changeForm = e =>{
         if(e.target.name === "privacyPolicy"){
@@ -93,8 +95,7 @@ export default function RegisterForm(props){
         props.successRegister();
     }
 
-    const register = e => {
-        setIsRegistering(true);
+    const checkFields = () => {
         const person = {
             name: input.name,
             lastName: input.lastName,
@@ -120,50 +121,46 @@ export default function RegisterForm(props){
             default:
               break;
           }
-        const emailVal = input.email;
-        const passwordVal = input.password;
-        const repeatPasswordVal = input.repeatPassword;
-        const nameVal = input.name;
-        const lastNameVal = input.lastName;
-        const dniVal = input.dni;
-        const phoneVal = input.phone;
-        const profileVal = input.profile;
-        const addressVal = input.address;
 
-        if(!emailVal || !passwordVal ||!repeatPasswordVal|| !nameVal|| !lastNameVal|| !phoneVal|| !dniVal|| !profileVal || !addressVal){
-            notification['error']({
+        if(!input.email || !input.password || !input.repeatPassword || !input.name || !input.lastName || !input.phone|| !input.dni || !input.profile || !input.address){
+            return notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrarse",
                 placement: "top"
             })
-        } else{
-            if(vet){
-                if (!input.mp) {
-                    return notification['error']({
+        } else if (vet){
+            if (!input.mp) {
+                return notification['error']({
                         message: "La matrícula profesional es obligatoria",
                         description: "Debe ingresar su matrícula profesional para poder registrarse",
                         placement: "top"
                     })
-                }
             }
-            if(passwordVal !== repeatPasswordVal){
-                notification['error']({
-                    message: "Las constraseñas deben ser iguales",
-                    description: "Compruebe que las contraseñas ingresadas coincidan",
-                    placement: "top"
-                })
-            } else{
-                signUpApi(completeProfile)
-                    .then(res => {
-                        setIsRegistering(false);
-                        setRegisteredUser(res);
-                    })
-                    .catch(error => {
-                        setCatchReason(error.response.data);
-                        setIsRegistering(false);
-                    });
-            }      
         }
+        if(input.password !== input.repeatPassword){
+            return notification['error']({
+                message: "Las constraseñas deben ser iguales",
+                description: "Compruebe que las contraseñas ingresadas coincidan",
+                placement: "top"
+            })
+        } else {
+            return completeProfile;
+        }
+    }
+
+    const register = e => {
+        setIsRegistering(true);
+        const completeProfile = checkFields(); 
+        signUpApi(completeProfile)
+            .then(res => {
+                setIsRegistering(false);
+                setRegisteredUser(res);
+            })
+            .catch(error => {
+                setCatchReason(error.response.data);
+                setIsRegistering(false);
+            });
+           
     };
 
     const resetForm = () =>{
@@ -236,7 +233,10 @@ export default function RegisterForm(props){
     }
 
     const showModal = () => {
-        setIsModalVisible(true);
+        checkFields()
+        .then(
+            setIsModalVisible(true)
+        )
     };
 
     const hideModal = () =>{
@@ -249,10 +249,10 @@ export default function RegisterForm(props){
                 <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" name="email" onChange={inputValidation} value={input.email} placeholder="Correo electrónico" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" onChange={inputValidation} value={input.password} placeholder="Contraseña" className="register-form__input" onSelect={inputValidation}/>
+                <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="password" onChange={inputValidation} value={input.password} placeholder="Contraseña" className="register-form__input" onSelect={inputValidation} minlength="8"/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="repeatPassword" onChange={inputValidation} value={input.repeatPassword} placeholder="Repetir Contraseña" className="register-form__input" onSelect={inputValidation}/>
+                <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} type="password" name="repeatPassword" onChange={inputValidation} value={input.repeatPassword} placeholder="Repetir Contraseña" className="register-form__input" onSelect={inputValidation} minlength="8" />
             </Form.Item>
             <Form.Item>
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="name" onChange={inputValidation} value={input.name} placeholder="Nombre" className="register-form__input" onSelect={inputValidation}/>
@@ -296,7 +296,7 @@ export default function RegisterForm(props){
                         </Button>,
                         catchReason ? 
                         <Button htmlType="submit" type="primary" onClick={returnFromError} className="register-form_button-ok-modal">
-                            Reveer datos
+                            Revisar datos
                         </Button>
                         :
                         registeredUser ? 

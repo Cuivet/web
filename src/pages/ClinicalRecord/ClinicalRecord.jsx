@@ -382,6 +382,20 @@ export default function ClinicalRecord() {
     });
   };
 
+  const [anamnesisItem, setAnamnesisItem] = useState({    
+    id: null,
+    anamnesisId: null,
+    anamnesisQuestionId: null,
+    booleanResponse: null,
+    textResponse: null,
+  })
+
+  const [anamnesis, setAnamnesis] =useState({
+    id: null,
+    visitId: null,
+    anamnesisItems:[]
+  })
+
   const [physcalExam, setPhysicalExam] = useState({
     id: null,
     visitId: null,
@@ -393,11 +407,7 @@ export default function ClinicalRecord() {
     observation: null,
   });
 
-  const [presumptiveDiagnosis, setPresumptiveDiagnosis] = useState({
-    id: 4,
-    visitId: 2,
-    presumptiveDiagnosisItem: [],
-  });
+  const [presumptiveDiagnosisItem, setPresumptiveDiagnosisItem] = useState([]);
 
   //faltan los tratamientos
   const [diagnosisItem, setDiagnosisItem] = useState({
@@ -405,8 +415,8 @@ export default function ClinicalRecord() {
     diagnosisId: null,
     diagnosisResult: null,
     observation: null,
-    diagnosisTypeId: 2, //???
-    diagnosisItemTreatments: [],
+    diagnosisTypeId: 2, //fijo no sacar
+    diagnosisItemTreatments: [null],
   });
   const [diagnosis, setDiagnosis] = useState({
     id: null,
@@ -420,44 +430,34 @@ export default function ClinicalRecord() {
     observation: null,
   });
 
+  const anamnesisChangeForm = (a) =>{
+    setAnamnesisItem(a);
+    setAnamnesis({...anamnesis, anamnesisItems:[anamnesisItem]})
+  }
+
   const physicalExamChangeForm = (pe) => {
     setPhysicalExam({
       ...physcalExam,
       [pe.target.name]: pe.target.value,
     });
   };
-
-  //sin terminar el presuntivo
-  const [pDI, setPDI] = useState([]);
+  
   const presumptiveDiagnosisChangeForm = (pd) => {
-    console.log(pd.presumptiveDiagnosisItem);
-    const test = pd.presumptiveDiagnosisItem;
-    for (let i in pd.presumptiveDiagnosisItem) {
-      console.log(i);
-      setPDI([...pDI, { id: 1, observation: test[i].observation }]);
-    }
-    console.log(pDI);
-    // setPresumptiveDiagnosis({
-    //   ...presumptiveDiagnosis,
-    //   [pd.target.name]: pd.target.value,
-    // })
+    setPresumptiveDiagnosisItem(pd)
   };
 
+  //sin terminar, considerar los tratamientos 
   const diagnosisChangeForm = (d) => {
-    if (
-      d.target.name === "diagnosisResult" ||
-      d.target.name === "observation"
-    ) {
-      setDiagnosisItem({ ...diagnosisItem, [d.target.name]: d.target.value });
-    }
-    setDiagnosis({ ...diagnosis, diagnosisItems: diagnosisItem });
+    
+    setDiagnosisItem(d);
+    setDiagnosis({...diagnosis, diagnosisItems: [diagnosisItem]})
   };
 
   const prognosisChangeForm = (p) => {
     setPrognosis({ ...prognosis, [p.target.name]: p.target.value });
   };
 
-  console.log(prognosis);
+  console.log(anamnesis);
 
   const steps = [
     {
@@ -480,9 +480,9 @@ export default function ClinicalRecord() {
         // <Anamnesis
         //   id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
         //   answers={cRecord.anamnesis.anamnesisItems}
-        //   stepSave={changeForm}
+        //   stepSave={anamnesisChangeForm}
         // />
-        <Anamnesis id={null} answers={null} stepSave={changeForm} />
+        <Anamnesis id={null} answers={null} stepSave={anamnesisChangeForm} />
       ),
       subTitle: Visits(cRecord.anamnesis),
     },
@@ -509,7 +509,7 @@ export default function ClinicalRecord() {
             cRecord.physcalExam,
             cRecord.physcalExam.observation
           )}
-          stepSave={changeForm}
+          stepSave={physicalExamChangeForm}
         />
         // <PhysicalExam
         //   id={null}

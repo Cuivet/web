@@ -17,16 +17,17 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import {treatmentTypeService} from '../../services/treatment_type.service';
-import {treatmentOptionService} from '../../services/treatment_option.service';
-import {drugService} from '../../services/drug.service';
+import { treatmentTypeService } from "../../services/treatment_type.service";
+import { treatmentOptionService } from "../../services/treatment_option.service";
+import { drugService } from "../../services/drug.service";
 
 export default function Diagnosis(props) {
-  const [treatmentTypes, setTreatmentTypes]= useState([]);
-  const [selectedTreatmentTypeId, setSelectedTreatmentTypeId]= useState(null);
-  const [treatmentOptions, setTreatmentOptions]= useState([]);
-  const [selectedTreatmentOptionId, setSelectedTreatmentOptionId]= useState(null);
-  const [drugs, setDrugs]= useState([]);
+  const [treatmentTypes, setTreatmentTypes] = useState([]);
+  const [selectedTreatmentTypeId, setSelectedTreatmentTypeId] = useState(null);
+  const [treatmentOptions, setTreatmentOptions] = useState([]);
+  const [selectedTreatmentOptionId, setSelectedTreatmentOptionId] =
+    useState(null);
+  const [drugs, setDrugs] = useState([]);
   const [disabled, setIsDisabled] = useState(false);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
   const [input, setInput] = useState({
@@ -42,6 +43,7 @@ export default function Diagnosis(props) {
       },
     ],
   });
+  const [form] = Form.useForm();
   const wrapper = {
     sm: { offset: 0, span: 14 },
     xs: {
@@ -51,21 +53,18 @@ export default function Diagnosis(props) {
 
   useEffect(() => {
     const fetchData = async () => {
-        await treatmentOptionService.findAll()
-        .then(response => {
-          setTreatmentOptions(response);
-        });
-        await treatmentTypeService.findAll()
-        .then(response => {
-          setTreatmentTypes(response);
-        });
-        await drugService.findAll()
-        .then(response => {
-          setDrugs(response)
-        })
+      await treatmentOptionService.findAll().then((response) => {
+        setTreatmentOptions(response);
+      });
+      await treatmentTypeService.findAll().then((response) => {
+        setTreatmentTypes(response);
+      });
+      await drugService.findAll().then((response) => {
+        setDrugs(response);
+      });
     };
     fetchData();
-}, []);
+  }, []);
 
   //   console.log(props);
   useEffect(() => {
@@ -154,34 +153,42 @@ export default function Diagnosis(props) {
     }
   }, [props]);
 
-  console.log(initValue);
+  // console.log(initValue);
   const [flag, setFlag] = useState(false);
 
   function renderTreatmentTypes() {
-    let list = []
-    treatmentTypes.forEach(treatmentType => {
-        list.push(<Select.Option value={treatmentType.id}>{treatmentType.name}</Select.Option>);
-    })
+    let list = [];
+    treatmentTypes.forEach((treatmentType) => {
+      list.push(
+        <Select.Option value={treatmentType.id}>
+          {treatmentType.name}
+        </Select.Option>
+      );
+    });
     return list;
   }
 
-function renderTreatmentOptions() {
+  function renderTreatmentOptions() {
     let list = [];
-    if(selectedTreatmentTypeId!==null){
-      treatmentOptions.forEach(treatmentOption => {
-        if(treatmentOption.treatmentTypeId === selectedTreatmentTypeId){
-            list.push(<Select.Option value={treatmentOption.id}>{treatmentOption.name}</Select.Option>);
+    if (selectedTreatmentTypeId !== null) {
+      treatmentOptions.forEach((treatmentOption) => {
+        if (treatmentOption.treatmentTypeId === selectedTreatmentTypeId) {
+          list.push(
+            <Select.Option value={treatmentOption.id}>
+              {treatmentOption.name}
+            </Select.Option>
+          );
         }
-      })
+      });
     }
     return list;
   }
 
   function renderDrugs() {
     let list = [];
-    drugs.forEach(drug => {
-        list.push(<Select.Option value={drug.id}>{drug.name}</Select.Option>);
-    })
+    drugs.forEach((drug) => {
+      list.push(<Select.Option value={drug.id}>{drug.name}</Select.Option>);
+    });
     return list;
   }
 
@@ -318,15 +325,15 @@ function renderTreatmentOptions() {
     return render;
   }
 
-  const [medic, setMedic] = useState(false);
   //trigger cuando carga tratamiento tipo medico
+  const [medic, setMedic] = useState(false);
 
   // const handleChange = (value) => {
   //   value === 1 ? setMedic(true) : setMedic(false);
   // };
 
   const onTreatmentTypeChange = (treatmentTypeId) => {
-    setSelectedTreatmentTypeId(treatmentTypeId)
+    setSelectedTreatmentTypeId(treatmentTypeId);
     setSelectedTreatmentOptionId(null);
     if (treatmentTypeId === 1) {
       setMedic(true);
@@ -336,13 +343,12 @@ function renderTreatmentOptions() {
   };
 
   const onTreatmentOptionChange = (treatmentOptionId) => {
-    setSelectedTreatmentOptionId(treatmentOptionId)
-  }; 
-  
+    setSelectedTreatmentOptionId(treatmentOptionId);
+  };
 
   //carga de datos en las variables
   const changeForm = (e) => {
-    props.stepSave(e);
+    // props.stepSave(e);
     // no esta andando como deberia
     // let test = input.diagnosisItem.map((i) => {
     //   return { ...i, [e.target.name]: e.target.value };
@@ -357,7 +363,18 @@ function renderTreatmentOptions() {
 
   const register = (e) => {
     //guardado de datos, sin validaciones
-    console.log("Received values of form:", e);
+    console.log("Received values of form:", e);    
+    let list = e.diagnosisItemTreatments;
+    // console.log(list);
+    for (let i in list){
+      list[i].id = parseInt(i)+1;
+      list[i].drugId = null;
+      list[i].frecuencyInterval = null;
+      list[i].frecuencyDuration = null;
+    }
+    // d.diagnosisItemTreatments = list;
+    e.diagnosisItemTreatments = list;
+    props.stepSave(e);
   };
   return (
     <>
@@ -370,12 +387,14 @@ function renderTreatmentOptions() {
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             layout="horizontal"
+            autoComplete="off"
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             onFinish={register}
             className="stepForm"
             onChange={changeForm}
             fields={initValue}
+            form={form}
           >
             <Col>
               <Form.Item
@@ -422,7 +441,7 @@ function renderTreatmentOptions() {
             {disabled ? (
               <RenderT />
             ) : (
-              <Form.List name="diagnosisItemsTreatments">
+              <Form.List name="diagnosisItemTreatments">
                 {(fields, { add, remove }) => (
                   <>
                     {fields.map(({ key, name, ...restField }) => (
@@ -462,8 +481,8 @@ function renderTreatmentOptions() {
                               {renderTreatmentOptions()}
                             </Select>
                           </Form.Item>
-                        </Col>
-                        {medic ? (
+                        </Col>                        
+                        {/* {medic ? (
                           <>
                             <Col>
                               <Form.Item
@@ -480,6 +499,7 @@ function renderTreatmentOptions() {
                                   max={24}
                                   placeholder={"Ingrese intervalo"}
                                   className="appDataFieldStep"
+                                  name="frecuencyInterval"
                                   addonAfter={"Horas"}
                                   disabled={disabled}
                                 />
@@ -498,6 +518,7 @@ function renderTreatmentOptions() {
                                   min={0}
                                   placeholder="Ingrese duración"
                                   className="appDataFieldStep"
+                                  name="frecuencyDuration"
                                   addonAfter={"Días"}
                                   disabled={disabled}
                                 />
@@ -505,7 +526,7 @@ function renderTreatmentOptions() {
                             </Col>
                             <Col span={24}>
                               <Form.Item
-                                name={'drugId'}
+                                name={"drugId"}
                                 label={"Droga"}
                                 tooltip={{
                                   title: "Droga del tratamiento",
@@ -517,15 +538,12 @@ function renderTreatmentOptions() {
                                   className="appDataFieldStep"
                                   placeholder={"Seleccione droga"}
                                 >
-                                  {/* Martina */}
                                   {renderDrugs()}
                                 </Select>
                               </Form.Item>
                             </Col>
                           </>
-                        ) : (
-                          null
-                        )}
+                        ) : null} */}
                         <Col style={{ marginBottom: "2%" }}>
                           <Tooltip title={"Borrar tratamiento"} align="left">
                             <Button
@@ -541,7 +559,12 @@ function renderTreatmentOptions() {
                       //   </Space>
                     ))}
                     <Col>
-                      <Form.Item wrapperCol={{ xs:{ span:24},sm:{span: 20, offset: 2} }}>
+                      <Form.Item
+                        wrapperCol={{
+                          xs: { span: 24 },
+                          sm: { span: 20, offset: 2 },
+                        }}
+                      >
                         <Button
                           type="dashed"
                           onClick={() => add()}

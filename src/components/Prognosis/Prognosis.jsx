@@ -83,7 +83,7 @@ export default function Prognosis(props) {
                 />
               </Form.Item>
             </Col>
-            <Col>
+            {/* <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
@@ -97,7 +97,7 @@ export default function Prognosis(props) {
                   </Button>
                 </Tooltip>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Form>
         </Col>
       </Row>

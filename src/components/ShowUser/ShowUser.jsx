@@ -25,7 +25,8 @@ export default function ShowUser(props){
                             name="name"
                             placeholder="Nombre"
                             className="register-form__input"
-                            value={formData.name}/>
+                            value={formData.name}
+                            disabled={veterinary}/>
                 </Form.Item>
             </Title>
             <Title level={5}>Apellido:
@@ -34,7 +35,8 @@ export default function ShowUser(props){
                             name="lastName"
                             placeholder="Apellido"
                             className="register-form__input"
-                            value={formData.lastName}/>
+                            value={formData.lastName}
+                            disabled={veterinary}/>
                 </Form.Item>
             </Title>
             <Title level={5}>Teléfono:

@@ -89,43 +89,44 @@ export default function VetsAssociations() {
     }
   };
 
-  const createAssociation = () => {
-    if (generatedCode[0] === "R") {
-      createRegentAssociation();
-    } else {
-      createVeterinaryAssociation();
+    const createAssociation = () => {
+        if (generatedCode[0]==="R") {
+            createRegentAssociation();
+        } else {
+            createVeterinaryAssociation();
+        }
+    };
+    
+    const createRegentAssociation = () => {
+        const regentAssociation = {
+            id: completeTemporalAssociation.vetData.vet.id,
+            name: completeTemporalAssociation.vetData.vet.name,
+            phone: completeTemporalAssociation.vetData.vet.phone,
+            address: completeTemporalAssociation.vetData.vet.address,
+            vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId, //para que usa todos estos datos??
+            veterinaryId: profile.veterinary.id,
+        };
+        registerRegentOnVet(regentAssociation)
+        .then(response =>{
+            message.success('Asociación establecida exitosamente');
+            refreshComponent();
+        });
     }
-  };
-
-  const createRegentAssociation = () => {
-    const regentAssociation = {
-      id: completeTemporalAssociation.vetData.vet.id,
-      name: completeTemporalAssociation.vetData.vet.name,
-      phone: completeTemporalAssociation.vetData.vet.phone,
-      address: completeTemporalAssociation.vetData.vet.address,
-      vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId, //para que usa todos estos datos??
-      veterinaryId: profile.veterinary.id,
-    };
-    registerRegentOnVet(regentAssociation).then((response) => {
-      message.success("Asociación establecida exitosamente");
-      refreshComponent();
-    });
-  };
-
-  const createVeterinaryAssociation = () => {
-    const veterinaryAssociations = [];
-    const veterinaryAssociation = {
-      vetId: completeTemporalAssociation.vetData.vet.id,
-      veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id,
-    };
-    veterinaryAssociations.push(veterinaryAssociation);
-    veterinaryAssociationService
-      .register(veterinaryAssociations)
-      .then((response) => {
-        message.success("Asociación establecida exitosamente");
-        refreshComponent();
-      });
-  };
+    
+    const createVeterinaryAssociation = () => {
+        const veterinaryAssociations = [];
+        const veterinaryAssociation = {
+            vetId: completeTemporalAssociation.vetData.vet.id,
+            veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id
+        }
+        veterinaryAssociations.push(veterinaryAssociation);
+        veterinaryAssociationService.register(veterinaryAssociations)
+            .then(response => {
+                message.success('Asociación establecida exitosamente');
+                refreshComponent();
+                window.location.replace('');
+            });
+    }
 
   function refreshComponent() {
     veterinaryAssociationService

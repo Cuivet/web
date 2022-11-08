@@ -49,13 +49,14 @@ export default function VeterinariesAssociations() {
     setIsInit(true);
   }
 
-  const confirm = (associationsIds) => {
-    associationsIds.forEach((assId) => {
-      deleteAssociationById(assId);
-    });
-    message.success("Profesional desasociado correctamente", 5);
-    refreshComponent();
-  };
+    const confirm = (associationsIds) => {
+        associationsIds.forEach(assId =>{
+            deleteAssociationById(assId)
+        })
+        message.success('Profesional desasociado correctamente', 5);
+        refreshComponent();
+        window.location.replace('');
+    };
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -74,19 +75,20 @@ export default function VeterinariesAssociations() {
       });
   };
 
-  const createAssociation = () => {
-    const petAssociations = [];
-    selectedPetIds.forEach((petId) => {
-      petAssociations.push({
-        petId: Number(petId),
-        veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id,
-      });
-    });
-    register(petAssociations).then((response) => {
-      message.success("Asociación establecida exitosamente");
-      refreshComponent();
-    });
-  };
+
+    const createAssociation = () => {
+        const petAssociations = [];
+        selectedPetIds.forEach( petId => {
+            petAssociations.push({petId: Number(petId), veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id})
+        });
+        register(petAssociations)
+            .then(response => {
+                message.success('Asociación establecida exitosamente');
+                window.location.replace('');
+                refreshComponent();
+                
+            });
+    }
 
   function refreshComponent() {
     getAllByTutorId(profile.tutor.id).then((associations) => {

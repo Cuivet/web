@@ -239,11 +239,12 @@ export default function VeterinariesManagement() {
     }
   };
 
-  const hideModal = () => {
-    setIsModalVetOwner(false);
-    setGeneratedCode(false);
-    setIsModalRegent(false);
-  };
+    const hideModal = () => {
+        setIsModalVetOwner(false);
+        setGeneratedCode(false);
+        setIsModalRegent(false);
+        window.location.replace(''); 
+    };
 
   const refreshMP = (e) => {
     setSearchedVeterinaryData(null);

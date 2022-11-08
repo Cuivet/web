@@ -186,12 +186,13 @@ export default function PetsManagement() {
     });
   };
 
-  const hideModal = () => {
-    setIsModalOpen(false);
-    setGeneratedCode(false);
-    setSearchedTutorData(null);
-    setTutorDni(null);
-  };
+    const hideModal = () => {
+        setIsModalOpen(false);
+        setGeneratedCode(false);
+        setSearchedTutorData(null);
+        setTutorDni(null);
+        window.location.replace('');
+    };
 
   const refreshDni = (e) => {
     setSearchedTutorData(null);

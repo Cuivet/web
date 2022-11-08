@@ -82,10 +82,10 @@
 .ant-card-actions{
 
     .anticon svg{
-        color: $secondary-color;
+        color: $primary-color;
         font-size: 0em + 22px / $defaultFontSize;
         &:hover{
-            color: $primary-color;
+            color: $secondary-color;
         }
     }  
 }

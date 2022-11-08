@@ -122,7 +122,8 @@ export default function RegisterVetForm(props){
                             message: "Clínica creada correctamente",
                             placement: "top"
                         });
-                })               
+                    });
+                    window.location.replace('');        
 
             }
     };

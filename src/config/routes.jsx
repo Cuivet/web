@@ -24,6 +24,8 @@ import Studies from "../pages/Studies";
 import Diary from "../pages/Diary";
 import ClinicalRecord from "../pages/ClinicalRecord/ClinicalRecord";
 import ClinicalRecordMenu from "../pages/ClinicalRecordMenu/ClinicalRecordMenu";
+import Reports from "../pages/VisitReports/VisitReports";
+import PetsReports from "../pages/PetsReports/PetsReports";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -104,6 +106,16 @@ const routesAdmin = [
     {
         path: "/clinical-record",
         component: ClinicalRecord,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/reports",
+        component: Reports,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/pets-reports",
+        component: PetsReports,
         layout: LayoutAdmin,
     },
     {

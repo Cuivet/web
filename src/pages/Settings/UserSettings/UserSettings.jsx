@@ -96,10 +96,10 @@ export default function UserSettings(){
     return (
         <>
             <Row align="middle">
-                <Col xs={{span: 24}}md={{span: 23}}>
+                <Col span={22}>
                     <Title className='appTitle'>Mi Cuenta</Title>
                 </Col>
-                <Col xs={{span: 24}}md={{span: 1}}>
+                <Col span={2}>
                     <Tooltip title="Eliminar mi cuenta" placement='right'>
                         <Button type='link' className="appButton" size='large' icon={<DeleteOutlined/>}/>
                     </Tooltip>
@@ -111,8 +111,8 @@ export default function UserSettings(){
             <ShowUser formData={formData} refreshUser={changeForm}></ShowUser>
             <Row align="middle">
                 <Col xs={{span: 24}}md={{span: 24}}>
-                    <Button htmlType="submit" className="update-User-form__button" icon={<LockOutlined />}> Cambiar Contraseña </Button>
-                    <Button htmlType="submit" className="update-User-form__button" icon={<SaveOutlined />} onClick={updatePerson}> Guardar </Button>
+                    <Button shape="round" htmlType="submit" className="update-User-form__button" icon={<LockOutlined />}> Cambiar Contraseña </Button>
+                    <Button shape="round" htmlType="submit" className="update-User-form__button" icon={<SaveOutlined />} onClick={updatePerson}> Guardar </Button>
                 </Col>
             </Row>
         </>

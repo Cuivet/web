@@ -17,10 +17,11 @@ import {
   CheckOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import BiotechOutlinedIcon from '@mui/icons-material/BiotechOutlined';
+import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
+import { Link } from "react-router-dom";
 
-const {Title} =Typography;
-const {Option}= Select;
+const { Title } = Typography;
+const { Option } = Select;
 
 export default function PresumptiveDiagnosis(props) {
   const [disabled, setIsDisabled] = useState(false);
@@ -92,24 +93,41 @@ export default function PresumptiveDiagnosis(props) {
     }
     return render;
   }
-  const [item, setItem] = useState([{}]);
 
   const changeForm = (e) => {
-    console.log(e);
+    // props.stepSave(e);
     // console.log(e.target.value)
-    setItem([...item, { [e.target.name]: e.target.value }]);
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
-    console.log(item);
+    // setItem([...item, { [e.target.name]: e.target.value }]);
+    // setInput({
+    //   ...input,
+    //   [e.target.name]: e.target.value,
+    // });
+    // console.log(item);
   };
 
+  const [presumptiveDiagnosisItem, setPresumptiveDiagnosisItem] = useState([]);
   const register = (e) => {
     //guardado de datos, sin validaciones
-    //recibo los datos cargados en el form, capas no haga falta hace el guardado en el cambio
+    //recibo los datos cargados en el form
 
     console.log("Received values of form:", e.presumptiveDiagnosisItem);
+    let list = e.presumptiveDiagnosisItem;
+    for (let i in list) {
+      list[i].id = parseInt(i) + 1;
+      list[i].presumptiveDiagnosisId = null;
+      list[i].diagnosisTypeId = 2;
+      // console.log(list[i]);
+    }
+    //cargo el primer diagnostico al array
+    let first = {
+      observation: e.observation,
+      id: 0,
+      presumptiveDiagnosisId: null,
+      diagnosisTypeId: 2,
+    };
+    list.splice(0, 0, first);
+    // console.log(list)
+    props.stepSave(list);
   };
 
   return (
@@ -118,24 +136,27 @@ export default function PresumptiveDiagnosis(props) {
         <Col span={24}>
           <Typography.Title className="" level={4}>
             Diagnostico Presuntivo
-            <Tooltip title="Pedido de Estudios Complementarios" placement="right">
-            <Button
-              type="link"
-              className="appButton"
-              size="small"
-              style={{marginLeft:'1%'}}
-              icon={<BiotechOutlinedIcon />}
-              onClick={showModal}
-            />
-          </Tooltip>
+            <Tooltip
+              title="Pedido de Estudios Complementarios"
+              placement="right"
+            >
+              <Button
+                type="link"
+                className="appButton"
+                size="small"
+                style={{ marginLeft: "1%" }}
+                icon={<BiotechOutlinedIcon />}
+                onClick={showModal}
+              />
+            </Tooltip>
           </Typography.Title>
-          
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             onFinish={register}
             autoComplete="off"
             layout="horizontal"
+            className="stepForm"
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             fields={initValue}
@@ -175,6 +196,7 @@ export default function PresumptiveDiagnosis(props) {
                           <Col span={24}>
                             <Form.Item
                               {...restField}
+                              key={key}
                               name={[name, `observation`]}
                               label={"Diagnóstico"}
                               tooltip={{
@@ -243,55 +265,59 @@ export default function PresumptiveDiagnosis(props) {
             </Col>
           </Form>
 
-          <Modal title='Pedido de Estudios Complementarios'             
-                visible={isModalOpen} 
-                onCancel={handleCancel}
-                footer={[
-                    <Button key="back" onClick={handleCancel}>
-                        Cancelar
-                    </Button>,
-                    <Button key="submit" type="primary" >
-                        Generar
-                    </Button>,
-                ]}>
+          <Modal
+            title="Pedido de Estudios Complementarios"
+            visible={isModalOpen}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Cancelar
+              </Button>,
+              <Link to={"/studies-request"}>
+                <Button key="submit" type="primary">
+                  Generar
+                </Button>
+              </Link>,
+            ]}
+          >
             <Row>
-                <Title level={5}>Tipo de Estudio Complementario:</Title>
+              <Title level={5}>Tipo de Estudio Complementario:</Title>
             </Row>
             <Row>
-                <Col span={24}>
-                    <Select placeholder='Estudios'
-                            allowClear
-                            showSearch
-                            name={'complementaryStudyTypeId'}
-                            className="select-before full-width"
-                            style={{ width: '100%' }} > 
-                    <Option value={1}>Radiografia</Option>
-                    <Option value={2}>Rayos X</Option>
-                    <Option value={3}>Particular</Option>
-                    <Option value={4}>Ecografia</Option>
-                    </Select>
-                </Col>
+              <Col span={24}>
+                <Select
+                  placeholder="Estudios"
+                  allowClear
+                  showSearch
+                  name={"complementaryStudyTypeId"}
+                  className="select-before full-width"
+                  style={{ width: "100%" }}
+                >
+                  <Option value={1}>Radiografia</Option>
+                  <Option value={2}>Rayos X</Option>
+                  <Option value={3}>Particular</Option>
+                  <Option value={4}>Ecografia</Option>
+                </Select>
+              </Col>
             </Row>
             <Row>
-                <Title level={5}>Observaciones:</Title>
+              <Title level={5}>Observaciones:</Title>
             </Row>
             <Row>
-                <Col span={24}>
+              <Col span={24}>
                 <Input.TextArea
-                    showCount
-                    allowClear
-                    maxLength={500}
-                    placeholder='Ingrese observacion...'
-                    autoSize={{
-                        minRows: 3,
-                        maxRows: 5,
-                      }}
-                    
+                  showCount
+                  allowClear
+                  maxLength={500}
+                  placeholder="Ingrese observacion..."
+                  autoSize={{
+                    minRows: 3,
+                    maxRows: 5,
+                  }}
                 />
-                </Col>
+              </Col>
             </Row>
-
-        </Modal>
+          </Modal>
         </Col>
       </Row>
     </>

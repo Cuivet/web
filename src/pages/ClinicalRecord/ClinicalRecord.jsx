@@ -3,6 +3,9 @@ import {
   RightCircleOutlined,
   CheckCircleOutlined,
   IssuesCloseOutlined,
+  SaveOutlined,
+  ContainerOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -32,73 +35,74 @@ import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
 import { useLocation } from "react-router-dom";
 import { clinicalRecordService } from "../../services/clinical_record.service";
+import { getPetsByTutorId } from "../../services/pet.service";
 
 const { Title } = Typography;
 
 export default function ClinicalRecord() {
   const location = useLocation();
   useEffect(() => {
-    if(location.state.clinicalRecordId){
-      clinicalRecordService.findOneById(location.state.clinicalRecordId)
-        .then( res =>{
+    if (location.state.clinicalRecordId) {
+      clinicalRecordService
+        .findOneById(location.state.clinicalRecordId)
+        .then((res) => {
           setClinicalRecord(res);
         })
-        .catch(error => {
+        .catch((error) => {
           message.error(error.response.data);
         });
-    } else{
+    } else {
       const clinicalRecord = {
-        veterinaryId: JSON.parse(sessionStorage.getItem('profile')).veterinary.id,
+        veterinaryId: JSON.parse(sessionStorage.getItem("profile")).veterinary
+          .id,
         petId: location.state.petId,
-        vetId: 1 // cuando desarrollemos lo de vets habria que mandarlo bien
+        vetId: 1, // cuando desarrollemos lo de vets habria que mandarlo bien
       };
-      clinicalRecordService.registerClinicalRecord(clinicalRecord)
-            .then( res => {
-              setClinicalRecord(res);
-            })
-            .catch(error => {
-                message.error(error.response.data);
-            });
+      clinicalRecordService
+        .registerClinicalRecord(clinicalRecord)
+        .then((res) => {
+          setClinicalRecord(res);
+        })
+        .catch((error) => {
+          message.error(error.response.data);
+        });
     }
   }, [location]);
-
+  const [isInit, setIsInit] = useState(false);
+  const [pets, setPets] = useState([]);
   const [clinicalRecord, setClinicalRecord] = useState(null);
-  const [editableStr, setEditableStr] = useState("Motivo de la consulta...");
+  const [editableStr, setEditableStr] = useState("Motivo de la consulta");
   const [current, setCurrent] = useState(0);
   const [showControl, setShowControl] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [studies, setStudies] = useState(false);
-
-  const showModal = () => {
-    console.log(isModalOpen);
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  const handleControl = () => {
-    //funcion para guardar el control en la visita
-    setIsModalOpen(false);
-    setShowControl(true);
-  };
-
-  const cRecord = {
+  var veterinary = false;
+  const profile = JSON.parse(sessionStorage.getItem("profile"));
+  if (profile.veterinary != null) {
+    veterinary = true;
+  }
+  // if (!isInit) {
+  //   setIsInit(true);
+  //   getPetsByTutorId(profile.tutor.id).then((response) => {
+  //     setPets(response);
+  //   });
+  // }
+  const [cRecord, setcRecord] = useState({
     id: 1,
     veterinaryData: {
       veterinary: {
-        id: 1,
-        mp: 80604020,
-        userId: 2,
+        id: profile.person.id,
+        mp: veterinary ? profile.veterinary.mp : null,
+        userId: null,
       },
       person: {
         id: 1,
-        name: "Diego",
-        lastName: "García",
-        phone: "3516432332",
-        address: "Recta Martinolli 4465",
-        dni: 17465536,
-        userId: 2,
+        name: profile.person.name,
+        lastName: profile.person.lastName,
+        phone: profile.person.phone,
+        address: profile.person.address,
+        dni: profile.person.dni,
+        userId: null,
       },
     },
     tutorData: {
@@ -108,7 +112,7 @@ export default function ClinicalRecord() {
       },
       person: {
         id: 2,
-        name: "Tomáas",
+        name: "Tomás",
         lastName: "Bardin",
         phone: "3515936520",
         address: "San Cayetano 4465",
@@ -118,7 +122,7 @@ export default function ClinicalRecord() {
     },
     pet: {
       id: 1,
-      name: "Pepe",
+      name: "Malu",
       birth: "2012-07-07 02:03:41",
       isMale: true,
       tutorId: 1,
@@ -244,12 +248,14 @@ export default function ClinicalRecord() {
           id: 2,
           presumptiveDiagnosisId: 4,
           complementaryStudyTypeId: 2,
+          observation: "Radiografia de torax",
           url: "www.cuivet.com/302HLk22",
         },
         {
           id: 3,
           presumptiveDiagnosisId: 4,
           complementaryStudyTypeId: 1,
+          observation: "",
           url: null,
         },
       ],
@@ -326,6 +332,20 @@ export default function ClinicalRecord() {
       visitId: 3,
       observation: "Se va a recuperar bien",
     },
+  });
+
+  const showModal = () => {
+    console.log(isModalOpen);
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const handleControl = () => {
+    //funcion para guardar el control en la visita
+    setIsModalOpen(false);
+    setShowControl(true);
   };
 
   const next = () => {
@@ -354,6 +374,91 @@ export default function ClinicalRecord() {
     }
   }
   const { Step } = Steps;
+
+  const changeForm = (fd) => {
+    setcRecord({
+      ...cRecord,
+      [fd.target.name]: fd.target.value,
+    });
+  };
+
+  const [anamnesisItem, setAnamnesisItem] = useState({    
+    id: null,
+    anamnesisId: null,
+    anamnesisQuestionId: null,
+    booleanResponse: null,
+    textResponse: null,
+  })
+
+  const [anamnesis, setAnamnesis] =useState({
+    id: null,
+    visitId: null,
+    anamnesisItems:[]
+  })
+
+  const [physcalExam, setPhysicalExam] = useState({
+    id: null,
+    visitId: null,
+    temperature: null,
+    weight: null,
+    pulse: null,
+    mucousMembrane: null,
+    bodyCondition: null,
+    observation: null,
+  });
+
+  const [presumptiveDiagnosisItem, setPresumptiveDiagnosisItem] = useState([]);
+
+  //faltan los tratamientos
+  const [diagnosisItem, setDiagnosisItem] = useState({
+    id: null,
+    diagnosisId: null,
+    diagnosisResult: null,
+    observation: null,
+    diagnosisTypeId: 2, //fijo no sacar
+    diagnosisItemTreatments: [null],
+  });
+  const [diagnosis, setDiagnosis] = useState({
+    id: null,
+    visitId: null,
+    diagnosisItems: [diagnosisItem],
+  });
+
+  const [prognosis, setPrognosis] = useState({
+    id: null,
+    visitId: null,
+    observation: null,
+  });
+
+  const anamnesisChangeForm = (a) =>{
+    setAnamnesisItem(a);
+    setAnamnesis({...anamnesis, anamnesisItems:[anamnesisItem]})
+  }
+
+  const physicalExamChangeForm = (pe) => {
+    setPhysicalExam({
+      ...physcalExam,
+      [pe.target.name]: pe.target.value,
+    });
+  };
+  
+  const presumptiveDiagnosisChangeForm = (pd) => {
+    setPresumptiveDiagnosisItem(pd)
+  };
+
+  //sin terminar, considerar los tratamientos 
+  const diagnosisChangeForm = (d) => {
+    
+    setDiagnosisItem(d);
+    setDiagnosis({...diagnosis, diagnosisItems: [diagnosisItem]})
+  };
+
+  const prognosisChangeForm = (p) => {
+    setPrognosis({ ...prognosis, [p.target.name]: p.target.value });
+  };
+
+  console.log(anamnesis);
+
   const steps = [
     {
       title: "Reseña",
@@ -362,6 +467,10 @@ export default function ClinicalRecord() {
           id={Exists(cRecord.review, cRecord.review.id)}
           pet={cRecord.pet}
         />
+        // <Review
+        //   id={null}
+        //   pet={null}
+        // />
       ),
       subTitle: Visits(cRecord.review),
     },
@@ -371,8 +480,9 @@ export default function ClinicalRecord() {
         // <Anamnesis
         //   id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
         //   answers={cRecord.anamnesis.anamnesisItems}
+        //   stepSave={anamnesisChangeForm}
         // />
-        <Anamnesis id={null} answers={null} />
+        <Anamnesis id={null} answers={null} stepSave={anamnesisChangeForm} />
       ),
       subTitle: Visits(cRecord.anamnesis),
     },
@@ -399,6 +509,7 @@ export default function ClinicalRecord() {
             cRecord.physcalExam,
             cRecord.physcalExam.observation
           )}
+          stepSave={physicalExamChangeForm}
         />
         // <PhysicalExam
         //   id={null}
@@ -408,6 +519,7 @@ export default function ClinicalRecord() {
         //   mucousMembrane={null}
         //   bodyCondition={null}
         //   observation={null}
+        //   stepSave={physicalExamChangeForm}
         // />
       ),
       subTitle: Visits(cRecord.physcalExam),
@@ -424,8 +536,13 @@ export default function ClinicalRecord() {
         //     cRecord.presumptiveDiagnosis,
         //     cRecord.presumptiveDiagnosis.presumptiveDiagnosisItem
         //   )}
+        //  stepSave={presumptiveDiagnosisChangeForm}
         // />
-        <PresumptiveDiagnosis id={null} presumptiveDiagnosis={null} />
+        <PresumptiveDiagnosis
+          id={null}
+          presumptiveDiagnosis={null}
+          stepSave={presumptiveDiagnosisChangeForm}
+        />
       ),
       subTitle: Visits(cRecord.presumptiveDiagnosis),
     },
@@ -435,8 +552,9 @@ export default function ClinicalRecord() {
         // <Diagnosis
         //   id={Exists(cRecord.diagnosis, cRecord.diagnosis.id)}
         //   diagnosis={Exists(cRecord.diagnosis, cRecord.diagnosis.diagnosisItems[0])}
+        //    stepSave={diagnosisChangeForm}
         // />
-        <Diagnosis id={null} treatments={null} />
+        <Diagnosis id={null} treatments={null} stepSave={diagnosisChangeForm} />
       ),
       subTitle: Visits(cRecord.diagnosis),
     },
@@ -445,8 +563,9 @@ export default function ClinicalRecord() {
       content: (
         // <Prognosis
         //   id={Exists(cRecord.presumptiveDiagnosis, cRecord.presumptiveDiagnosis.id)}
+        //  stepSave={prognosisChangeForm}
         // />
-        <Prognosis id={null} />
+        <Prognosis id={null} stepSave={prognosisChangeForm} />
       ),
       subTitle: Visits(cRecord.prognosis),
     },
@@ -464,7 +583,10 @@ export default function ClinicalRecord() {
         <Typography.Text type="secondary">Ficha Nro: 76531732</Typography.Text>
       </Row>
       <Row>
-        <Typography.Text strong>Tutor: Tomas Bardin</Typography.Text>
+        <Typography.Text strong>
+          Tutor:{" "}
+          {`${cRecord.tutorData.person.name} ${cRecord.tutorData.person.lastName}`}
+        </Typography.Text>
       </Row>
       <Row>
         <Title
@@ -479,13 +601,14 @@ export default function ClinicalRecord() {
           {editableStr}
         </Title>
       </Row>
-      {studies ? <div>
-        <IconLink
-          src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
-          text="Estudio complementario"
-        />
-      </div>: null }
-      
+      {studies ? (
+        <div>
+          <IconLink
+            src="https://gw.alipayobjects.com/zos/rmsportal/ohOEPSYdDTNnyMbGuyLb.svg"
+            text="Estudio complementario"
+          />
+        </div>
+      ) : null}
     </>
   );
   return (
@@ -500,11 +623,11 @@ export default function ClinicalRecord() {
         <Col span={24}>
           {/* back */}
           <PageHeader
-            title="Eugenia Frattin"
-            subTitle="Visita Nro: 1"
+            title={`${cRecord.veterinaryData.person.name} ${cRecord.veterinaryData.person.lastName}`}
+            //subTitle="Visita Nro: 1"
             ghost={false}
             className="site-page-header"
-            tags={<Tag color="purple">Malu</Tag>}
+            tags={<Tag color="purple">{cRecord.pet.name}</Tag>}
             extra={[
               <Tooltip title="Cerrar Consulta">
                 <Button shape="circle" key={2} type="primary">
@@ -513,7 +636,13 @@ export default function ClinicalRecord() {
               </Tooltip>,
             ]}
             // reemplazar con nombre del back
-            avatar={{ icon: "EF", style: { backgroundColor: "#f56a00" } }}
+            avatar={{
+              icon: `${cRecord.veterinaryData.person.name.slice(
+                0,
+                1
+              )}${cRecord.veterinaryData.person.lastName.slice(0, 1)}`,
+              style: { backgroundColor: "#f56a00" },
+            }}
           >
             <Row>
               <Col span={24}>{content}</Col>
@@ -525,7 +654,7 @@ export default function ClinicalRecord() {
         <Col span={24}>
           <PageHeader
             title="Visita N°1"
-            subTitle="22/10/2022"
+            subTitle={cRecord.visits.date}
             style={{ marginTop: "2%" }}
             ghost={false}
             tags={[
@@ -533,12 +662,20 @@ export default function ClinicalRecord() {
               <Tag color="geekblue">ANAMNESIS</Tag>,
             ]}
             extra={[
-              <Button shape="round" type="default" onClick={showModal}>                
-                {showControl ? "Ver control" : "Ingresar control"}
-              </Button>,
-              <Button type="dashed" style={{borderColor:'#57266a'}} shape="round">
-                Guardar visita
-              </Button>,
+              <Tooltip title={showControl ? "Ver control" : "Ingresar control"}>
+                <Button shape="round" type="default" onClick={showModal}>
+                  {showControl ? <EyeOutlined /> : <ContainerOutlined />}
+                </Button>
+              </Tooltip>,
+              <Tooltip title={"Guardar visita"}>
+                <Button
+                  type="dashed"
+                  style={{ borderColor: "#57266a" }}
+                  shape="round"
+                >
+                  <SaveOutlined />
+                </Button>
+              </Tooltip>,
             ]}
           >
             <Row>
@@ -560,7 +697,12 @@ export default function ClinicalRecord() {
             <Button type="default" onClick={handleCancel}>
               Cancelar
             </Button>,
-            <Button type="primary" className="primaryDisabled" disabled={showControl} onClick={handleControl}>
+            <Button
+              type="primary"
+              className="primaryDisabled"
+              disabled={showControl}
+              onClick={handleControl}
+            >
               Guardar
             </Button>,
           ]}

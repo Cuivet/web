@@ -115,17 +115,24 @@ export default function Anamnesis(props) {
           //texto + radio
           render.push(
             <Col key={i}>
-              <Form.Item label={questions[i]["question"]}>
+              <Form.Item
+                label={questions[i]["question"]}
+                name={`booleanResponse${i}`}
+              >
                 <Radio.Group
                   disabled={disabled}
                   optionType="button"
                   name={`booleanResponse`}
                 >
-                  <Radio  style={{ width: "50%" }} value={true}>Si</Radio>
-                  <Radio  style={{ width: "50%" }} value={false}>No</Radio>
+                  <Radio style={{ width: "50%" }} value={true}>
+                    Si
+                  </Radio>
+                  <Radio style={{ width: "50%" }} value={false}>
+                    No
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
-              <Form.Item name={questions[i]["id"]}>
+              <Form.Item name={`textResponse${i}`}>
                 <Input
                   type="text"
                   name={`textResponse`}
@@ -150,8 +157,12 @@ export default function Anamnesis(props) {
                     value={answers[i].booleanResponse}
                     optionType="button"
                   >
-                    <Radio style={{ width: "50%" }} value={true}>Si</Radio>
-                    <Radio style={{ width: "50%" }} value={false}>No</Radio>
+                    <Radio style={{ width: "50%" }} value={true}>
+                      Si
+                    </Radio>
+                    <Radio style={{ width: "50%" }} value={false}>
+                      No
+                    </Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name={questions[i]["id"]}>
@@ -171,17 +182,25 @@ export default function Anamnesis(props) {
           if (initValue[i] === undefined) {
             render.push(
               <Col>
-                  <Form.Item
-                    name={questions[i]["id"]}
-                    label={questions[i]["question"]}
+                <Form.Item
+                  name={`textResponse${i}`}
+                  label={questions[i]["question"]}
+                >
+                  <Radio.Group
+                    disabled={disabled}
+                    name="booleanResponse"
+                    optionType="button"
                   >
-                    <Radio.Group disabled={disabled} name='booleanResponse' optionType="button">
-                      <Radio style={{ width: "50%" }} value={true}>Si</Radio>
-                      <Radio style={{ width: "50%" }} value={false}>No</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </Col>
-            )
+                    <Radio style={{ width: "50%" }} value={true}>
+                      Si
+                    </Radio>
+                    <Radio style={{ width: "50%" }} value={false}>
+                      No
+                    </Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
+            );
           } else {
             //pregunta respondida
             if (initValue[i]["name"] === questions[i]["id"]) {
@@ -192,8 +211,12 @@ export default function Anamnesis(props) {
                     label={questions[i]["question"]}
                   >
                     <Radio.Group disabled={disabled} optionType="button">
-                      <Radio style={{ width: "50%" }} value={true}>Si</Radio>
-                      <Radio style={{ width: "50%" }} value={false}>No</Radio>
+                      <Radio style={{ width: "50%" }} value={true}>
+                        Si
+                      </Radio>
+                      <Radio style={{ width: "50%" }} value={false}>
+                        No
+                      </Radio>
                     </Radio.Group>
                   </Form.Item>
                 </Col>
@@ -208,7 +231,7 @@ export default function Anamnesis(props) {
             render.push(
               <Col>
                 <Form.Item
-                  name={questions[i]["id"]}
+                  name={`booleanResponse${i}`}
                   label={questions[i]["question"]}
                 >
                   <Input
@@ -218,7 +241,7 @@ export default function Anamnesis(props) {
                   />
                 </Form.Item>
               </Col>
-            )
+            );
           } else {
             render.push(
               <Col>
@@ -237,19 +260,14 @@ export default function Anamnesis(props) {
         }
       }
     }
-    return render;
-  };
-  // console.log(input);
-  // const [test, setTest] = useState({
-  //   anamnesisId: null,
-  //   anamnesisQuestionId: null,
-  //   booleanResponse: null,
-  //   textResponse: null,
-  // });
+    let test = <Form.List name={"anamnesisItems"}>{() => render}</Form.List>;
+    return test;
+  }
   //cada vez que cambia el formulario
   //texto no deja ingresar mas de un caracter por vez
   //probar de hacer la carga en el onfinish
   const changeForm = (e) => {
+    // props.stepSave(e);
     // if (e.target.name.slice(0, 15) === "booleanResponse") {
     //   setTest({
     //     ...test,
@@ -279,37 +297,42 @@ export default function Anamnesis(props) {
     //             return {...i};
     //         }
     // }));
-
     // console.log(test);
     // console.log(input);
   };
 
+  // const onblurForm = (e) => {
+  //   console.log(e.target);
+  // };
+
   const register = (e) => {
-    console.log(e);
-    // const keys = Object.keys(e);
-    // for (let j in keys) {
-    //   setInput(
-    //     input.map((i) => {
-    //       console.log(e[keys[j]]);
-    //       if (i.anamnesisQuestionId === keys[j]) {
-    //         // console.log( e);
-    //         return { ...i, textResponse: e[keys[j]] };
-    //       }
-    //       return { ...i };
-    //     })
-    //   );
-    // }
-    // console.log(input);
-    // setInput(input.map( i => {
-    //   for (let j in keys){
-    //     console.log(j)
-    //     if (i.anamnesisQuestionId == keys[j]){
-    //       // return{ ...i, textResponse: 'algo'}
-
-    //     }
-    //   }
-
-    // }))
+    // console.log(e);
+    let size = Object.keys(e).length;
+    let last = 0;
+    let list =[]
+    for (let key in e) {
+      let obj
+      if (
+        parseInt(key.slice(15)) === last &&
+        key.slice(0, 16) === "booleanResponse"
+      ) {
+        obj = { booleanResponse: e[key] };
+        last = parseInt(key.slice(15));
+      }
+      if (
+        parseInt(key.slice(12)) === last &&
+        key.slice(0, 13) === "textResponse"
+      ) {
+        obj = { textResponse: e[key] };
+        last = parseInt(key.slice(12));
+      }
+      console.log(obj)
+      list.push(obj)
+      // console.log(key.slice(15));
+      // console.log(`${key}: ${e[key]}`);
+    }
+    console.log(list)
+    props.stepSave(e);
   };
 
   return (
@@ -321,10 +344,12 @@ export default function Anamnesis(props) {
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             layout="vertical"
-            labelCol={{ sm: { span: 14, offset:5 }, xs: { span: 5 } }}
+            labelCol={{ sm: { span: 14, offset: 5 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             onFinish={register}
+            className="stepForm"
             fields={initValue}
+            autoComplete="off"
             onChange={changeForm}
           >
             <RenderQ />

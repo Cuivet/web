@@ -33,10 +33,11 @@ export default function Prognosis(props) {
   }, [props]);
 
   const changeForm = (e) => {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value,
-    });
+    props.stepSave(e);
+    // setInput({
+    //   ...input,
+    //   [e.target.name]: e.target.value,
+    // });
     // console.log(input);
   };
 
@@ -57,6 +58,7 @@ export default function Prognosis(props) {
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             onFinish={register}
+            className="stepForm"
             onChange={changeForm}
             fields={initValue}
           >
@@ -81,7 +83,7 @@ export default function Prognosis(props) {
                 />
               </Form.Item>
             </Col>
-            <Col>
+            {/* <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
@@ -95,7 +97,7 @@ export default function Prognosis(props) {
                   </Button>
                 </Tooltip>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Form>
         </Col>
       </Row>

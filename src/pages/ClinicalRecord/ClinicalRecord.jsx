@@ -477,12 +477,12 @@ export default function ClinicalRecord() {
     {
       title: "Anamnesis",
       content: (
-        // <Anamnesis
-        //   id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
-        //   answers={cRecord.anamnesis.anamnesisItems}
-        //   stepSave={anamnesisChangeForm}
-        // />
-        <Anamnesis id={null} answers={null} stepSave={anamnesisChangeForm} />
+        <Anamnesis
+          id={Exists(cRecord.anamnesis, cRecord.anamnesis.id)}
+          answers={cRecord.anamnesis.anamnesisItems}
+          stepSave={anamnesisChangeForm}
+        />
+        // <Anamnesis id={null} answers={null} stepSave={anamnesisChangeForm} />
       ),
       subTitle: Visits(cRecord.anamnesis),
     },

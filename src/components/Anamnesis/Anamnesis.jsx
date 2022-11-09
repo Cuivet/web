@@ -260,8 +260,8 @@ export default function Anamnesis(props) {
         }
       }
     }
-    let test = <Form.List name={"anamnesisItems"}>{() => render}</Form.List>;
-    return test;
+    // let test = <Form.List name={"anamnesisItems"}>{() => render}</Form.List>;
+    return render;
   }
   //cada vez que cambia el formulario
   //texto no deja ingresar mas de un caracter por vez

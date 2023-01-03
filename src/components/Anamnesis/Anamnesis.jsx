@@ -7,6 +7,7 @@ import {
   Input,
   Button,
   Tooltip,
+  Space,
 } from "antd";
 import React, { useState, useEffect } from "react";
 import { CheckOutlined } from "@ant-design/icons";
@@ -44,17 +45,43 @@ export default function Anamnesis(props) {
       isTextResponse: true,
     },
   ];
+  // no se para que lo hice pero no lo borro todavia
+  // const [input, setInput] = useState(
+  //   questions.map((question) => {
+  //     return {
+  //       anamnesisId: props.id,
+  //       anamnesisQuestionId: question.id,
+  //       booleanResponse: null,
+  //       textResponse: null,
+  //     };
+  //   })
+  // );
 
-  const [input, setInput] = useState(
-    questions.map((question) => {
-      return {
-        anamnesisId: props.id,
-        anamnesisQuestionId: question.id,
-        booleanResponse: null,
-        textResponse: null,
-      };
-    })
-  );
+  //Create form fields based off how many items are in the questions
+  // const itemInputs = questions.map((item) => {
+  //   return {
+  //     id: item.id,
+  //     question: item.question,
+  //     isBooleanResponse: item.isBooleanResponse,
+  //     isTextResponse: item.isTextResponse,
+  //   };
+  // });
+
+
+  //funcion para mapear las preguntas 
+  const itemInputs = questions.map((item) => {
+    if (item.isBooleanResponse && item.isTextResponse) {
+      return { type1: item.question };
+    } else {
+      if (item.isBooleanResponse) {
+        return { type2: item.question };
+      }
+      if (item.isTextResponse) {
+        return { type3: item.question };
+      }
+    }
+  });
+  
   const wrapper = {
     sm: { offset: 5, span: 14 },
     xs: {
@@ -263,6 +290,7 @@ export default function Anamnesis(props) {
     // let test = <Form.List name={"anamnesisItems"}>{() => render}</Form.List>;
     return render;
   }
+
   //cada vez que cambia el formulario
   //texto no deja ingresar mas de un caracter por vez
   //probar de hacer la carga en el onfinish
@@ -306,34 +334,38 @@ export default function Anamnesis(props) {
   // };
 
   const register = (e) => {
-    // console.log(e);
-    let size = Object.keys(e).length;
-    let last = 0;
-    let list =[]
-    for (let key in e) {
-      let obj
-      if (
-        parseInt(key.slice(15)) === last &&
-        key.slice(0, 16) === "booleanResponse"
-      ) {
-        obj = { booleanResponse: e[key] };
-        last = parseInt(key.slice(15));
-      }
-      if (
-        parseInt(key.slice(12)) === last &&
-        key.slice(0, 13) === "textResponse"
-      ) {
-        obj = { textResponse: e[key] };
-        last = parseInt(key.slice(12));
-      }
-      console.log(obj)
-      list.push(obj)
-      // console.log(key.slice(15));
-      // console.log(`${key}: ${e[key]}`);
-    }
-    console.log(list)
+    console.log(e);
+    // let size = Object.keys(e).length;
+    // let last = 0;
+    // let list = [];
+    // for (let key in e) {
+    //   let obj;
+    //   if (
+    //     parseInt(key.slice(15)) === last &&
+    //     key.slice(0, 16) === "booleanResponse"
+    //   ) {
+    //     obj = { booleanResponse: e[key] };
+    //     last = parseInt(key.slice(15));
+    //   }
+    //   if (
+    //     parseInt(key.slice(12)) === last &&
+    //     key.slice(0, 13) === "textResponse"
+    //   ) {
+    //     obj = { textResponse: e[key] };
+    //     last = parseInt(key.slice(12));
+    //   }
+    //   console.log(obj);
+    //   list.push(obj);
+    // console.log(key.slice(15));
+    // console.log(`${key}: ${e[key]}`);
+    // }
+    // console.log(list);
     props.stepSave(e);
   };
+
+  console.log(initValue)
+  const test = [{ hola: "bye" }, { hola: "chau" }];
+
 
   return (
     <>
@@ -348,11 +380,11 @@ export default function Anamnesis(props) {
             wrapperCol={wrapper}
             onFinish={register}
             className="stepForm"
-            fields={initValue}
             autoComplete="off"
             onChange={changeForm}
           >
             <RenderQ />
+            
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>

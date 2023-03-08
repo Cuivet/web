@@ -41,7 +41,7 @@ export default function Pets() {
           item={pet.id}
           title={pet.name}
           popTitle={"¿Está seguro que desea borrar la mascota?"}
-          img={paw}
+          img={pet.photo ? pet.photo : paw}
           description={getAgeContent(pet.birth)}
         ></CardPet>
       );

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
-import { Form, message, Upload, Input, Button, notification, Select, Radio, DatePicker, Row, Col, Spin } from 'antd';
+import { Form, Upload, Input, Button, notification, Select, Radio, DatePicker, Row, Col, Spin } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
 import moment  from "moment";
 import { registerPet } from "../../services/pet.service";
 import { raceService } from "../../services/race.service";
@@ -9,6 +9,8 @@ import { specieService } from "../../services/specie.service";
 import { petSizeService } from "../../services/pet_size.service";
 import { hairColorService } from "../../services/hair_color.service";
 import { hairLengthService } from "../../services/hair_length.service";
+import storage from "../../firebaseConfig";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import './RegisterPetForm.scss';
 
 export default function RegisterPetForm(props){
@@ -21,7 +23,7 @@ export default function RegisterPetForm(props){
     const [hairColors, sethairColors]= useState([]);
     const [hairLenghts, sethairLenghts]= useState([]);
     const [formValid, setFormValid] = useState(initFormValid());
-    const {Dragger} = Upload;
+    const [fileList, setFileList] = useState([]);
 
     if(!isInitData && isFetchData){
         initPet();
@@ -57,6 +59,11 @@ export default function RegisterPetForm(props){
 
     function initPet() {
         const pet = props.pet;
+        if (pet) {
+            if (pet.photo){
+                setFileList([{uid: '-1', name: 'image.png', status: 'done', url: pet.photo}])
+            }
+        }
         setPet({
             id: pet? pet.id : null,
             name: pet ? pet.name : null,
@@ -70,7 +77,8 @@ export default function RegisterPetForm(props){
             hairLengthId: pet ? pet.hairLengthId : null,
             castrationDate: pet ? pet.castrationDate ? moment(pet.castrationDate.slice(0, 10), 'YYYY-MM-DD') : null : null,
             haveChip: pet ? pet.haveChip ? '1' : '0' : null,
-            aspects: pet ? pet.aspects : null
+            aspects: pet ? pet.aspects : null,
+            photo: pet ? pet.photo : null
         });
     }
 
@@ -88,29 +96,24 @@ export default function RegisterPetForm(props){
         }
     }
 
-    const draggerFields = {
-        name: '',
-        multiple: false,
-        maxCount:1,
-        accept: 'image/png, image/jpeg',
-        method: 'post',
-        action: 'localhost',
-        onChange(info) {
-          const { status } = info.file;
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+        setPet({...pet, photo: null});
+    };
 
-          if (status !== 'uploading') {
-            console.log(info.file, info.fileList);
-          }
-      
-          if (status === 'done') {
-            message.success(`${info.file.name} Imágen subida con éxito.`);
-          } else if (status === 'error') {
-            message.error(`${info.file.name} La imágen no se ha podido subir`);
-          }
-        },
-        onDrop(e) {
-          console.log('Archivo eliminado', e.dataTransfer.files);
-        },
+    const onPreview = async (file) => {
+        let src = file.url;
+        if (!src) {
+          src = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file.originFileObj);
+            reader.onload = () => resolve(reader.result);
+          });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
     };
 
     const register = e => {
@@ -122,12 +125,38 @@ export default function RegisterPetForm(props){
             })
         }
         pet.isMale = pet.isMale === '1' ? true : false;
+        if (fileList.length > 0 && pet.photo == null) {
+
+                const storageRef = ref(storage, `/pets/` + new Date().toString());
+                const uploadTask = uploadBytesResumable(storageRef, fileList[0].originFileObj);
+
+                uploadTask.on(
+                    "state_changed", 
+                    (snapshot) => {
+                        // const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                        // se esta cargando la foto, prender un spinner tengo el percent aca 
+                    },
+                    (err) => console.log(err),
+                    () => {
+                        // se cargo la foto, ya tengo el url
+                        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                            pet.photo = url;
+                            uploadPet(pet);
+                        });
+                    }
+                );
+        } else {
+            uploadPet(pet);
+        }
+    };
+
+    const uploadPet = pet =>{
         registerPet(pet)
             .then( res => {
                 resetForm();
                 props.registeredPet();
                 if(pet.id){
-                     return notification['success']({
+                    return notification['success']({
                         message: "Mascota actualizada correctamente",
                         placement: "top"
                     });
@@ -252,6 +281,19 @@ export default function RegisterPetForm(props){
             <Row gutter={16}>
                 <Col span={24}>
                     <Form.Item>
+                        <ImgCrop rotate>
+                            <Upload customRequest={({ onSuccess }) => setTimeout(() => { onSuccess("ok", null); }, 0) }
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    onChange={onChange}
+                                    onPreview={onPreview}>
+                                    {fileList.length < 1 && '+ Subir'}
+                            </Upload>
+                        </ImgCrop>
+                    </Form.Item>
+                </Col> 
+                <Col span={24}>
+                    <Form.Item>
                         <Input type="text" name="name" value={pet.name} placeholder="Nombre" className="register-pet-form__input"/>
                     </Form.Item>
                 </Col>
@@ -303,7 +345,6 @@ export default function RegisterPetForm(props){
                         </Select>
                     </Form.Item>
                 </Col>
-
                 <Col span={24}>
                     <Form.Item>
                         <Select name="hairColor" placeholder="Color de Pelaje" className="register-pet-form__select" value={pet.hairColorId} onChange={onHairColorChange} allowClear >
@@ -322,19 +363,7 @@ export default function RegisterPetForm(props){
                     <Form.Item>
                         <Input type="text" name="aspects" value={pet.aspects} placeholder="Otras características físicas" className="register-pet-form__input"/>
                     </Form.Item>
-                </Col>
-                <Col span={24}>
-                    <Form.Item>
-                        <ImgCrop rotate>
-                            <Dragger {...draggerFields}>
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">Click aquí o arrastre la imagen a esta área</p>
-                            </Dragger>
-                        </ImgCrop>
-                    </Form.Item>
-                </Col>     
+                </Col>    
                 <Col span={24}>
                     <Form.Item>
                         <Button htmlType="submit" className="register-pet-form__button" icon={<SaveOutlined />}> 

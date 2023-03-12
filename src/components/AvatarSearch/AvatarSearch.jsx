@@ -1,5 +1,4 @@
-import { Avatar, Image, Typography, Card } from "antd";
-const { Meta } = Card;
+import { Avatar, Image, Typography } from "antd";
 
 export default function AvatarSearch(props){
     const {person, icon} = props;

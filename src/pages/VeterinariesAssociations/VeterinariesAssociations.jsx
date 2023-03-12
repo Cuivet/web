@@ -160,7 +160,7 @@ export default function VeterinariesAssociations() {
           className="appCard"
           hoverable
           style={{ width: 300 }}
-          cover={<img alt="required text" src={DefaultAvatar}></img>}
+          cover={<img alt="required text" src={association.veterinaryData.person.photo ? association.veterinaryData.person.photo : DefaultAvatar}></img>}
           actions={[
             <Tooltip title="Desasociar Veterinario">
               <Popconfirm

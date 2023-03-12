@@ -279,7 +279,7 @@ export default function RegisterPetForm(props){
         :
         <Form className="register-pet-form"  onFinish={register} onChange={changeForm}>           
             <Row gutter={16}>
-                <Col span={24}>
+                <Col span={20} offset={4}>
                     <Form.Item>
                         <ImgCrop rotate>
                             <Upload customRequest={({ onSuccess }) => setTimeout(() => { onSuccess("ok", null); }, 0) }

@@ -376,8 +376,7 @@ export default function PetsManagement() {
                   {searchedTutorData ? (
                     <>
                       <AvatarSearch
-                        name={searchedTutorData.person.name}
-                        lastName={searchedTutorData.person.lastName}
+                        person={searchedTutorData.person}
                       ></AvatarSearch>
                     </>
                   ) : isSearchingTutorData ? (

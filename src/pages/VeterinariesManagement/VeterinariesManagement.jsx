@@ -456,8 +456,7 @@ export default function VeterinariesManagement() {
                   {searchedVeterinaryData ? (
                     <>
                       <AvatarSearch
-                        name={searchedVeterinaryData.person.name}
-                        lastName={searchedVeterinaryData.person.lastName}
+                        person={searchedVeterinaryData.person}
                       ></AvatarSearch>
                       <Divider
                         orientation="left"
@@ -601,8 +600,7 @@ export default function VeterinariesManagement() {
                   {searchedVeterinaryData ? (
                     <>
                       <AvatarSearch
-                        name={searchedVeterinaryData.person.name}
-                        lastName={searchedVeterinaryData.person.lastName}
+                        person={searchedVeterinaryData.person}
                       ></AvatarSearch>
                       <Divider orientation="left" plain>
                         {" "}

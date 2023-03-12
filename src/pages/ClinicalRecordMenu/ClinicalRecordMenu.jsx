@@ -145,8 +145,7 @@ export default function ClinicalRecordMenu() {
               ?
                 <Col xs={{ span: 24 }}>
                   <AvatarSearch
-                    name={searchedTutorData.person.name}
-                    lastName={searchedTutorData.person.lastName}
+                    person={searchedTutorData.person}
                   ></AvatarSearch>
                 </Col>
               : 

@@ -55,6 +55,7 @@
   },
   "resolve.fallback": {
     "path": false
+    
   },
   "browserslist": {
     "production": [

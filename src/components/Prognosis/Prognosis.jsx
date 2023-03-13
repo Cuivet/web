@@ -67,7 +67,7 @@ export default function Prognosis(props) {
                 name="observation"
                 label="Observación"
                 tooltip={{
-                  title: "algo",
+                  title: "Pronostico de la mascota",
                   icon: <InfoCircleOutlined />,
                 }}
               >

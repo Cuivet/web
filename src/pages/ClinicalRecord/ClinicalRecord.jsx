@@ -457,8 +457,6 @@ export default function ClinicalRecord() {
     setPrognosis({ ...prognosis, [p.target.name]: p.target.value });
   };
 
-  console.log(anamnesis);
-
   const steps = [
     {
       title: "Reseña",

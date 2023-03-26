@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { getVetsByVetOwnerId } from '../../services/vet.service';
 import {Row, Col, Typography, Tooltip, Button, Drawer, Divider} from 'antd';
 import{PlusCircleOutlined} from '@ant-design/icons';
-// import clinic from '../../assets/img/jpg/clinic.jpg';
 import clinica from '../../assets/img/jpg/clinica.jpg';
-// import '../UserSettings/UserSettings.scss'
 import CardPet from "../../components/CardPet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 
@@ -13,7 +11,7 @@ const {Title}= Typography;
 export default function Vets(){
     const [isInit, setIsInit] = useState(false);
     const [vets, setVets] = useState([]);
-    // const [work, setWork] = useState(false);
+    const [visible, setVisible] = useState(false);
     const profile = JSON.parse(sessionStorage.getItem('profile'));
 
     if (!isInit) {
@@ -24,28 +22,25 @@ export default function Vets(){
         });
     }
     
-     //para el drawer
-     const [visible, setVisible] = useState(false);
-     const showDrawer = () => {
-         setVisible(true);
-     }; 
-     const onClose = () => {
-         setVisible(false);
-     }; 
+    const showDrawer = () => {
+        setVisible(true);
+    }; 
 
-     
-     function Vet(){
+    const onClose = () => {
+        setVisible(false);
+    }; 
+    
+    function Vet(){
         const renderVetList = [];
-        if (vets.length){
+        if (vets.length) {
             vets.forEach(vet => {
                 renderVetList.push(                     
-                    <CardPet item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={clinica} description={vet.vet.address}></CardPet>
+                    <CardPet key={vet.vet.id} item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={vet.vet.photo ? vet.vet.photo : clinica} description={vet.vet.address}></CardPet>
                 )
             });
-         };
-         return renderVetList;
-         
-     };
+        };
+        return renderVetList;
+    };
 
     return (
         <>   
@@ -62,17 +57,17 @@ export default function Vets(){
                 </Col>
             </Row>
             <Divider></Divider>
-            <Drawer
-            title="Registrar nueva clínica veterinaria"          
-            onClose={onClose}
-            visible={visible}
-            bodyStyle={{
-            paddingBottom: 80,
-            }}
-        ><RegisterVetForm></RegisterVetForm></Drawer>
-        <Row>
-            <Vet></Vet>
-        </Row>
+            <Drawer title="Registrar nueva clínica veterinaria"          
+                    onClose={onClose}
+                    visible={visible}
+                    bodyStyle={{
+                    paddingBottom: 80}}>
+                <RegisterVetForm>
+                </RegisterVetForm>
+            </Drawer>
+            <Row>
+                <Vet></Vet>
+            </Row>
         </>
     );
 };

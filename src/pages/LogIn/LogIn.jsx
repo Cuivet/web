@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { Layout, Tabs } from "antd";
-import Logo from '../../assets/img/png/logo2.png'
+import Logo from '../../assets/img/png/logo2.png';
 import RegisterForm from "../../components/RegisterForm";
 import SignInForm from "../../components/SignInForm/SignInForm";
 import { getProfile } from '../../services/user.service';
@@ -39,10 +39,14 @@ export default function LogIn(){
     return (
         <Layout className="sign-in">
             <Content className="sign-in__content">
-                <h1 className="sign-in__content-logo">
-                    <img src={ Logo } alt="CUIVET" />
-                </h1>
-
+                <div className="sign-in__content-welcomeCard">
+                    <div>
+                        <img src={ Logo } alt="CUIVET" className="sign-in__content-logo"/>
+                    </div>
+                    <div>
+                        <h1 level={3}>Bienvenido a cuivet</h1>
+                    </div>
+                </div>
                 <div className="sign-in__content-tabs">
                     <Tabs type="card" centered activeKey={activeTab} onChange={changeTabKey}>
                         <TabPane tab={<span>Iniciar Sesión</span>} key="1">

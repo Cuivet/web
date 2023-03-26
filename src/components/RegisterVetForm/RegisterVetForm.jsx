@@ -1,139 +1,138 @@
 import React, {useState} from "react";
 import { numberValidation } from '../../utils/formValidation';
-import {Row, Col, Form, Button, Upload, notification, message, Input } from 'antd';
+import { Row, Col, Form, Button, Upload, notification, Input } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { SaveOutlined, InboxOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
 import { registerVet } from '../../services/vet.service';
+import storage from "../../firebaseConfig";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function RegisterVetForm(props){
-    const {Dragger} = Upload;
-
-    var vetName;
-    const fields = {
-        name: `vet`, //le dejamos el nombre con el que lo sube ?
-        multiple: false,
-        maxCount:1,
-        accept: 'image/png, image/jpeg',
-        method: 'post',
-        action: 'localhost', //creo es para llamar el endpoint... 
-      
-        onChange(info) {
-          const { status } = info.file;
-      
-          if (status !== 'uploading') {
-            console.log(info.file, info.fileList);
-          }
-      
-          if (status === 'done') {
-            message.success(`${info.file.name} Imágen subida con éxito.`);
-            //aca iria lo del back para guardar la img
-          } else if (status === 'error') {
-            message.error(`${info.file.name} La imágen no se ha podido subir`);
-          }
-        },
-      
-        onDrop(e) {
-          console.log('Archivo eliminado', e.dataTransfer.files);
-        },
-      };
-    
-    const profile = JSON.parse(sessionStorage.getItem('profile'));
-
+    const [fileList, setFileList] = useState([]);
     const [input, setInput]= useState({
         name:null,
         mp: null,
         phone: null,
         address:null,
+        photo: null
     });
-
     const [formValid, setFormValid] = useState({
-        name:false,
+        name: false,
         mp: false,
         phone: false,
-        address:false,
+        address: false
     });
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+
     const changeForm = e =>{
-        
-        if(e.target.name === "sex"){
-            setInput({
-                ...input,
-                [e.target.name]: e.target.value
-            });
-        } else {
-            setInput({
-                ...input,
-                [e.target.name]: e.target.value
-            });
-        }
+        setInput({
+            ...input,
+            [e.target.name]: e.target.value
+        });
     };
 
     const inputValidation = e =>{
-        //console.log(e.target);
-        const {type, name, value} = e.target;
-
-        if(type ==="radio"){
+        const {type, name} = e.target;
+        if (type ==="radio"){
             setFormValid({
                 ...formValid,
                 [name]:e.target.checked
             });
         };
-
-        if(type === "text"){
-            if(name === "name"){
-                vetName = value;
-            }
+        if (type === "text"){
             setFormValid({ ...formValid, [name]:(e.target)});
         };
-
         if (type === "number"){
             setFormValid({
                 ...formValid,
                 [name]:numberValidation(e.target)
             });
         };
-
         setInput({...input});
-        
     };
+
     const register = e => {
         const newVet = {
             name: input.name,
             mp: null,
             address:input.address,
             phone: input.phone,
-            vetOwnerId: profile.vetOwner.id,
+            vetOwnerId: profile.vetOwner.id
         }
-        const nameVal = input.name;
-        const addressVal = input.address;
-        const phoneVal = input.phone;
-        
-
-        if(!nameVal || !addressVal || !phoneVal){
-            notification['error']({
+        if (!input.name || !input.address || !input.phone) {
+            return notification['error']({
                 message: "Todos los campos son obligatorios",
                 description: "Debe completar todos los campos para poder registrar una Clínica",
                 placement: "top"
-            })
-        } else{
-                registerVet(newVet)
-                    .then( res => {
-                        resetForm();
-                        notification['success']({
-                            message: "Clínica creada correctamente",
-                            placement: "top"
-                        });
+            });
+        }
+        if (fileList.length > 0 && input.photo == null) {
+            const storageRef = ref(storage, `/vets/` + new Date().toString());
+            const uploadTask = uploadBytesResumable(storageRef, fileList[0].originFileObj);
+            uploadTask.on(
+                "state_changed", 
+                (snapshot) => {
+                    // const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    // se esta cargando la foto, prender un spinner tengo el percent aca 
+                },
+                (err) => {
+                    console.log(err)
+                },
+                () => {
+                    // se cargo la foto, ya tengo el url
+                    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                        setInput({...input, photo: url});
+                        newVet.photo = url;
+                        registerVet(newVet)
+                            .then( res => {
+                                resetForm();
+                                notification['success']({
+                                    message: "Clínica creada correctamente",
+                                    placement: "top"
+                                });
+                                window.location.replace('');
+                            });
                     });
-                    window.location.replace('');        
-
-            }
+                }
+            );
+        } else {
+            registerVet(newVet)
+                .then( res => {
+                    resetForm();
+                    notification['success']({
+                        message: "Clínica creada correctamente",
+                        placement: "top"
+                    });
+                    window.location.replace('');
+                });
+        }
     };
+
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+        setInput({...input, photo: null});
+    };
+
+    const onPreview = async (file) => {
+        let src = file.url;
+        if (!src) {
+          src = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file.originFileObj);
+            reader.onload = () => resolve(reader.result);
+          });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+
     const resetForm = () =>{
         const inputs = document.getElementsByTagName('input');
-
         for (let i = 0; i< inputs.length; i++){
             inputs[i].classList.remove("success");
             inputs[i].classList.remove("error");
-
             setInput({
                 name:null,
                 mp: null,
@@ -165,29 +164,16 @@ export default function RegisterVetForm(props){
                         <Input type="text" name="address" onChange={inputValidation} value={input.address} placeholder="Dirección " className="register-pet-form__input" onSelect={inputValidation}/>
                     </Form.Item>
                 </Col>
-                {/* <Col span={24}>
-                    <Form.Item>
-                    <Input type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Matricula MVR" className="register-pet-form__input" onSelect={inputValidation}/>
-                    </Form.Item>
-                </Col> */}
-                <Col span={24}>
+                <Col span={20} offset={4}>
                     <Form.Item>
                         <ImgCrop rotate>
-                            {/* <Upload
-                                    action=""
-                                listType="picture-card"
-                                fileList={fileList}
-                                onChange={onChange}
-                                onPreview={onPreview}
-                            >
-                                {fileList.length < 5 && '+ Cargar'}
-                            </Upload> */}
-                            <Dragger {...fields}>
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">Click aquí o arrastre la imágen a esta área</p>
-                            </Dragger>
+                            <Upload customRequest={({ onSuccess }) => setTimeout(() => { onSuccess("ok", null); }, 0) }
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    onChange={onChange}
+                                    onPreview={onPreview}>
+                                    {fileList.length < 1 && '+ Subir'}
+                            </Upload>
                         </ImgCrop>
                     </Form.Item>
                 </Col>     

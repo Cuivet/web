@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {Form, Input, Button, Select, notification, Spin, Modal} from 'antd';
-import {emailValidation, minLengthValidation,numberValidation} from '../../utils/formValidation';
-import { signUpApi } from "../../services/user.service";
+import { Form, Input, Button, Select, notification, Spin, Modal } from 'antd';
+import { emailValidation, minLengthValidation,numberValidation } from '../../utils/formValidation';
+import { signUpApi, confirmSignUp } from "../../services/user.service";
 import './RegisterForm.scss';
-import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined, EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
+import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined } from "@ant-design/icons";
 
 import Terms from "../Terms/Terms";
 
@@ -37,9 +37,9 @@ export default function RegisterForm(props){
     const [isRegistering, setIsRegistering] = useState(false);
     const [registeredUser, setRegisteredUser] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [confirmationCode, setConfirmationCode] = useState(null);
     const [catchReason, setCatchReason] = useState(null);
     const [vet, setVet] =  useState(false);
-    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const changeForm = e =>{
         if(e.target.name === "privacyPolicy"){
@@ -154,7 +154,25 @@ export default function RegisterForm(props){
         signUpApi(completeProfile)
             .then(res => {
                 setIsRegistering(false);
-                setRegisteredUser(res);
+                setRegisteredUser(res.data);
+            })
+            .catch(error => {
+                setCatchReason(error.response.data);
+                setIsRegistering(false);
+            });
+           
+    };
+
+    const confirmRegister = e => {
+        setIsRegistering(true);
+        setCatchReason(null);
+        const data = {email: registeredUser.user.email, code: confirmationCode}; 
+        confirmSignUp(data)
+            .then(res => {
+                setIsRegistering(false);
+                var registeredUser = res.data;
+                registeredUser.confirmated = true;
+                setRegisteredUser(res.data);
             })
             .catch(error => {
                 setCatchReason(error.response.data);
@@ -170,6 +188,7 @@ export default function RegisterForm(props){
         setIsModalVisible(false);
         setVet(false);
         setCatchReason(null);
+        setConfirmationCode(null);
 
         for (let i = 0; i< inputs.length; i++){
             inputs[i].classList.remove("success");
@@ -241,6 +260,15 @@ export default function RegisterForm(props){
 
     const hideModal = () =>{
         setIsModalVisible(false);
+        if (registeredUser) {
+            resetForm();
+        }
+    }
+
+    const updateConfirmationCode = e => {
+        var code = Number(e.target.value);
+        code = code > 9999 ? confirmationCode : code;
+        setConfirmationCode(code);
     }
     
     return (        
@@ -276,10 +304,23 @@ export default function RegisterForm(props){
                     <Select.Option value="vetOwner">Propietario de Veterinaria</Select.Option>
                 </Select>
             </Form.Item>  
-            {vet ? <div> <Form.Item id="matricula">
-                <Input prefix={<IdcardOutlined  className="site-form-item-icon" />} type="number" name="mp" onChange={inputValidation} value={input.mp} placeholder="Número de Matrícula" className="register-form__input" onSelect={inputValidation}/>
-            </Form.Item></div>
-            : null}          
+            {
+            vet ? 
+                <div> 
+                    <Form.Item id="matricula">
+                        <Input  prefix={ <IdcardOutlined className="site-form-item-icon"/> } 
+                                type="number" 
+                                name="mp" 
+                                onChange={inputValidation} 
+                                value={input.mp} 
+                                placeholder="Número de Matrícula" 
+                                className="register-form__input"
+                                onSelect={inputValidation}/>
+                    </Form.Item>
+                </div>
+                : 
+                null
+            }          
             <Form.Item>
                 <Button type="submit" htmlType="submit" className="register-form__button" onClick={showModal} > 
                   Registrarme
@@ -295,14 +336,38 @@ export default function RegisterForm(props){
                             Cancelar
                         </Button>,
                         catchReason ? 
-                        <Button htmlType="submit" type="primary" onClick={returnFromError} className="register-form_button-ok-modal">
-                            Revisar datos
-                        </Button>
+                            (
+                            registeredUser ?
+                            <Button htmlType="submit" type="primary" onClick={confirmRegister} className="register-form_button-ok-modal" >
+                                    {
+                                        isRegistering ?
+                                        <Spin></Spin>
+                                        :
+                                        <>Reintentar confirmacion</>
+                                    }
+                                </Button>
+                            :
+                            <Button htmlType="submit" type="primary" onClick={returnFromError} className="register-form_button-ok-modal">
+                                Revisar datos
+                            </Button>
+                            )
                         :
                         registeredUser ? 
-                        <Button htmlType="submit" type="primary" onClick={goToLogin} className="register-form_button-ok-modal" >
-                            Ir al Inicio de Sesión
-                        </Button>
+                            (
+                            registeredUser.confirmated ? 
+                                <Button htmlType="submit" type="primary" onClick={goToLogin} className="register-form_button-ok-modal" >
+                                    Ir al login
+                                </Button>
+                                :
+                                <Button htmlType="submit" type="primary" onClick={confirmRegister} className="register-form_button-ok-modal" >
+                                    {
+                                        isRegistering ?
+                                        <Spin></Spin>
+                                        :
+                                        <>Confirmar registro</>
+                                    }
+                                </Button>
+                            )
                         :
                         <Button htmlType="submit" type="primary" onClick={register} className="register-form_button-ok-modal" >
                             {
@@ -320,10 +385,36 @@ export default function RegisterForm(props){
                                 Registrando usuario, este proceso hace algunas validaciones de tus datos y por lo tanto puede demorar unos segundos
                             </>
                             :
-                            registeredUser ? 
-                            <>
-                                Usuario registrado con éxito!
-                            </>
+                            registeredUser ?
+                            (
+                                registeredUser.confirmated ? 
+                                <>
+                                    Registro completado exitosamente!
+                                </>
+                                :
+                                <>
+                                    {
+                                    catchReason ?
+                                        <> 
+                                            {catchReason},
+                                        </>
+                                        :
+                                        <>
+                                            Datos validados correctamente! Se ha enviado un codigo a tu correo electronico, ingresalo a continuación para completar 
+                                            el registro o bien 
+                                        </>
+                                    }
+                                    <a href='www.google.com'> reenvía el codigo</a> si no lo has recibido.
+                                    <div style={{justifyContent: 'center', alignContent:'center', display: 'flex', flexDirection:'row', paddingTop: '20px'}}>
+                                            <Input  type="number" 
+                                                    onChange={updateConfirmationCode} 
+                                                    style={{width: '160px', textAlign: 'center'}} 
+                                                    placeholder="Código de registro" 
+                                                    size="large"
+                                                    value={confirmationCode}/>
+                                    </div>
+                                </>
+                            )
                             :
                             catchReason ? 
                             <>

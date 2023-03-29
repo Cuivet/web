@@ -45,28 +45,7 @@ export default function Anamnesis(props) {
       isTextResponse: true,
     },
   ];
-  // no se para que lo hice pero no lo borro todavia
-  // const [input, setInput] = useState(
-  //   questions.map((question) => {
-  //     return {
-  //       anamnesisId: props.id,
-  //       anamnesisQuestionId: question.id,
-  //       booleanResponse: null,
-  //       textResponse: null,
-  //     };
-  //   })
-  // );
-
-  //Create form fields based off how many items are in the questions
-  // const itemInputs = questions.map((item) => {
-  //   return {
-  //     id: item.id,
-  //     question: item.question,
-  //     isBooleanResponse: item.isBooleanResponse,
-  //     isTextResponse: item.isTextResponse,
-  //   };
-  // });
-
+ 
   //funcion para mapear las preguntas
   const itemInputs = questions.map((item) => {
     if (item.isBooleanResponse && item.isTextResponse) {
@@ -87,15 +66,6 @@ export default function Anamnesis(props) {
       offset: 0,
     },
   };
-
-  // const onChange = (e) => {
-  //   // setRadioValue(e.target.value);
-  //   console.log(e.target.name);
-  //   console.log(e.target.value);
-  //   const oldValues = [...radiosValues];
-  //   oldValues.splice(e.target.name, 1, e.target.value);
-  //   setRadiosValues(oldValues);
-  // };
 
   //carga de datos en los campos
   useEffect(() => {
@@ -291,44 +261,6 @@ export default function Anamnesis(props) {
     return render;
   }
 
-  //cada vez que cambia el formulario
-  //texto no deja ingresar mas de un caracter por vez
-  //probar de hacer la carga en el onfinish
-  const changeForm = (e) => {
-    // props.stepSave(e);
-    // if (e.target.name.slice(0, 15) === "booleanResponse") {
-    //   setTest({
-    //     ...test,
-    //     anamnesisQuestionId: parseInt(e.target.name.slice(15)),
-    //     [e.target.name.slice(0, 15)]: e.target.value,
-    //   });
-    // }
-    // if(e.target.name.slice(0,12) === 'textResponse'){
-    //   setTest({
-    //     ...test,
-    //     [e.target.name.slice(0,12)]: e.target.value});
-    // }
-    // setInput(input.map(i => {
-    //   if (i.anamnesisQuestionId === parseInt(e.target.name.slice(15))){
-    //     return test;
-    //   }
-    //   return i;
-    // }))
-    // setInput(input.map( i => {
-    //         if(e.target.name.slice(0,4) === 'bool' && i.anamnesisQuestionId === parseInt(e.target.name.slice(4))){
-    //             return {...i, booleanResponse: e.target.value,};
-    //         }
-    //         // else if (e.target.name.slice(0,4) === 'text' && i.anamnesisQuestionId === parseInt(e.target.name.slice(4))){
-    //         //     return {...i, textResponse: e.target.value,};
-    //         // }
-    //          else{
-    //             return {...i};
-    //         }
-    // }));
-    // console.log(test);
-    // console.log(input);
-  };
-
   const register = (e) => {
     console.log(e);
 
@@ -368,56 +300,10 @@ export default function Anamnesis(props) {
     );
 
     console.log(anamnesisItems);
-
-    // let size = Object.keys(e).length;
-    // let keys = Object.keys(e);
-    // let anamnesisItems = Array(questions.length).fill(null);
-    // let last;
-    // let flag = true;
-    // console.log(anamnesisItems);
-    // for (let i = 0; i < size; i++) {
-    //   // let obj;
-    //   // console.log(keys[i]);
-
-    //   if (flag) {
-    //     // console.log(values[i]);
-    //     if (keys[i].slice(0, 15) === "booleanResponse") {
-    //       console.log("hola");
-    //       anamnesisItems.splice(0, 1, { booleanResponse: e.booleanResponse0 });
-    //       last = e.booleanResponse0;
-    //       console.log(last);
-    //     }
-    //     flag = false;
-    //   }
-    //   console.log(anamnesisItems)
-
-    // if (
-    //   parseInt(key.slice(15)) === last &&
-    //   key.slice(0, 16) === "booleanResponse"
-    // ) {
-    //   obj = { booleanResponse: e[key] };
-    //   last = parseInt(key.slice(15));
-    // }
-    //   if (
-    //     parseInt(key.slice(12)) === last &&
-    //     key.slice(0, 13) === "textResponse"
-    //   ) {
-    //     obj = { textResponse: e[key] };
-    //     last = parseInt(key.slice(12));
-    //   }
-    //   console.log(obj);
-    //   list.push(obj);
-    // console.log(key.slice(15));
-    // console.log(`${key}: ${e[key]}`);
-    // }
-    // console.log(list);
+    const data = anamnesisItems;
+    localStorage.setItem("anamnesisItems", JSON.stringify(data));
     props.stepSave(e);
   };
-
-  // console.log(initValue);
-  const test = [{ hola: "bye" }, { hola: "chau" }];
-  // console.log(itemInputs);
-  // console.clear();
 
   return (
     <>
@@ -433,7 +319,6 @@ export default function Anamnesis(props) {
             onFinish={register}
             className="stepForm"
             autoComplete="off"
-            onChange={changeForm}
           >
             <RenderQ />
             {/* <Form.List name={"anamnesisItems"} >

@@ -43,16 +43,23 @@ export default function ClinicalRecordMenu() {
         setIsSearchingTutorData(false);
         getPetsByTutorId(res.tutor.id).then((pets) => {
           setPetOptions(generatePetOptions(pets));
-        });
+          
+        });      
+        sessionStorage.setItem("tutor", JSON.stringify(res));
+        
       })
       .catch((error) => {
         message.error(error.response.data);
         setIsSearchingTutorData(false);
       });
+    
   };
+  
+  
 
   const refreshSelectedPet = (value) => {
     setSelectedPetId(value);
+    sessionStorage.setItem("petId", JSON.stringify(value));
   };
 
   function generatePetOptions(pets) {
@@ -77,22 +84,23 @@ export default function ClinicalRecordMenu() {
         </Col>
       </Row>
 
-      <Divider orientation="left">Nueva ficha clínica</Divider>
+      <Divider orientation="center">Nueva ficha clínica</Divider>
       
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 9 }}>
+        <Col sm={{ span: 24 }} md={{ span: 10, offset:7}} style={{ marginBottom: "1%" }}>
           <Card title="Datos para la nueva ficha" hoverable
             actions={[
               <Col>
                 {
                   selectedPetId ?
-                    <Col xs={{ span: 24 }}>
+                    <Col xs={{ span: 24 }} md={{ span: 4, offset: 9 }}>
                       <Button
                         htmlType="submit"
                         type="primary"
                         className="register-form_button-ok-modal"
                         onClick={createClinicalRecord}
                         shape="round"
+                        
                       >
                         Crear
                       </Button>
@@ -130,7 +138,7 @@ export default function ClinicalRecordMenu() {
                 <Button
                   htmlType="submit"
                   type="primary"
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", marginTop:'2%' }}
                   onClick={searchTutorData}
                   className="register-form_button-ok-modal"
                 >

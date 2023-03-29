@@ -35,7 +35,7 @@ import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
 import { useLocation } from "react-router-dom";
 import { clinicalRecordService } from "../../services/clinical_record.service";
-import { getPetsByTutorId } from "../../services/pet.service";
+import { getPet } from "../../services/pet.service";
 
 const { Title } = Typography;
 
@@ -69,7 +69,7 @@ export default function ClinicalRecord() {
     }
   }, [location]);
   const [isInit, setIsInit] = useState(false);
-  const [pets, setPets] = useState([]);
+  // const [pets, setPets] = useState([]);
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [editableStr, setEditableStr] = useState("Motivo de la consulta");
   const [current, setCurrent] = useState(0);
@@ -78,6 +78,16 @@ export default function ClinicalRecord() {
   const [studies, setStudies] = useState(false);
   var veterinary = false;
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const tutor = JSON.parse(sessionStorage.getItem("tutor"));
+
+  getPet(JSON.parse(sessionStorage.getItem("petId")))
+    .then((response) => {
+      sessionStorage.setItem("petData", JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   if (profile.veterinary != null) {
     veterinary = true;
   }
@@ -87,13 +97,16 @@ export default function ClinicalRecord() {
   //     setPets(response);
   //   });
   // }
+  const pet = JSON.parse(sessionStorage.getItem("petData"));
+  // console.log(pet);
+
   const [cRecord, setcRecord] = useState({
     id: 1,
     veterinaryData: {
       veterinary: {
         id: profile.person.id,
         mp: veterinary ? profile.veterinary.mp : null,
-        userId: null,
+        userId: profile.veterinary.userId,
       },
       person: {
         id: 1,
@@ -102,37 +115,37 @@ export default function ClinicalRecord() {
         phone: profile.person.phone,
         address: profile.person.address,
         dni: profile.person.dni,
-        userId: null,
+        userId: profile.person.userId,
       },
     },
     tutorData: {
       tutor: {
-        id: 1,
-        userId: 3,
+        id: tutor.tutor.id,
+        userId: tutor.tutor.userId,
       },
       person: {
-        id: 2,
-        name: "Tomás",
-        lastName: "Bardin",
-        phone: "3515936520",
-        address: "San Cayetano 4465",
-        dni: 40402461,
-        userId: 3,
+        id: tutor.person.id,
+        name: tutor.person.name,
+        lastName: tutor.person.lastName,
+        phone: tutor.person.phone,
+        address: tutor.person.address,
+        dni: tutor.person.dni,
+        userId: tutor.person.userId,
       },
     },
     pet: {
-      id: 1,
-      name: "Malu",
-      birth: "2012-07-07 02:03:41",
-      isMale: true,
-      tutorId: 1,
-      raceId: 201,
-      castrationDate: "2020-07-03T19:00:43.000Z",
-      haveChip: true,
-      aspects: "Cicatriz en oreja derecha",
-      hairColorId: 1,
-      hairLengthId: 3,
-      petSizeId: 2,
+      id: pet.id,
+      name: pet.name,
+      birth: pet.birth,
+      isMale: pet.isMale,
+      tutorId: pet.tutorId,
+      raceId: pet.raceId,
+      castrationDate: pet.castrationDate,
+      haveChip: pet.haveChip,
+      aspects: pet.aspects,
+      hairColorId: pet.hairColorId,
+      hairLengthId: pet.hairLengthId,
+      petSizeId: pet.petSizeId,
     },
     vet: {
       id: 1,
@@ -334,6 +347,32 @@ export default function ClinicalRecord() {
     },
   });
 
+  // const [cRecord2, setcRecord2]= useState({
+  //   id: 1,
+  //   veterinaryData: {
+  //     veterinary: {
+  //       id: profile.person.id,
+  //       mp: veterinary ? profile.veterinary.mp : null,
+  //       userId: null,
+  //     },
+  //   },
+  //   tutorData: {
+  //     tutor: {
+  //       id: tutor.tutor.id,
+  //       userId: tutor.tutor.userId,
+  //     },
+  //     person: {
+  //       id: tutor.person.id,
+  //       name: tutor.person.name,
+  //       lastName: tutor.person.lastName,
+  //       phone: tutor.person.phone,
+  //       address: tutor.person.address,
+  //       dni: tutor.person.dni,
+  //       userId: tutor.person.userId,
+  //     },
+  //   },
+  // })
+
   const showModal = () => {
     console.log(isModalOpen);
     setIsModalOpen(true);
@@ -382,19 +421,19 @@ export default function ClinicalRecord() {
     });
   };
 
-  const [anamnesisItem, setAnamnesisItem] = useState({    
+  const [anamnesisItem, setAnamnesisItem] = useState({
     id: null,
     anamnesisId: null,
     anamnesisQuestionId: null,
     booleanResponse: null,
     textResponse: null,
-  })
+  });
 
-  const [anamnesis, setAnamnesis] =useState({
+  const [anamnesis, setAnamnesis] = useState({
     id: null,
     visitId: null,
-    anamnesisItems:[]
-  })
+    anamnesisItems: [],
+  });
 
   const [physcalExam, setPhysicalExam] = useState({
     id: null,
@@ -430,10 +469,10 @@ export default function ClinicalRecord() {
     observation: null,
   });
 
-  const anamnesisChangeForm = (a) =>{
+  const anamnesisChangeForm = (a) => {
     setAnamnesisItem(a);
-    setAnamnesis({...anamnesis, anamnesisItems:[anamnesisItem]})
-  }
+    setAnamnesis({ ...anamnesis, anamnesisItems: [anamnesisItem] });
+  };
 
   const physicalExamChangeForm = (pe) => {
     setPhysicalExam({
@@ -441,16 +480,15 @@ export default function ClinicalRecord() {
       [pe.target.name]: pe.target.value,
     });
   };
-  
+
   const presumptiveDiagnosisChangeForm = (pd) => {
-    setPresumptiveDiagnosisItem(pd)
+    setPresumptiveDiagnosisItem(pd);
   };
 
-  //sin terminar, considerar los tratamientos 
+  //sin terminar, considerar los tratamientos
   const diagnosisChangeForm = (d) => {
-    
     setDiagnosisItem(d);
-    setDiagnosis({...diagnosis, diagnosisItems: [diagnosisItem]})
+    setDiagnosis({ ...diagnosis, diagnosisItems: [diagnosisItem] });
   };
 
   const prognosisChangeForm = (p) => {

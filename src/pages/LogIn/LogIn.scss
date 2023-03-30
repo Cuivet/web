@@ -1,7 +1,8 @@
 @import "../../scss/index.scss";
 
 .sign-in{
-    background-image: url('../../assets/img/png/background-v1.jpg');
+    background: rgb(66,0,57);
+    background: linear-gradient(90deg, rgba(66,0,57,1) 0%, rgba(117,0,143,1) 22%, rgba(255,0,232,1) 100%);
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -13,10 +14,25 @@
         align-items: center;
         min-height: 100vh;
     
-        &-logo{
-            padding: 60px 20px;
+        &-welcomeCard{
+            flex-flow: row wrap;
+            width: 40vh;
+            padding: 50px 20px;
+            display: grid;
+            grid-template-columns: auto auto;
+            place-items: center;
+            div {
+                display: inline-grid;
+            }
+            h1 {
+                color: white;
+                padding: 0px 0px 0px 14px;
+                margin: 0;
+                font-size: 1.1rem;
+            }
             img {
                 width: 100%;
+                display: block;
             }
         }
 

@@ -16,6 +16,22 @@ export function signUpApi(data){
         })
 }
 
+export function confirmSignUp(data){
+    var axios = require('axios');
+    return axios({
+        method: "post",
+        url: `${basePATH}/user/confirmRegister`,
+        data: data,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json'
+        }
+        })
+        .then((response) => {
+            return response;
+        })
+}
+
 export function getProfile() {
     var axios = require('axios');
     return axios({

@@ -36,6 +36,7 @@ import Prognosis from "../../components/Prognosis/Prognosis";
 import { useLocation } from "react-router-dom";
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { getPet } from "../../services/pet.service";
+import {getAllDataByRegentOrVeterinary} from "../../services/veterinary_association.service";
 
 const { Title } = Typography;
 
@@ -90,7 +91,15 @@ export default function ClinicalRecord() {
 
   if (profile.veterinary != null) {
     veterinary = true;
-  }
+  };
+
+  getAllDataByRegentOrVeterinary(profile.veterinary.id)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
   // if (!isInit) {
   //   setIsInit(true);
   //   getPetsByTutorId(profile.tutor.id).then((response) => {
@@ -188,11 +197,11 @@ export default function ClinicalRecord() {
     review: {
       id: 12,
       visitId: 1,
-      name: "Lima",
-      birth: "2018-07-09T19:00:43.000Z",
-      isMale: false,
-      raceId: 2,
-      specieId: 2,
+      name: pet.name,
+      birth: pet.birth,
+      isMale: pet.isMale,
+      raceId: pet.raceId,
+      specieId: pet.specieId,
     },
     anamnesis: {
       id: 10,

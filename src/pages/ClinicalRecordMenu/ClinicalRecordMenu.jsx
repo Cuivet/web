@@ -93,7 +93,7 @@ export default function ClinicalRecordMenu() {
               <Col>
                 {
                   selectedPetId ?
-                    <Col xs={{ span: 24 }} md={{ span: 4, offset: 9 }}>
+                    <Col xs={{ span: 24 }} md={{ span: 4, offset: 10 }}>
                       <Button
                         htmlType="submit"
                         type="primary"

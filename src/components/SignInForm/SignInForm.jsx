@@ -35,7 +35,6 @@ export default function SignInForm(props){
 
 
     const changeForm = e =>{
-        console.log(e.target.name);
         setInput({
             ...input,
             [e.target.name]: e.target.value

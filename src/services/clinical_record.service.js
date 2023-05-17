@@ -23,7 +23,7 @@ async function findOneById(id) {
         })
 };
 
-async function findAllByVeterinaryId(veterinaryId) {
+export async function findAllByVeterinaryId(veterinaryId) {
     var axios = require('axios');
     return axios({
         method: "get",

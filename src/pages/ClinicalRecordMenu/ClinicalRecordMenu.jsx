@@ -58,8 +58,9 @@ export default function ClinicalRecordMenu() {
   
 
   const refreshSelectedPet = (value) => {
-    setSelectedPetId(value);
+    setSelectedPetId(value);    
     sessionStorage.setItem("petId", JSON.stringify(value));
+    
   };
 
   function generatePetOptions(pets) {
@@ -71,6 +72,7 @@ export default function ClinicalRecordMenu() {
   }
 
   const createClinicalRecord = () => {
+    console.log(selectedPetId);
     navigate("/clinical-record", {
       state: { clinicalRecordId: null, petId: Number(selectedPetId) },
     });
@@ -87,7 +89,7 @@ export default function ClinicalRecordMenu() {
       <Divider orientation="center">Nueva ficha clínica</Divider>
       
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 10, offset:7}} style={{ marginBottom: "1%" }}>
+        <Col sm={{ span: 24 }} md={{ span: 14, offset:5}} lg={{span:8, offset: 8}} style={{ marginBottom: "1%" }}>
           <Card title="Datos para la nueva ficha" hoverable
             actions={[
               <Col>

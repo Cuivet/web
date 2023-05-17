@@ -34,20 +34,39 @@ import PresumptiveDiagnosis from "../../components/PresumptiveDiagnosis/Presumpt
 import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
 import { useLocation } from "react-router-dom";
-import { clinicalRecordService } from "../../services/clinical_record.service";
+import {
+  clinicalRecordService,
+  findAllByVeterinaryId,
+} from "../../services/clinical_record.service";
 import { getPet } from "../../services/pet.service";
-import {getAllDataByRegentOrVeterinary} from "../../services/veterinary_association.service";
+import { getAllDataByRegentOrVeterinary } from "../../services/veterinary_association.service";
 
 const { Title } = Typography;
 
 export default function ClinicalRecord() {
   const location = useLocation();
+  const [cRecord2, setcRecord2] = useState(null);
+
+  clinicalRecordService
+    .findOneById(location.state.clinicalRecordId)
+    .then((res) => {
+      sessionStorage.setItem("cRecord", JSON.stringify(res));
+    })
+    .catch((error) => {
+      message.error("Algo salio mal");
+    });
+
   useEffect(() => {
     if (location.state.clinicalRecordId) {
       clinicalRecordService
         .findOneById(location.state.clinicalRecordId)
         .then((res) => {
           setClinicalRecord(res);
+          sessionStorage.setItem("cRecord", JSON.stringify(res));
+          // console.log(res);
+          // const dataRes = res;
+          // console.log(dataRes);
+          // setcRecord2(dataRes);
         })
         .catch((error) => {
           message.error(error.response.data);
@@ -63,13 +82,18 @@ export default function ClinicalRecord() {
         .registerClinicalRecord(clinicalRecord)
         .then((res) => {
           setClinicalRecord(res);
+          sessionStorage.setItem("cRecord", JSON.stringify(res));
+          // const dataRes = res;
+          // console.log(dataRes);
+          // setcRecord2(dataRes);
         })
         .catch((error) => {
           message.error(error.response.data);
         });
     }
   }, [location]);
-  const [isInit, setIsInit] = useState(false);
+
+  // const [isInit, setIsInit] = useState(false);
   // const [pets, setPets] = useState([]);
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [editableStr, setEditableStr] = useState("Motivo de la consulta");
@@ -78,36 +102,57 @@ export default function ClinicalRecord() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [studies, setStudies] = useState(false);
   var veterinary = false;
+
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const tutor = JSON.parse(sessionStorage.getItem("tutor"));
 
-  getPet(JSON.parse(sessionStorage.getItem("petId")))
-    .then((response) => {
-      sessionStorage.setItem("petData", JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  // getPet(JSON.parse(1))
+  //   .then((response) => {
+  //     sessionStorage.setItem("petData", JSON.stringify(response.data));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 
   if (profile.veterinary != null) {
     veterinary = true;
-  };
+  }
 
-  getAllDataByRegentOrVeterinary(profile.veterinary.id)
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+  // getAllDataByRegentOrVeterinary(profile.veterinary.id)
+  //   .then((response) => {
+  //     if (response === []) {
+  //       response = "Sin asignar";
+  //     } else {
+  //       sessionStorage.setItem("vet", JSON.stringify(response[0].vetData.vet));
+  //     }
+  //     // console.log(response[0].vetData.vet)
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
+  // findAllByVeterinaryId(profile.veterinary.id)
+  //   .then((response) => {
+  //     // console.log(response);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
+  // console.log(cRecord2);
+  // console.log(clinicalRecord);
+
   // if (!isInit) {
   //   setIsInit(true);
   //   getPetsByTutorId(profile.tutor.id).then((response) => {
   //     setPets(response);
   //   });
   // }
-  const pet = JSON.parse(sessionStorage.getItem("petData"));
-  // console.log(pet);
+
+  // const pet = JSON.parse(sessionStorage.getItem("petData"));
+  // const vet = JSON.parse(sessionStorage.getItem("vet"));
+  const vet={id:1, name:'juan',ohone:2312,address:"gola",photo:null,vetOwnerId:2,veterinaryId:2}
+  const pet={}
 
   const [cRecord, setcRecord] = useState({
     id: 1,
@@ -157,13 +202,13 @@ export default function ClinicalRecord() {
       petSizeId: pet.petSizeId,
     },
     vet: {
-      id: 1,
-      name: "Clínica La Recta",
-      phone: "03543-429312",
-      address: "Recta Martinolli 8520",
-      photo: null,
-      vetOwnerId: 1,
-      veterinaryId: 5,
+      id: vet.id,
+      name: vet.name,
+      phone: vet.phone,
+      address: vet.address,
+      photo: vet.photo,
+      vetOwnerId: vet.vetOwnerId,
+      veterinaryId: vet.veterinaryId,
     },
     visits: [
       {
@@ -356,32 +401,6 @@ export default function ClinicalRecord() {
     },
   });
 
-  // const [cRecord2, setcRecord2]= useState({
-  //   id: 1,
-  //   veterinaryData: {
-  //     veterinary: {
-  //       id: profile.person.id,
-  //       mp: veterinary ? profile.veterinary.mp : null,
-  //       userId: null,
-  //     },
-  //   },
-  //   tutorData: {
-  //     tutor: {
-  //       id: tutor.tutor.id,
-  //       userId: tutor.tutor.userId,
-  //     },
-  //     person: {
-  //       id: tutor.person.id,
-  //       name: tutor.person.name,
-  //       lastName: tutor.person.lastName,
-  //       phone: tutor.person.phone,
-  //       address: tutor.person.address,
-  //       dni: tutor.person.dni,
-  //       userId: tutor.person.userId,
-  //     },
-  //   },
-  // })
-
   const showModal = () => {
     console.log(isModalOpen);
     setIsModalOpen(true);
@@ -404,12 +423,29 @@ export default function ClinicalRecord() {
     setCurrent(current - 1);
   };
 
-  function Exists(step, datafield) {
-    if (step === null) {
-      return null;
-    } else {
-      return datafield;
-    }
+  function Exists(obj, property) {
+    // if (step === null) {
+    //   return null;
+    // } else {
+    //   return datafield;
+    // }
+
+    // return step?.[datafield] || null;
+
+    // if (
+    //   step === null ||
+    //   step === undefined ||
+    //   step[datafield] === null ||
+    //   step[datafield] === undefined
+    // ) {
+    //   return null;
+    // } else {
+    //   return step[datafield];
+    // }
+
+    // return obj?.[property] !== undefined || obj?.[property] !== null ?? obj[property] : null;
+
+    return obj?.[property] ?? null;
   }
   function Visits(step) {
     if (step !== null) {
@@ -422,13 +458,13 @@ export default function ClinicalRecord() {
     }
   }
   const { Step } = Steps;
-
-  const changeForm = (fd) => {
-    setcRecord({
-      ...cRecord,
-      [fd.target.name]: fd.target.value,
-    });
-  };
+  //revisar si la usaba
+  // const changeForm = (fd) => {
+  //   setclinicalRecord({
+  //     ...cRecord,
+  //     [fd.target.name]: fd.target.value,
+  //   });
+  // };
 
   const [anamnesisItem, setAnamnesisItem] = useState({
     id: null,
@@ -504,14 +540,21 @@ export default function ClinicalRecord() {
     setPrognosis({ ...prognosis, [p.target.name]: p.target.value });
   };
 
+  const test = { review: null };
+
+  // Check if cRecord has review.id property
+  // if (test?.review?.id !== undefined) {
+  //   console.log("cRecord has review.id property.");
+  // } else {
+  //   console.log("cRecord does not have review.id property.");
+  // }
+  // console.log(Exists(cRecord2.review, 'id'));
+
   const steps = [
     {
       title: "Reseña",
       content: (
-        <Review
-          id={Exists(cRecord.review, cRecord.review.id)}
-          pet={cRecord.pet}
-        />
+        <Review id={Exists(cRecord.review, "id")} pet={cRecord.pet} />
         // <Review
         //   id={null}
         //   pet={null}
@@ -687,6 +730,7 @@ export default function ClinicalRecord() {
                 1
               )}${cRecord.veterinaryData.person.lastName.slice(0, 1)}`,
               style: { backgroundColor: "#f56a00" },
+              // size: "small",
             }}
           >
             <Row>

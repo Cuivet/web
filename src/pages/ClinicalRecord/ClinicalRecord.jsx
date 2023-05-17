@@ -106,13 +106,13 @@ export default function ClinicalRecord() {
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const tutor = JSON.parse(sessionStorage.getItem("tutor"));
 
-  // getPet(JSON.parse(1))
-  //   .then((response) => {
-  //     sessionStorage.setItem("petData", JSON.stringify(response.data));
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
+  getPet(JSON.parse(sessionStorage.getItem("petId")))
+    .then((response) => {
+      sessionStorage.setItem("petData", JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   if (profile.veterinary != null) {
     veterinary = true;
@@ -149,10 +149,10 @@ export default function ClinicalRecord() {
   //   });
   // }
 
-  // const pet = JSON.parse(sessionStorage.getItem("petData"));
-  // const vet = JSON.parse(sessionStorage.getItem("vet"));
-  const vet={id:1, name:'juan',ohone:2312,address:"gola",photo:null,vetOwnerId:2,veterinaryId:2}
-  const pet={}
+  const pet = JSON.parse(sessionStorage.getItem("petData"));
+  const vet = JSON.parse(sessionStorage.getItem("vet"));
+  // const vet={id:1, name:'juan',ohone:2312,address:"gola",photo:null,vetOwnerId:2,veterinaryId:2}
+  // const pet={}
 
   const [cRecord, setcRecord] = useState({
     id: 1,

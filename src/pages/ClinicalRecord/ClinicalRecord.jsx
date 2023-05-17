@@ -36,10 +36,10 @@ import Prognosis from "../../components/Prognosis/Prognosis";
 import { useLocation } from "react-router-dom";
 import {
   clinicalRecordService,
-  findAllByVeterinaryId,
+  // findAllByVeterinaryId,
 } from "../../services/clinical_record.service";
 import { getPet } from "../../services/pet.service";
-import { getAllDataByRegentOrVeterinary } from "../../services/veterinary_association.service";
+// import { getAllDataByRegentOrVeterinary } from "../../services/veterinary_association.service";
 
 const { Title } = Typography;
 
@@ -50,7 +50,7 @@ export default function ClinicalRecord() {
   clinicalRecordService
     .findOneById(location.state.clinicalRecordId)
     .then((res) => {
-      sessionStorage.setItem("cRecord", JSON.stringify(res));
+      // sessionStorage.setItem("cRecord", JSON.stringify(res));
     })
     .catch((error) => {
       message.error("Algo salio mal");
@@ -64,8 +64,8 @@ export default function ClinicalRecord() {
           setClinicalRecord(res);
           sessionStorage.setItem("cRecord", JSON.stringify(res));
           // console.log(res);
-          // const dataRes = res;
-          // console.log(dataRes);
+          const dataRes = res;
+          console.log(dataRes);
           // setcRecord2(dataRes);
         })
         .catch((error) => {
@@ -83,8 +83,8 @@ export default function ClinicalRecord() {
         .then((res) => {
           setClinicalRecord(res);
           sessionStorage.setItem("cRecord", JSON.stringify(res));
-          // const dataRes = res;
-          // console.log(dataRes);
+          const dataRes = res;
+          console.log(dataRes);
           // setcRecord2(dataRes);
         })
         .catch((error) => {
@@ -106,13 +106,14 @@ export default function ClinicalRecord() {
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const tutor = JSON.parse(sessionStorage.getItem("tutor"));
 
-  getPet(JSON.parse(sessionStorage.getItem("petId")))
-    .then((response) => {
-      sessionStorage.setItem("petData", JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  // getPet(1)
+  //   .then((response) => {
+  //     console.log(response);
+  //     // sessionStorage.setItem("petData", JSON.stringify(response.data));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
 
   if (profile.veterinary != null) {
     veterinary = true;
@@ -149,8 +150,9 @@ export default function ClinicalRecord() {
   //   });
   // }
 
-  const pet = JSON.parse(sessionStorage.getItem("petData"));
-  const vet = JSON.parse(sessionStorage.getItem("vet"));
+  // const pet = JSON.parse(sessionStorage.getItem("petData"));
+  // const vet = JSON.parse(sessionStorage.getItem("vet"));
+  
   // const vet={id:1, name:'juan',ohone:2312,address:"gola",photo:null,vetOwnerId:2,veterinaryId:2}
   // const pet={}
 
@@ -188,27 +190,27 @@ export default function ClinicalRecord() {
       },
     },
     pet: {
-      id: pet.id,
-      name: pet.name,
-      birth: pet.birth,
-      isMale: pet.isMale,
-      tutorId: pet.tutorId,
-      raceId: pet.raceId,
-      castrationDate: pet.castrationDate,
-      haveChip: pet.haveChip,
-      aspects: pet.aspects,
-      hairColorId: pet.hairColorId,
-      hairLengthId: pet.hairLengthId,
-      petSizeId: pet.petSizeId,
+      // id: pet.id,
+      // name: pet.name,
+      // birth: pet.birth,
+      // isMale: pet.isMale,
+      // tutorId: pet.tutorId,
+      // raceId: pet.raceId,
+      // castrationDate: pet.castrationDate,
+      // haveChip: pet.haveChip,
+      // aspects: pet.aspects,
+      // hairColorId: pet.hairColorId,
+      // hairLengthId: pet.hairLengthId,
+      // petSizeId: pet.petSizeId,
     },
     vet: {
-      id: vet.id,
-      name: vet.name,
-      phone: vet.phone,
-      address: vet.address,
-      photo: vet.photo,
-      vetOwnerId: vet.vetOwnerId,
-      veterinaryId: vet.veterinaryId,
+      // id: vet.id,
+      // name: vet.name,
+      // phone: vet.phone,
+      // address: vet.address,
+      // photo: vet.photo,
+      // vetOwnerId: vet.vetOwnerId,
+      // veterinaryId: vet.veterinaryId,
     },
     visits: [
       {
@@ -242,11 +244,11 @@ export default function ClinicalRecord() {
     review: {
       id: 12,
       visitId: 1,
-      name: pet.name,
-      birth: pet.birth,
-      isMale: pet.isMale,
-      raceId: pet.raceId,
-      specieId: pet.specieId,
+      // name: pet.name,
+      // birth: pet.birth,
+      // isMale: pet.isMale,
+      // raceId: pet.raceId,
+      // specieId: pet.specieId,
     },
     anamnesis: {
       id: 10,

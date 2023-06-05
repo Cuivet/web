@@ -16,7 +16,7 @@ import { getTutorDataByDni } from "../../services/tutor.service";
 import AvatarSearch from "../../components/AvatarSearch";
 import { SettingTwoTone } from "@ant-design/icons";
 import { getPetsByTutorId } from "../../services/pet.service";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -72,8 +72,7 @@ export default function ClinicalRecordMenu() {
   }
 
   const createClinicalRecord = () => {
-    console.log(selectedPetId);
-    navigate("/clinical-record", {
+    navigate("/clinical-recordT", {
       state: { clinicalRecordId: null, petId: Number(selectedPetId) },
     });
   };
@@ -100,7 +99,7 @@ export default function ClinicalRecordMenu() {
                         htmlType="submit"
                         type="primary"
                         className="register-form_button-ok-modal"
-                        onClick={createClinicalRecord}
+                        onClick={()=>{createClinicalRecord()}}
                         shape="round"
                         
                       >

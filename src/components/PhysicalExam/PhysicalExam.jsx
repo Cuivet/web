@@ -15,21 +15,16 @@ import { numberValidation } from "../../utils/formValidation";
 
 export default function PhysicalExam(props) {
   const {
-    weight,
-    temperature,
-    pulse,
-    mucousMembrane,
-    bodyCondition,
-    observation,
+    physicalExam,
   } = props;
   const [disabled, setIsDisabled] = useState(false);
   const [initValue, setInitValue] = useState([
-    { name: ["weight"], value: weight },
-    { name: ["temperature"], value: temperature },
-    { name: ["pulse"], value: pulse },
-    { name: ["mucousMembrane"], value: mucousMembrane },
-    { name: ["bodyCondition"], value: bodyCondition },
-    { name: ["observation"], value: observation },
+    { name: ["weight"], value: physicalExam.weight },
+    { name: ["temperature"], value: physicalExam.temperature },
+    { name: ["pulse"], value: physicalExam.pulse },
+    { name: ["mucousMembrane"], value: physicalExam.mucousMembrane },
+    { name: ["bodyCondition"], value: physicalExam.bodyCondition },
+    { name: ["observation"], value: physicalExam.observation },
   ]);
   const [input, setInput] = useState({
     visitId: null,

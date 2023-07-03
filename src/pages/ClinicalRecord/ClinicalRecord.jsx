@@ -345,7 +345,7 @@ export default function ClinicalRecord() {
         visitId: 3,
         diagnosisItems: [
           {
-            //va a ser un solo objeto por defecto
+            //un solo objeto por defecto, no puede haber mas de uno
             id: 4,
             diagnosisId: 2,
             diagnosisResult: "Gastroenteritis aguda",

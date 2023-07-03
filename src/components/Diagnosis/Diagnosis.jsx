@@ -10,6 +10,7 @@ import {
   Tooltip,
   Divider,
   InputNumber,
+  message,
 } from "antd";
 import {
   InfoCircleOutlined,
@@ -29,6 +30,7 @@ export default function Diagnosis(props) {
     useState(null);
   const [drugs, setDrugs] = useState([]);
   const [disabled, setIsDisabled] = useState(false);
+  const [isDataFilled, setIsDataFilled] = useState(false);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
   const [input, setInput] = useState({
     visitId: null,
@@ -64,6 +66,7 @@ export default function Diagnosis(props) {
       });
     };
     fetchData();
+    console.log(treatmentOptions);
   }, []);
 
   //   console.log(props);
@@ -71,6 +74,7 @@ export default function Diagnosis(props) {
     //caso1: trae TODOS los datos cargados
     if (props.id !== null) {
       setIsDisabled(true);
+      setIsDataFilled(true);
 
       //Martina
       const newTreatments = props.diagnosis.diagnosisItemTreatments.map(
@@ -149,6 +153,7 @@ export default function Diagnosis(props) {
       //caso2: carga SOLO los campos
       //habilita campo
       setIsDisabled(false);
+      setIsDataFilled(false);
       setInitValue([{ name: "empty", value: null }]);
     }
   }, [props]);
@@ -201,7 +206,7 @@ export default function Diagnosis(props) {
         //mapear con una bandera de activacion, distintos obj en el array
         if (initValue[i]["name"].slice(0, 15) === "treatmentTypeId") {
           render.push(
-            <Col>
+            <Col key={i}>
               <Form.Item
                 name={initValue[i]["name"]}
                 // wrapperCol={wrapper}
@@ -227,7 +232,7 @@ export default function Diagnosis(props) {
           }
         } else if (initValue[i]["name"].slice(0, 17) === "treatmentOptionId") {
           render.push(
-            <Col>
+            <Col key={i}>
               <Form.Item
                 name={initValue[i]["name"]}
                 // wrapperCol={wrapper}
@@ -248,7 +253,7 @@ export default function Diagnosis(props) {
         if (flag) {
           if (initValue[i]["name"].slice(0, 17) === "frecuencyInterval") {
             render.push(
-              <Col>
+              <Col key={i}>
                 <Form.Item
                   name={initValue[i]["name"]}
                   label={"Intervalo"}
@@ -273,7 +278,7 @@ export default function Diagnosis(props) {
           }
           if (initValue[i]["name"].slice(0, 17) === "frecuencyDuration") {
             render.push(
-              <Col span={24}>
+              <Col key={i} span={24}>
                 <Form.Item
                   name={initValue[i]["name"]}
                   label={"Duración"}
@@ -296,7 +301,7 @@ export default function Diagnosis(props) {
           }
           if (initValue[i]["name"].slice(0, 6) === "drugId") {
             render.push(
-              <Col span={24}>
+              <Col key={i} span={24}>
                 <Form.Item
                   name={initValue[i]["name"]}
                   //   wrapperCol={wrapper}
@@ -323,7 +328,7 @@ export default function Diagnosis(props) {
       //   console.log(render);
     }
     return render;
-  }
+  };
 
   //trigger cuando carga tratamiento tipo medico
   const [medic, setMedic] = useState(false);
@@ -360,21 +365,37 @@ export default function Diagnosis(props) {
     // console.log(test);
     // console.log(input);
   };
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
+  };
 
   const register = (e) => {
     //guardado de datos, sin validaciones
-    console.log("Received values of form:", e);    
+    console.log("Received values of form:", e);
     let list = e.diagnosisItemTreatments;
     // console.log(list);
-    for (let i in list){
-      list[i].id = parseInt(i)+1;
+    for (let i in list) {
+      list[i].id = parseInt(i) + 1;
       list[i].drugId = null;
       list[i].frecuencyInterval = null;
       list[i].frecuencyDuration = null;
     }
+    // console.log(list);
     // d.diagnosisItemTreatments = list;
     e.diagnosisItemTreatments = list;
-    props.stepSave(e);
+    message.loading("Guardando..", 1, () => {
+      // Object.keys(e).length === 0
+      areObjectPropertiesUndefined(e)
+        ? sessionStorage.setItem("diagnosisItems", JSON.stringify(null))
+        : sessionStorage.setItem("diagnosisItems", JSON.stringify(e));
+
+      message.success("Guardado con exito!");
+      setIsDisabled(true);
+    });
+    console.log(e);
   };
   return (
     <>
@@ -438,14 +459,14 @@ export default function Diagnosis(props) {
             <Col>
               <Divider>Tratamiento</Divider>
             </Col>
-            {disabled ? (
+            {isDataFilled ? (
               <RenderT />
             ) : (
               <Form.List name="diagnosisItemTreatments">
                 {(fields, { add, remove }) => (
                   <>
                     {fields.map(({ key, name, ...restField }) => (
-                      <>
+                      <div key={key}>
                         <Col span={24}>
                           <Form.Item
                             {...restField}
@@ -481,7 +502,7 @@ export default function Diagnosis(props) {
                               {renderTreatmentOptions()}
                             </Select>
                           </Form.Item>
-                        </Col>                        
+                        </Col>
                         {/* {medic ? (
                           <>
                             <Col>
@@ -555,7 +576,7 @@ export default function Diagnosis(props) {
                             </Button>
                           </Tooltip>
                         </Col>
-                      </>
+                      </div>
                       //   </Space>
                     ))}
                     <Col>

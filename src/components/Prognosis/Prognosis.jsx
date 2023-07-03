@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col, Typography, Button, Input, Tooltip } from "antd";
+import {
+  Form,
+  Row,
+  Col,
+  Typography,
+  message,
+  Button,
+  Input,
+  Tooltip,
+} from "antd";
 import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
 
 export default function Prognosis(props) {
   const [disabled, setIsDisabled] = useState(false);
   const [initValue, setInitValue] = useState([{ name: ["algo"], value: 23 }]);
-  const [input, setInput] = useState({
-    visitId: null,
-  });
+
 
   const wrapper = {
     sm: { offset: 0, span: 14 },
@@ -33,16 +40,27 @@ export default function Prognosis(props) {
   }, [props]);
 
   const changeForm = (e) => {
-    props.stepSave(e);
-    // setInput({
-    //   ...input,
-    //   [e.target.name]: e.target.value,
-    // });
-    // console.log(input);
+    //posible uso en el futuro
+  };
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
   };
 
   const register = (e) => {
     //guardado de datos, sin validaciones
+    message.loading("Guardando..", 1, () => {
+      // Object.keys(e).length === 0
+      areObjectPropertiesUndefined(e)
+        ? sessionStorage.setItem("prognosis", JSON.stringify(null))
+        : sessionStorage.setItem("prognosis", JSON.stringify(e));
+
+      message.success("Guardado con exito!");
+      setIsDisabled(true);
+    });
+    console.log(e);
   };
   return (
     <>
@@ -52,7 +70,7 @@ export default function Prognosis(props) {
             Pronóstico
           </Typography.Title>
         </Col>
-        <Col  xs={{ span: 24 }} md={{ span: 10 }}>
+        <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             layout="horizontal"
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
@@ -83,7 +101,7 @@ export default function Prognosis(props) {
                 />
               </Form.Item>
             </Col>
-            {/* <Col>
+            <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
@@ -97,7 +115,7 @@ export default function Prognosis(props) {
                   </Button>
                 </Tooltip>
               </Form.Item>
-            </Col> */}
+            </Col>
           </Form>
         </Col>
       </Row>

@@ -7,7 +7,7 @@ import {
   Input,
   Button,
   Tooltip,
-  Space,
+  message,
 } from "antd";
 import React, { useState, useEffect } from "react";
 import { CheckOutlined } from "@ant-design/icons";
@@ -15,8 +15,6 @@ import { CheckOutlined } from "@ant-design/icons";
 export default function Anamnesis(props) {
   const { answers } = props;
   const [disabled, setIsDisabled] = useState(false);
-  // const [radioValue, setRadioValue] = useState([null]);
-  const [radiosValues, setRadiosValues] = useState([null]);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
 
   const questions = [
@@ -45,7 +43,7 @@ export default function Anamnesis(props) {
       isTextResponse: true,
     },
   ];
- 
+
   //funcion para mapear las preguntas
   const itemInputs = questions.map((item) => {
     if (item.isBooleanResponse && item.isTextResponse) {
@@ -260,10 +258,14 @@ export default function Anamnesis(props) {
     // let test = <Form.List name={"anamnesisItems"}>{() => render}</Form.List>;
     return render;
   }
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
+  };
 
   const register = (e) => {
-    console.log(e);
-
     const result = Object.entries(e).reduce((acc, [key, value]) => {
       const index = /\d+/.exec(key);
       if (index) {
@@ -273,7 +275,7 @@ export default function Anamnesis(props) {
         acc.push({ [key]: value });
       }
       return acc;
-    }, []);    
+    }, []);
 
     const resultFill = result.map((obj, index) => {
       if (!("id" in obj)) {
@@ -301,8 +303,15 @@ export default function Anamnesis(props) {
 
     console.log(anamnesisItems);
     const data = anamnesisItems;
-    localStorage.setItem("anamnesisItems", JSON.stringify(data));
-    props.stepSave(e);
+    message.loading("Guardando..", 1, () => {
+      areObjectPropertiesUndefined(e)
+        ? sessionStorage.setItem("anamnesisItems", JSON.stringify(null))
+        : sessionStorage.setItem("anamnesisItems", JSON.stringify(data));
+      message.success("Guardado con exito!");
+      setIsDisabled(true);
+    });
+
+    // props.stepSave(e);
   };
 
   return (

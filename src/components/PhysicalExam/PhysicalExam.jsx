@@ -7,25 +7,17 @@ import {
   Select,
   Button,
   Input,
+  message,
   Tooltip,
 } from "antd";
 import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import { numberValidation } from "../../utils/formValidation";
 
 export default function PhysicalExam(props) {
-  const {
-    physicalExam,
-  } = props;
+  const { physicalExam } = props;
   const [disabled, setIsDisabled] = useState(false);
-  const [initValue, setInitValue] = useState([
-    { name: ["weight"], value: physicalExam.weight },
-    { name: ["temperature"], value: physicalExam.temperature },
-    { name: ["pulse"], value: physicalExam.pulse },
-    { name: ["mucousMembrane"], value: physicalExam.mucousMembrane },
-    { name: ["bodyCondition"], value: physicalExam.bodyCondition },
-    { name: ["observation"], value: physicalExam.observation },
-  ]);
+  const [initValue, setInitValue] = useState(null);
+
   const [input, setInput] = useState({
     visitId: null,
     temperature: null,
@@ -35,14 +27,7 @@ export default function PhysicalExam(props) {
     bodyCondition: "",
     observation: "",
   });
-  const [formValid, setFormValid] = useState({
-    temperature: false,
-    weight: false,
-    pulse: false,
-    mucousMembrane: false,
-    bodyCondition: false,
-    observation: false,
-  });
+
   const wrapper = {
     sm: { offset: 0, span: 14 },
     xs: {
@@ -57,6 +42,14 @@ export default function PhysicalExam(props) {
     //caso1: trae TODOS los datos cargados
     if (props.id !== null) {
       setIsDisabled(true);
+      setInitValue([
+        { name: ["weight"], value: physicalExam.weight },
+        { name: ["temperature"], value: physicalExam.temperature },
+        { name: ["pulse"], value: physicalExam.pulse },
+        { name: ["mucousMembrane"], value: physicalExam.mucousMembrane },
+        { name: ["bodyCondition"], value: physicalExam.bodyCondition },
+        { name: ["observation"], value: physicalExam.observation },
+      ]);
     } else {
       //caso2: carga SOLO los campos
       //habilita campo
@@ -70,7 +63,9 @@ export default function PhysicalExam(props) {
   }, [props]);
 
   const changeForm = (e) => {
-    props.stepSave(e);
+    // props.stepSave(e);
+    // const { value, name } = e.target;
+    // console.log(value);
   };
 
   const selectChange = (value) => {
@@ -110,30 +105,25 @@ export default function PhysicalExam(props) {
     }
   };
 
-  //validacion de los tipos de datos
-  //no esta funcionando
-  const inputValidation = (e) => {
-    console.log("e");
-    if (
-      e.target.name === "weight" ||
-      e.target.name === "temperature" ||
-      e.target.name === "pulse"
-    ) {
-      console.log("Entre");
-      setFormValid({
-        ...formValid,
-        [e.targe.name]: numberValidation(e.target),
-      });
-    } else {
-      setFormValid({
-        ...formValid,
-        [e.targe.name]: true,
-      });
-    }
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
   };
 
   const register = (e) => {
     //guardado de datos, sin validaciones
+    console.log(Object.keys(e).length);
+    message.loading("Guardando..", 1, () => {
+      // Object.keys(e).length === 0
+      areObjectPropertiesUndefined(e)
+        ? sessionStorage.setItem("physicalExam", JSON.stringify(null))
+        : sessionStorage.setItem("physicalExam", JSON.stringify(e));
+
+      message.success("Guardado con exito!");
+      setIsDisabled(true);
+    });
   };
   return (
     <>
@@ -167,8 +157,7 @@ export default function PhysicalExam(props) {
                   min={1}
                   style={{ width: "100%" }}
                   disabled={disabled}
-                  addonAfter={'Kg'}
-                  onChange={inputValidation}
+                  addonAfter={"Kg"}
                   keyboard="false"
                   placeholder="Ingrese el peso"
                 />
@@ -190,8 +179,7 @@ export default function PhysicalExam(props) {
                   min={30}
                   max={50}
                   keyboard="false"
-                  addonAfter={'°C'}
-                  onChange={inputValidation}
+                  addonAfter={"°C"}
                   placeholder="Ingrese la temperatura"
                 />
               </Form.Item>
@@ -210,8 +198,7 @@ export default function PhysicalExam(props) {
                   disabled={disabled}
                   style={{ width: "100%" }}
                   min={30}
-                  onChange={inputValidation}
-                  addonAfter={'lpm'}
+                  addonAfter={"lpm"}
                   keyboard="false"
                   placeholder="Ingrese el pulso"
                 />
@@ -230,7 +217,6 @@ export default function PhysicalExam(props) {
                   name="mucousMembrane"
                   allowClear
                   disabled={disabled}
-                  onChange={inputValidation}
                   placeholder={"Ingrese mucosa"}
                 />
               </Form.Item>
@@ -240,7 +226,7 @@ export default function PhysicalExam(props) {
                 name="bodyCondition"
                 label="Condición corporal"
                 tooltip={{
-                  title: "",
+                  title: "clasificacion segun apreciación visual",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -263,7 +249,7 @@ export default function PhysicalExam(props) {
                 name="observation"
                 label="Observación"
                 tooltip={{
-                  title: "algo",
+                  title: "comentario relacionado a la condición física",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -272,7 +258,6 @@ export default function PhysicalExam(props) {
                   name="observation"
                   rows={4}
                   allowClear
-                  onChange={inputValidation}
                   placeholder="Ingrese alguna observación"
                   maxLength={500}
                   showCount
@@ -280,7 +265,7 @@ export default function PhysicalExam(props) {
                 />
               </Form.Item>
             </Col>
-            {/* <Col>
+            <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={"Guardar"}>
                   <Button
@@ -294,7 +279,7 @@ export default function PhysicalExam(props) {
                   </Button>
                 </Tooltip>
               </Form.Item>
-            </Col> */}
+            </Col>
           </Form>
         </Col>
       </Row>

@@ -10,6 +10,7 @@ import {
   Tooltip,
   Select,
   Modal,
+  message,
 } from "antd";
 import {
   MinusCircleOutlined,
@@ -25,6 +26,7 @@ const { Option } = Select;
 
 export default function PresumptiveDiagnosis(props) {
   const [disabled, setIsDisabled] = useState(false);
+  const [isDataFill, setIsDataFill] = useState(false);
   const [initValue, setInitValue] = useState([{ name: ["weight"], value: 12 }]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [input, setInput] = useState({
@@ -41,6 +43,7 @@ export default function PresumptiveDiagnosis(props) {
   useEffect(() => {
     if (props.id !== null) {
       setIsDisabled(true);
+      setIsDataFill(true);
       const newDiagnosis = props.presumptiveDiagnosisItem.map((item, index) => {
         if (item.observation !== null && item.id !== null) {
           return { name: `observation${index}`, value: item.observation };
@@ -50,6 +53,7 @@ export default function PresumptiveDiagnosis(props) {
       setInitValue(newDiagnosis);
     } else {
       setIsDisabled(false);
+      setIsDataFill(false);
       setInitValue([{ name: "empty", value: null }]);
     }
   }, [props]);
@@ -69,7 +73,7 @@ export default function PresumptiveDiagnosis(props) {
       if (initValue[i] !== undefined) {
         if (initValue[i]["name"].slice(0, 11) === "observation") {
           render.push(
-            <Col>
+            <Col key={i}>
               <Form.Item
                 name={initValue[i]["name"]}
                 label="Diagnóstico"
@@ -91,6 +95,7 @@ export default function PresumptiveDiagnosis(props) {
         }
       }
     }
+    console.log(render);
     return render;
   }
 
@@ -105,29 +110,55 @@ export default function PresumptiveDiagnosis(props) {
     // console.log(item);
   };
 
-  const [presumptiveDiagnosisItem, setPresumptiveDiagnosisItem] = useState([]);
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
+  };
+
   const register = (e) => {
     //guardado de datos, sin validaciones
     //recibo los datos cargados en el form
-
-    console.log("Received values of form:", e.presumptiveDiagnosisItem);
-    let list = e.presumptiveDiagnosisItem;
-    for (let i in list) {
-      list[i].id = parseInt(i) + 1;
-      list[i].presumptiveDiagnosisId = null;
-      list[i].diagnosisTypeId = 2;
-      // console.log(list[i]);
+    if (areObjectPropertiesUndefined(e)) {
+      message.loading("Guardando..", 1, () => {
+        // Object.keys(e).length === 0
+        sessionStorage.setItem(
+          "presumptiveDiagnosisItem",
+          JSON.stringify(null)
+        );
+        message.success("Guardado con exito!");
+        setIsDisabled(true);
+      });
+    } else {
+      let list;
+      e.presumptiveDiagnosisItem
+        ? (list = e.presumptiveDiagnosisItem)
+        : (list = []);
+      for (let i in list) {
+        list[i].id = parseInt(i) + 1;
+        list[i].presumptiveDiagnosisId = null; //completar
+        list[i].diagnosisTypeId = 2;
+      }
+      //cargo el primer diagnostico al array
+      let first = {
+        observation: e.observation,
+        id: 0,
+        presumptiveDiagnosisId: null,
+        diagnosisTypeId: 2,
+      };
+      list.splice(0, 0, first);
+      message.loading("Guardando..", 1, () => {
+        // Object.keys(e).length === 0
+        sessionStorage.setItem(
+          "presumptiveDiagnosisItem",
+          JSON.stringify(list)
+        );
+        message.success("Guardado con exito!");
+        setIsDisabled(true);
+      });
+      // console.log(list);
     }
-    //cargo el primer diagnostico al array
-    let first = {
-      observation: e.observation,
-      id: 0,
-      presumptiveDiagnosisId: null,
-      diagnosisTypeId: 2,
-    };
-    list.splice(0, 0, first);
-    // console.log(list)
-    props.stepSave(list);
   };
 
   return (
@@ -162,7 +193,7 @@ export default function PresumptiveDiagnosis(props) {
             fields={initValue}
             onChange={changeForm}
           >
-            {disabled ? (
+            {isDataFill ? (
               <RenderD />
             ) : (
               <>
@@ -192,7 +223,7 @@ export default function PresumptiveDiagnosis(props) {
                   {(fields, { add, remove }) => (
                     <>
                       {fields.map(({ key, name, ...restField }) => (
-                        <>
+                        <div key={key}>
                           <Col span={24}>
                             <Form.Item
                               {...restField}
@@ -222,7 +253,7 @@ export default function PresumptiveDiagnosis(props) {
                               </Button>
                             </Tooltip>
                           </Col>
-                        </>
+                        </div>
                         //   </Space>
                       ))}
                       <Col>

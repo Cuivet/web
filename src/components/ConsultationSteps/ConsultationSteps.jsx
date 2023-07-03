@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Steps, Tooltip, Button, message } from "antd";
+import { Steps, Tooltip, Button } from "antd";
 import {
   LeftCircleOutlined,
   RightCircleOutlined,
@@ -24,6 +24,7 @@ export default function ConsultationSteps(props) {
   } = props;
   const { Step } = Steps;
   const [current, setCurrent] = useState(0);
+  const [stepsClinicalRecord, setStepsClinicalRecord] = useState(null);
 
   const next = () => {
     setCurrent(current + 1);
@@ -32,7 +33,7 @@ export default function ConsultationSteps(props) {
   const prev = () => {
     setCurrent(current - 1);
   };
-  console.log(review);
+
   const steps = [
     {
       title: "Reseña",
@@ -71,7 +72,7 @@ export default function ConsultationSteps(props) {
             content: (
               <PhysicalExam
                 id={physicalExam.id}
-                physcalExam={physicalExam}
+                physicalExam={physicalExam}
                 //   stepSave={physicalExamChangeForm}
               />
             ),
@@ -157,6 +158,40 @@ export default function ConsultationSteps(props) {
       //   subTitle: Visits(cRecord.prognosis),
     },
   ];
+  //recopilamos todos los datos que cargamos en la consulta para armar la ficha
+  const Save = () => {
+    let anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
+    let physicalExam = JSON.parse(sessionStorage.getItem("physicalExam"));
+    let presumptiveDiagnosisItem = JSON.parse(
+      sessionStorage.getItem("presumptiveDiagnosisItem")
+    );
+    let diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
+    let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
+    // console.log(
+    //   anamnesisItems,
+    //   physcalExam,
+    //   presumptiveDiagnosisItem,
+    //   diagnosisItems,
+    //   prognosis
+    // );
+    let cRecord= {
+      anamnesisItems: anamnesisItems,
+      physicalExam: physicalExam,
+      presumptiveDiagnosisItem: presumptiveDiagnosisItem,
+      diagnosisItems: diagnosisItems,
+      prognosis: prognosis,
+    }
+    console.log(cRecord);
+    // setStepsClinicalRecord({
+    //   anamnesisItems: anamnesisItems,
+    //   physcalExam: physcalExam,
+    //   presumptiveDiagnosisItem: presumptiveDiagnosisItem,
+    //   diagnosisItem: diagnosisItem,
+    //   prognosis: prognosis,
+    // });
+    // console.log(stepsClinicalRecord);
+    props.sendDataClinicalRecord(cRecord);
+  };
 
   return (
     <>
@@ -208,7 +243,8 @@ export default function ConsultationSteps(props) {
             <Button
               type="primary"
               className="steps-action-finish"
-              onClick={() => message.success("Consulta Finalizada!")}
+              onClick={Save}
+              //   onClick={() => message.success("Consulta Finalizada!")}
             >
               <CheckCircleOutlined />
             </Button>

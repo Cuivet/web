@@ -8,13 +8,12 @@ import {
   Typography,
   message,
   Tag,
-  Modal,
   Divider,
   Tooltip,
   Spin,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import ConsultationHeader from "../../components/ConsultationHeader/ConsultationHeader";
 import ConsultationVisits from "../../components/ConsultationVisits/ConsultationVisits";
@@ -24,6 +23,7 @@ const { Title } = Typography;
 
 export default function ClinicalRecordT() {
   const location = useLocation();
+  let navigate = useNavigate();
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [flag, setFlag] = useState(true);
 
@@ -64,10 +64,55 @@ export default function ClinicalRecordT() {
         .catch((error) => {
           message.error(error.response.data);
         });
-      
+      //probar de guardar automaticamente
+      // if (anamnesisItems) {
+      //   console.log(anamnesisItems);
+      //   setClinicalRecord((prevRecord) => ({
+      //     ...prevRecord,
+      //     anamnesis: {
+      //       id: clinicalRecord.id,
+      //       anamnesisItems: anamnesisItems,
+      //       visitId: 1,
+      //     },
+      //   }));
+      // }
     }
+    console.log(clinicalRecord);
     updateReview();
   }, [location, flag]);
+
+  //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
+  //guarda automaticamente el mismo
+  const saveClinicalRecord = (data) => {
+    setClinicalRecord(prevClinicalRecord => ({
+      ...prevClinicalRecord,
+      anamnesis: {
+        ...prevClinicalRecord.anamnesis,
+        anamnesisItems: data.anamnesisItems,
+      },
+      physicalExam: data.physicalExam,
+      presumptiveDiagnosis: {
+        ...prevClinicalRecord.presumptiveDiagnosis,
+        presumptiveDiagnosisItem: data.presumptiveDiagnosisItem,
+      },
+      diagnosis: {
+        ...prevClinicalRecord.diagnosis,
+        diagnosisItems: data.diagnosisItems,
+      },
+      prognosis: data.prognosis
+    }));
+    message.loading("Guardando Ficha Clinica", 1, () => {
+      //pegarle al endpoint para guardar la ficha
+      message.success("Guardado con exito!"); 
+      sessionStorage.removeItem("anamnesisItems");
+      sessionStorage.removeItem("physicalExam");
+      sessionStorage.removeItem("presumptiveDiagnosisItem");
+      sessionStorage.removeItem("diagnosisItems");
+      sessionStorage.removeItem("prognosis");      
+      navigate(-1);    
+    });
+   
+  };
 
   return (
     <>
@@ -144,6 +189,7 @@ export default function ClinicalRecordT() {
                 presumptiveDiagnosis={clinicalRecord.presumptiveDiagnosis}
                 diagnosis={clinicalRecord.diagnosis}
                 prognosis={clinicalRecord.prognosis}
+                sendDataClinicalRecord={saveClinicalRecord}
               />
             </Col>
           </Row>

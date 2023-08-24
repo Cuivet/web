@@ -46,6 +46,35 @@ export default function ClinicalRecordT() {
     // setFlag(true);
   };
 
+  const getLastDateFromVisits = (visits) => {
+    if (Array.isArray(visits) && visits.length > 0) {
+      const sortedVisits = visits.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      return sortedVisits[0].date;
+    } else {
+      return null; // Return null for empty array or invalid input
+    }
+  };
+
+  const getStepsDone = (cRecord) => {
+    const excludedProperties = [
+      "id",
+      "CREATEDAT",
+      "veterinaryData",
+      "tutorData",
+      "pet",
+      "vet",
+      "visits",
+    ];
+
+    return Object.keys(cRecord).filter((property) => {
+      return (
+        cRecord[property] !== null && !excludedProperties.includes(property)
+      );
+    });
+  };
+
   useEffect(() => {
     let profile = JSON.parse(sessionStorage.getItem("profile"));
     if (profile && profile.veterinary && profile.veterinary.id && flag) {
@@ -84,7 +113,7 @@ export default function ClinicalRecordT() {
   //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
   //guarda automaticamente el mismo
   const saveClinicalRecord = (data) => {
-    setClinicalRecord(prevClinicalRecord => ({
+    setClinicalRecord((prevClinicalRecord) => ({
       ...prevClinicalRecord,
       anamnesis: {
         ...prevClinicalRecord.anamnesis,
@@ -99,20 +128,89 @@ export default function ClinicalRecordT() {
         ...prevClinicalRecord.diagnosis,
         diagnosisItems: data.diagnosisItems,
       },
-      prognosis: data.prognosis
+      prognosis: data.prognosis,
     }));
+    console.log(clinicalRecord);
     message.loading("Guardando Ficha Clinica", 1, () => {
+      //
       //pegarle al endpoint para guardar la ficha
-      message.success("Guardado con exito!"); 
+      //
+      message.success("Guardado con exito!");
       sessionStorage.removeItem("anamnesisItems");
       sessionStorage.removeItem("physicalExam");
       sessionStorage.removeItem("presumptiveDiagnosisItem");
       sessionStorage.removeItem("diagnosisItems");
-      sessionStorage.removeItem("prognosis");      
-      navigate(-1);    
+      sessionStorage.removeItem("prognosis");
+      navigate(-1);
     });
-   
   };
+
+  const saveVisitControl = (data) => {
+    setClinicalRecord((prevClinicalRecord) => ({
+      ...prevClinicalRecord,
+      visits: [...prevClinicalRecord.visits, data],
+    }));
+  };
+
+  const saveClinicalRecordUnfinished = () => {
+    let anamnesisItems;
+    let physicalExam;
+    let presumptiveDiagnosisItem;
+    let diagnosisItems;
+    let prognosis;
+    if (sessionStorage.getItem("anamnesisItems") !== null) {
+      anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
+    } else {
+      anamnesisItems = [];
+    }
+    if (sessionStorage.getItem("physicalExam") !== null) {
+      physicalExam = JSON.parse(sessionStorage.getItem("physicalExam"));
+    } else {
+      physicalExam = null;
+    }
+    if (sessionStorage.getItem("presumptiveDiagnosisItem") !== null) {
+      presumptiveDiagnosisItem = JSON.parse(
+        sessionStorage.getItem("presumptiveDiagnosisItem")
+      );
+    } else {
+      presumptiveDiagnosisItem = [];
+    }
+    if (sessionStorage.getItem("diagnosisItems") !== null) {
+      diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
+    } else {
+      diagnosisItems = [];
+    }
+    if (sessionStorage.getItem("prognosis") !== null) {
+      prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
+    } else {
+      prognosis = null;
+    }
+    setClinicalRecord((prevClinicalRecord) => ({
+      ...prevClinicalRecord,
+      anamnesis: {
+        ...prevClinicalRecord.anamnesis,
+        anamnesisItems: anamnesisItems,
+      },
+      physicalExam: physicalExam,
+      presumptiveDiagnosis: {
+        ...prevClinicalRecord.presumptiveDiagnosis,
+        presumptiveDiagnosisItem: presumptiveDiagnosisItem,
+      },
+      diagnosis: {
+        ...prevClinicalRecord.diagnosis,
+        diagnosisItems: diagnosisItems,
+      },
+      prognosis: prognosis,
+    }));
+    console.log(clinicalRecord);
+  };
+
+  if (clinicalRecord !== null) {
+    var lastVisitDate = getLastDateFromVisits(clinicalRecord.visits);
+    var stepsDone = getStepsDone(clinicalRecord).map((str) =>
+      str.toUpperCase()
+    );
+  }
 
   return (
     <>
@@ -135,7 +233,12 @@ export default function ClinicalRecordT() {
                 tags={<Tag color="purple">{clinicalRecord.pet.name}</Tag>}
                 extra={[
                   <Tooltip title="Cerrar Consulta">
-                    <Button shape="circle" key={2} type="primary">
+                    <Button
+                      shape="circle"
+                      onClick={saveClinicalRecordUnfinished}
+                      key={2}
+                      type="primary"
+                    >
                       <IssuesCloseOutlined />
                     </Button>
                   </Tooltip>,
@@ -167,13 +270,23 @@ export default function ClinicalRecordT() {
               </PageHeader>
             </Col>
           </Row>
-          {/* visitas */}
           <Row>
             <Col span={24}>
               <ConsultationVisits
-                id={1}
-                date={clinicalRecord.visits.date}
-                steps={["RESEÑA", "ANAMNESIS"]}
+                id={clinicalRecord.visits.length + 1}
+                date={lastVisitDate ? lastVisitDate : "Sin visitas previas"}
+                steps={stepsDone}
+                visits={
+                  clinicalRecord.visits.length !== 0
+                    ? clinicalRecord.visits
+                    : [
+                        {
+                          control: "Sin controles previos",
+                          date: "-",
+                        },
+                      ]
+                }
+                sendDataControl={saveVisitControl}
               />
             </Col>
           </Row>

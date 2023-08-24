@@ -181,7 +181,7 @@ export default function ConsultationSteps(props) {
       diagnosisItems: diagnosisItems,
       prognosis: prognosis,
     }
-    console.log(cRecord);
+    // console.log(cRecord);
     // setStepsClinicalRecord({
     //   anamnesisItems: anamnesisItems,
     //   physcalExam: physcalExam,

@@ -9,6 +9,9 @@ import {
   Button,
   Row,
   Col,
+  message,
+  List,
+  Typography,
 } from "antd";
 import {
   SaveOutlined,
@@ -17,31 +20,51 @@ import {
 } from "@ant-design/icons";
 
 export default function ConsultationVisits(props) {
-  const { id, date, steps } = props;
+  const { id, date, steps, visits } = props;
   const [showControl, setShowControl] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [control, setControl] = useState("");
+  const moment = require("moment");
+  const currentDate = moment();
 
   const showModal = () => {
-    console.log(isModalOpen);
     setIsModalOpen(true);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleControl = () => {
+
+  const handleControlChange = (e) => {
+    setControl(e.target.value);
+    // console.log(control);
+  };
+  const handleControl = (e) => {
     //funcion para guardar el control en la visita
+    const newControl = {
+      id: id,
+      clinicalRecordId: 1,
+      control: control,
+      date: currentDate.format("DD/MM/YYYY"),
+    };
+    console.log(newControl);
+    props.sendDataControl(newControl);
+    // message.loading("Guardando..", 0.5, () => {
+    //   sessionStorage.setItem("newVisit", JSON.stringify(newVisit));
+    // });
+    // message.success("Guardado con exito!");
     setIsModalOpen(false);
     setShowControl(true);
   };
 
-  const renderSteps= () =>{
+  const renderSteps = () => {
     let render = [];
-    steps.forEach(i => {
-        render.push(<Tag color="geekblue">{i}</Tag>);
+    steps.forEach((i) => {
+      render.push(<Tag color="geekblue">{i}</Tag>);
     });
+    render.shift();
     return render;
-  }
+  };
 
   return (
     <>
@@ -50,13 +73,7 @@ export default function ConsultationVisits(props) {
         subTitle={date}
         style={{ marginTop: "2%" }}
         ghost={false}
-        tags={
-            renderSteps()
-        //     [
-        //   <Tag color="geekblue">RESEÑA</Tag>,
-        //   <Tag color="geekblue">ANAMNESIS</Tag>,
-        // ]
-    }
+        tags={renderSteps()}
         extra={[
           <Tooltip title={showControl ? "Ver control" : "Ingresar control"}>
             <Button shape="round" type="default" onClick={showModal}>
@@ -96,6 +113,7 @@ export default function ConsultationVisits(props) {
             type="primary"
             className="primaryDisabled"
             disabled={showControl}
+            htmlType="submit"
             onClick={handleControl}
           >
             Guardar
@@ -104,20 +122,33 @@ export default function ConsultationVisits(props) {
       >
         <Row>
           <Col span={24}>
-            <Form>
-              <Form.Item>
-                <Input.TextArea
-                  disabled={showControl}
-                  name="control"
-                  rows={4}
-                  allowClear
-                  placeholder="Ingrese el control..."
-                  maxLength={500}
-                  showCount
-                  autoSize={{ minRows: 4, maxRows: 5 }}
-                />
-              </Form.Item>
-            </Form>
+            <List
+              size="small"
+              dataSource={visits}
+              renderItem={(item) => (
+                <List.Item>
+                  <Typography.Text strong>{item.date} </Typography.Text>
+                  {item.control}
+                </List.Item>
+              )}
+              footer={
+                <Form onFinish={handleControl}>
+                  <Form.Item>
+                    <Input.TextArea
+                      disabled={showControl}
+                      name="control"
+                      rows={4}
+                      allowClear
+                      placeholder="Ingrese nuevo control..."
+                      maxLength={500}
+                      showCount
+                      onChange={handleControlChange}
+                      autoSize={{ minRows: 4, maxRows: 5 }}
+                    />
+                  </Form.Item>
+                </Form>
+              }
+            />
           </Col>
         </Row>
       </Modal>

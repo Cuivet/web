@@ -10,13 +10,15 @@ import {
   message,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import { CheckOutlined } from "@ant-design/icons";
-
+// import { useForm } from "react-hook-form";
+import { CheckOutlined, LockOutlined, LockTwoTone, UnlockOutlined, UnlockTwoTone, LockFilled, UnlockFilled} from "@ant-design/icons";
+import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 export default function Anamnesis(props) {
   const { answers } = props;
-  const [disabled, setIsDisabled] = useState(false);
+  // const [disabled, setIsDisabled] = useState(false);
+  const {disabled, toggleEdit}=useEditContext();
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
-
+  //preguntas de anamnesis, cambiar por la pegada al endpoint que traiga las preguntas
   const questions = [
     {
       id: 1,
@@ -44,19 +46,19 @@ export default function Anamnesis(props) {
     },
   ];
 
-  //funcion para mapear las preguntas
-  const itemInputs = questions.map((item) => {
-    if (item.isBooleanResponse && item.isTextResponse) {
-      return { type1: item.question };
-    } else {
-      if (item.isBooleanResponse) {
-        return { type2: item.question };
-      }
-      if (item.isTextResponse) {
-        return { type3: item.question };
-      }
-    }
-  });
+  //funcion para mapear las preguntas, sin usar QUITAR
+  // const itemInputs = questions.map((item) => {
+  //   if (item.isBooleanResponse && item.isTextResponse) {
+  //     return { type1: item.question };
+  //   } else {
+  //     if (item.isBooleanResponse) {
+  //       return { type2: item.question };
+  //     }
+  //     if (item.isTextResponse) {
+  //       return { type3: item.question };
+  //     }
+  //   }
+  // });
 
   const wrapper = {
     sm: { offset: 5, span: 14 },
@@ -66,39 +68,40 @@ export default function Anamnesis(props) {
   };
 
   //carga de datos en los campos
-  useEffect(() => {
-    //caso1: trae TODOS los datos cargados
-    if (props.id !== null) {
-      setIsDisabled(true);
-      console.log(props.answers[0].anamnesisQuestionId);
-      const newAnswers = props.answers.map((answer) => {
-        //tipo pregunta 1: texto + radio
-        if (answer.booleanResponse !== null && answer.textResponse !== null) {
-          return {
-            name: answer.anamnesisQuestionId,
-            value: answer.textResponse,
-          };
-          //tipo pregunta 2: radio
-        } else if (answer.booleanResponse) {
-          return {
-            name: answer.anamnesisQuestionId,
-            value: answer.booleanResponse,
-          };
-          //tipo pregunta 3: texto
-        } else {
-          return {
-            name: answer.anamnesisQuestionId,
-            value: answer.textResponse,
-          };
-        }
-      });
-
-      setInitValue(newAnswers);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [props]);
-  console.log(initValue);
+  // useEffect(() => {
+  //   //caso1: trae TODOS los datos cargados
+  //   const anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
+  //   if (props.id !== null || anamnesisItems !== null) {
+  //     console.log(anamnesisItems);
+  //     setIsDisabled(true);
+  //     // console.log(props.answers[0].anamnesisQuestionId);
+  //     anamnesisItems.forEach((answer) => {
+  //       //tipo pregunta 1: texto + radio
+  //       if (answer.booleanResponse !== null && answer.textResponse !== null) {
+  //         setInitValue((initValue) => [
+  //           ...initValue,
+  //           { name: answer.anamnesisQuestionId, value: answer.textResponse },
+  //         ]);
+  //         //tipo pregunta 2: radio
+  //       } else if (answer.booleanResponse) {
+  //         setInitValue((initValue) => [
+  //           ...initValue,
+  //           { name: answer.anamnesisQuestionId, value: answer.booleanResponse },
+  //         ]);
+  //         //tipo pregunta 3: texto
+  //       } else {
+  //         setInitValue((initValue) => [
+  //           ...initValue,
+  //           { name: answer.anamnesisQuestionId, value: answer.textResponse },
+  //         ]);
+  //       }
+  //     });
+  //     initValue.slice(1, initValue.length);
+  //   } else {
+  //     setIsDisabled(false);
+  //   }
+  // }, [props]);
+  // console.log(initValue);
 
   function RenderQ() {
     const render = [];
@@ -300,7 +303,9 @@ export default function Anamnesis(props) {
         )
       )
     );
+    // onNextStep(anamnesisItems);
 
+    //prueba
     console.log(anamnesisItems);
     const data = anamnesisItems;
     message.loading("Guardando..", 1, () => {
@@ -308,10 +313,40 @@ export default function Anamnesis(props) {
         ? sessionStorage.setItem("anamnesisItems", JSON.stringify(null))
         : sessionStorage.setItem("anamnesisItems", JSON.stringify(data));
       message.success("Guardado con exito!");
-      setIsDisabled(true);
+      // setIsDisabled(true);
     });
 
     // props.stepSave(e);
+  };
+
+  const [responses, setResponses] = useState(
+    JSON.parse(sessionStorage.getItem("anamnesisItems")) || {}
+  );
+
+  useEffect(() => {
+    // Store responses in sessionStorage whenever they change
+    sessionStorage.setItem("anamnesisItems", JSON.stringify(responses));
+      
+  }, [responses]);
+
+  const handleBooleanResponseChange = (id, value) => {
+    setResponses({
+      ...responses,
+      [id]: {
+        ...responses[id],
+        booleanResponse: value,
+      },
+    });
+  };
+
+  const handleTextResponseChange = (id, value) => {
+    setResponses({
+      ...responses,
+      [id]: {
+        ...responses[id],
+        textResponse: value,
+      },
+    });
   };
 
   return (
@@ -325,11 +360,48 @@ export default function Anamnesis(props) {
             layout="vertical"
             labelCol={{ sm: { span: 14, offset: 5 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
-            onFinish={register}
+            // onFinish={register}
             className="stepForm"
             autoComplete="off"
           >
-            <RenderQ />
+            {/*prueba  <RenderQ /> */}
+            {questions.map((q, i) => (
+              <Col key={q.id}>
+                <Form.Item label={q.question} name={`question${q.id}`}>
+                  {q.isBooleanResponse && (
+                    <Radio.Group
+                      optionType="button"
+                      disabled={disabled}
+                      style={{marginBottom:'2%'}}
+                      name={`booleanResponse${q.id}`}
+                      value={responses[q.id]?.booleanResponse || undefined}
+                      onChange={(e) =>
+                        handleBooleanResponseChange(q.id, e.target.value)
+                      }
+                    >
+                      <Radio style={{ width: "50%" }} value={true}>
+                        Si
+                      </Radio>
+                      <Radio style={{ width: "50%" }} value={false}>
+                        No
+                      </Radio>
+                    </Radio.Group>
+                  )}
+                  {q.isTextResponse && (
+                    <Input
+                      type="text"
+                      disabled={disabled}
+                      placeholder={"Ingrese su respuesta"}
+                      value={responses[q.id]?.textResponse || ""}
+                      onChange={(e) =>
+                        handleTextResponseChange(q.id, e.target.value)
+                      }
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+            ))}
+
             {/* <Form.List name={"anamnesisItems"} >
               {(fields) => (
                 <>
@@ -387,15 +459,16 @@ export default function Anamnesis(props) {
 
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
-                <Tooltip title={"Guardar"}>
+                <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>
                   <Button
-                    htmlType="submit"
+                    // htmlType="submit"
                     className="stepSave"
                     shape="round"
-                    disabled={disabled}
+                    // disabled={disabled}
                     type="primary"
+                    onClick={toggleEdit}
                   >
-                    <CheckOutlined />
+                    {disabled ? <LockFilled /> : <UnlockFilled />}
                   </Button>
                 </Tooltip>
               </Form.Item>

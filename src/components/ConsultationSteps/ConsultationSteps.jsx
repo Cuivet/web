@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect,  useState } from "react";
 import { Steps, Tooltip, Button } from "antd";
 import {
   LeftCircleOutlined,
   RightCircleOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
+// import { useClinicalRecord } from "../ClinicalRecordContext/ClinicalRecordContext";
 import Review from "../../components/Review/Review";
 import Anamnesis from "../../components/Anamnesis/Anamnesis";
 import PhysicalExam from "../../components/PhysicalExam/PhysicalExam";
@@ -12,7 +13,10 @@ import PresumptiveDiagnosis from "../../components/PresumptiveDiagnosis/Presumpt
 import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
 
+//prueba
 export default function ConsultationSteps(props) {
+  // export default function ConsultationSteps({saveStepData}){
+  // const clinicalRecord = useClinicalRecord();
   const {
     pet,
     review,
@@ -22,11 +26,17 @@ export default function ConsultationSteps(props) {
     diagnosis,
     prognosis,
   } = props;
+
   const { Step } = Steps;
   const [current, setCurrent] = useState(0);
   const [stepsClinicalRecord, setStepsClinicalRecord] = useState(null);
 
-  const next = () => {
+  //prueba sacar despues
+  // useEffect(() => {
+  //   console.log(anamnesis);
+  // }, [anamnesis]);
+  const next = (stepData) => {
+    // saveStepData(stepData);
     setCurrent(current + 1);
   };
 
@@ -47,11 +57,12 @@ export default function ConsultationSteps(props) {
       ...(anamnesis !== null
         ? {
             content: (
-              <Anamnesis
-                id={anamnesis.id}
-                answers={anamnesis.anamnesisItems}
-                //   stepSave={anamnesisChangeForm}
-              />
+              // <Anamnesis
+              //   id={anamnesis.id}
+              //   answers={anamnesis.anamnesisItems}
+              //   //   stepSave={anamnesisChangeForm}
+              // />
+              <Anamnesis onNextStep={next} answers={anamnesis.anamnesisItems} />
             ),
           }
         : {
@@ -104,11 +115,11 @@ export default function ConsultationSteps(props) {
           }
         : {
             content: (
-              <PresumptiveDiagnosis
-                id={null}
-                presumptiveDiagnosis={null}
-                // stepSave={presumptiveDiagnosisChangeForm}
-              />
+                <PresumptiveDiagnosis
+                  id={null}
+                  presumptiveDiagnosis={null}
+                  // stepSave={presumptiveDiagnosisChangeForm}
+                />
             ),
           }),
       //   subTitle: Visits(cRecord.presumptiveDiagnosis),
@@ -174,13 +185,13 @@ export default function ConsultationSteps(props) {
     //   diagnosisItems,
     //   prognosis
     // );
-    let cRecord= {
+    let cRecord = {
       anamnesisItems: anamnesisItems,
       physicalExam: physicalExam,
       presumptiveDiagnosisItem: presumptiveDiagnosisItem,
       diagnosisItems: diagnosisItems,
       prognosis: prognosis,
-    }
+    };
     // console.log(cRecord);
     // setStepsClinicalRecord({
     //   anamnesisItems: anamnesisItems,
@@ -190,7 +201,9 @@ export default function ConsultationSteps(props) {
     //   prognosis: prognosis,
     // });
     // console.log(stepsClinicalRecord);
-    props.sendDataClinicalRecord(cRecord);
+
+    //prueba
+    // props.sendDataClinicalRecord(cRecord);
   };
 
   return (

@@ -10,13 +10,20 @@ import {
   message,
   Tooltip,
 } from "antd";
-import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  CheckOutlined,
+  LockFilled,
+  UnlockFilled,
+} from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
+import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 
 export default function PhysicalExam(props) {
   const { physicalExam } = props;
-  const [disabled, setIsDisabled] = useState(false);
+  // const [disabled, setIsDisabled] = useState(false);
   const [initValue, setInitValue] = useState(null);
+  const { disabled, toggleEdit } = useEditContext();
 
   const [input, setInput] = useState({
     visitId: null,
@@ -38,29 +45,30 @@ export default function PhysicalExam(props) {
   //debemos diferenciar el valor que queda vacio por eleccion
   //del que aun no ha se ha cargado.
   //si id == null no tiene nada cargado
-  useEffect(() => {
-    //caso1: trae TODOS los datos cargados
-    if (props.id !== null) {
-      setIsDisabled(true);
-      setInitValue([
-        { name: ["weight"], value: physicalExam.weight },
-        { name: ["temperature"], value: physicalExam.temperature },
-        { name: ["pulse"], value: physicalExam.pulse },
-        { name: ["mucousMembrane"], value: physicalExam.mucousMembrane },
-        { name: ["bodyCondition"], value: physicalExam.bodyCondition },
-        { name: ["observation"], value: physicalExam.observation },
-      ]);
-    } else {
-      //caso2: carga SOLO los campos
-      //habilita campo
-      setIsDisabled(false);
-      //deja campo vacio, no hace falta recorrer, sobresbribe todo los fields en vacios
-      //   for (let i in props) {
-      // setInitValue([{ name: toString(i), value: null }]);
-      setInitValue([{ name: "empty", value: null }]);
-      //   }
-    }
-  }, [props]);
+  //prueba
+  // useEffect(() => {
+  //   //caso1: trae TODOS los datos cargados
+  //   if (props.id !== null) {
+  //     setIsDisabled(true);
+  //     setInitValue([
+  //       { name: ["weight"], value: physicalExam.weight },
+  //       { name: ["temperature"], value: physicalExam.temperature },
+  //       { name: ["pulse"], value: physicalExam.pulse },
+  //       { name: ["mucousMembrane"], value: physicalExam.mucousMembrane },
+  //       { name: ["bodyCondition"], value: physicalExam.bodyCondition },
+  //       { name: ["observation"], value: physicalExam.observation },
+  //     ]);
+  //   } else {
+  //     //caso2: carga SOLO los campos
+  //     //habilita campo
+  //     setIsDisabled(false);
+  //     //deja campo vacio, no hace falta recorrer, sobresbribe todo los fields en vacios
+  //     //   for (let i in props) {
+  //     // setInitValue([{ name: toString(i), value: null }]);
+  //     setInitValue([{ name: "empty", value: null }]);
+  //     //   }
+  //   }
+  // }, [props]);
 
   const changeForm = (e) => {
     // props.stepSave(e);
@@ -114,7 +122,6 @@ export default function PhysicalExam(props) {
 
   const register = (e) => {
     //guardado de datos, sin validaciones
-    console.log(Object.keys(e).length);
     message.loading("Guardando..", 1, () => {
       // Object.keys(e).length === 0
       areObjectPropertiesUndefined(e)
@@ -122,9 +129,38 @@ export default function PhysicalExam(props) {
         : sessionStorage.setItem("physicalExam", JSON.stringify(e));
 
       message.success("Guardado con exito!");
-      setIsDisabled(true);
+      // setIsDisabled(true);
     });
   };
+
+// new
+  const [responses, setResponses] = useState(
+    JSON.parse(sessionStorage.getItem("physicalExam")) || {}
+  );
+
+  useEffect(() => {
+    // Store responses in sessionStorage whenever they change
+    sessionStorage.setItem("physicalExam", JSON.stringify(responses));
+    // if (!disabled){
+    //   setIsDisabled(JSON.parse(sessionStorage.getItem("disabled")).anamnesis);
+    // }
+  }, [responses]);
+  console.log(responses);
+
+  const handleTextResponseChange = (name, value) => {
+    setResponses({
+      ...responses,
+      [name]: value,
+    });
+  };
+
+  const handleNumericResponseChange = (name, value) => {
+    setResponses((prevResponses) => ({
+      ...prevResponses,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <Row justify="center" gutter={24}>
@@ -138,14 +174,14 @@ export default function PhysicalExam(props) {
             layout="horizontal"
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
-            onFinish={register}
+            // onFinish={register}
             className="stepForm"
-            onChange={changeForm}
+            // onChange={changeForm}
             fields={initValue}
           >
             <Col span={24}>
               <Form.Item
-                name="weight"
+                // name="weight"
                 label="Peso"
                 tooltip={{
                   title: "Peso en Kilogramos",
@@ -153,19 +189,23 @@ export default function PhysicalExam(props) {
                 }}
               >
                 <InputNumber
-                  name="weight"
+                  // name="weight"
                   min={1}
                   style={{ width: "100%" }}
                   disabled={disabled}
                   addonAfter={"Kg"}
                   keyboard="false"
+                  name={`weight`}
+                  value={responses["weight"] || undefined}
+                  onChange={(value) =>
+                    handleNumericResponseChange("weight", value)
+                  }
                   placeholder="Ingrese el peso"
                 />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
-                name="temperature"
                 label="Temperatura"
                 tooltip={{
                   title: "Temperatura en grados Celsius",
@@ -173,7 +213,7 @@ export default function PhysicalExam(props) {
                 }}
               >
                 <InputNumber
-                  name="temperature"
+                  name={`temperature`}
                   disabled={disabled}
                   style={{ width: "100%" }}
                   min={30}
@@ -181,12 +221,15 @@ export default function PhysicalExam(props) {
                   keyboard="false"
                   addonAfter={"°C"}
                   placeholder="Ingrese la temperatura"
+                  value={responses["temperature"] || undefined}
+                  onChange={(value) =>
+                    handleNumericResponseChange("temperature", value)
+                  }
                 />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
-                name="pulse"
                 label="Pulso"
                 tooltip={{
                   title: "Latidos por minuto",
@@ -194,19 +237,22 @@ export default function PhysicalExam(props) {
                 }}
               >
                 <InputNumber
-                  name="pulse"
+                  name={`pulse`}
                   disabled={disabled}
                   style={{ width: "100%" }}
                   min={30}
                   addonAfter={"lpm"}
                   keyboard="false"
                   placeholder="Ingrese el pulso"
+                  value={responses["pulse"] || undefined}
+                  onChange={(value) =>
+                    handleNumericResponseChange("pulse", value)
+                  }
                 />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
-                name="mucousMembrane"
                 label="Mucosa"
                 tooltip={{
                   title: "información relacionada con la mucosa",
@@ -214,16 +260,19 @@ export default function PhysicalExam(props) {
                 }}
               >
                 <Input
-                  name="mucousMembrane"
+                  name={`mucousMembrane`}
                   allowClear
                   disabled={disabled}
                   placeholder={"Ingrese mucosa"}
+                  value={responses["mucousMembrane"] || undefined}
+                  onChange={(e) =>
+                    handleTextResponseChange("mucousMembrane", e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
-                name="bodyCondition"
                 label="Condición corporal"
                 tooltip={{
                   title: "clasificacion segun apreciación visual",
@@ -233,7 +282,11 @@ export default function PhysicalExam(props) {
                 <Select
                   name="bodyCondition"
                   disabled={disabled}
-                  onChange={selectChange}
+                  // onChange={selectChange}
+                  value={responses["bodyCondition"] || undefined}
+                  onChange={(value) =>
+                    handleTextResponseChange("bodyCondition", value)
+                  }
                   placeholder={"Seleccione condición corporal"}
                 >
                   <Select.Option value="1">Muy Flaco</Select.Option>
@@ -246,7 +299,6 @@ export default function PhysicalExam(props) {
             </Col>
             <Col span={24}>
               <Form.Item
-                name="observation"
                 label="Observación"
                 tooltip={{
                   title: "comentario relacionado a la condición física",
@@ -254,28 +306,33 @@ export default function PhysicalExam(props) {
                 }}
               >
                 <Input.TextArea
+                  name={`observation`}
                   disabled={disabled}
-                  name="observation"
                   rows={4}
                   allowClear
                   placeholder="Ingrese alguna observación"
                   maxLength={500}
                   showCount
                   autoSize={{ minRows: 4, maxRows: 5 }}
+                  value={responses["observation"] || undefined}
+                  onChange={(e) =>
+                    handleTextResponseChange("observation", e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
-                <Tooltip title={"Guardar"}>
+                <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>
                   <Button
-                    htmlType="submit"
-                    shape="round"
+                    // htmlType="submit"
                     className="stepSave"
-                    disabled={disabled}
+                    shape="round"
+                    // disabled={disabled}
                     type="primary"
+                    onClick={toggleEdit}
                   >
-                    <CheckOutlined />
+                    {disabled ? <LockFilled /> : <UnlockFilled />}
                   </Button>
                 </Tooltip>
               </Form.Item>

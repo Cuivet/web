@@ -389,22 +389,7 @@ export default function ClinicalRecord() {
                 frecuencyDuration: null,
               },
             ],
-          },
-          {
-            id: 5,
-            diagnosisId: 2,
-            diagnosisTypeId: 3,
-            diagnosisItemTreatments: [
-              {
-                id: 7,
-                diagnosisItemId: 5,
-                drugId: 2,
-                treatmentTypeId: 1,
-                frecuencyInterval: 8,
-                frecuencyDuration: 2,
-              },
-            ],
-          },
+          },          
         ],
       },
       prognosis: {

@@ -18,6 +18,8 @@ import { clinicalRecordService } from "../../services/clinical_record.service";
 import ConsultationHeader from "../../components/ConsultationHeader/ConsultationHeader";
 import ConsultationVisits from "../../components/ConsultationVisits/ConsultationVisits";
 import ConsultationSteps from "../../components/ConsultationSteps/ConsultationSteps";
+// import { ClinicalRecordProvider } from "../../components/ClinicalRecordContext/ClinicalRecordContext";
+//import {ClinicalRecordProvider} from "../../context/ClinicalRecordContext";
 
 const { Title } = Typography;
 
@@ -106,6 +108,7 @@ export default function ClinicalRecordT() {
       //   }));
       // }
     }
+    
     console.log(clinicalRecord);
     updateReview();
   }, [location, flag]);
@@ -185,6 +188,7 @@ export default function ClinicalRecordT() {
     } else {
       prognosis = null;
     }
+    //recordar que clinicalRecord es una variable asincronica, el impacto se vera reflejado, pero no en el momento
     setClinicalRecord((prevClinicalRecord) => ({
       ...prevClinicalRecord,
       anamnesis: {
@@ -202,8 +206,28 @@ export default function ClinicalRecordT() {
       },
       prognosis: prognosis,
     }));
+    message.loading("Guardando Ficha Clinica", 1, () => {
+      //
+      //pegarle al endpoint para guardar la ficha
+      //
+      message.success("Guardado con exito!");
+      sessionStorage.removeItem("anamnesisItems");
+      sessionStorage.removeItem("physicalExam");
+      sessionStorage.removeItem("presumptiveDiagnosisItem");
+      sessionStorage.removeItem("diagnosisItems");
+      sessionStorage.removeItem("prognosis");
+      navigate(-1);
+    });
     console.log(clinicalRecord);
   };
+
+  //prueba de datos
+  // const saveStepData = (stepData) => {
+  //   setClinicalRecord((prevClinicalRecord) => ({
+  //     ...prevClinicalRecord,
+  //     ...stepData,
+  //   }));
+  // }
 
   if (clinicalRecord !== null) {
     var lastVisitDate = getLastDateFromVisits(clinicalRecord.visits);
@@ -304,6 +328,9 @@ export default function ClinicalRecordT() {
                 prognosis={clinicalRecord.prognosis}
                 sendDataClinicalRecord={saveClinicalRecord}
               />
+              {/* <ClinicalRecordProvider value={clinicalRecord} >
+                <ConsultationSteps saveStepData={saveStepData}/>
+              </ClinicalRecordProvider> */}
             </Col>
           </Row>
         </>

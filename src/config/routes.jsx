@@ -28,6 +28,8 @@ import StudiesRequest from "../pages/StudiesRequest/StudiesRequest";
 import Reports from "../pages/VisitReports/VisitReports";
 import PetsReports from "../pages/PetsReports/PetsReports";
 
+import ClinicalRecordT from "../pages/ClinicalRecordT/Clinical RecordT";
+
 //Client pages
 import Landing from "../pages/Landing/Landing";
 import Contact from "../pages/Contact";
@@ -108,6 +110,11 @@ const routesAdmin = [
         path: "/clinical-record",
         component: ClinicalRecord,
         layout: LayoutAdmin,
+    },
+    {
+        path:"/clinical-recordT",
+        component: ClinicalRecordT,
+        layout:LayoutAdmin,
     },
     {
         path: "/studies-request",

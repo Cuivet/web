@@ -7,18 +7,18 @@ import {
   Input,
   Button,
   Tooltip,
-  Space,
+  message,
 } from "antd";
 import React, { useState, useEffect } from "react";
-import { CheckOutlined } from "@ant-design/icons";
-
+// import { useForm } from "react-hook-form";
+import { CheckOutlined, LockOutlined, LockTwoTone, UnlockOutlined, UnlockTwoTone, LockFilled, UnlockFilled} from "@ant-design/icons";
+import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 export default function Anamnesis(props) {
   const { answers } = props;
-  const [disabled, setIsDisabled] = useState(false);
-  // const [radioValue, setRadioValue] = useState([null]);
-  const [radiosValues, setRadiosValues] = useState([null]);
+  // const [disabled, setIsDisabled] = useState(false);
+  const {disabled, toggleEdit}=useEditContext();
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
-
+  //preguntas de anamnesis, cambiar por la pegada al endpoint que traiga las preguntas
   const questions = [
     {
       id: 1,
@@ -45,41 +45,20 @@ export default function Anamnesis(props) {
       isTextResponse: true,
     },
   ];
-  // no se para que lo hice pero no lo borro todavia
-  // const [input, setInput] = useState(
-  //   questions.map((question) => {
-  //     return {
-  //       anamnesisId: props.id,
-  //       anamnesisQuestionId: question.id,
-  //       booleanResponse: null,
-  //       textResponse: null,
-  //     };
-  //   })
-  // );
 
-  //Create form fields based off how many items are in the questions
+  //funcion para mapear las preguntas, sin usar QUITAR
   // const itemInputs = questions.map((item) => {
-  //   return {
-  //     id: item.id,
-  //     question: item.question,
-  //     isBooleanResponse: item.isBooleanResponse,
-  //     isTextResponse: item.isTextResponse,
-  //   };
+  //   if (item.isBooleanResponse && item.isTextResponse) {
+  //     return { type1: item.question };
+  //   } else {
+  //     if (item.isBooleanResponse) {
+  //       return { type2: item.question };
+  //     }
+  //     if (item.isTextResponse) {
+  //       return { type3: item.question };
+  //     }
+  //   }
   // });
-
-  //funcion para mapear las preguntas
-  const itemInputs = questions.map((item) => {
-    if (item.isBooleanResponse && item.isTextResponse) {
-      return { type1: item.question };
-    } else {
-      if (item.isBooleanResponse) {
-        return { type2: item.question };
-      }
-      if (item.isTextResponse) {
-        return { type3: item.question };
-      }
-    }
-  });
 
   const wrapper = {
     sm: { offset: 5, span: 14 },
@@ -88,49 +67,41 @@ export default function Anamnesis(props) {
     },
   };
 
-  // const onChange = (e) => {
-  //   // setRadioValue(e.target.value);
-  //   console.log(e.target.name);
-  //   console.log(e.target.value);
-  //   const oldValues = [...radiosValues];
-  //   oldValues.splice(e.target.name, 1, e.target.value);
-  //   setRadiosValues(oldValues);
-  // };
-
   //carga de datos en los campos
-  useEffect(() => {
-    //caso1: trae TODOS los datos cargados
-    if (props.id !== null) {
-      setIsDisabled(true);
-      console.log(props.answers[0].anamnesisQuestionId);
-      const newAnswers = props.answers.map((answer) => {
-        //tipo pregunta 1: texto + radio
-        if (answer.booleanResponse !== null && answer.textResponse !== null) {
-          return {
-            name: answer.anamnesisQuestionId,
-            value: answer.textResponse,
-          };
-          //tipo pregunta 2: radio
-        } else if (answer.booleanResponse) {
-          return {
-            name: answer.anamnesisQuestionId,
-            value: answer.booleanResponse,
-          };
-          //tipo pregunta 3: texto
-        } else {
-          return {
-            name: answer.anamnesisQuestionId,
-            value: answer.textResponse,
-          };
-        }
-      });
-
-      setInitValue(newAnswers);
-    } else {
-      setIsDisabled(false);
-    }
-  }, [props]);
-  console.log(initValue);
+  // useEffect(() => {
+  //   //caso1: trae TODOS los datos cargados
+  //   const anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
+  //   if (props.id !== null || anamnesisItems !== null) {
+  //     console.log(anamnesisItems);
+  //     setIsDisabled(true);
+  //     // console.log(props.answers[0].anamnesisQuestionId);
+  //     anamnesisItems.forEach((answer) => {
+  //       //tipo pregunta 1: texto + radio
+  //       if (answer.booleanResponse !== null && answer.textResponse !== null) {
+  //         setInitValue((initValue) => [
+  //           ...initValue,
+  //           { name: answer.anamnesisQuestionId, value: answer.textResponse },
+  //         ]);
+  //         //tipo pregunta 2: radio
+  //       } else if (answer.booleanResponse) {
+  //         setInitValue((initValue) => [
+  //           ...initValue,
+  //           { name: answer.anamnesisQuestionId, value: answer.booleanResponse },
+  //         ]);
+  //         //tipo pregunta 3: texto
+  //       } else {
+  //         setInitValue((initValue) => [
+  //           ...initValue,
+  //           { name: answer.anamnesisQuestionId, value: answer.textResponse },
+  //         ]);
+  //       }
+  //     });
+  //     initValue.slice(1, initValue.length);
+  //   } else {
+  //     setIsDisabled(false);
+  //   }
+  // }, [props]);
+  // console.log(initValue);
 
   function RenderQ() {
     const render = [];
@@ -290,48 +261,14 @@ export default function Anamnesis(props) {
     // let test = <Form.List name={"anamnesisItems"}>{() => render}</Form.List>;
     return render;
   }
-
-  //cada vez que cambia el formulario
-  //texto no deja ingresar mas de un caracter por vez
-  //probar de hacer la carga en el onfinish
-  const changeForm = (e) => {
-    // props.stepSave(e);
-    // if (e.target.name.slice(0, 15) === "booleanResponse") {
-    //   setTest({
-    //     ...test,
-    //     anamnesisQuestionId: parseInt(e.target.name.slice(15)),
-    //     [e.target.name.slice(0, 15)]: e.target.value,
-    //   });
-    // }
-    // if(e.target.name.slice(0,12) === 'textResponse'){
-    //   setTest({
-    //     ...test,
-    //     [e.target.name.slice(0,12)]: e.target.value});
-    // }
-    // setInput(input.map(i => {
-    //   if (i.anamnesisQuestionId === parseInt(e.target.name.slice(15))){
-    //     return test;
-    //   }
-    //   return i;
-    // }))
-    // setInput(input.map( i => {
-    //         if(e.target.name.slice(0,4) === 'bool' && i.anamnesisQuestionId === parseInt(e.target.name.slice(4))){
-    //             return {...i, booleanResponse: e.target.value,};
-    //         }
-    //         // else if (e.target.name.slice(0,4) === 'text' && i.anamnesisQuestionId === parseInt(e.target.name.slice(4))){
-    //         //     return {...i, textResponse: e.target.value,};
-    //         // }
-    //          else{
-    //             return {...i};
-    //         }
-    // }));
-    // console.log(test);
-    // console.log(input);
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
   };
 
   const register = (e) => {
-    console.log(e);
-
     const result = Object.entries(e).reduce((acc, [key, value]) => {
       const index = /\d+/.exec(key);
       if (index) {
@@ -341,7 +278,7 @@ export default function Anamnesis(props) {
         acc.push({ [key]: value });
       }
       return acc;
-    }, []);    
+    }, []);
 
     const resultFill = result.map((obj, index) => {
       if (!("id" in obj)) {
@@ -366,58 +303,51 @@ export default function Anamnesis(props) {
         )
       )
     );
+    // onNextStep(anamnesisItems);
 
+    //prueba
     console.log(anamnesisItems);
+    const data = anamnesisItems;
+    message.loading("Guardando..", 1, () => {
+      areObjectPropertiesUndefined(e)
+        ? sessionStorage.setItem("anamnesisItems", JSON.stringify(null))
+        : sessionStorage.setItem("anamnesisItems", JSON.stringify(data));
+      message.success("Guardado con exito!");
+      // setIsDisabled(true);
+    });
 
-    // let size = Object.keys(e).length;
-    // let keys = Object.keys(e);
-    // let anamnesisItems = Array(questions.length).fill(null);
-    // let last;
-    // let flag = true;
-    // console.log(anamnesisItems);
-    // for (let i = 0; i < size; i++) {
-    //   // let obj;
-    //   // console.log(keys[i]);
-
-    //   if (flag) {
-    //     // console.log(values[i]);
-    //     if (keys[i].slice(0, 15) === "booleanResponse") {
-    //       console.log("hola");
-    //       anamnesisItems.splice(0, 1, { booleanResponse: e.booleanResponse0 });
-    //       last = e.booleanResponse0;
-    //       console.log(last);
-    //     }
-    //     flag = false;
-    //   }
-    //   console.log(anamnesisItems)
-
-    // if (
-    //   parseInt(key.slice(15)) === last &&
-    //   key.slice(0, 16) === "booleanResponse"
-    // ) {
-    //   obj = { booleanResponse: e[key] };
-    //   last = parseInt(key.slice(15));
-    // }
-    //   if (
-    //     parseInt(key.slice(12)) === last &&
-    //     key.slice(0, 13) === "textResponse"
-    //   ) {
-    //     obj = { textResponse: e[key] };
-    //     last = parseInt(key.slice(12));
-    //   }
-    //   console.log(obj);
-    //   list.push(obj);
-    // console.log(key.slice(15));
-    // console.log(`${key}: ${e[key]}`);
-    // }
-    // console.log(list);
-    props.stepSave(e);
+    // props.stepSave(e);
   };
 
-  // console.log(initValue);
-  const test = [{ hola: "bye" }, { hola: "chau" }];
-  // console.log(itemInputs);
-  // console.clear();
+  const [responses, setResponses] = useState(
+    JSON.parse(sessionStorage.getItem("anamnesisItems")) || {}
+  );
+
+  useEffect(() => {
+    // Store responses in sessionStorage whenever they change
+    sessionStorage.setItem("anamnesisItems", JSON.stringify(responses));
+      
+  }, [responses]);
+
+  const handleBooleanResponseChange = (id, value) => {
+    setResponses({
+      ...responses,
+      [id]: {
+        ...responses[id],
+        booleanResponse: value,
+      },
+    });
+  };
+
+  const handleTextResponseChange = (id, value) => {
+    setResponses({
+      ...responses,
+      [id]: {
+        ...responses[id],
+        textResponse: value,
+      },
+    });
+  };
 
   return (
     <>
@@ -430,12 +360,48 @@ export default function Anamnesis(props) {
             layout="vertical"
             labelCol={{ sm: { span: 14, offset: 5 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
-            onFinish={register}
+            // onFinish={register}
             className="stepForm"
             autoComplete="off"
-            onChange={changeForm}
           >
-            <RenderQ />
+            {/*prueba  <RenderQ /> */}
+            {questions.map((q, i) => (
+              <Col key={q.id}>
+                <Form.Item label={q.question} name={`question${q.id}`}>
+                  {q.isBooleanResponse && (
+                    <Radio.Group
+                      optionType="button"
+                      disabled={disabled}
+                      style={{marginBottom:'2%'}}
+                      name={`booleanResponse${q.id}`}
+                      value={responses[q.id]?.booleanResponse || undefined}
+                      onChange={(e) =>
+                        handleBooleanResponseChange(q.id, e.target.value)
+                      }
+                    >
+                      <Radio style={{ width: "50%" }} value={true}>
+                        Si
+                      </Radio>
+                      <Radio style={{ width: "50%" }} value={false}>
+                        No
+                      </Radio>
+                    </Radio.Group>
+                  )}
+                  {q.isTextResponse && (
+                    <Input
+                      type="text"
+                      disabled={disabled}
+                      placeholder={"Ingrese su respuesta"}
+                      value={responses[q.id]?.textResponse || ""}
+                      onChange={(e) =>
+                        handleTextResponseChange(q.id, e.target.value)
+                      }
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+            ))}
+
             {/* <Form.List name={"anamnesisItems"} >
               {(fields) => (
                 <>
@@ -493,15 +459,16 @@ export default function Anamnesis(props) {
 
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
-                <Tooltip title={"Guardar"}>
+                <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>
                   <Button
-                    htmlType="submit"
+                    // htmlType="submit"
                     className="stepSave"
                     shape="round"
-                    disabled={disabled}
+                    // disabled={disabled}
                     type="primary"
+                    onClick={toggleEdit}
                   >
-                    <CheckOutlined />
+                    {disabled ? <LockFilled /> : <UnlockFilled />}
                   </Button>
                 </Tooltip>
               </Form.Item>

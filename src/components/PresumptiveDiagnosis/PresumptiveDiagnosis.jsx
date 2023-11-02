@@ -23,6 +23,7 @@ import {
 import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
 import { Link } from "react-router-dom";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
+import ComplementaryStudiesModal from "../ComplementaryStudiesModal/ComplementaryStudiesModal";
 // import {
 //   DiagnosesContext,
 //   DiagnosesContextProvider,
@@ -108,17 +109,6 @@ export default function PresumptiveDiagnosis(props) {
     return render;
   }
 
-  const changeForm = (e) => {
-    // props.stepSave(e);
-    // console.log(e.target.value)
-    // setItem([...item, { [e.target.name]: e.target.value }]);
-    // setInput({
-    //   ...input,
-    //   [e.target.name]: e.target.value,
-    // });
-    // console.log(item);
-  };
-
   const areObjectPropertiesUndefined = (object) => {
     const propertyNames = Object.keys(object);
     return propertyNames.every(
@@ -169,9 +159,11 @@ export default function PresumptiveDiagnosis(props) {
       // console.log(list);
     }
   };
+
   const [showMore, setShowMore] = useState(false);
+  const [flag, setFlag] = useState(props.presumptiveDiagnosisItem || "");
   const [responses, setResponses] = useState(
-    JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItem")) || {}
+    JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItem")) || flag
   );
 
   useEffect(() => {
@@ -180,7 +172,7 @@ export default function PresumptiveDiagnosis(props) {
       "presumptiveDiagnosisItem",
       JSON.stringify(responses)
     );
-    if(Object.keys(responses).length > 1){
+    if (Object.keys(responses).length > 1) {
       setShowMore(true);
     }
   }, [responses]);
@@ -230,9 +222,6 @@ export default function PresumptiveDiagnosis(props) {
             fields={initValue}
             // onChange={changeForm}
           >
-            {isDataFill ? (
-              <RenderD />
-            ) : (
               <>
                 <Col>
                   <Form.Item
@@ -259,78 +248,75 @@ export default function PresumptiveDiagnosis(props) {
                 <Col>
                   <Divider>Diagnóstico Diferencial</Divider>
                 </Col>
-                  <Form.List name="diagnoses" >
-                    {(fields, { add, remove }) => (
-                      <>
-                        {fields.map(({ key, name, ...restField }, i) => (
-                          <div key={key}>
-                            <Col span={24}>
-                              <Form.Item
-                                {...restField}
-                                key={key}
-                                // name={[name, `observation`]}
-                                label={"Diagnóstico"}
-                                tooltip={{
-                                  title: "diagnóstico diferencial",
-                                  icon: <InfoCircleOutlined />,
-                                }}
-                              >
-                                <Input
-                                  disabled={disabled}
-                                  name={i + 1}
-                                  placeholder="Ingrese el diagnóstico"
-                                  value={
-                                    responses[i + 1]?.observation || undefined
-                                  }
-                                  onChange={(e) =>
-                                    handleTextResponseChange(
-                                      e.target.name,
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col style={{ marginBottom: "2%" }}>
-                              <Tooltip
-                                title={"Borrar diagnóstico"}
-                                align="left"
-                              >
-                                <Button
-                                  type="primary"
-                                  shape="circle"
-                                  onClick={() => remove(name)}
-                                >
-                                  <MinusCircleOutlined />
-                                </Button>
-                              </Tooltip>
-                            </Col>
-                          </div>
-                          //   </Space>
-                        ))}
-                        <Col>
-                          <Form.Item
-                            wrapperCol={{
-                              xs: { span: 24 },
-                              sm: { span: 20, offset: 2 },
-                            }}
-                          >
-                            <Button
-                              type="dashed"
-                              onClick={() => add()}
-                              block
-                              icon={<PlusOutlined />}
+                <Form.List name="diagnoses">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map(({ key, name, ...restField }, i) => (
+                        <div key={key}>
+                          <Col span={24}>
+                            <Form.Item
+                              {...restField}
+                              key={key}
+                              // name={[name, `observation`]}
+                              label={"Diagnóstico"}
+                              tooltip={{
+                                title: "diagnóstico diferencial",
+                                icon: <InfoCircleOutlined />,
+                              }}
                             >
-                              {showMore ? "Mostrar mas diagnósticos" : "Agregar diagnóstico"}
-                              
-                            </Button>
-                          </Form.Item>
-                        </Col>
-                      </>
-                    )}
-                  </Form.List>
+                              <Input
+                                disabled={disabled}
+                                name={i + 1}
+                                placeholder="Ingrese el diagnóstico"
+                                value={
+                                  responses[i + 1]?.observation || undefined
+                                }
+                                onChange={(e) =>
+                                  handleTextResponseChange(
+                                    e.target.name,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col style={{ marginBottom: "2%" }}>
+                            <Tooltip title={"Borrar diagnóstico"} align="left">
+                              <Button
+                                type="primary"
+                                shape="circle"
+                                onClick={() => remove(name)}
+                              >
+                                <MinusCircleOutlined />
+                              </Button>
+                            </Tooltip>
+                          </Col>
+                        </div>
+                        //   </Space>
+                      ))}
+                      <Col>
+                        <Form.Item
+                          wrapperCol={{
+                            xs: { span: 24 },
+                            sm: { span: 20, offset: 2 },
+                          }}
+                        >
+                          <Button
+                            type="dashed"
+                            onClick={() => add()}
+                            block
+                            icon={<PlusOutlined />}
+                          >
+                            {showMore
+                              ? "Mostrar mas diagnósticos"
+                              : "Agregar diagnóstico"}
+                          </Button>
+                        </Form.Item>
+                      </Col>
+                    </>
+                  )}
+                </Form.List>
               </>
-            )}
 
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
@@ -350,59 +336,7 @@ export default function PresumptiveDiagnosis(props) {
             </Col>
           </Form>
           {/* Estudios complementarios */}
-          <Modal
-            title="Pedido de Estudios Complementarios"
-            visible={isModalOpen}
-            onCancel={handleCancel}
-            footer={[
-              <Button key="back" onClick={handleCancel}>
-                Cancelar
-              </Button>,
-              <Link to={"/studies-request"}>
-                <Button key="submit" type="primary">
-                  Generar
-                </Button>
-              </Link>,
-            ]}
-          >
-            <Row>
-              <Title level={5}>Tipo de Estudio Complementario:</Title>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <Select
-                  placeholder="Estudios"
-                  allowClear
-                  showSearch
-                  name={"complementaryStudyTypeId"}
-                  className="select-before full-width"
-                  style={{ width: "100%" }}
-                >
-                  <Option value={1}>Radiografia</Option>
-                  <Option value={2}>Rayos X</Option>
-                  <Option value={3}>Particular</Option>
-                  <Option value={4}>Ecografia</Option>
-                </Select>
-              </Col>
-            </Row>
-            <Row>
-              <Title level={5}>Observaciones:</Title>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <Input.TextArea
-                  showCount
-                  allowClear
-                  maxLength={500}
-                  placeholder="Ingrese observacion..."
-                  autoSize={{
-                    minRows: 3,
-                    maxRows: 5,
-                  }}
-                />
-              </Col>
-            </Row>
-          </Modal>
+          <ComplementaryStudiesModal isModalOpen={isModalOpen} handleCancel={handleCancel} />
         </Col>
       </Row>
     </>

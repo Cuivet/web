@@ -90,6 +90,11 @@ export default function ClinicalRecordT() {
         .then((res) => {
           console.log(res);
           setClinicalRecord(res);
+          // sessionStorage.setItem("physicalExam", JSON.stringify(res.physicalExam));
+          // sessionStorage.setItem("anamnesisItems", JSON.stringify(res.anamnesis.anamnesisItems || null ));
+          // sessionStorage.setItem("presuptiveDiagnosisItem", JSON.stringify(res.presumptiveDiagnosis?.presumptiveDiagnosis));
+          // sessionStorage.setItem("diagnosisItems", JSON.stringify(res.diagnosis?.diagnosisItems));
+          // sessionStorage.setItem("prognosis", JSON.stringify(res.prognosis));
           setFlag(false);
         })
         .catch((error) => {
@@ -108,7 +113,7 @@ export default function ClinicalRecordT() {
       //   }));
       // }
     }
-    
+
     console.log(clinicalRecord);
     updateReview();
   }, [location, flag]);
@@ -136,7 +141,14 @@ export default function ClinicalRecordT() {
     console.log(clinicalRecord);
     message.loading("Guardando Ficha Clinica", 1, () => {
       //
-      //pegarle al endpoint para guardar la ficha
+      clinicalRecordService
+        .registerClinicalRecord(clinicalRecord)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
       //
       message.success("Guardado con exito!");
       sessionStorage.removeItem("anamnesisItems");
@@ -236,6 +248,41 @@ export default function ClinicalRecordT() {
     );
   }
 
+  const presumptiveDiagnosis= {
+    id: 4,
+    visitId: 2,
+    presumptiveDiagnosisItem: [
+      {
+        id: 3,
+        presumptiveDiagnosisId: 4,
+        diagnosisTypeId: 2,
+        observation: "Puede presentar esto por manchas en la panza",
+      },
+      {
+        id: 4,
+        presumptiveDiagnosisId: 4,
+        diagnosisTypeId: 3, //no se va a usar o va a ser fijo
+        observation: "Gastroenteritis", //no debe venir null
+      },
+    ],
+    complementaryStudies: [
+      {
+        id: 2,
+        presumptiveDiagnosisId: 4,
+        complementaryStudyTypeId: 2,
+        observation: "Radiografia de torax",
+        url: "www.cuivet.com/302HLk22",
+      },
+      {
+        id: 3,
+        presumptiveDiagnosisId: 4,
+        complementaryStudyTypeId: 1,
+        observation: "",
+        url: null,
+      },
+    ],
+  };
+
   return (
     <>
       <Row>
@@ -323,7 +370,7 @@ export default function ClinicalRecordT() {
                 review={clinicalRecord.review}
                 anamnesis={clinicalRecord.anamnesis}
                 physicalExam={clinicalRecord.physicalExam}
-                presumptiveDiagnosis={clinicalRecord.presumptiveDiagnosis}
+                presumptiveDiagnosis={presumptiveDiagnosis}
                 diagnosis={clinicalRecord.diagnosis}
                 prognosis={clinicalRecord.prognosis}
                 sendDataClinicalRecord={saveClinicalRecord}

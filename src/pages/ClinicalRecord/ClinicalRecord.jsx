@@ -325,11 +325,11 @@ export default function ClinicalRecord() {
         ],
         complementaryStudies: [
           {
-            id: 2,
-            presumptiveDiagnosisId: 4,
-            complementaryStudyTypeId: 2,
-            observation: "Radiografia de torax",
-            url: "www.cuivet.com/302HLk22",
+            id: 2, //id en esa ficha clinica
+            presumptiveDiagnosisId: 4, //id del diagnostico presuntivo
+            complementaryStudyTypeId: 2, //id propio del estudio seleccionado
+            observation: "Radiografia de torax", //comentario
+            url: "www.cuivet.com/302HLk22", //
           },
           {
             id: 3,

@@ -2,20 +2,18 @@ import {
   Form,
   Row,
   Col,
-  InputNumber,
   Select,
   Typography,
-  DatePicker,
   Input,
   Radio,
-  Button,
-  Tooltip,
 } from "antd";
-import { InfoCircleOutlined, CheckOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import {raceService} from '../../services/race.service';
 import {specieService} from '../../services/specie.service';
-
+import { petSizeService } from "../../services/pet_size.service";
+import { hairColorService } from "../../services/hair_color.service";
+import { hairLengthService } from "../../services/hair_length.service";
 
 export default function Review(props) {
   const { pet } = props;
@@ -23,6 +21,9 @@ export default function Review(props) {
   const [initValue, setInitValue] = useState([]);
   const [races, setRaces] = useState([]);
   const [species, setSpecies] = useState([]);
+  const [petSizes, setPetSizes] = useState([]);
+  const [hairColors, sethairColors] = useState([]);
+  const [hairLenghts, sethairLenghts] = useState([]);
   const [isInitData, setIsInitData]= useState(false);
   const [isFetchData, setIsFetchData] = useState(false);
   const wrapper = {
@@ -51,6 +52,15 @@ export default function Review(props) {
           await specieService.findAll().then((response) => {
             setSpecies(response);
           });
+          await petSizeService.findAll().then((response) => {
+            setPetSizes(response);
+          });
+          await hairColorService.findAll().then((response) => {
+            sethairColors(response);
+          });
+          await hairLengthService.findAll().then((response) => {
+            sethairLenghts(response);
+          });
           setIsFetchData(true);
         };
         fetchData();
@@ -70,7 +80,7 @@ export default function Review(props) {
       { name: ["isMale"], value: pet.isMale },
       { name: ["raceId"], value: pet.raceId },
       { name: ["specieId"], value: species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id},
-      { name: ["castrationDate"], value: pet.castrationDate },
+      { name: ["castrationDate"], value: pet.castrationDate.slice(0, 10) },
       { name: ["haveChip"], value: pet.haveChip },
       { name: ["aspects"], value: pet.aspects },
       { name: ["hairColorId"], value: pet.hairColorId },
@@ -96,6 +106,30 @@ export default function Review(props) {
       });
       return list;
     }
+    function renderPetSize() {
+      let list = [];
+      petSizes.forEach(petSize => {
+          list.push(<Select.Option value={petSize.id}>{petSize.name}</Select.Option>);
+      })
+      return list;
+  }
+
+  function renderHairColor() {
+      let list = [];
+      hairColors.forEach(hairColor => {
+          list.push(<Select.Option value={hairColor.id}>{hairColor.name}</Select.Option>);
+      })
+      return list;
+  }
+
+
+  function renderHairLength() {
+      let list = [];
+      hairLenghts.forEach(hairLength => {
+          list.push(<Select.Option value={hairLength.id}>{hairLength.name}</Select.Option>);
+      })
+      return list;
+  }
 
   return (
     <>
@@ -160,10 +194,10 @@ export default function Review(props) {
                   disabled={disabled}
                   className="register-pet-form__radio"
                 >
-                  <Radio style={{ width: "50%" }} value={true}>
+                  <Radio style={{ width: "50%" }} value={1}>
                     Macho
                   </Radio>
-                  <Radio style={{ width: "50%" }} value={false}>
+                  <Radio style={{ width: "50%" }} value={0}>
                     Hembra
                   </Radio>
                 </Radio.Group>
@@ -210,7 +244,7 @@ export default function Review(props) {
             </Col>
             <Col span={24}>
               <Form.Item
-                name="castratioDate"
+                name="castrationDate"
                 label="Castración"
                 tooltip={{
                   title: "Fecha de castración del paciente",
@@ -237,10 +271,10 @@ export default function Review(props) {
                   optionType="button"
                   className="register-pet-form__radio"
                 >
-                  <Radio style={{ width: "50%" }} value={true}>
+                  <Radio style={{ width: "50%" }} value={1}>
                     Tiene chip
                   </Radio>
-                  <Radio style={{ width: "50%" }} value={false}>
+                  <Radio style={{ width: "50%" }} value={0}>
                     No tiene
                   </Radio>
                 </Radio.Group>
@@ -262,8 +296,7 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={1}>Pálido</Select.Option>
-                  {/*Martina */}
+                  {renderHairColor()}
                 </Select>
               </Form.Item>
             </Col>
@@ -282,8 +315,7 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={3}>Corto</Select.Option>
-                  {/* {renderRaces()} Martina */}
+                  {renderHairLength()}
                 </Select>
               </Form.Item>
             </Col>
@@ -302,8 +334,7 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  <Select.Option value={2}>Mediano</Select.Option>
-                  {/* {renderRaces()} Martina*/}
+                  {renderPetSize()} 
                 </Select>
               </Form.Item>
             </Col>
@@ -327,21 +358,6 @@ export default function Review(props) {
                 />
               </Form.Item>
             </Col>
-            {/* <Col>
-              <Form.Item wrapperCol={{ span: 24 }}>
-                <Tooltip title={"Guardar"}>
-                  <Button
-                    htmlType="submit"
-                    shape="round"
-                    className="stepSave"
-                    disabled={disabled}
-                    type="primary"
-                  >
-                    <CheckOutlined />
-                  </Button>
-                </Tooltip>
-              </Form.Item>
-            </Col> */}
           </Form>
         </Col>
       </Row>

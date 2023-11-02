@@ -31,10 +31,6 @@ export default function ConsultationSteps(props) {
   const [current, setCurrent] = useState(0);
   const [stepsClinicalRecord, setStepsClinicalRecord] = useState(null);
 
-  //prueba sacar despues
-  // useEffect(() => {
-  //   console.log(anamnesis);
-  // }, [anamnesis]);
   const next = (stepData) => {
     // saveStepData(stepData);
     setCurrent(current + 1);
@@ -178,13 +174,6 @@ export default function ConsultationSteps(props) {
     );
     let diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
     let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
-    // console.log(
-    //   anamnesisItems,
-    //   physcalExam,
-    //   presumptiveDiagnosisItem,
-    //   diagnosisItems,
-    //   prognosis
-    // );
     let cRecord = {
       anamnesisItems: anamnesisItems,
       physicalExam: physicalExam,
@@ -192,18 +181,9 @@ export default function ConsultationSteps(props) {
       diagnosisItems: diagnosisItems,
       prognosis: prognosis,
     };
-    // console.log(cRecord);
-    // setStepsClinicalRecord({
-    //   anamnesisItems: anamnesisItems,
-    //   physcalExam: physcalExam,
-    //   presumptiveDiagnosisItem: presumptiveDiagnosisItem,
-    //   diagnosisItem: diagnosisItem,
-    //   prognosis: prognosis,
-    // });
-    // console.log(stepsClinicalRecord);
-
-    //prueba
-    // props.sendDataClinicalRecord(cRecord);
+    //prueba del guardado de la ficha clinica, 
+    //envio los datos recolectados en step a componente padre
+    props.sendDataClinicalRecord(cRecord);
   };
 
   return (

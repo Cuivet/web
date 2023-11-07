@@ -10,16 +10,20 @@ import {
   Tooltip,
   Divider,
   InputNumber,
+  message,
 } from "antd";
 import {
   InfoCircleOutlined,
   CheckOutlined,
   MinusCircleOutlined,
   PlusOutlined,
+  LockFilled,
+  UnlockFilled,
 } from "@ant-design/icons";
 import { treatmentTypeService } from "../../services/treatment_type.service";
 import { treatmentOptionService } from "../../services/treatment_option.service";
 import { drugService } from "../../services/drug.service";
+import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 
 export default function Diagnosis(props) {
   const [treatmentTypes, setTreatmentTypes] = useState([]);
@@ -28,7 +32,9 @@ export default function Diagnosis(props) {
   const [selectedTreatmentOptionId, setSelectedTreatmentOptionId] =
     useState(null);
   const [drugs, setDrugs] = useState([]);
-  const [disabled, setIsDisabled] = useState(false);
+  // const [disabled, setIsDisabled] = useState(false);
+  const { disabled, toggleEdit } = useEditContext();
+  const [isDataFilled, setIsDataFilled] = useState(false);
   const [initValue, setInitValue] = useState([{ name: null, value: null }]);
   const [input, setInput] = useState({
     visitId: null,
@@ -44,6 +50,7 @@ export default function Diagnosis(props) {
     ],
   });
   const [form] = Form.useForm();
+
   const wrapper = {
     sm: { offset: 0, span: 14 },
     xs: {
@@ -64,13 +71,15 @@ export default function Diagnosis(props) {
       });
     };
     fetchData();
+    console.log(treatmentOptions);
   }, []);
 
   //   console.log(props);
   useEffect(() => {
     //caso1: trae TODOS los datos cargados
     if (props.id !== null) {
-      setIsDisabled(true);
+      // setIsDisabled(true);
+      setIsDataFilled(true);
 
       //Martina
       const newTreatments = props.diagnosis.diagnosisItemTreatments.map(
@@ -148,7 +157,8 @@ export default function Diagnosis(props) {
     } else {
       //caso2: carga SOLO los campos
       //habilita campo
-      setIsDisabled(false);
+      // setIsDisabled(false);
+      setIsDataFilled(false);
       setInitValue([{ name: "empty", value: null }]);
     }
   }, [props]);
@@ -173,12 +183,20 @@ export default function Diagnosis(props) {
     if (selectedTreatmentTypeId !== null) {
       treatmentOptions.forEach((treatmentOption) => {
         if (treatmentOption.treatmentTypeId === selectedTreatmentTypeId) {
+          // if(treatmentOption.treatmentOptionId === selectedTreatmentOptionId){
+          //   list.push(
+          //     <Select.Option value={treatmentOption.id}>
+          //       {treatmentOption.name}
+          //     </Select.Option>
+          //   )
+          // }
           list.push(
             <Select.Option value={treatmentOption.id}>
               {treatmentOption.name}
             </Select.Option>
           );
         }
+
       });
     }
     return list;
@@ -201,7 +219,7 @@ export default function Diagnosis(props) {
         //mapear con una bandera de activacion, distintos obj en el array
         if (initValue[i]["name"].slice(0, 15) === "treatmentTypeId") {
           render.push(
-            <Col>
+            <Col key={i}>
               <Form.Item
                 name={initValue[i]["name"]}
                 // wrapperCol={wrapper}
@@ -227,7 +245,7 @@ export default function Diagnosis(props) {
           }
         } else if (initValue[i]["name"].slice(0, 17) === "treatmentOptionId") {
           render.push(
-            <Col>
+            <Col key={i}>
               <Form.Item
                 name={initValue[i]["name"]}
                 // wrapperCol={wrapper}
@@ -248,7 +266,7 @@ export default function Diagnosis(props) {
         if (flag) {
           if (initValue[i]["name"].slice(0, 17) === "frecuencyInterval") {
             render.push(
-              <Col>
+              <Col key={i}>
                 <Form.Item
                   name={initValue[i]["name"]}
                   label={"Intervalo"}
@@ -273,7 +291,7 @@ export default function Diagnosis(props) {
           }
           if (initValue[i]["name"].slice(0, 17) === "frecuencyDuration") {
             render.push(
-              <Col span={24}>
+              <Col key={i} span={24}>
                 <Form.Item
                   name={initValue[i]["name"]}
                   label={"Duración"}
@@ -296,7 +314,7 @@ export default function Diagnosis(props) {
           }
           if (initValue[i]["name"].slice(0, 6) === "drugId") {
             render.push(
-              <Col span={24}>
+              <Col key={i} span={24}>
                 <Form.Item
                   name={initValue[i]["name"]}
                   //   wrapperCol={wrapper}
@@ -335,11 +353,12 @@ export default function Diagnosis(props) {
   const onTreatmentTypeChange = (treatmentTypeId) => {
     setSelectedTreatmentTypeId(treatmentTypeId);
     setSelectedTreatmentOptionId(null);
-    if (treatmentTypeId === 1) {
-      setMedic(true);
-    } else {
-      setMedic(false);
-    }
+
+    // if (treatmentTypeId === 1) {
+    //   setMedic(true);
+    // } else {
+    //   setMedic(false);
+    // }
   };
 
   const onTreatmentOptionChange = (treatmentOptionId) => {
@@ -360,22 +379,99 @@ export default function Diagnosis(props) {
     // console.log(test);
     // console.log(input);
   };
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
+  };
 
   const register = (e) => {
     //guardado de datos, sin validaciones
-    console.log("Received values of form:", e);    
+    console.log("Received values of form:", e);
     let list = e.diagnosisItemTreatments;
     // console.log(list);
-    for (let i in list){
-      list[i].id = parseInt(i)+1;
+    for (let i in list) {
+      list[i].id = parseInt(i) + 1;
       list[i].drugId = null;
       list[i].frecuencyInterval = null;
       list[i].frecuencyDuration = null;
     }
+    // console.log(list);
     // d.diagnosisItemTreatments = list;
     e.diagnosisItemTreatments = list;
-    props.stepSave(e);
+    message.loading("Guardando..", 1, () => {
+      // Object.keys(e).length === 0
+      areObjectPropertiesUndefined(e)
+        ? sessionStorage.setItem("diagnosisItems", JSON.stringify(null))
+        : sessionStorage.setItem("diagnosisItems", JSON.stringify(e));
+
+      message.success("Guardado con exito!");
+      // setIsDisabled(true);
+    });
+    console.log(e);
   };
+
+  const [responses, setResponses] = useState(
+    JSON.parse(sessionStorage.getItem("diagnosisItems")) || {}
+  );
+
+  // useEffect(() => {
+  //   const storedTreatments = JSON.parse(sessionStorage.getItem("diagnosisItems"));
+  //   if (storedTreatments) {
+      
+  //   }
+  // })
+
+  useEffect(() => {
+    // Store responses in sessionStorage whenever they change
+    sessionStorage.setItem("diagnosisItems", JSON.stringify(responses));
+  }, [responses]);
+
+  const [id, setId] =useState(true);
+
+  const handleTextResponseChange = (name, value) => {
+    
+    // console.log(id);
+    const newTreatment = {
+      id: id ? 1 : responses.diagnosisItemTreatments.length + 1, // Generate a new ID or use the next available number
+      diagnosisItemId: 1, //siempre va a ser el mismo
+      drugId: null, // Default value for drugId, can be set based on your logic
+      treatmentTypeId: null, // Default value for treatmentTypeId, can be set based on your logic
+      treatmentOptionId: null, // Default value for treatmentOptionId, can be set based on your logic
+      frecuencyInterval: null, // Default value for frecuencyInterval, can be set based on your logic
+      frecuencyDuration: null, // Default value for frecuencyDuration, can be set based on your logic
+    };
+    if (name === "treatmentTypeId") {
+      onTreatmentTypeChange(value);
+    } else if (name === "treatmentOptionId") {
+      // console.log(selectedTreatmentTypeId);
+      setId(false);
+      onTreatmentOptionChange(value);
+      newTreatment.treatmentTypeId = selectedTreatmentTypeId;
+      newTreatment.treatmentOptionId = value;
+      setResponses((prevResponses) => ({
+        ...prevResponses,
+        diagnosisItemTreatments: [
+          ...(prevResponses.diagnosisItemTreatments || []),
+          newTreatment,
+        ],
+      }));      
+      return;
+    } else {
+      setResponses({
+        ...responses,
+        [name]: value,
+        id: 1, //va a haber uno solo siempre
+        diagnosisId: 2, //id del diagnóstico al que pertenece
+        diagnosisTypeId: 2, // ???
+        diagnosisItemTreatments: null,
+      });
+      return;
+    }
+    
+  };
+
   return (
     <>
       <Row justify="center" gutter={24}>
@@ -390,15 +486,15 @@ export default function Diagnosis(props) {
             autoComplete="off"
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
-            onFinish={register}
+            // onFinish={register}
             className="stepForm"
-            onChange={changeForm}
+            // onChange={changeForm}
             fields={initValue}
-            form={form}
+            // form={form}
           >
             <Col>
               <Form.Item
-                name="diagnosisResult"
+                // name="diagnosisResult"
                 label="Diagnóstico"
                 tooltip={{
                   title: "Diagnóstico directo final",
@@ -411,12 +507,16 @@ export default function Diagnosis(props) {
                   keyboard="false"
                   className="appDataFieldStep"
                   placeholder="Ingrese el diagnóstico"
+                  value={responses?.diagnosisResult || undefined}
+                  onChange={(e) =>
+                    handleTextResponseChange("diagnosisResult", e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
             <Col>
               <Form.Item
-                name={"observation"}
+                // name={"observation"}
                 label={"Observación"}
                 tooltip={{
                   title: "Observación sobre el diagnóstico",
@@ -432,24 +532,29 @@ export default function Diagnosis(props) {
                   maxLength={500}
                   showCount
                   autoSize={{ minRows: 3, maxRows: 5 }}
+                  value={responses?.observation || undefined}
+                  onChange={(e) =>
+                    handleTextResponseChange("observation", e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
             <Col>
               <Divider>Tratamiento</Divider>
             </Col>
-            {disabled ? (
+            {isDataFilled ? (
               <RenderT />
             ) : (
               <Form.List name="diagnosisItemTreatments">
                 {(fields, { add, remove }) => (
                   <>
-                    {fields.map(({ key, name, ...restField }) => (
-                      <>
+                    {fields.map(({ key, name, ...restField },i) => (
+                      <div key={key}>
                         <Col span={24}>
                           <Form.Item
                             {...restField}
-                            name={[name, "treatmentTypeId"]}
+                            key={i}
+                            // name={[name, "treatmentTypeId"]}
                             label={"Tipo Tratamiento"}
                             tooltip={{
                               title: "Tipo de tratamiento",
@@ -460,7 +565,13 @@ export default function Diagnosis(props) {
                               placeholder={"Seleccione tipo de tratamiento"}
                               disabled={disabled}
                               name="treatmentTypeId"
-                              onChange={onTreatmentTypeChange}
+                              // value={responses.diagnosisItemTreatments[i]?.treatmentTypeId || undefined}
+                              onChange={(value) =>
+                                handleTextResponseChange(
+                                  "treatmentTypeId",
+                                  value
+                                )
+                              }
                             >
                               {renderTreatmentTypes()}
                             </Select>
@@ -469,11 +580,18 @@ export default function Diagnosis(props) {
                         <Col span={24}>
                           <Form.Item
                             {...restField}
-                            name={[name, "treatmentOptionId"]}
+                            //name={[name, "treatmentOptionId"]}
                             label={"Tratamiento"}
                           >
                             <Select
-                              onChange={onTreatmentOptionChange}
+                              name="treatmentOptionId"
+                              // value={responses?.diagnosisItemTreatments[i+1].treatmentOptionId || undefined}
+                              onChange={(value) =>
+                                handleTextResponseChange(
+                                  "treatmentOptionId",
+                                  value
+                                )
+                              }
                               placeholder={"Tratamiento"}
                               disabled={disabled}
                               allowClear
@@ -481,7 +599,7 @@ export default function Diagnosis(props) {
                               {renderTreatmentOptions()}
                             </Select>
                           </Form.Item>
-                        </Col>                        
+                        </Col>
                         {/* {medic ? (
                           <>
                             <Col>
@@ -555,7 +673,7 @@ export default function Diagnosis(props) {
                             </Button>
                           </Tooltip>
                         </Col>
-                      </>
+                      </div>
                       //   </Space>
                     ))}
                     <Col>
@@ -582,15 +700,16 @@ export default function Diagnosis(props) {
 
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
-                <Tooltip title={"Guardar"}>
+              <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>
                   <Button
-                    htmlType="submit"
+                    // htmlType="submit"
                     className="stepSave"
                     shape="round"
-                    disabled={disabled}
+                    // disabled={disabled}
                     type="primary"
+                    onClick={toggleEdit}
                   >
-                    <CheckOutlined />
+                    {disabled ? <LockFilled /> : <UnlockFilled />}
                   </Button>
                 </Tooltip>
               </Form.Item>

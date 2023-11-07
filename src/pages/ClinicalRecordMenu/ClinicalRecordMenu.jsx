@@ -16,7 +16,7 @@ import { getTutorDataByDni } from "../../services/tutor.service";
 import AvatarSearch from "../../components/AvatarSearch";
 import { SettingTwoTone } from "@ant-design/icons";
 import { getPetsByTutorId } from "../../services/pet.service";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -43,16 +43,24 @@ export default function ClinicalRecordMenu() {
         setIsSearchingTutorData(false);
         getPetsByTutorId(res.tutor.id).then((pets) => {
           setPetOptions(generatePetOptions(pets));
-        });
+          
+        });      
+        sessionStorage.setItem("tutor", JSON.stringify(res));
+        
       })
       .catch((error) => {
         message.error(error.response.data);
         setIsSearchingTutorData(false);
       });
+    
   };
+  
+  
 
   const refreshSelectedPet = (value) => {
-    setSelectedPetId(value);
+    setSelectedPetId(value);    
+    sessionStorage.setItem("petId", JSON.stringify(value));
+    
   };
 
   function generatePetOptions(pets) {
@@ -64,7 +72,7 @@ export default function ClinicalRecordMenu() {
   }
 
   const createClinicalRecord = () => {
-    navigate("/clinical-record", {
+    navigate("/clinical-recordT", {
       state: { clinicalRecordId: null, petId: Number(selectedPetId) },
     });
   };
@@ -77,22 +85,23 @@ export default function ClinicalRecordMenu() {
         </Col>
       </Row>
 
-      <Divider orientation="left">Nueva ficha clínica</Divider>
+      <Divider orientation="center">Nueva ficha clínica</Divider>
       
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 9 }}>
+        <Col sm={{ span: 24 }} md={{ span: 14, offset:5}} lg={{span:8, offset: 8}} style={{ marginBottom: "1%" }}>
           <Card title="Datos para la nueva ficha" hoverable
             actions={[
               <Col>
                 {
                   selectedPetId ?
-                    <Col xs={{ span: 24 }}>
+                    <Col xs={{ span: 24 }} md={{ span: 4, offset: 10 }}>
                       <Button
                         htmlType="submit"
                         type="primary"
                         className="register-form_button-ok-modal"
-                        onClick={createClinicalRecord}
+                        onClick={()=>{createClinicalRecord()}}
                         shape="round"
+                        
                       >
                         Crear
                       </Button>
@@ -130,7 +139,7 @@ export default function ClinicalRecordMenu() {
                 <Button
                   htmlType="submit"
                   type="primary"
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", marginTop:'2%' }}
                   onClick={searchTutorData}
                   className="register-form_button-ok-modal"
                 >

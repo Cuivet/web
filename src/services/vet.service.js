@@ -1,4 +1,4 @@
-import { basePATH } from "./config";
+ import { basePATH } from "./config";
 
 export function registerVet(data){
     var axios = require('axios');

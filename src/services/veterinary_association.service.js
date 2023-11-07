@@ -75,7 +75,7 @@ async function getAllByVeterinaryId(veterinaryId){
         });
 }
 
-async function getAllDataByRegentOrVeterinary(veterinaryId){
+export function getAllDataByRegentOrVeterinary(veterinaryId){
     var axios = require('axios');
     return axios({
         method: "get",

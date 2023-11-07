@@ -10,21 +10,32 @@ import {
   Tooltip,
   Select,
   Modal,
+  message,
 } from "antd";
 import {
   MinusCircleOutlined,
   PlusOutlined,
   CheckOutlined,
   InfoCircleOutlined,
+  LockFilled,
+  UnlockFilled,
 } from "@ant-design/icons";
 import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
 import { Link } from "react-router-dom";
+import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
+// import {
+//   DiagnosesContext,
+//   DiagnosesContextProvider,
+//   useDiagnoses
+// } from "../../context/ClinicalRecordContext/DiagnosesContex";
 
 const { Title } = Typography;
 const { Option } = Select;
 
 export default function PresumptiveDiagnosis(props) {
-  const [disabled, setIsDisabled] = useState(false);
+  // const [disabled, setIsDisabled] = useState(false);
+  const { disabled, toggleEdit } = useEditContext();
+  const [isDataFill, setIsDataFill] = useState(false);
   const [initValue, setInitValue] = useState([{ name: ["weight"], value: 12 }]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [input, setInput] = useState({
@@ -38,21 +49,23 @@ export default function PresumptiveDiagnosis(props) {
     },
   };
 
-  useEffect(() => {
-    if (props.id !== null) {
-      setIsDisabled(true);
-      const newDiagnosis = props.presumptiveDiagnosisItem.map((item, index) => {
-        if (item.observation !== null && item.id !== null) {
-          return { name: `observation${index}`, value: item.observation };
-        }
-        return { name: "error", value: null };
-      });
-      setInitValue(newDiagnosis);
-    } else {
-      setIsDisabled(false);
-      setInitValue([{ name: "empty", value: null }]);
-    }
-  }, [props]);
+  // useEffect(() => {
+  //   if (props.id !== null) {
+  //     // setIsDisabled(true);
+  //     setIsDataFill(true);
+  //     const newDiagnosis = props.presumptiveDiagnosisItem.map((item, index) => {
+  //       if (item.observation !== null && item.id !== null) {
+  //         return { name: `observation${index}`, value: item.observation };
+  //       }
+  //       return { name: "error", value: null };
+  //     });
+  //     setInitValue(newDiagnosis);
+  //   } else {
+  //     // setIsDisabled(false);
+  //     setIsDataFill(false);
+  //     setInitValue([{ name: "empty", value: null }]);
+  //   }
+  // }, [props]);
 
   const showModal = () => {
     console.log(isModalOpen);
@@ -69,7 +82,7 @@ export default function PresumptiveDiagnosis(props) {
       if (initValue[i] !== undefined) {
         if (initValue[i]["name"].slice(0, 11) === "observation") {
           render.push(
-            <Col>
+            <Col key={i}>
               <Form.Item
                 name={initValue[i]["name"]}
                 label="Diagnóstico"
@@ -91,6 +104,7 @@ export default function PresumptiveDiagnosis(props) {
         }
       }
     }
+    console.log(render);
     return render;
   }
 
@@ -105,29 +119,83 @@ export default function PresumptiveDiagnosis(props) {
     // console.log(item);
   };
 
-  const [presumptiveDiagnosisItem, setPresumptiveDiagnosisItem] = useState([]);
+  const areObjectPropertiesUndefined = (object) => {
+    const propertyNames = Object.keys(object);
+    return propertyNames.every(
+      (property) => typeof object[property] === "undefined"
+    );
+  };
+
   const register = (e) => {
     //guardado de datos, sin validaciones
     //recibo los datos cargados en el form
-
-    console.log("Received values of form:", e.presumptiveDiagnosisItem);
-    let list = e.presumptiveDiagnosisItem;
-    for (let i in list) {
-      list[i].id = parseInt(i) + 1;
-      list[i].presumptiveDiagnosisId = null;
-      list[i].diagnosisTypeId = 2;
-      // console.log(list[i]);
+    if (areObjectPropertiesUndefined(e)) {
+      message.loading("Guardando..", 1, () => {
+        // Object.keys(e).length === 0
+        sessionStorage.setItem(
+          "presumptiveDiagnosisItem",
+          JSON.stringify(null)
+        );
+        message.success("Guardado con exito!");
+        // setIsDisabled(true);
+      });
+    } else {
+      let list;
+      e.presumptiveDiagnosisItem
+        ? (list = e.presumptiveDiagnosisItem)
+        : (list = []);
+      for (let i in list) {
+        list[i].id = parseInt(i) + 1;
+        list[i].presumptiveDiagnosisId = null; //completar
+        list[i].diagnosisTypeId = 2;
+      }
+      //cargo el primer diagnostico al array
+      let first = {
+        observation: e.observation,
+        id: 0,
+        presumptiveDiagnosisId: null,
+        diagnosisTypeId: 2,
+      };
+      list.splice(0, 0, first);
+      message.loading("Guardando..", 1, () => {
+        // Object.keys(e).length === 0
+        sessionStorage.setItem(
+          "presumptiveDiagnosisItem",
+          JSON.stringify(list)
+        );
+        message.success("Guardado con exito!");
+        // setIsDisabled(true);
+      });
+      // console.log(list);
     }
-    //cargo el primer diagnostico al array
-    let first = {
-      observation: e.observation,
-      id: 0,
-      presumptiveDiagnosisId: null,
-      diagnosisTypeId: 2,
-    };
-    list.splice(0, 0, first);
-    // console.log(list)
-    props.stepSave(list);
+  };
+  const [showMore, setShowMore] = useState(false);
+  const [responses, setResponses] = useState(
+    JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItem")) || {}
+  );
+
+  useEffect(() => {
+    // Store responses in sessionStorage whenever they change
+    sessionStorage.setItem(
+      "presumptiveDiagnosisItem",
+      JSON.stringify(responses)
+    );
+    if(Object.keys(responses).length > 1){
+      setShowMore(true);
+    }
+  }, [responses]);
+
+  const handleTextResponseChange = (id, value) => {
+    setResponses({
+      ...responses,
+      [id]: {
+        ...responses[id],
+        id: id,
+        presumptiveDiagnosisId: null,
+        diagnosisTypeId: 2,
+        observation: value,
+      },
+    });
   };
 
   return (
@@ -160,15 +228,15 @@ export default function PresumptiveDiagnosis(props) {
             labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             fields={initValue}
-            onChange={changeForm}
+            // onChange={changeForm}
           >
-            {disabled ? (
+            {isDataFill ? (
               <RenderD />
             ) : (
               <>
                 <Col>
                   <Form.Item
-                    name="observation"
+                    // name="observation"
                     label="Diagnóstico"
                     tooltip={{
                       title: "diagnóstico presuntivo",
@@ -176,95 +244,112 @@ export default function PresumptiveDiagnosis(props) {
                     }}
                   >
                     <Input
-                      name="observation"
+                      name="0"
                       disabled={disabled}
                       keyboard="false"
                       className="appDataFieldStep"
                       placeholder="Ingrese el diagnóstico"
+                      value={responses["0"]?.observation || undefined}
+                      onChange={(e) =>
+                        handleTextResponseChange(e.target.name, e.target.value)
+                      }
                     />
                   </Form.Item>
                 </Col>
                 <Col>
                   <Divider>Diagnóstico Diferencial</Divider>
                 </Col>
-
-                <Form.List name="presumptiveDiagnosisItem">
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <>
-                          <Col span={24}>
-                            <Form.Item
-                              {...restField}
-                              key={key}
-                              name={[name, `observation`]}
-                              label={"Diagnóstico"}
-                              tooltip={{
-                                title: "diagnóstico diferencial",
-                                icon: <InfoCircleOutlined />,
-                              }}
-                            >
-                              <Input
-                                disabled={disabled}
-                                name={`observation`}
-                                placeholder="Ingrese el diagnóstico"
-                              />
-                            </Form.Item>
-                          </Col>
-                          <Col style={{ marginBottom: "2%" }}>
-                            <Tooltip title={"Borrar diagnóstico"} align="left">
-                              <Button
-                                type="primary"
-                                shape="circle"
-                                onClick={() => remove(name)}
+                  <Form.List name="diagnoses" >
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map(({ key, name, ...restField }, i) => (
+                          <div key={key}>
+                            <Col span={24}>
+                              <Form.Item
+                                {...restField}
+                                key={key}
+                                // name={[name, `observation`]}
+                                label={"Diagnóstico"}
+                                tooltip={{
+                                  title: "diagnóstico diferencial",
+                                  icon: <InfoCircleOutlined />,
+                                }}
                               >
-                                <MinusCircleOutlined />
-                              </Button>
-                            </Tooltip>
-                          </Col>
-                        </>
-                        //   </Space>
-                      ))}
-                      <Col>
-                        <Form.Item
-                          wrapperCol={{
-                            xs: { span: 24 },
-                            sm: { span: 20, offset: 2 },
-                          }}
-                        >
-                          <Button
-                            type="dashed"
-                            onClick={() => add()}
-                            block
-                            icon={<PlusOutlined />}
+                                <Input
+                                  disabled={disabled}
+                                  name={i + 1}
+                                  placeholder="Ingrese el diagnóstico"
+                                  value={
+                                    responses[i + 1]?.observation || undefined
+                                  }
+                                  onChange={(e) =>
+                                    handleTextResponseChange(
+                                      e.target.name,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col style={{ marginBottom: "2%" }}>
+                              <Tooltip
+                                title={"Borrar diagnóstico"}
+                                align="left"
+                              >
+                                <Button
+                                  type="primary"
+                                  shape="circle"
+                                  onClick={() => remove(name)}
+                                >
+                                  <MinusCircleOutlined />
+                                </Button>
+                              </Tooltip>
+                            </Col>
+                          </div>
+                          //   </Space>
+                        ))}
+                        <Col>
+                          <Form.Item
+                            wrapperCol={{
+                              xs: { span: 24 },
+                              sm: { span: 20, offset: 2 },
+                            }}
                           >
-                            Agregar diagnóstico
-                          </Button>
-                        </Form.Item>
-                      </Col>
-                    </>
-                  )}
-                </Form.List>
+                            <Button
+                              type="dashed"
+                              onClick={() => add()}
+                              block
+                              icon={<PlusOutlined />}
+                            >
+                              {showMore ? "Mostrar mas diagnósticos" : "Agregar diagnóstico"}
+                              
+                            </Button>
+                          </Form.Item>
+                        </Col>
+                      </>
+                    )}
+                  </Form.List>
               </>
             )}
 
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
-                <Tooltip title={"Guardar"}>
+                <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>
                   <Button
-                    htmlType="submit"
+                    // htmlType="submit"
                     className="stepSave"
                     shape="round"
-                    disabled={disabled}
+                    // disabled={disabled}
                     type="primary"
+                    onClick={toggleEdit}
                   >
-                    <CheckOutlined />
+                    {disabled ? <LockFilled /> : <UnlockFilled />}
                   </Button>
                 </Tooltip>
               </Form.Item>
             </Col>
           </Form>
-
+          {/* Estudios complementarios */}
           <Modal
             title="Pedido de Estudios Complementarios"
             visible={isModalOpen}

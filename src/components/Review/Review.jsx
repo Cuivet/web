@@ -82,7 +82,7 @@ export default function Review(props) {
     function renderSpecies() {
       let list = [];
       species.forEach((specie) => {
-        list.push(<Select.Option value={specie.id}>{specie.name}</Select.Option>);
+        list.push(<Select.Option key={specie.id} value={specie.id}>{specie.name}</Select.Option>);
       });
       return list;
     }
@@ -91,7 +91,7 @@ export default function Review(props) {
       let list = [];
       races.forEach((race) => {
         if (race.specieId) {
-          list.push(<Select.Option value={race.id}>{race.name}</Select.Option>);
+          list.push(<Select.Option key={race.id} value={race.id}>{race.name}</Select.Option>);
         }
       });
       return list;

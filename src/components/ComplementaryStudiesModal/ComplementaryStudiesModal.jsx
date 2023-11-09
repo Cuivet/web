@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Row, Col, Input, Select, Button, Typography } from "antd";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Modal, Row, Col, Form, Input, Select, Typography } from "antd";
+// import { Link } from "react-router-dom";
 
 const { Title } = Typography;
-const { Option } = Select;
 
 export default function ComplementaryStudiesModal(prop) {
-  const { isModalOpen, handleCancel } = prop;
+  const { isModalOpen, handleCancel, onAddStudy, presumptiveDiagnosisId } =
+    prop;
   const studies = [
     {
       id: 1,
@@ -64,93 +64,105 @@ export default function ComplementaryStudiesModal(prop) {
     }
     return options;
   };
-  const [flag, setFlag] = useState('');
-  const [responses, setResponses] = useState(
-    JSON.parse(sessionStorage.getItem("complementaryStudies")) || flag
-  );
-  useEffect(() => {
-    // Store responses in sessionStorage whenever they change
-    sessionStorage.setItem("complementaryStudies", JSON.stringify(responses));
-  }, [responses]);
-// definir funcionamiento despues de hablar con el negro 
-  const handleSelectResponseChange = (value) =>{
-    console.log(value);
-    setResponses({
-      ...responses,
-      [value.key]: {
-        ...responses[value.key],
-        complementaryStudyTypeId: value.value
-      },
-    });
-  }
+
+  const [complementaryStudyTypeId, setComplementaryStudyTypeId] = useState("");
+  const [observation, setObservation] = useState("");
+  const [count, setCount] = useState(0);
+  const [form] = Form.useForm();
+
+  const handleAddStudy = () => {
+    if (complementaryStudyTypeId) {
+      onAddStudy({
+        complementaryStudyTypeId,
+        observation,
+        presumptiveDiagnosisId: presumptiveDiagnosisId,
+        id: count,
+        url: "www.cuivet.com/studies-request" + complementaryStudyTypeId,
+      });
+      setCount(count + 1);
+      setComplementaryStudyTypeId("");
+      setObservation("");
+      handleCancel();
+    }
+  };
 
   return (
     <Modal
       title="Pedido de Estudios Complementarios"
       visible={isModalOpen}
+      onOk={() => {
+        form.validateFields().then(() => {
+          form.resetFields();
+          handleAddStudy();
+        });
+      }}
+      okText="Generar"
       onCancel={handleCancel}
-      footer={[
-        <Button key="back" style={{ marginRight: 8 }} onClick={handleCancel}>
-          Cancelar
-        </Button>,
-        <Link to={"/studies-request"}>
-          <Button key="submit" type="primary">
-            Generar
-          </Button>
-        </Link>,
-      ]}
     >
       <Row>
         <Title level={5}>Tipo de Estudio Complementario:</Title>
       </Row>
-      <Row>
-        <Col span={24}>
-          <Select
-            placeholder="Estudios"
-            allowClear
-            mode="multiple"
-            labelInValue
-            showSearch
-            name={"complementaryStudyTypeId"}
-            className="select-before full-width"
-            style={{ width: "100%" }}
-            onChange={(value) =>
-                handleSelectResponseChange(value)
-              }
-            options={setOptions(studies)}
-            maxTagCount={'responsive'}
-            optionFilterProp="children"
-            
-            filterOption={(input, option) =>
-              (option?.label ?? "").includes(input)
-            }
-            filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
-              
-          >
-          </Select>
-        </Col>
-      </Row>
-      <Row>
-        <Title level={5}>Observaciones:</Title>
-      </Row>
-      <Row>
-        <Col span={24}>
-          <Input.TextArea
-            showCount
-            allowClear
-            maxLength={500}
-            placeholder="Ingrese observacion..."
-            autoSize={{
-              minRows: 3,
-              maxRows: 5,
-            }}
-          />
-        </Col>
-      </Row>
+      <Form form={form}>
+        <Row>
+          <Col span={24}>
+            <Form.Item
+              name="study"
+              rules={[
+                {
+                  required: true,
+                  message: "Por favor seleccione un estudio",
+                },
+              ]}
+            >
+              <Select
+                placeholder={"Estudios"}
+                allowClear
+                // mode="multiple"
+                // labelInValue
+                showSearch
+                name={"complementaryStudyTypeId"}
+                className="select-before full-width"
+                style={{ width: "100%" }}
+                // value={null}
+                onChange={(value) => setComplementaryStudyTypeId(value)}
+                options={setOptions(studies)}
+                // maxTagCount={'responsive'}
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "").includes(input)
+                }
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Title level={5}>Observaciones:</Title>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Form.Item>
+              <Input.TextArea
+                showCount
+                allowClear
+                maxLength={500}
+                defaultValue={""}
+                value={observation}
+                placeholder="Ingrese observacion..."
+                autoSize={{
+                  minRows: 3,
+                  maxRows: 5,
+                }}
+                onChange={(e) => setObservation(e.target.value)}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   );
 }

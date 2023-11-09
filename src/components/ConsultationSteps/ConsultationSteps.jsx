@@ -105,6 +105,7 @@ export default function ConsultationSteps(props) {
                 presumptiveDiagnosisItem={
                   presumptiveDiagnosis.presumptiveDiagnosisItem
                 }
+                complementaryStudies={presumptiveDiagnosis.complementaryStudies}
                 //  stepSave={presumptiveDiagnosisChangeForm}
               />
             ),

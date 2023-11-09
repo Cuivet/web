@@ -29,8 +29,6 @@ export default function ClinicalRecordT() {
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [flag, setFlag] = useState(true);
 
-  const [studies, setStudies] = useState(false);
-
   const updateReview = () => {
     if (clinicalRecord !== null && flag === false) {
       setClinicalRecord((clinicalPrev) => ({
@@ -233,55 +231,13 @@ export default function ClinicalRecordT() {
     console.log(clinicalRecord);
   };
 
-  //prueba de datos
-  // const saveStepData = (stepData) => {
-  //   setClinicalRecord((prevClinicalRecord) => ({
-  //     ...prevClinicalRecord,
-  //     ...stepData,
-  //   }));
-  // }
-
+ 
   if (clinicalRecord !== null) {
     var lastVisitDate = getLastDateFromVisits(clinicalRecord.visits);
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
   }
-
-  const presumptiveDiagnosis= {
-    id: 4,
-    visitId: 2,
-    presumptiveDiagnosisItem: [
-      {
-        id: 3,
-        presumptiveDiagnosisId: 4,
-        diagnosisTypeId: 2,
-        observation: "Puede presentar esto por manchas en la panza",
-      },
-      {
-        id: 4,
-        presumptiveDiagnosisId: 4,
-        diagnosisTypeId: 3, //no se va a usar o va a ser fijo
-        observation: "Gastroenteritis", //no debe venir null
-      },
-    ],
-    complementaryStudies: [
-      {
-        id: 2,
-        presumptiveDiagnosisId: 4,
-        complementaryStudyTypeId: 2,
-        observation: "Radiografia de torax",
-        url: "www.cuivet.com/302HLk22",
-      },
-      {
-        id: 3,
-        presumptiveDiagnosisId: 4,
-        complementaryStudyTypeId: 1,
-        observation: "",
-        url: null,
-      },
-    ],
-  };
 
   return (
     <>
@@ -370,7 +326,7 @@ export default function ClinicalRecordT() {
                 review={clinicalRecord.review}
                 anamnesis={clinicalRecord.anamnesis}
                 physicalExam={clinicalRecord.physicalExam}
-                presumptiveDiagnosis={presumptiveDiagnosis}
+                presumptiveDiagnosis={clinicalRecord.presumptiveDiagnosis}
                 diagnosis={clinicalRecord.diagnosis}
                 prognosis={clinicalRecord.prognosis}
                 sendDataClinicalRecord={saveClinicalRecord}

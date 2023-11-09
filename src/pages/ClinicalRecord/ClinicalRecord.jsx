@@ -336,7 +336,7 @@ export default function ClinicalRecord() {
             presumptiveDiagnosisId: 4,
             complementaryStudyTypeId: 1,
             observation: "",
-            url: null,
+            url: null, //verificar si puede existir la posibilidad de que llegue un null en la url
           },
         ],
       },

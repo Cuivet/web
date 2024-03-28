@@ -119,7 +119,7 @@ export default function ClinicalRecordsManagement(){
         <>   
             <Row align="middle">
                 <Col span={24}>
-                    <Title className='appTitle'>Historiales Clínico</Title>
+                    <Title className='appTitle'>Historiales Clínicos</Title>
                 </Col>
             </Row>
 

@@ -1,62 +1,29 @@
 import React, { useState } from "react";
 import { Modal, Row, Col, Form, Input, Select, Typography } from "antd";
-// import { Link } from "react-router-dom";
+import { complementaryStudiyTypeService } from "../../services/complementary_study_type.service";
+import { useEffect } from "react";
 
 const { Title } = Typography;
 
 export default function ComplementaryStudiesModal(prop) {
   const { isModalOpen, handleCancel, onAddStudy, presumptiveDiagnosisId } =
     prop;
-  const studies = [
-    {
-      id: 1,
-      name: "Ecografía",
-    },
-    {
-      id: 2,
-      name: "Rayos X",
-    },
-    {
-      id: 3,
-      name: "Tomografía",
-    },
-    {
-      id: 4,
-      name: "Resonancia Magnetica",
-    },
-    {
-      id: 5,
-      name: "Analisis de Sangre",
-    },
-    {
-      id: 6,
-      name: "ADN",
-    },
-    {
-      id: 7,
-      name: "Electrocardiograma",
-    },
-    {
-      id: 8,
-      name: "Sonda",
-    },
-    {
-      id: 9,
-      name: "Patología",
-    },
-    {
-      id: 10,
-      name: "Higiene Veterinaria",
-    },
-    {
-      id: 11,
-      name: "Cirugía Especializada",
-    },
-    {
-      id: 12,
-      name: "Medicamentos Oncologicos",
-    },
-  ];
+    const [studies, setStudies]= useState([]);
+  
+    useEffect(() => {
+      // const fetchData = async () => {
+      //   await complementaryStudiyTypeService
+      //     .findAll()
+      //     .then((response) => {
+      //       setStudies(response);
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //     });
+      // }
+      // fetchData();
+    })
+  
   const setOptions = (studies) => {
     let options = [];
     for (let study of studies) {

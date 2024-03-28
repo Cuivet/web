@@ -142,7 +142,7 @@ export default function Review(props) {
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             layout="horizontal"
-            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            labelCol={{ sm: { span: 10 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             labelAlign="right"
             className="stepForm"
@@ -272,10 +272,10 @@ export default function Review(props) {
                   className="register-pet-form__radio"
                 >
                   <Radio style={{ width: "50%" }} value={1}>
-                    Tiene chip
+                    Si
                   </Radio>
                   <Radio style={{ width: "50%" }} value={0}>
-                    No tiene
+                    No
                   </Radio>
                 </Radio.Group>
               </Form.Item>

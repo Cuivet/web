@@ -237,7 +237,7 @@ export default function ClinicalRecordT() {
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
-  }
+  };
 
   return (
     <>

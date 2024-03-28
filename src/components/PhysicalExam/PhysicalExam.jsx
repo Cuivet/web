@@ -7,12 +7,10 @@ import {
   Select,
   Button,
   Input,
-  message,
   Tooltip,
 } from "antd";
 import {
   InfoCircleOutlined,
-  CheckOutlined,
   LockFilled,
   UnlockFilled,
 } from "@ant-design/icons";
@@ -71,7 +69,7 @@ export default function PhysicalExam(props) {
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             layout="horizontal"
-            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            labelCol={{ sm: { span: 10 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             // onFinish={register}
             className="stepForm"

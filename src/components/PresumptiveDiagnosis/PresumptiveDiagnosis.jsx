@@ -99,6 +99,7 @@ export default function PresumptiveDiagnosis(props) {
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItem")) || flag
   );
+  
   // console.log(props.complementaryStudies);
   const study =  props.complementaryStudies || "";
   const [complementaryStudies, setComplementaryStudies] = useState(
@@ -137,7 +138,7 @@ export default function PresumptiveDiagnosis(props) {
         ...responses[id],
         id: parseInt(id),
         presumptiveDiagnosisId: null, //responses[id]?.presumptiveDiagnosisId + 1 || 0,
-        diagnosisTypeId: 2,
+        diagnosisTypeId: null, //fijo, definir valor que tendra
         observation: value,
       },
     });
@@ -147,6 +148,15 @@ export default function PresumptiveDiagnosis(props) {
     setComplementaryStudies([...complementaryStudies, item]);
     setStudies(true);
   };
+  const handleRemovePresumptiveDiagnosisItem = (id) => {
+    setResponses((prevState) => {
+      const updatedPresumptiveDiagnosis = { ...prevState };
+      delete updatedPresumptiveDiagnosis[id];
+      return updatedPresumptiveDiagnosis;
+    });
+  };
+  
+  
 
   return (
     <>
@@ -193,7 +203,7 @@ export default function PresumptiveDiagnosis(props) {
             autoComplete="off"
             layout="horizontal"
             className="stepForm"
-            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            labelCol={{ sm: { span: 10 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
           >
             <>
@@ -238,9 +248,9 @@ export default function PresumptiveDiagnosis(props) {
                           >
                             <Input
                               disabled={disabled}
-                              name={i + 1}
+                              name={key + 1}
                               placeholder="Ingrese el diagnóstico"
-                              value={responses[i + 1]?.observation || undefined}
+                              value={responses[key + 1]?.observation || undefined}
                               onChange={(e) =>
                                 handleTextResponseChange(
                                   e.target.name,
@@ -255,7 +265,8 @@ export default function PresumptiveDiagnosis(props) {
                             <Button
                               type="primary"
                               shape="circle"
-                              onClick={() => remove(name)}
+                              onClick={() =>{ remove(name);
+                                handleRemovePresumptiveDiagnosisItem(key + 1);}}
                             >
                               <MinusCircleOutlined />
                             </Button>

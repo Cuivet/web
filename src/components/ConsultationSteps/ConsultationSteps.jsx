@@ -128,7 +128,7 @@ export default function ConsultationSteps(props) {
             content: (
               <Diagnosis
                 id={diagnosis.id}
-                diagnosis={diagnosis.diagnosisItems[0]}
+                diagnosisItems={diagnosis.diagnosisItems[0]}
                 //    stepSave={diagnosisChangeForm}
               />
             ),

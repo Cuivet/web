@@ -9,7 +9,6 @@ import {
   Button,
   Row,
   Col,
-  message,
   List,
   Typography,
 } from "antd";
@@ -42,10 +41,10 @@ export default function ConsultationVisits(props) {
   const handleControl = (e) => {
     //funcion para guardar el control en la visita
     const newControl = {
-      id: id,
-      clinicalRecordId: 1,
+      id: null,
+      clinicalRecordId: visits[0].clinicalRecordId,
       control: control,
-      date: currentDate.format("DD/MM/YYYY"),
+      date: currentDate.toISOString(),
     };
     console.log(newControl);
     props.sendDataControl(newControl);
@@ -69,8 +68,8 @@ export default function ConsultationVisits(props) {
   return (
     <>
       <PageHeader
-        title={`Visita N° ${id}`}
-        subTitle={date}
+        title={`Visita N° ${visits.length}`}
+        subTitle={moment(date).format("DD/MM/YYYY")}
         style={{ marginTop: "2%" }}
         ghost={false}
         tags={renderSteps()}
@@ -127,7 +126,7 @@ export default function ConsultationVisits(props) {
               dataSource={visits}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.date} </Typography.Text>
+                  <Typography.Text strong>{moment(item.date).format("DD/MM/YYYY")} </Typography.Text>
                   {item.control}
                 </List.Item>
               )}

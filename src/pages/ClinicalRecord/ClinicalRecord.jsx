@@ -309,7 +309,7 @@ export default function ClinicalRecord() {
       presumptiveDiagnosis: {
         id: 4,
         visitId: 2,
-        presumptiveDiagnosisItem: [
+        presumptiveDiagnosisItems: [
           {
             id: 3,
             presumptiveDiagnosisId: 4,
@@ -350,7 +350,7 @@ export default function ClinicalRecord() {
             diagnosisId: 2,
             diagnosisResult: "Gastroenteritis aguda",
             observation: "Costo mucho",
-            diagnosisTypeId: 2, //
+            diagnosisTypeId: 2, // fijo no se usa
             diagnosisItemTreatments: [
               {
                 id: 5,

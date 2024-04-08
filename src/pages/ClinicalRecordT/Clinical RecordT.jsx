@@ -43,6 +43,7 @@ export default function ClinicalRecordT() {
         },
       }));
     }
+
     // setFlag(true);
   };
 
@@ -81,7 +82,7 @@ export default function ClinicalRecordT() {
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,
-        vetId: 1, //traer si tiene
+        vetId: 1, //traer si tiene, debe traer la clinica a la que pertence
       };
       clinicalRecordService
         .registerClinicalRecord(cRecord)
@@ -119,39 +120,39 @@ export default function ClinicalRecordT() {
   //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
   //guarda automaticamente el mismo
   const saveClinicalRecord = (data) => {
-    setClinicalRecord((prevClinicalRecord) => ({
-      ...prevClinicalRecord,
-      anamnesis: {
-        ...prevClinicalRecord.anamnesis,
-        anamnesisItems: data.anamnesisItems,
-      },
+    console.log(data);
+    const cRecord = {
+      id: clinicalRecord.id,
+      veterinaryData: clinicalRecord.veterinaryData,
+      tutorData: clinicalRecord.tutorData,
+      pet: clinicalRecord.pet,
+      visits: clinicalRecord.visits,
+      review: clinicalRecord.review,
+      anamnesis: { id: null, anamnesisItems: data.anamnesisItems },
       physicalExam: data.physicalExam,
       presumptiveDiagnosis: {
-        ...prevClinicalRecord.presumptiveDiagnosis,
-        presumptiveDiagnosisItem: data.presumptiveDiagnosisItem,
+        id: null,
+        presumptiveDiagnosisItems: data.presumptiveDiagnosisItems,
+        complementaryStudies: data.complementaryStudies,
       },
-      diagnosis: {
-        ...prevClinicalRecord.diagnosis,
-        diagnosisItems: data.diagnosisItems,
-      },
+      diagnosis: { id: null, diagnosisItems: [data.diagnosisItems] },
       prognosis: data.prognosis,
-    }));
-    console.log(clinicalRecord);
+    };
+    console.log(cRecord);
     message.loading("Guardando Ficha Clinica", 1, () => {
-      //
       clinicalRecordService
-        .registerClinicalRecord(clinicalRecord)
+        .updateClinicalRecord(cRecord)
         .then((res) => {
           console.log(res);
         })
         .catch((error) => {
           console.log(error.response.data);
         });
-      //
       message.success("Guardado con exito!");
       sessionStorage.removeItem("anamnesisItems");
       sessionStorage.removeItem("physicalExam");
-      sessionStorage.removeItem("presumptiveDiagnosisItem");
+      sessionStorage.removeItem("presumptiveDiagnosisItems");
+      sessionStorage.removeItem("complementaryStudies");
       sessionStorage.removeItem("diagnosisItems");
       sessionStorage.removeItem("prognosis");
       navigate(-1);
@@ -159,6 +160,10 @@ export default function ClinicalRecordT() {
   };
 
   const saveVisitControl = (data) => {
+    // revisar, esto no esta bien
+    if (clinicalRecord.visits[0].id === 0) {
+      clinicalRecord.visits.shift();
+    }
     setClinicalRecord((prevClinicalRecord) => ({
       ...prevClinicalRecord,
       visits: [...prevClinicalRecord.visits, data],
@@ -168,7 +173,7 @@ export default function ClinicalRecordT() {
   const saveClinicalRecordUnfinished = () => {
     let anamnesisItems;
     let physicalExam;
-    let presumptiveDiagnosisItem;
+    let presumptiveDiagnosisItems;
     let diagnosisItems;
     let prognosis;
     if (sessionStorage.getItem("anamnesisItems") !== null) {
@@ -181,12 +186,12 @@ export default function ClinicalRecordT() {
     } else {
       physicalExam = null;
     }
-    if (sessionStorage.getItem("presumptiveDiagnosisItem") !== null) {
-      presumptiveDiagnosisItem = JSON.parse(
-        sessionStorage.getItem("presumptiveDiagnosisItem")
+    if (sessionStorage.getItem("presumptiveDiagnosisItems") !== null) {
+      presumptiveDiagnosisItems = JSON.parse(
+        sessionStorage.getItem("presumptiveDiagnosisItems")
       );
     } else {
-      presumptiveDiagnosisItem = [];
+      presumptiveDiagnosisItems = [];
     }
     if (sessionStorage.getItem("diagnosisItems") !== null) {
       diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
@@ -208,7 +213,7 @@ export default function ClinicalRecordT() {
       physicalExam: physicalExam,
       presumptiveDiagnosis: {
         ...prevClinicalRecord.presumptiveDiagnosis,
-        presumptiveDiagnosisItem: presumptiveDiagnosisItem,
+        presumptiveDiagnosisItems: presumptiveDiagnosisItems,
       },
       diagnosis: {
         ...prevClinicalRecord.diagnosis,
@@ -223,7 +228,7 @@ export default function ClinicalRecordT() {
       message.success("Guardado con exito!");
       sessionStorage.removeItem("anamnesisItems");
       sessionStorage.removeItem("physicalExam");
-      sessionStorage.removeItem("presumptiveDiagnosisItem");
+      sessionStorage.removeItem("presumptiveDiagnosisItems");
       sessionStorage.removeItem("diagnosisItems");
       sessionStorage.removeItem("prognosis");
       navigate(-1);
@@ -231,13 +236,26 @@ export default function ClinicalRecordT() {
     console.log(clinicalRecord);
   };
 
- 
   if (clinicalRecord !== null) {
+    if (clinicalRecord.visits.length === 0) {
+      setClinicalRecord((clinicalPrev) => ({
+        ...clinicalPrev,
+        visits: [
+          {
+            id: null,
+            clinicalRecordId: clinicalRecord.id,
+            control: null,
+            date: new Date().toISOString(),
+          },
+        ],
+      }));
+      console.log(clinicalRecord.visits);
+    }
     var lastVisitDate = getLastDateFromVisits(clinicalRecord.visits);
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
-  };
+  }
 
   return (
     <>
@@ -259,7 +277,7 @@ export default function ClinicalRecordT() {
                 className="site-page-header"
                 tags={<Tag color="purple">{clinicalRecord.pet.name}</Tag>}
                 extra={[
-                  <Tooltip title="Cerrar Consulta">
+                  <Tooltip title="Guardar Consulta Parcial">
                     <Button
                       shape="circle"
                       onClick={saveClinicalRecordUnfinished}
@@ -303,16 +321,7 @@ export default function ClinicalRecordT() {
                 id={clinicalRecord.visits.length + 1}
                 date={lastVisitDate ? lastVisitDate : "Sin visitas previas"}
                 steps={stepsDone}
-                visits={
-                  clinicalRecord.visits.length !== 0
-                    ? clinicalRecord.visits
-                    : [
-                        {
-                          control: "Sin controles previos",
-                          date: "-",
-                        },
-                      ]
-                }
+                visits={clinicalRecord.visits}
                 sendDataControl={saveVisitControl}
               />
             </Col>

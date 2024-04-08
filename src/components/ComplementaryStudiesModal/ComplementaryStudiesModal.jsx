@@ -8,22 +8,22 @@ const { Title } = Typography;
 export default function ComplementaryStudiesModal(prop) {
   const { isModalOpen, handleCancel, onAddStudy, presumptiveDiagnosisId } =
     prop;
-    const [studies, setStudies]= useState([]);
-  
-    useEffect(() => {
-      // const fetchData = async () => {
-      //   await complementaryStudiyTypeService
-      //     .findAll()
-      //     .then((response) => {
-      //       setStudies(response);
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     });
-      // }
-      // fetchData();
-    })
-  
+  const [studies, setStudies] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await complementaryStudiyTypeService
+        .findAll()
+        .then((response) => {
+          setStudies(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchData();
+  }, []);
+
   const setOptions = (studies) => {
     let options = [];
     for (let study of studies) {
@@ -42,11 +42,12 @@ export default function ComplementaryStudiesModal(prop) {
       onAddStudy({
         complementaryStudyTypeId,
         observation,
-        presumptiveDiagnosisId: presumptiveDiagnosisId,
+        presumptiveDiagnosisId: presumptiveDiagnosisId, //revisar bien como lo vamos a modificar
         id: count,
         url: "www.cuivet.com/studies-request" + complementaryStudyTypeId,
       });
-      setCount(count + 1);
+      let test = JSON.parse(sessionStorage.getItem("complementaryStudies")) || [];
+      setCount(test.length + 1);
       setComplementaryStudyTypeId("");
       setObservation("");
       handleCancel();

@@ -9,7 +9,6 @@ import {
   Divider,
   Tooltip,
   List,
-  message,
 } from "antd";
 import {
   MinusCircleOutlined,
@@ -43,64 +42,12 @@ export default function PresumptiveDiagnosis(props) {
     setIsModalOpen(false);
   };
 
-  const areObjectPropertiesUndefined = (object) => {
-    const propertyNames = Object.keys(object);
-    return propertyNames.every(
-      (property) => typeof object[property] === "undefined"
-    );
-  };
-
-  const register = (e) => {
-    //guardado de datos, sin validaciones
-    //recibo los datos cargados en el form
-    if (areObjectPropertiesUndefined(e)) {
-      message.loading("Guardando..", 1, () => {
-        // Object.keys(e).length === 0
-        sessionStorage.setItem(
-          "presumptiveDiagnosisItem",
-          JSON.stringify(null)
-        );
-        message.success("Guardado con exito!");
-        // setIsDisabled(true);
-      });
-    } else {
-      let list;
-      e.presumptiveDiagnosisItem
-        ? (list = e.presumptiveDiagnosisItem)
-        : (list = []);
-      for (let i in list) {
-        list[i].id = parseInt(i) + 1;
-        list[i].presumptiveDiagnosisId = null; //completar
-        list[i].diagnosisTypeId = 2;
-      }
-      //cargo el primer diagnostico al array
-      let first = {
-        observation: e.observation,
-        id: 0,
-        presumptiveDiagnosisId: null,
-        diagnosisTypeId: 2,
-      };
-      list.splice(0, 0, first);
-      message.loading("Guardando..", 1, () => {
-        // Object.keys(e).length === 0
-        sessionStorage.setItem(
-          "presumptiveDiagnosisItem",
-          JSON.stringify(list)
-        );
-        message.success("Guardado con exito!");
-        // setIsDisabled(true);
-      });
-      // console.log(list);
-    }
-  };
-
   const [showMore, setShowMore] = useState(false);
-  const flag = props.presumptiveDiagnosisItem || "";
+  const flag = props.presumptiveDiagnosisItems || "";
   const [responses, setResponses] = useState(
-    JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItem")) || flag
+    JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems")) || flag
   );
   
-  // console.log(props.complementaryStudies);
   const study =  props.complementaryStudies || "";
   const [complementaryStudies, setComplementaryStudies] = useState(
     JSON.parse(sessionStorage.getItem("complementaryStudies")) || study
@@ -110,7 +57,7 @@ export default function PresumptiveDiagnosis(props) {
   useEffect(() => {
     // Store responses in sessionStorage whenever they change
     sessionStorage.setItem(
-      "presumptiveDiagnosisItem",
+      "presumptiveDiagnosisItems",
       JSON.stringify(responses)
     );
     sessionStorage.setItem(
@@ -136,8 +83,8 @@ export default function PresumptiveDiagnosis(props) {
       ...responses,
       [id]: {
         ...responses[id],
-        id: parseInt(id),
-        presumptiveDiagnosisId: null, //responses[id]?.presumptiveDiagnosisId + 1 || 0,
+        id: null,
+        presumptiveDiagnosisId: null, //es el mismo para todos
         diagnosisTypeId: null, //fijo, definir valor que tendra
         observation: value,
       },
@@ -199,7 +146,7 @@ export default function PresumptiveDiagnosis(props) {
             />
           ) : null}
           <Form
-            onFinish={register}
+            // onFinish={register}
             autoComplete="off"
             layout="horizontal"
             className="stepForm"

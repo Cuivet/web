@@ -1,4 +1,4 @@
-import React, { useEffect,  useState } from "react";
+import React, { useState } from "react";
 import { Steps, Tooltip, Button } from "antd";
 import {
   LeftCircleOutlined,
@@ -13,10 +13,7 @@ import PresumptiveDiagnosis from "../../components/PresumptiveDiagnosis/Presumpt
 import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
 
-//prueba
 export default function ConsultationSteps(props) {
-  // export default function ConsultationSteps({saveStepData}){
-  // const clinicalRecord = useClinicalRecord();
   const {
     pet,
     review,
@@ -29,7 +26,6 @@ export default function ConsultationSteps(props) {
 
   const { Step } = Steps;
   const [current, setCurrent] = useState(0);
-  const [stepsClinicalRecord, setStepsClinicalRecord] = useState(null);
 
   const next = (stepData) => {
     // saveStepData(stepData);
@@ -102,8 +98,8 @@ export default function ConsultationSteps(props) {
             content: (
               <PresumptiveDiagnosis
                 id={presumptiveDiagnosis.id}
-                presumptiveDiagnosisItem={
-                  presumptiveDiagnosis.presumptiveDiagnosisItem
+                presumptiveDiagnosisItems={
+                  presumptiveDiagnosis.presumptiveDiagnosisItems
                 }
                 complementaryStudies={presumptiveDiagnosis.complementaryStudies}
                 //  stepSave={presumptiveDiagnosisChangeForm}
@@ -112,11 +108,11 @@ export default function ConsultationSteps(props) {
           }
         : {
             content: (
-                <PresumptiveDiagnosis
-                  id={null}
-                  presumptiveDiagnosis={null}
-                  // stepSave={presumptiveDiagnosisChangeForm}
-                />
+              <PresumptiveDiagnosis
+                id={null}
+                presumptiveDiagnosis={null}
+                // stepSave={presumptiveDiagnosisChangeForm}
+              />
             ),
           }),
       //   subTitle: Visits(cRecord.presumptiveDiagnosis),
@@ -168,21 +164,30 @@ export default function ConsultationSteps(props) {
   ];
   //recopilamos todos los datos que cargamos en la consulta para armar la ficha
   const Save = () => {
-    let anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
+    let anamnesisItems = Object.keys(
+      JSON.parse(sessionStorage.getItem("anamnesisItems"))
+    ).map((key) => JSON.parse(sessionStorage.getItem("anamnesisItems"))[key]);
     let physicalExam = JSON.parse(sessionStorage.getItem("physicalExam"));
-    let presumptiveDiagnosisItem = JSON.parse(
-      sessionStorage.getItem("presumptiveDiagnosisItem")
+    let presumptiveDiagnosisItems = Object.keys(
+      JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems"))
+    ).map(
+      (key) =>
+        JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems"))[key]
+    );
+    let complementaryStudies = JSON.parse(
+      sessionStorage.getItem("complementaryStudies")
     );
     let diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
     let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
     let cRecord = {
       anamnesisItems: anamnesisItems,
       physicalExam: physicalExam,
-      presumptiveDiagnosisItem: presumptiveDiagnosisItem,
+      presumptiveDiagnosisItems: presumptiveDiagnosisItems,
+      complementaryStudies: complementaryStudies,
       diagnosisItems: diagnosisItems,
       prognosis: prognosis,
     };
-    //prueba del guardado de la ficha clinica, 
+    //prueba del guardado de la ficha clinica,
     //envio los datos recolectados en step a componente padre
     props.sendDataClinicalRecord(cRecord);
   };

@@ -27,6 +27,7 @@ import ClinicalRecordMenu from "../pages/ClinicalRecordMenu/ClinicalRecordMenu";
 import StudiesRequest from "../pages/StudiesRequest/StudiesRequest";
 import Reports from "../pages/VisitReports/VisitReports";
 import PetsReports from "../pages/PetsReports/PetsReports";
+import Qualification from "../pages/Qualification/Qualification";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -122,6 +123,11 @@ const routesAdmin = [
     {
         path: "/pets-reports",
         component: PetsReports,
+        layout: LayoutAdmin,
+    },
+    {
+        path: "/qualification",
+        component: Qualification,
         layout: LayoutAdmin,
     },
     {

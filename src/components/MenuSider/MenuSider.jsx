@@ -10,6 +10,7 @@ import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import FolderOpenOutlined from '@mui/icons-material/FolderOpenOutlined';
 import './MenuSider.scss';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import StarBorderIcon from '@mui/icons-material/StarBorder'; //Se insertan opciones de calificaciones para tutores y veterinarios
 import {getAllByRegentId} from '../../services/vet.service';
 
 export default function MenuSider(props){
@@ -93,6 +94,12 @@ export default function MenuSider(props){
                                 <span className="nav-text"> Veterinarios Asociados </span>
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="qualifications">
+                            <Link to={"/qualification"} className='admin-sider__item'>                      
+                                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Calificaciones </span>
+                            </Link>
+                        </Menu.Item>
                     </> 
                 : null}
 
@@ -118,6 +125,13 @@ export default function MenuSider(props){
                                 <span className="nav-text"> Historiales Clínicos </span>
                             </Link>
                         </Menu.Item>
+                        <Menu.Item key="vetQualification">
+                            <Link to={"/vetQualification"} className='admin-sider__item'>                      
+                                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Mis Calificaciones </span>
+                            </Link>
+                        </Menu.Item>
+                
 
                         { regent ?
                         <Menu.Item key="veterinaryVeterinariesManagement">
@@ -161,6 +175,12 @@ export default function MenuSider(props){
                         </Menu.Item>   
                     </> 
                 : null}
+                {/* <Menu.Item key="qualifications">
+                            <Link to={"/qualification"} className='admin-sider__item'>                      
+                                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
+                                <span className="nav-text"> Calificaciones </span>
+                            </Link>
+                        </Menu.Item> */}
 
                 <Menu.Item key="user">
                     <Link to={"/settings/user"} className='admin-sider__item'>            

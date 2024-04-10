@@ -1,0 +1,185 @@
+@import '../../scss/index.scss';
+.buttona {
+    background-color:rgba(88, 9, 114, 0.329);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .buttona:hover {
+    background-color:rgba(88, 9, 114, 0.329);
+  }
+
+
+
+.qualifications{
+    &__title{
+        color: $primary-color!important;
+        font-size: 28px!important;
+        display: flex;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    @media (min-width: $media-breackpoint-up-lg) {
+        
+        &__title{
+            font-size: 38px!important;
+            display: flex;
+            justify-content: center;
+        }
+    } 
+
+    &__h2{
+        color: $primary-color!important;
+        font-size: 25px!important;
+        display: flex;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    @media (min-width: $media-breackpoint-up-lg) {
+        
+        &__h2{
+            font-size: 35px!important;
+            display: flex;
+            justify-content: center;
+        }
+    } 
+
+    &__h3{
+        color: $primary-color!important;
+        font-size: 25px!important;
+        display: flex;
+        align-items: center;
+        display: flex;
+        justify-content: right;
+    }
+    @media (min-width: $media-breackpoint-up-lg) {
+        
+        &__h3{
+            font-size: 35px!important;
+            display: flex;
+            justify-content: right;
+        }
+    }  
+
+    
+    &__button{
+    
+
+        &-add{
+            // margin: 1px 5px 5px 20px;         
+            // font-size: 0em+40px/$defaultFontSize;  
+            // border: 0px;
+            // background-color: $primary-color;
+            // color: $font-light;    
+            // border-radius: 50px!important;
+            color: $primary-color;
+            margin-top: 0.5%;
+            
+    
+            &:hover{
+                // background-color: $secondary-color !important;
+                // border-color: $secondary-color;
+                color: $secondary-color!important;
+            }
+            &:focus, &:active{
+                // background-color: $primary-color!important;
+                color: $secondary-color!important;
+            }
+            @media (min-width: $media-breackpoint-up-lg) {
+               span{
+                font-size: 22px!important;
+               }
+            //    margin-left: 2%;
+            align-items: baseline!important;
+                
+            }
+            
+        }
+        &-cancel{
+            &:hover, :active, :focus{            
+                border-color: $primary-color!important;
+                color: $primary-color!important;
+            }
+        }
+        &-register{        
+            background-color: $primary-color;
+            color: $font-light;
+    
+            &:hover{
+                //background-color: $primary-color-hover !important;
+                background-color: $secondary-color !important;
+                border-color: $secondary-color;
+                color: $font-light;
+            }
+            &:focus, &:active{
+                background-color: $primary-color!important;
+                color: $font-light;
+                border:0;
+            }
+        }
+        
+        
+    }
+}
+
+
+
+.ant-card-actions{
+
+    .anticon svg{
+        color: $primary-color;
+        font-size: 0em + 22px / $defaultFontSize;
+        &:hover{
+            color: $secondary-color;
+        }
+    }  
+}
+
+.row:nth-child(1) {
+     height: 10%; 
+     display: flex;
+    // align-items: center;
+    // justify-content: center;
+    background-color: #f0f0f0;
+  }
+
+  /* Estilo específico para la segunda fila */
+  .row:nth-child(2) {
+    height: 8%;
+    display: flex;
+    background-color: #f0f0f0;
+  }
+  .row:nth-child(3) {
+    height: 82%;
+    display: flex;
+    background-color: #f0f0f0;
+  }
+  
+  
+  .column {
+    width: 45%; /* Cada columna ocupa la mitad del ancho */
+    // display: inline-block;
+    // vertical-align: top;
+    background-color: #f0f0f0;
+    // color: #fff;
+    // padding: 20px;
+    //  text-align: center;
+  }
+  .column:nth-child(2) {
+    width: 10%;
+    background-color: #f0f0f0;
+    color: #000;
+    
+  }
+
+  .divider {
+    margin: 0 10px; /* Espacio a cada lado de la línea */
+    border: 1px solid #ccc; /* Borde para la línea */
+    flex: 0; /* No crece ni encoge */
+  }
+

@@ -162,6 +162,22 @@ export default function ConsultationSteps(props) {
       //   subTitle: Visits(cRecord.prognosis),
     },
   ];
+  function updateIdToNull(data) {
+    if (data.id !== undefined && typeof data.id !== "object") {
+      data.id = null;
+      console.log('entre');
+    }
+    if (Array.isArray(data.diagnosisItemTreatments)) {
+      console.log('entre2');
+      data.diagnosisItemTreatments.forEach((treatment) => {
+        if (treatment.id !== undefined && typeof treatment.id !== "object") {
+          console.log('entre3');
+          treatment.id = null;
+        }
+      });
+    }
+    return data;
+  };
   //recopilamos todos los datos que cargamos en la consulta para armar la ficha
   const Save = () => {
     let anamnesisItems = Object.keys(
@@ -177,7 +193,9 @@ export default function ConsultationSteps(props) {
     let complementaryStudies = JSON.parse(
       sessionStorage.getItem("complementaryStudies")
     );
-    let diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
+    let diagnosisItems = updateIdToNull(
+      JSON.parse(sessionStorage.getItem("diagnosisItems")),
+    );
     let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
     let cRecord = {
       anamnesisItems: anamnesisItems,

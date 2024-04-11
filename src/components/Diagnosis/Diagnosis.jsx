@@ -110,9 +110,9 @@ export default function Diagnosis(props) {
 
   const [showMore, setShowMore] = useState(false);
   const flag = props.diagnosisItems || {
-    id: 1, //va a haber solo uno SIEMPRE!!!
-    diagnosisId: 2, //id del diagnóstico al que pertenece
-    diagnosisTypeId: null, // campo no definido, por ahora
+    id: null, //va a haber solo uno SIEMPRE!!!
+    diagnosisId: null, //id del diagnóstico al que pertenece
+    // diagnosisTypeId: null, // campo no definido, por ahora
     diagnosisItemTreatments: [],
   };
 
@@ -152,7 +152,7 @@ export default function Diagnosis(props) {
         // Si no existe, creamos uno nuevo
         const newTreatment = {
           id: id + 1, // Ajusta según tu necesidad
-          diagnosisItemId: 1,          
+          diagnosisItemId: null,          
           [field]: value, // El campo que cambió
         };
 

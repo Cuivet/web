@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   PageHeader,
   Form,
@@ -25,6 +25,7 @@ export default function ConsultationVisits(props) {
   const [control, setControl] = useState("");
   const moment = require("moment");
   const currentDate = moment();
+  console.log(date);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -34,26 +35,42 @@ export default function ConsultationVisits(props) {
     setIsModalOpen(false);
   };
 
+  // funcion para registrar el cambio en el textarea
   const handleControlChange = (e) => {
     setControl(e.target.value);
     // console.log(control);
   };
+  const [visit, setVisit] = useState(
+    JSON.parse(sessionStorage.getItem("visits")) || visits
+  );
+  useEffect(() => {
+    sessionStorage.setItem("visits", JSON.stringify(visit));
+  }, [visit]);
   const handleControl = (e) => {
     //funcion para guardar el control en la visita
-    const newControl = {
-      id: null,
-      clinicalRecordId: visits[0].clinicalRecordId,
-      control: control,
-      date: currentDate.toISOString(),
-    };
-    console.log(newControl);
-    props.sendDataControl(newControl);
+    // const newControl = {
+    //   id: null,
+    //   clinicalRecordId: visits[0].clinicalRecordId,
+    //   control: control,
+    //   date: currentDate.toISOString(),
+    // };
+    // console.log(e);
+    setVisit((prevVisit) => [
+      ...prevVisit,
+      {
+        id: null,
+        clinicalRecordId: null,
+        control: control,
+        date: currentDate.toISOString(),
+      },
+    ]);
+    props.sendDataControl(visit);
     // message.loading("Guardando..", 0.5, () => {
     //   sessionStorage.setItem("newVisit", JSON.stringify(newVisit));
     // });
     // message.success("Guardado con exito!");
     setIsModalOpen(false);
-    setShowControl(true);
+    setShowControl(true); //para bloquear la edicion
   };
 
   const renderSteps = () => {
@@ -69,7 +86,11 @@ export default function ConsultationVisits(props) {
     <>
       <PageHeader
         title={`Visita N° ${visits.length}`}
-        subTitle={moment(date).format("DD/MM/YYYY")}
+        subTitle={
+          date === "Sin visitas previas"
+            ? "Sin visitas previas"
+            : moment(date).format("DD/MM/YYYY")
+        }
         style={{ marginTop: "2%" }}
         ghost={false}
         tags={renderSteps()}
@@ -126,7 +147,9 @@ export default function ConsultationVisits(props) {
               dataSource={visits}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{moment(item.date).format("DD/MM/YYYY")} </Typography.Text>
+                  <Typography.Text strong>
+                    {moment(item.date).format("DD/MM/YYYY")}{" "}
+                  </Typography.Text>
                   {item.control}
                 </List.Item>
               )}

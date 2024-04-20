@@ -146,7 +146,8 @@ export default function ConsultationSteps(props) {
         ? {
             content: (
               <Prognosis
-                id={presumptiveDiagnosis.id}
+                id={prognosis.id}
+                prognosis={prognosis}
                 //  stepSave={prognosisChangeForm}
               />
             ),
@@ -155,6 +156,7 @@ export default function ConsultationSteps(props) {
             content: (
               <Prognosis
                 id={null}
+                prognosis={null}
                 //  stepSave={prognosisChangeForm}
               />
             ),
@@ -165,19 +167,19 @@ export default function ConsultationSteps(props) {
   function updateIdToNull(data) {
     if (data.id !== undefined && typeof data.id !== "object") {
       data.id = null;
-      console.log('entre');
+      console.log("entre");
     }
     if (Array.isArray(data.diagnosisItemTreatments)) {
-      console.log('entre2');
+      console.log("entre2");
       data.diagnosisItemTreatments.forEach((treatment) => {
         if (treatment.id !== undefined && typeof treatment.id !== "object") {
-          console.log('entre3');
+          console.log("entre3");
           treatment.id = null;
         }
       });
     }
     return data;
-  };
+  }
   //recopilamos todos los datos que cargamos en la consulta para armar la ficha
   const Save = () => {
     let anamnesisItems = Object.keys(
@@ -194,9 +196,10 @@ export default function ConsultationSteps(props) {
       sessionStorage.getItem("complementaryStudies")
     );
     let diagnosisItems = updateIdToNull(
-      JSON.parse(sessionStorage.getItem("diagnosisItems")),
+      JSON.parse(sessionStorage.getItem("diagnosisItems"))
     );
     let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
+    let visits = JSON.parse(sessionStorage.getItem("visits"));
     let cRecord = {
       anamnesisItems: anamnesisItems,
       physicalExam: physicalExam,
@@ -204,6 +207,7 @@ export default function ConsultationSteps(props) {
       complementaryStudies: complementaryStudies,
       diagnosisItems: diagnosisItems,
       prognosis: prognosis,
+      visits: visits,
     };
     //prueba del guardado de la ficha clinica,
     //envio los datos recolectados en step a componente padre

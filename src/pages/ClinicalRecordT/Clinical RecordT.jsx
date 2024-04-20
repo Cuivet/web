@@ -52,7 +52,8 @@ export default function ClinicalRecordT() {
       const sortedVisits = visits.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
       );
-      return sortedVisits[0].date;
+      console.log(sortedVisits);
+      return sortedVisits[0].createdAt; //ver si dejo esto o pongo el date
     } else {
       return null; // Return null for empty array or invalid input
     }
@@ -78,11 +79,22 @@ export default function ClinicalRecordT() {
 
   useEffect(() => {
     let profile = JSON.parse(sessionStorage.getItem("profile"));
-    if (profile && profile.veterinary && profile.veterinary.id && flag) {
+    if (location.state.clinicalRecordId) {
+      clinicalRecordService
+        .findOneById(location.state.clinicalRecordId)
+        .then((res) => {
+          console.log(res);
+          setClinicalRecord(res);
+          setFlag(false);
+        })
+        .catch((error) => {
+          message.error(error.response.data);
+        });
+    } else if (profile && profile.veterinary && profile.veterinary.id && flag) {
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,
-        vetId: 1, //traer si tiene, debe traer la clinica a la que pertence
+        vetId: 1, //traer si tiene, debe traer la clinica a la que pertence, pegar al endpoint
       };
       clinicalRecordService
         .registerClinicalRecord(cRecord)
@@ -99,19 +111,8 @@ export default function ClinicalRecordT() {
         .catch((error) => {
           message.error(error.response.data);
         });
-      //probar de guardar automaticamente
-      // if (anamnesisItems) {
-      //   console.log(anamnesisItems);
-      //   setClinicalRecord((prevRecord) => ({
-      //     ...prevRecord,
-      //     anamnesis: {
-      //       id: clinicalRecord.id,
-      //       anamnesisItems: anamnesisItems,
-      //       visitId: 1,
-      //     },
-      //   }));
-      // }
     }
+    // console.log(location.state.clinicalRecordId);
 
     console.log(clinicalRecord);
     updateReview();
@@ -121,6 +122,20 @@ export default function ClinicalRecordT() {
   //guarda automaticamente el mismo
   const saveClinicalRecord = (data) => {
     console.log(data);
+    if (clinicalRecord.visits.length === 0) {
+      setClinicalRecord((clinicalPrev) => ({
+        ...clinicalPrev,
+        visits: [
+          {
+            id: null,
+            clinicalRecordId: clinicalRecord.id,
+            control: null,
+            date: new Date().toISOString(),
+          },
+        ],
+      }));
+      console.log(clinicalRecord.visits);
+    }
     const cRecord = {
       id: clinicalRecord.id,
       veterinaryData: clinicalRecord.veterinaryData,
@@ -137,6 +152,7 @@ export default function ClinicalRecordT() {
       },
       diagnosis: { id: null, diagnosisItems: [data.diagnosisItems] },
       prognosis: data.prognosis,
+      visits: data.visits,
     };
     console.log(cRecord);
     message.loading("Guardando Ficha Clinica", 1, () => {
@@ -155,20 +171,55 @@ export default function ClinicalRecordT() {
       sessionStorage.removeItem("complementaryStudies");
       sessionStorage.removeItem("diagnosisItems");
       sessionStorage.removeItem("prognosis");
+      sessionStorage.removeItem("visits");
       navigate(-1);
     });
   };
 
   const saveVisitControl = (data) => {
     // revisar, esto no esta bien
-    if (clinicalRecord.visits[0].id === 0) {
-      clinicalRecord.visits.shift();
-    }
+    // if (clinicalRecord.visits[0].id === 0) {
+    //   clinicalRecord.visits.shift();
+    // }
+    console.log(data);
+    // console.log(clinicalRecord.visits);
+
+    // Si no hay entrada repetida, actualizar el valor
+    // if (!verificarEntradaRepetida(data.date, clinicalRecord.visits)) {
     setClinicalRecord((prevClinicalRecord) => ({
       ...prevClinicalRecord,
-      visits: [...prevClinicalRecord.visits, data],
+      visits: [
+        ...prevClinicalRecord.visits,
+        {
+          id: null,
+          clinicalRecordId: null,
+          control: data.control,
+          date: data.date,
+        },
+      ],
     }));
+    // console.log("entre");
+    // };
+    console.log(clinicalRecord);
   };
+
+  // Función para verificar si hay una entrada con la misma fecha
+  function verificarEntradaRepetida(nuevaEntrada, entradasRegistradas) {
+    // const nuevaFecha = new Date(nuevaEntrada.date);
+    // console.log(nuevaEntrada);
+    // Recorrer las entradas ya registradas
+    for (const entrada of entradasRegistradas) {
+      // console.log(entrada);
+      // const fechaRegistrada = new Date(entrada.date);
+
+      // Comparar las fechas
+      if (nuevaEntrada.slice(0, 10) === entrada.date.slice(0, 10)) {
+        return true; // Se encontró una entrada con la misma fecha
+      }
+    }
+
+    return false; // No se encontró ninguna entrada con la misma fecha
+  }
 
   const saveClinicalRecordUnfinished = () => {
     let anamnesisItems;
@@ -237,21 +288,8 @@ export default function ClinicalRecordT() {
   };
 
   if (clinicalRecord !== null) {
-    if (clinicalRecord.visits.length === 0) {
-      setClinicalRecord((clinicalPrev) => ({
-        ...clinicalPrev,
-        visits: [
-          {
-            id: null,
-            clinicalRecordId: clinicalRecord.id,
-            control: null,
-            date: new Date().toISOString(),
-          },
-        ],
-      }));
-      console.log(clinicalRecord.visits);
-    }
     var lastVisitDate = getLastDateFromVisits(clinicalRecord.visits);
+    console.log(lastVisitDate);
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
@@ -338,6 +376,7 @@ export default function ClinicalRecordT() {
                 presumptiveDiagnosis={clinicalRecord.presumptiveDiagnosis}
                 diagnosis={clinicalRecord.diagnosis}
                 prognosis={clinicalRecord.prognosis}
+                visits={clinicalRecord.visits}
                 sendDataClinicalRecord={saveClinicalRecord}
               />
               {/* <ClinicalRecordProvider value={clinicalRecord} >

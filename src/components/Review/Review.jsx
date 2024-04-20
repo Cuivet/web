@@ -80,7 +80,7 @@ export default function Review(props) {
       { name: ["isMale"], value: pet.isMale },
       { name: ["raceId"], value: pet.raceId },
       { name: ["specieId"], value: species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id},
-      { name: ["castrationDate"], value: pet.castrationDate.slice(0, 10) },
+      { name: ["castrationDate"], value: pet.castrationDate?.slice(0, 10) },
       { name: ["haveChip"], value: pet.haveChip },
       { name: ["aspects"], value: pet.aspects },
       { name: ["hairColorId"], value: pet.hairColorId },

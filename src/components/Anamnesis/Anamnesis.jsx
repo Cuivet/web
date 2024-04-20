@@ -51,8 +51,8 @@ export default function Anamnesis(props) {
     },
   };
 
-  const [flag, setFlag] = useState(props.answers || '');
-
+  const [flag, setFlag] = useState(props.answers || "");
+  console.log(flag);
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("anamnesisItems")) || flag
   );
@@ -97,7 +97,9 @@ export default function Anamnesis(props) {
             className="stepForm"
             autoComplete="off"
           >
-            {/*prueba  <RenderQ /> */}
+            {/* revisar en la carga queda mal acomodado si se
+             saltea responder alguna pregunta y complica la
+              renderizacion a la hora de retomar una ficha */}
             {questions.map((q, i) => (
               <Col key={q.id}>
                 <Form.Item label={q.question} name={`question${q.id}`}>
@@ -106,16 +108,16 @@ export default function Anamnesis(props) {
                       optionType="button"
                       disabled={disabled}
                       style={{ marginBottom: "2%" }}
-                      name={`booleanResponse${q.id}`}
-                      value={responses[i]?.booleanResponse }
+                      // name={`booleanResponse${q.id}`}
+                      value={responses[i]?.booleanResponse}
                       onChange={(e) =>
                         handleBooleanResponseChange(i, e.target.value)
                       }
                     >
-                      <Radio style={{ width: "50%" }} value={true}>
+                      <Radio style={{ width: "50%" }} value={0}>
                         Si
                       </Radio>
-                      <Radio style={{ width: "50%" }} value={false}>
+                      <Radio style={{ width: "50%" }} value={1}>
                         No
                       </Radio>
                     </Radio.Group>

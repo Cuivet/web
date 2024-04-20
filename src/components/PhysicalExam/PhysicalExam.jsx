@@ -18,7 +18,7 @@ import React, { useState, useEffect } from "react";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 
 export default function PhysicalExam(props) {
-  console.log(props);
+  // console.log(props);
   const { physicalExam } = props;
   const { disabled, toggleEdit } = useEditContext();
 
@@ -42,7 +42,7 @@ export default function PhysicalExam(props) {
     //   setIsDisabled(JSON.parse(sessionStorage.getItem("disabled")).anamnesis);
     // }
   }, [responses]);
-  console.log(responses);
+  // console.log(responses);
 
   const handleTextResponseChange = (name, value) => {
     setResponses({
@@ -170,7 +170,7 @@ export default function PhysicalExam(props) {
             </Col>
             <Col span={24}>
               <Form.Item
-                label="Condición corporal"
+                label={`Condición corporal`}
                 tooltip={{
                   title: "clasificacion segun apreciación visual",
                   icon: <InfoCircleOutlined />,
@@ -186,11 +186,11 @@ export default function PhysicalExam(props) {
                   }
                   placeholder={"Seleccione condición corporal"}
                 >
-                  <Select.Option value="1">Muy Flaco</Select.Option>
-                  <Select.Option value="2">Flaco</Select.Option>
-                  <Select.Option value="3">Normal</Select.Option>
-                  <Select.Option value="4">Exceso de Peso</Select.Option>
-                  <Select.Option value="5">Obeso</Select.Option>
+                  <Select.Option value={1}>Muy Flaco</Select.Option>
+                  <Select.Option value={2}>Flaco</Select.Option>
+                  <Select.Option value={3}>Normal</Select.Option>
+                  <Select.Option value={4}>Exceso de Peso</Select.Option>
+                  <Select.Option value={5}>Obeso</Select.Option>
                 </Select>
               </Form.Item>
             </Col>

@@ -139,6 +139,7 @@ export default function VetsAssociations() {
     setCompleteTemporalAssociation(null);
   }
 
+  //renderizado de cards de clinicas
   function returnRegentAssociationCards() {
     var renderAssociationCards = [];
     veterinaryAssociationDataList.forEach((association) => {

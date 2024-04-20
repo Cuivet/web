@@ -17,6 +17,7 @@ import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalReco
 
 export default function Prognosis(props) {
   // const [disabled, setIsDisabled] = useState(false);
+  const { prognosis } = props;
   const { disabled, toggleEdit } = useEditContext();
 
   const wrapper = {
@@ -25,9 +26,10 @@ export default function Prognosis(props) {
       offset: 0,
     },
   };
-  
+  const [flag, setFlag] = useState(prognosis ||  {id:null});
+  console.log(flag);
   const [responses, setResponses] = useState(
-    JSON.parse(sessionStorage.getItem("prognosis")) || {id:null}
+    JSON.parse(sessionStorage.getItem("prognosis")) || flag
   );
   useEffect(() => {
     sessionStorage.setItem("prognosis", JSON.stringify(responses));

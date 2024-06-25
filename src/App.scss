@@ -62,7 +62,7 @@
 
 //radiobtns del sistema
 .ant-radio-button-wrapper:hover {
-  color: $secondary-color;
+  color: $primary-color-hover;
 }
 .ant-radio-button-wrapper-checked:not(
     .ant-radio-button-wrapper-disabled
@@ -78,7 +78,7 @@
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
 .ant-btn:hover,
 .ant-input:hover {
-  border-color: $secondary-color !important;
+  border-color: $primary-color-hover!important;
 }
 .ant-btn-primary {
   border-color: $primary-color !important;
@@ -89,8 +89,8 @@
 .ant-btn:hover.ant-btn-default,
 .ant-btn-dashed:hover,
 .ant-btn-dashed:focus {
-  color: $secondary-color !important;
-  border-color: $secondary-color !important;
+  color: $primary-color-hover !important;
+  border-color: $primary-color-hover !important;
 }
 // el step en el que estoy
 .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
@@ -121,6 +121,26 @@
   > .ant-steps-item-tail::after {
   background-color: $primary-color-hover;
 }
+
+.ant-steps
+  .ant-steps-item:not(.ant-steps-item-active):not(.ant-steps-item-process)
+  > .ant-steps-item-container[role="button"]:hover
+  .ant-steps-item-icon {
+  border-color: $primary-color-hover;
+}
+.ant-steps
+  .ant-steps-item:not(.ant-steps-item-active):not(.ant-steps-item-process)
+  > .ant-steps-item-container[role="button"]:hover
+  .ant-steps-item-icon
+  .ant-steps-icon {
+  color: $primary-color-hover
+}
+.ant-steps
+  .ant-steps-item:not(.ant-steps-item-active)
+  > .ant-steps-item-container[role="button"]:hover
+  .ant-steps-item-title {
+  color: $primary-color-hover;
+}
 // progreso general, circulo sobre el step
 .ant-progress-inner:not(.ant-progress-circle-gradient)
   .ant-progress-circle-path {
@@ -137,7 +157,7 @@
 //arrows dentro del input number para incrementar/decrementar cantidad
 .ant-input-number-handler:hover .ant-input-number-handler-up-inner,
 .ant-input-number-handler:hover .ant-input-number-handler-down-inner {
-  color: $secondary-color;
+  color: $primary-color-hover;
 }
 //backtop button
 .ant-back-top-content {
@@ -146,15 +166,15 @@
 // hover en el pagination
 // borde
 .ant-pagination-item:hover {
-  border-color: $secondary-color;
+  border-color: $primary-color-hover;
 } //texto color
 .ant-pagination-item:hover a {
-  color: $secondary-color;
+  color: $primary-color-hover;
 } //para las flechas del paginado
 .ant-pagination-prev:hover .ant-pagination-item-link,
 .ant-pagination-next:hover .ant-pagination-item-link {
-  border-color: $secondary-color;
-  color: $secondary-color;
+  border-color: $primary-color-hover;
+  color: $primary-color-hover;
 }
 .ant-back-top-content:hover {
   background-color: $secondary-color;
@@ -211,7 +231,7 @@
   margin: 0;
 
   &:hover {
-    background-color: $secondary-color !important;
+    background-color: $primary-color-hover !important;
     color: $primary-color !important;
   }
   &:focus,
@@ -254,13 +274,13 @@
   color: $primary-color !important;
 
   &:hover {
-    color: $secondary-color !important;
+    color: $primary-color-hover !important;
   }
 }
 .appDatePicker {
   font-size: 0em+20px / $defaultFontSize !important;
   &:hover {
-    border-color: $secondary-color !important;
+    border-color: $primary-color-hover !important;
   }
   width: 100%;
 }
@@ -304,5 +324,5 @@ body::-webkit-scrollbar-thumb {
 
 /* Handle on hover */
 body::-webkit-scrollbar-thumb:hover {
-  background: $primary-color;
+  background: $primary-color-hover;
 }

@@ -36,6 +36,10 @@ export default function ConsultationSteps(props) {
     setCurrent(current - 1);
   };
 
+  const onChange = (value) => {
+    setCurrent(value);
+  };
+
   const steps = [
     {
       title: "Reseña",
@@ -167,13 +171,13 @@ export default function ConsultationSteps(props) {
   function updateIdToNull(data) {
     if (data.id !== undefined && typeof data.id !== "object") {
       data.id = null;
-      console.log("entre");
+      // console.log("entre");
     }
     if (Array.isArray(data.diagnosisItemTreatments)) {
-      console.log("entre2");
+      // console.log("entre2");
       data.diagnosisItemTreatments.forEach((treatment) => {
         if (treatment.id !== undefined && typeof treatment.id !== "object") {
-          console.log("entre3");
+          // console.log("entre3");
           treatment.id = null;
         }
       });
@@ -182,24 +186,26 @@ export default function ConsultationSteps(props) {
   }
   //recopilamos todos los datos que cargamos en la consulta para armar la ficha
   const Save = () => {
-    let anamnesisItems = Object.keys(
-      JSON.parse(sessionStorage.getItem("anamnesisItems"))
-    ).map((key) => JSON.parse(sessionStorage.getItem("anamnesisItems"))[key]);
-    let physicalExam = JSON.parse(sessionStorage.getItem("physicalExam"));
+    let anamnesisItems =
+      Object.keys(JSON.parse(sessionStorage.getItem("anamnesisItems"))).map(
+        (key) => JSON.parse(sessionStorage.getItem("anamnesisItems"))[key]
+      ) || null;
+    let physicalExam = JSON.parse(sessionStorage.getItem("physicalExam")) || null;
     let presumptiveDiagnosisItems = Object.keys(
       JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems"))
     ).map(
       (key) =>
         JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems"))[key]
-    );
+    ) || null;
     let complementaryStudies = JSON.parse(
       sessionStorage.getItem("complementaryStudies")
-    );
+    ) || [];
     let diagnosisItems = updateIdToNull(
       JSON.parse(sessionStorage.getItem("diagnosisItems"))
-    );
-    let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
+    ) || {diagnosisId:null, id:null, diagnosisItemTreatments:[]};
+    let prognosis = JSON.parse(sessionStorage.getItem("prognosis")) || null;
     let visits = JSON.parse(sessionStorage.getItem("visits"));
+    
     let cRecord = {
       anamnesisItems: anamnesisItems,
       physicalExam: physicalExam,
@@ -209,6 +215,7 @@ export default function ConsultationSteps(props) {
       prognosis: prognosis,
       visits: visits,
     };
+    console.log(cRecord);
     //prueba del guardado de la ficha clinica,
     //envio los datos recolectados en step a componente padre
     props.sendDataClinicalRecord(cRecord);
@@ -222,6 +229,7 @@ export default function ConsultationSteps(props) {
         labelPlacement="vertical"
         percent={(current + 1) * 16.7}
         responsive
+        onChange={onChange}
       >
         {steps.map((item) => (
           <Step
@@ -260,7 +268,7 @@ export default function ConsultationSteps(props) {
           </Tooltip>
         )}
         {current === steps.length - 1 && (
-          <Tooltip title="Finalizar">
+          <Tooltip title="Finalizar Ficha Clinica">
             <Button
               type="primary"
               className="steps-action-finish"

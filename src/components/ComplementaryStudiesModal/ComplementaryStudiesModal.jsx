@@ -46,8 +46,9 @@ export default function ComplementaryStudiesModal(prop) {
         id: count,
         url: "www.cuivet.com/studies-request" + complementaryStudyTypeId,
       });
-      let test = JSON.parse(sessionStorage.getItem("complementaryStudies")) || [];
-      setCount(test.length + 1);
+      let studies =
+        JSON.parse(sessionStorage.getItem("complementaryStudies")) || [];
+      setCount(studies.length + 1);
       setComplementaryStudyTypeId("");
       setObservation("");
       handleCancel();

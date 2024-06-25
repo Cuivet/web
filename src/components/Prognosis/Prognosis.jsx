@@ -27,7 +27,7 @@ export default function Prognosis(props) {
     },
   };
   const [flag, setFlag] = useState(prognosis ||  {id:null});
-  console.log(flag);
+  // console.log(flag);
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("prognosis")) || flag
   );

@@ -18,9 +18,9 @@ import React, { useState, useEffect } from "react";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 
 export default function PhysicalExam(props) {
-  // console.log(props);
   const { physicalExam } = props;
   const { disabled, toggleEdit } = useEditContext();
+  
 
   const wrapper = {
     sm: { offset: 0, span: 14 },
@@ -30,7 +30,6 @@ export default function PhysicalExam(props) {
   };
 
   const [flag, setFlag] = useState(physicalExam || '')
-
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("physicalExam")) || flag
   );
@@ -42,11 +41,11 @@ export default function PhysicalExam(props) {
     //   setIsDisabled(JSON.parse(sessionStorage.getItem("disabled")).anamnesis);
     // }
   }, [responses]);
-  // console.log(responses);
 
   const handleTextResponseChange = (name, value) => {
     setResponses({
       ...responses,
+      id: null,
       [name]: value,
     });
   };
@@ -71,14 +70,10 @@ export default function PhysicalExam(props) {
             layout="horizontal"
             labelCol={{ sm: { span: 10 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
-            // onFinish={register}
             className="stepForm"
-            // onChange={changeForm}
-            // fields={initValue}
           >
             <Col span={24}>
               <Form.Item
-                // name="weight"
                 label="Peso"
                 tooltip={{
                   title: "Peso en Kilogramos",
@@ -86,7 +81,6 @@ export default function PhysicalExam(props) {
                 }}
               >
                 <InputNumber
-                  // name="weight"
                   min={1}
                   style={{ width: "100%" }}
                   disabled={disabled}
@@ -179,7 +173,6 @@ export default function PhysicalExam(props) {
                 <Select
                   name="bodyCondition"
                   disabled={disabled}
-                  // onChange={selectChange}
                   value={responses["bodyCondition"] || undefined}
                   onChange={(value) =>
                     handleTextResponseChange("bodyCondition", value)
@@ -222,10 +215,8 @@ export default function PhysicalExam(props) {
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>
                   <Button
-                    // htmlType="submit"
                     className="stepSave"
                     shape="round"
-                    // disabled={disabled}
                     type="primary"
                     onClick={toggleEdit}
                   >

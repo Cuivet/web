@@ -275,7 +275,7 @@ export default function Diagnosis(props) {
                               placeholder={"Seleccione tipo de tratamiento"}
                               disabled={disabled}
                               name="treatmentTypeId"
-                              defaultValue={responses.diagnosisItemTreatments[i]?.treatmentTypeId|| undefined}                              
+                              defaultValue={responses.diagnosisItemTreatments[i]?.treatmentTypeId || undefined}                              
                               onChange={(value) =>
                                 handleItemTreatmentChange(
                                   "treatmentTypeId",

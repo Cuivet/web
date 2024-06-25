@@ -17,7 +17,7 @@ export default function LayoutAdmin(props){
     //     );
         
     // }
-    console.log(props);
+    // console.log(props);
     
     return (
         <Layout>

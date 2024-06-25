@@ -1,16 +1,8 @@
-import {
-  Form,
-  Row,
-  Col,
-  Select,
-  Typography,
-  Input,
-  Radio,
-} from "antd";
+import { Form, Row, Col, Select, Typography, Input, Radio } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import {raceService} from '../../services/race.service';
-import {specieService} from '../../services/specie.service';
+import { raceService } from "../../services/race.service";
+import { specieService } from "../../services/specie.service";
 import { petSizeService } from "../../services/pet_size.service";
 import { hairColorService } from "../../services/hair_color.service";
 import { hairLengthService } from "../../services/hair_length.service";
@@ -24,7 +16,7 @@ export default function Review(props) {
   const [petSizes, setPetSizes] = useState([]);
   const [hairColors, sethairColors] = useState([]);
   const [hairLenghts, sethairLenghts] = useState([]);
-  const [isInitData, setIsInitData]= useState(false);
+  const [isInitData, setIsInitData] = useState(false);
   const [isFetchData, setIsFetchData] = useState(false);
   const wrapper = {
     sm: { offset: 0, span: 14 },
@@ -32,45 +24,46 @@ export default function Review(props) {
       offset: 0,
     },
   };
-  
-  if(!isInitData && isFetchData){
+
+  if (!isInitData && isFetchData) {
     initPet();
     setIsInitData(true);
-  } 
+  }
 
   //debemos diferenciar el valor que queda vacio por eleccion
   //del que aun no ha se ha cargado.
   //si id == null no tiene nada cargado
   useEffect(() => {
     //caso1: trae TODOS los datos cargados
-    if (props.id !== null) {
+    // console.log(props);
+    // if (props.id !== null) {
       setIsDisabled(true);
-        const fetchData = async () => {
-          await raceService.findAll().then((response) => {
-            setRaces(response);
-          });
-          await specieService.findAll().then((response) => {
-            setSpecies(response);
-          });
-          await petSizeService.findAll().then((response) => {
-            setPetSizes(response);
-          });
-          await hairColorService.findAll().then((response) => {
-            sethairColors(response);
-          });
-          await hairLengthService.findAll().then((response) => {
-            sethairLenghts(response);
-          });
-          setIsFetchData(true);
-        };
-        fetchData();
-    } else {
+      const fetchData = async () => {
+        await raceService.findAll().then((response) => {
+          setRaces(response);
+        });
+        await specieService.findAll().then((response) => {
+          setSpecies(response);
+        });
+        await petSizeService.findAll().then((response) => {
+          setPetSizes(response);
+        });
+        await hairColorService.findAll().then((response) => {
+          sethairColors(response);
+        });
+        await hairLengthService.findAll().then((response) => {
+          sethairLenghts(response);
+        });
+        setIsFetchData(true);
+      };
+      fetchData();
+    // } else {
       //caso2: carga los datos en los campos
       //habilita campo
-      setIsDisabled(false);
+      // setIsDisabled(true);
       //deja campo vacio
-      setInitValue([{ name: "empty", value: null }]);
-    }
+    //   setInitValue([{ name: "empty", value: null }]);
+    // }
   }, [props]);
 
   function initPet() {
@@ -79,7 +72,13 @@ export default function Review(props) {
       { name: ["birth"], value: pet.birth.slice(0, 10) },
       { name: ["isMale"], value: pet.isMale },
       { name: ["raceId"], value: pet.raceId },
-      { name: ["specieId"], value: species.find(specie => specie.id === (races.find(race => race.id === pet.raceId).specieId)).id},
+      {
+        name: ["specieId"],
+        value: species.find(
+          (specie) =>
+            specie.id === races.find((race) => race.id === pet.raceId).specieId
+        ).id,
+      },
       { name: ["castrationDate"], value: pet.castrationDate?.slice(0, 10) },
       { name: ["haveChip"], value: pet.haveChip },
       { name: ["aspects"], value: pet.aspects },
@@ -87,48 +86,61 @@ export default function Review(props) {
       { name: ["hairLengthId"], value: pet.hairLengthId },
       { name: ["petSizeId"], value: pet.petSizeId },
     ]);
-}
+  }
 
-    function renderSpecies() {
-      let list = [];
-      species.forEach((specie) => {
-        list.push(<Select.Option key={specie.id} value={specie.id}>{specie.name}</Select.Option>);
-      });
-      return list;
-    }
+  function renderSpecies() {
+    let list = [];
+    species.forEach((specie) => {
+      list.push(
+        <Select.Option key={specie.id} value={specie.id}>
+          {specie.name}
+        </Select.Option>
+      );
+    });
+    return list;
+  }
 
-    function renderRaces() {
-      let list = [];
-      races.forEach((race) => {
-        if (race.specieId) {
-          list.push(<Select.Option key={race.id} value={race.id}>{race.name}</Select.Option>);
-        }
-      });
-      return list;
-    }
-    function renderPetSize() {
-      let list = [];
-      petSizes.forEach(petSize => {
-          list.push(<Select.Option value={petSize.id}>{petSize.name}</Select.Option>);
-      })
-      return list;
+  function renderRaces() {
+    let list = [];
+    races.forEach((race) => {
+      if (race.specieId) {
+        list.push(
+          <Select.Option key={race.id} value={race.id}>
+            {race.name}
+          </Select.Option>
+        );
+      }
+    });
+    return list;
+  }
+  function renderPetSize() {
+    let list = [];
+    petSizes.forEach((petSize) => {
+      list.push(
+        <Select.Option value={petSize.id}>{petSize.name}</Select.Option>
+      );
+    });
+    return list;
   }
 
   function renderHairColor() {
-      let list = [];
-      hairColors.forEach(hairColor => {
-          list.push(<Select.Option value={hairColor.id}>{hairColor.name}</Select.Option>);
-      })
-      return list;
+    let list = [];
+    hairColors.forEach((hairColor) => {
+      list.push(
+        <Select.Option value={hairColor.id}>{hairColor.name}</Select.Option>
+      );
+    });
+    return list;
   }
 
-
   function renderHairLength() {
-      let list = [];
-      hairLenghts.forEach(hairLength => {
-          list.push(<Select.Option value={hairLength.id}>{hairLength.name}</Select.Option>);
-      })
-      return list;
+    let list = [];
+    hairLenghts.forEach((hairLength) => {
+      list.push(
+        <Select.Option value={hairLength.id}>{hairLength.name}</Select.Option>
+      );
+    });
+    return list;
   }
 
   return (
@@ -280,7 +292,7 @@ export default function Review(props) {
                 </Radio.Group>
               </Form.Item>
             </Col>
-            
+
             <Col span={24}>
               <Form.Item
                 name="hairColorId"
@@ -334,7 +346,7 @@ export default function Review(props) {
                   disabled={disabled}
                   allowClear
                 >
-                  {renderPetSize()} 
+                  {renderPetSize()}
                 </Select>
               </Form.Item>
             </Col>

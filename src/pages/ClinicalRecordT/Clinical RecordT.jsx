@@ -1,4 +1,4 @@
-import { IssuesCloseOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 import {
   Button,
   BackTop,
@@ -18,46 +18,18 @@ import { clinicalRecordService } from "../../services/clinical_record.service";
 import ConsultationHeader from "../../components/ConsultationHeader/ConsultationHeader";
 import ConsultationVisits from "../../components/ConsultationVisits/ConsultationVisits";
 import ConsultationSteps from "../../components/ConsultationSteps/ConsultationSteps";
-// import { ClinicalRecordProvider } from "../../components/ClinicalRecordContext/ClinicalRecordContext";
-//import {ClinicalRecordProvider} from "../../context/ClinicalRecordContext";
+import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 
 const { Title } = Typography;
 
 export default function ClinicalRecordT() {
   const location = useLocation();
   let navigate = useNavigate();
+  const { toggleEdit } = useEditContext();
+  //recordar que clinicalRecord es una variable asincronica, el impacto se vera reflejado, pero no en el momento
   const [clinicalRecord, setClinicalRecord] = useState(null);
+  const [newVisit, setNewVisit] = useState(null);
   const [flag, setFlag] = useState(true);
-
-  const updateReview = () => {
-    if (clinicalRecord !== null && flag === false) {
-      setClinicalRecord((clinicalPrev) => ({
-        ...clinicalPrev,
-        review: {
-          ...clinicalPrev.review,
-          name: clinicalRecord.pet.name,
-          birth: clinicalRecord.pet.birth,
-          isMale: clinicalRecord.pet.isMale,
-          raceId: clinicalRecord.pet.raceId,
-          specieId: clinicalRecord.pet.specieId,
-        },
-      }));
-    }
-
-    // setFlag(true);
-  };
-
-  const getLastDateFromVisits = (visits) => {
-    if (Array.isArray(visits) && visits.length > 0) {
-      const sortedVisits = visits.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
-      );
-      console.log(sortedVisits);
-      return sortedVisits[0].createdAt; //ver si dejo esto o pongo el date
-    } else {
-      return null; // Return null for empty array or invalid input
-    }
-  };
 
   const getStepsDone = (cRecord) => {
     const excludedProperties = [
@@ -79,17 +51,19 @@ export default function ClinicalRecordT() {
 
   useEffect(() => {
     let profile = JSON.parse(sessionStorage.getItem("profile"));
+    //busca una empezada
     if (location.state.clinicalRecordId) {
       clinicalRecordService
         .findOneById(location.state.clinicalRecordId)
         .then((res) => {
-          console.log(res);
           setClinicalRecord(res);
+          toggleEdit();
           setFlag(false);
         })
         .catch((error) => {
           message.error(error.response.data);
         });
+      //crea una de cero
     } else if (profile && profile.veterinary && profile.veterinary.id && flag) {
       let cRecord = {
         veterinaryId: profile.veterinary.id,
@@ -101,48 +75,62 @@ export default function ClinicalRecordT() {
         .then((res) => {
           console.log(res);
           setClinicalRecord(res);
-          // sessionStorage.setItem("physicalExam", JSON.stringify(res.physicalExam));
-          // sessionStorage.setItem("anamnesisItems", JSON.stringify(res.anamnesis.anamnesisItems || null ));
-          // sessionStorage.setItem("presuptiveDiagnosisItem", JSON.stringify(res.presumptiveDiagnosis?.presumptiveDiagnosis));
-          // sessionStorage.setItem("diagnosisItems", JSON.stringify(res.diagnosis?.diagnosisItems));
-          // sessionStorage.setItem("prognosis", JSON.stringify(res.prognosis));
           setFlag(false);
         })
         .catch((error) => {
           message.error(error.response.data);
         });
     }
-    // console.log(location.state.clinicalRecordId);
-
-    console.log(clinicalRecord);
-    updateReview();
+    setNewVisit({
+      id: null,
+      clinicalRecordId: null,
+      date: new Date().toISOString(),
+    });
+    console.log("en useEffect: ", clinicalRecord);
   }, [location, flag]);
 
   //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
   //guarda automaticamente el mismo
   const saveClinicalRecord = (data) => {
     console.log(data);
-    if (clinicalRecord.visits.length === 0) {
-      setClinicalRecord((clinicalPrev) => ({
-        ...clinicalPrev,
-        visits: [
-          {
-            id: null,
-            clinicalRecordId: clinicalRecord.id,
-            control: null,
-            date: new Date().toISOString(),
-          },
-        ],
-      }));
-      console.log(clinicalRecord.visits);
-    }
+    // if (clinicalRecord.visits.length === 0) {
+    //   // setClinicalRecord((clinicalPrev) => ({
+    //   //   ...clinicalPrev,
+    //   //   visits: [
+    //   //     {
+    //   //       id: null,
+    //   //       clinicalRecordId: clinicalRecord.id,
+    //   //       control: null,
+    //   //       date: new Date().toISOString(),
+    //   //     },
+    //   //   ],
+    //   // }));
+    //   data.visits = [
+    //     {
+    //       id: null,
+    //       clinicalRecordId: clinicalRecord.id,
+    //       control: null,
+    //       date: new Date().toISOString(),
+    //     },
+    //   ];
+    //   console.log(clinicalRecord.visits);
+    // }
     const cRecord = {
       id: clinicalRecord.id,
       veterinaryData: clinicalRecord.veterinaryData,
       tutorData: clinicalRecord.tutorData,
       pet: clinicalRecord.pet,
       visits: clinicalRecord.visits,
-      review: clinicalRecord.review,
+      review: clinicalRecord.review
+        ? clinicalRecord.review
+        : {
+            id: null,
+            name: clinicalRecord.pet.name,
+            birth: clinicalRecord.pet.birth,
+            isMale: clinicalRecord.pet.isMale,
+            raceId: clinicalRecord.pet.raceId,
+            specieId: clinicalRecord.pet.specieId,
+          },
       anamnesis: { id: null, anamnesisItems: data.anamnesisItems },
       physicalExam: data.physicalExam,
       presumptiveDiagnosis: {
@@ -152,19 +140,21 @@ export default function ClinicalRecordT() {
       },
       diagnosis: { id: null, diagnosisItems: [data.diagnosisItems] },
       prognosis: data.prognosis,
-      visits: data.visits,
+      // visits: data.visits,
     };
     console.log(cRecord);
-    message.loading("Guardando Ficha Clinica", 1, () => {
+    message.loading("Finalizando Ficha Clinica", 1, () => {
       clinicalRecordService
         .updateClinicalRecord(cRecord)
         .then((res) => {
           console.log(res);
+          message.success("Guardado con exito!");
         })
         .catch((error) => {
           console.log(error.response.data);
+          message.error("Error al guardar");
         });
-      message.success("Guardado con exito!");
+
       sessionStorage.removeItem("anamnesisItems");
       sessionStorage.removeItem("physicalExam");
       sessionStorage.removeItem("presumptiveDiagnosisItems");
@@ -177,119 +167,123 @@ export default function ClinicalRecordT() {
   };
 
   const saveVisitControl = (data) => {
-    // revisar, esto no esta bien
-    // if (clinicalRecord.visits[0].id === 0) {
-    //   clinicalRecord.visits.shift();
-    // }
-    console.log(data);
-    // console.log(clinicalRecord.visits);
+    // console.log(data);
+    setNewVisit((prevNewVisit) => {
+      const updatedVisit = { ...prevNewVisit, control: data };
 
-    // Si no hay entrada repetida, actualizar el valor
-    // if (!verificarEntradaRepetida(data.date, clinicalRecord.visits)) {
-    setClinicalRecord((prevClinicalRecord) => ({
-      ...prevClinicalRecord,
-      visits: [
-        ...prevClinicalRecord.visits,
-        {
-          id: null,
-          clinicalRecordId: null,
-          control: data.control,
-          date: data.date,
-        },
-      ],
-    }));
-    // console.log("entre");
-    // };
-    console.log(clinicalRecord);
+      setClinicalRecord((clinicalPrev) => ({
+        ...clinicalPrev,
+        visits: [...clinicalPrev.visits, updatedVisit],
+      }));
+
+      return updatedVisit;
+    });
   };
 
-  // Función para verificar si hay una entrada con la misma fecha
-  function verificarEntradaRepetida(nuevaEntrada, entradasRegistradas) {
-    // const nuevaFecha = new Date(nuevaEntrada.date);
-    // console.log(nuevaEntrada);
-    // Recorrer las entradas ya registradas
-    for (const entrada of entradasRegistradas) {
-      // console.log(entrada);
-      // const fechaRegistrada = new Date(entrada.date);
-
-      // Comparar las fechas
-      if (nuevaEntrada.slice(0, 10) === entrada.date.slice(0, 10)) {
-        return true; // Se encontró una entrada con la misma fecha
-      }
+  
+  function updateIdToNull(data) {
+    if (data.id !== undefined && typeof data.id !== "object") {
+      data.id = null;
     }
-
-    return false; // No se encontró ninguna entrada con la misma fecha
+    if (Array.isArray(data.diagnosisItemTreatments)) {
+      data.diagnosisItemTreatments.forEach((treatment) => {
+        if (treatment.id !== undefined && typeof treatment.id !== "object") {
+          treatment.id = null;
+        }
+      });
+    }
+    return data;
   }
 
   const saveClinicalRecordUnfinished = () => {
-    let anamnesisItems;
-    let physicalExam;
-    let presumptiveDiagnosisItems;
-    let diagnosisItems;
-    let prognosis;
-    if (sessionStorage.getItem("anamnesisItems") !== null) {
-      anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
-    } else {
-      anamnesisItems = [];
+    let visits = clinicalRecord.visits;
+    visits.push(newVisit);
+
+    let cRecord = {
+      id: clinicalRecord.id,
+      reasonConsultation: clinicalRecord.reasonConsultation,
+      veterinaryData: clinicalRecord.veterinaryData,
+      tutorData: clinicalRecord.tutorData,
+      pet: clinicalRecord.pet,
+      review: clinicalRecord.review
+        ? clinicalRecord.review
+        : {
+            id: null,
+            name: clinicalRecord.pet.name,
+            birth: clinicalRecord.pet.birth,
+            isMale: clinicalRecord.pet.isMale,
+            raceId: clinicalRecord.pet.raceId,
+          },
+      visits: visits,
+      physicalExam: JSON.parse(sessionStorage.getItem("physicalExam")) || null,
+      anamnesis: null,
+      presumptiveDiagnosis: null,
+      diagnosis: null,
+      prognosis: JSON.parse(sessionStorage.getItem("prognosis")) || null,
+    };
+    let rConsultation = JSON.parse(sessionStorage.getItem("reasonConsultation"));
+    if (rConsultation !== null) {
+      cRecord.reasonConsultation = Object.values(rConsultation)[0];
     }
-    if (sessionStorage.getItem("physicalExam") !== null) {
-      physicalExam = JSON.parse(sessionStorage.getItem("physicalExam"));
-    } else {
-      physicalExam = null;
+    let aItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
+    if (aItems !== null) {
+      clinicalRecord.anamnesis.id
+        ? (cRecord.anamnesis = null)
+        : (cRecord.anamnesis = {
+            id: null,
+            anamnesisItems: Object.keys(aItems).map((key) => aItems[key]),
+          });
     }
-    if (sessionStorage.getItem("presumptiveDiagnosisItems") !== null) {
-      presumptiveDiagnosisItems = JSON.parse(
-        sessionStorage.getItem("presumptiveDiagnosisItems")
-      );
-    } else {
-      presumptiveDiagnosisItems = [];
+
+    let pDItems = JSON.parse(
+      sessionStorage.getItem("presumptiveDiagnosisItems")
+    );
+    let complementaryStudies =
+      JSON.parse(sessionStorage.getItem("complementaryStudies")) || null;
+    if (pDItems !== null) {
+      clinicalRecord.presumptiveDiagnosis.id
+        ? (cRecord.presumptiveDiagnosis = null)
+        : (cRecord.presumptiveDiagnosis = {
+            id: null,
+            presumptiveDiagnosisItems: Object.keys(pDItems).map(
+              (key) => pDItems[key]
+            ),
+            complementaryStudies: complementaryStudies,
+          });
     }
-    if (sessionStorage.getItem("diagnosisItems") !== null) {
-      diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
-    } else {
-      diagnosisItems = [];
+
+    let dItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
+    if (dItems !== null) {
+      clinicalRecord.diagnosis.id
+        ? (cRecord.diagnosis = null)
+        : (cRecord.diagnosis = {
+            id: null,
+            diagnosisItems: [updateIdToNull(dItems)],
+          });
     }
-    if (sessionStorage.getItem("prognosis") !== null) {
-      prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
-    } else {
-      prognosis = null;
-    }
-    //recordar que clinicalRecord es una variable asincronica, el impacto se vera reflejado, pero no en el momento
-    setClinicalRecord((prevClinicalRecord) => ({
-      ...prevClinicalRecord,
-      anamnesis: {
-        ...prevClinicalRecord.anamnesis,
-        anamnesisItems: anamnesisItems,
-      },
-      physicalExam: physicalExam,
-      presumptiveDiagnosis: {
-        ...prevClinicalRecord.presumptiveDiagnosis,
-        presumptiveDiagnosisItems: presumptiveDiagnosisItems,
-      },
-      diagnosis: {
-        ...prevClinicalRecord.diagnosis,
-        diagnosisItems: diagnosisItems,
-      },
-      prognosis: prognosis,
-    }));
+
+    console.log(cRecord);
+
     message.loading("Guardando Ficha Clinica", 1, () => {
-      //
-      //pegarle al endpoint para guardar la ficha
-      //
-      message.success("Guardado con exito!");
-      sessionStorage.removeItem("anamnesisItems");
-      sessionStorage.removeItem("physicalExam");
-      sessionStorage.removeItem("presumptiveDiagnosisItems");
-      sessionStorage.removeItem("diagnosisItems");
-      sessionStorage.removeItem("prognosis");
-      navigate(-1);
+      clinicalRecordService
+        .updateClinicalRecord(cRecord)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
     });
-    console.log(clinicalRecord);
+
+    sessionStorage.removeItem("anamnesisItems");
+    sessionStorage.removeItem("physicalExam");
+    sessionStorage.removeItem("presumptiveDiagnosisItems");
+    sessionStorage.removeItem("diagnosisItems");
+    sessionStorage.removeItem("prognosis");
   };
 
   if (clinicalRecord !== null) {
-    var lastVisitDate = getLastDateFromVisits(clinicalRecord.visits);
-    console.log(lastVisitDate);
+    var lastVisitDate = newVisit.date;
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
@@ -315,14 +309,14 @@ export default function ClinicalRecordT() {
                 className="site-page-header"
                 tags={<Tag color="purple">{clinicalRecord.pet.name}</Tag>}
                 extra={[
-                  <Tooltip title="Guardar Consulta Parcial">
+                  <Tooltip title="Guardar Consulta">
                     <Button
                       shape="circle"
                       onClick={saveClinicalRecordUnfinished}
                       key={2}
                       type="primary"
                     >
-                      <IssuesCloseOutlined />
+                      <SaveOutlined />
                     </Button>
                   </Tooltip>,
                 ]}
@@ -344,6 +338,9 @@ export default function ClinicalRecordT() {
                       <ConsultationHeader
                         id={clinicalRecord.id}
                         tutorName={`${clinicalRecord.tutorData.person.name} ${clinicalRecord.tutorData.person.lastName}`}
+                        complementaryStudies={
+                          clinicalRecord.presumptiveDiagnosis
+                        }
                       />
                     ) : (
                       <Spin />
@@ -356,7 +353,6 @@ export default function ClinicalRecordT() {
           <Row>
             <Col span={24}>
               <ConsultationVisits
-                id={clinicalRecord.visits.length + 1}
                 date={lastVisitDate ? lastVisitDate : "Sin visitas previas"}
                 steps={stepsDone}
                 visits={clinicalRecord.visits}

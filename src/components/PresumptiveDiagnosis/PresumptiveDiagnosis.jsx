@@ -52,7 +52,7 @@ export default function PresumptiveDiagnosis(props) {
   const [complementaryStudies, setComplementaryStudies] = useState(
     JSON.parse(sessionStorage.getItem("complementaryStudies")) || study
   );
-  const [urls, setUrls] = useState([]);
+  // const [urls, setUrls] = useState([]);
 
   useEffect(() => {
     // Store responses in sessionStorage whenever they change
@@ -65,14 +65,14 @@ export default function PresumptiveDiagnosis(props) {
       JSON.stringify(complementaryStudies)
     );
 
-    if (complementaryStudies.length > 0) {
-      const updatedUrls = complementaryStudies.map((item) =>
-        item.url ? item.url : "404: not-found"
-      );
-      console.log(updatedUrls);
-      setUrls(updatedUrls);
-      setStudies(true);
-    }
+    // if (complementaryStudies.length > 0) {
+    //   const updatedUrls = complementaryStudies.map((item) =>
+    //     item.url ? item.url : "404: not-found"
+    //   );
+    //   console.log(updatedUrls);
+    //   setUrls(updatedUrls);
+    //   setStudies(true);
+    // }
     if (Object.keys(responses).length > 1) {
       setShowMore(true);
     }
@@ -127,24 +127,7 @@ export default function PresumptiveDiagnosis(props) {
           </Typography.Title>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
-          {studies ? (
-            <List
-              size="small"
-              header={"Estudios"}
-              grid={{ gutter: 16, column: 1 }}
-              dataSource={urls}
-              renderItem={(item) => (
-                <List.Item>
-                  {item ? (
-                    <a href={item}>
-                      <LinkOutlined />
-                      {` ${item}`}
-                    </a>
-                  ) : null}
-                </List.Item>
-              )}
-            />
-          ) : null}
+          
           <Form
             // onFinish={register}
             autoComplete="off"
@@ -262,7 +245,7 @@ export default function PresumptiveDiagnosis(props) {
               </Form.Item>
             </Col>
           </Form>
-          {/* Estudios complementarios */}
+          {/* Estudios complementarios modal*/}
           <ComplementaryStudiesModal
             isModalOpen={isModalOpen}
             handleCancel={handleCancel}

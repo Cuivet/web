@@ -8,7 +8,6 @@ import {
   Input,
   Divider,
   Tooltip,
-  List,
 } from "antd";
 import {
   MinusCircleOutlined,
@@ -16,17 +15,18 @@ import {
   InfoCircleOutlined,
   LockFilled,
   UnlockFilled,
-  LinkOutlined,
 } from "@ant-design/icons";
 import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 import ComplementaryStudiesModal from "../ComplementaryStudiesModal/ComplementaryStudiesModal";
+import './PresumptiveDiagnosis.scss';
+
 
 export default function PresumptiveDiagnosis(props) {
-  // const [disabled, setIsDisabled] = useState(false);
   const { disabled, toggleEdit } = useEditContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [studies, setStudies] = useState(false);
+  const [blocked, setBlocked] = useState(true);
+  
 
   const wrapper = {
     sm: { offset: 0, span: 14 },
@@ -52,7 +52,6 @@ export default function PresumptiveDiagnosis(props) {
   const [complementaryStudies, setComplementaryStudies] = useState(
     JSON.parse(sessionStorage.getItem("complementaryStudies")) || study
   );
-  // const [urls, setUrls] = useState([]);
 
   useEffect(() => {
     // Store responses in sessionStorage whenever they change
@@ -64,6 +63,9 @@ export default function PresumptiveDiagnosis(props) {
       "complementaryStudies",
       JSON.stringify(complementaryStudies)
     );
+    if (responses[0]?.observation.length > 0 ){
+       setBlocked(false)
+      };
 
     // if (complementaryStudies.length > 0) {
     //   const updatedUrls = complementaryStudies.map((item) =>
@@ -71,7 +73,6 @@ export default function PresumptiveDiagnosis(props) {
     //   );
     //   console.log(updatedUrls);
     //   setUrls(updatedUrls);
-    //   setStudies(true);
     // }
     if (Object.keys(responses).length > 1) {
       setShowMore(true);
@@ -91,9 +92,9 @@ export default function PresumptiveDiagnosis(props) {
     });
   };
 
+
   const handleAddItem = (item) => {
     setComplementaryStudies([...complementaryStudies, item]);
-    setStudies(true);
   };
   const handleRemovePresumptiveDiagnosisItem = (id) => {
     setResponses((prevState) => {
@@ -116,10 +117,11 @@ export default function PresumptiveDiagnosis(props) {
               placement="right"
             >
               <Button
-                type="link"
-                className="appButton"
+                type="primary"
+                className="studiesButton"
+                shape="circle"
                 size="small"
-                style={{ marginLeft: "1%" }}
+                disabled={blocked}
                 icon={<BiotechOutlinedIcon />}
                 onClick={showModal}
               />

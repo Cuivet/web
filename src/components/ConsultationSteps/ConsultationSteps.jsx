@@ -202,7 +202,7 @@ export default function ConsultationSteps(props) {
     ) || [];
     let diagnosisItems = updateIdToNull(
       JSON.parse(sessionStorage.getItem("diagnosisItems"))
-    ) || {diagnosisId:null, id:null, diagnosisItemTreatments:[]};
+    ) || (null);
     let prognosis = JSON.parse(sessionStorage.getItem("prognosis")) || null;
     let visits = JSON.parse(sessionStorage.getItem("visits"));
     

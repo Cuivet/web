@@ -70,9 +70,9 @@ export default function Diagnosis(props) {
       }
     });
     return list;
-  };
+  }
 
-  function renderTreatmentOptions(treatmentTypeId,treatmentOptionId) {
+  function renderTreatmentOptions(treatmentTypeId, treatmentOptionId) {
     let list = [];
     if (selectedTreatmentTypeId !== null || treatmentTypeId !== null) {
       treatmentOptions.forEach((treatmentOption) => {
@@ -85,7 +85,10 @@ export default function Diagnosis(props) {
           );
         }
         //renderizado de opciones cuando viene cargado
-        if (treatmentOption.treatmentTypeId === treatmentTypeId && treatmentOptionId === treatmentOption.id) {
+        if (
+          treatmentOption.treatmentTypeId === treatmentTypeId &&
+          treatmentOptionId === treatmentOption.id
+        ) {
           list.push(
             <Select.Option value={treatmentOption.id}>
               {treatmentOption.name}
@@ -95,7 +98,7 @@ export default function Diagnosis(props) {
       });
     }
     return list;
-  };
+  }
 
   function renderDrugs() {
     let list = [];
@@ -103,7 +106,7 @@ export default function Diagnosis(props) {
       list.push(<Select.Option value={drug.id}>{drug.name}</Select.Option>);
     });
     return list;
-  };
+  }
   const onTreatmentTypeChange = (treatmentTypeId) => {
     setSelectedTreatmentTypeId(treatmentTypeId);
   };
@@ -119,13 +122,12 @@ export default function Diagnosis(props) {
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("diagnosisItems")) || flag
   );
-
   useEffect(() => {
     // Store responses in sessionStorage whenever they change
     sessionStorage.setItem("diagnosisItems", JSON.stringify(responses));
     if (Object.keys(responses?.diagnosisItemTreatments).length > 1) {
       setShowMore(true);
-    }
+    };
   }, [responses]);
 
   const handleItemTreatmentChange = (field, value, id) => {
@@ -135,9 +137,8 @@ export default function Diagnosis(props) {
       );
 
       if (field === "treatmentTypeId") {
-        // console.log(value);
         onTreatmentTypeChange(value);
-      } 
+      }
 
       if (treatmentIndex !== -1) {
         // Si el tratamiento existe, lo modificamos
@@ -152,7 +153,7 @@ export default function Diagnosis(props) {
         // Si no existe, creamos uno nuevo
         const newTreatment = {
           id: id + 1, // Ajusta según tu necesidad
-          diagnosisItemId: null,          
+          diagnosisItemId: null,
           [field]: value, // El campo que cambió
         };
 
@@ -252,181 +253,202 @@ export default function Diagnosis(props) {
             <Col>
               <Divider>Tratamiento</Divider>
             </Col>
-              <Form.List name="diagnosisItemTreatments">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map(({ key, name, ...restField }, i) => (
-                      //key=contador de campos generados
-                      //i=indice de campos en pantalla
-                      <div key={key}>
-                        {/* {console.log(key, i)} */}
-                        <Col span={24}>
-                          <Form.Item
-                            {...restField}
-                            key={i}
-                            // name={[name, "treatmentTypeId"]}
-                            label={"Tipo Tratamiento"}
-                            tooltip={{
-                              title: "Tipo de tratamiento",
-                              icon: <InfoCircleOutlined />,
+            <Form.List name="diagnosisItemTreatments">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, ...restField }, i) => (
+                    //key=contador de campos generados
+                    //i=indice de campos en pantalla
+                    <div key={key}>
+                      <Col span={24}>
+                        <Form.Item
+                          {...restField}
+                          key={i}
+                          // name={[name, "treatmentTypeId"]}
+                          label={"Tipo Tratamiento"}
+                          tooltip={{
+                            title: "Tipo de tratamiento",
+                            icon: <InfoCircleOutlined />,
+                          }}
+                        >
+                          <Select
+                            placeholder={"Seleccione tipo de tratamiento"}
+                            disabled={disabled}
+                            name="treatmentTypeId"
+                            defaultValue={
+                              responses.diagnosisItemTreatments[i]
+                                ?.treatmentTypeId || undefined
+                            }
+                            onChange={(value) =>
+                              handleItemTreatmentChange(
+                                "treatmentTypeId",
+                                value,
+                                key
+                              )
+                            }
+                          >
+                            {renderTreatmentTypes()}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={24}>
+                        <Form.Item
+                          {...restField}
+                          //name={[name, "treatmentOptionId"]}
+                          label={"Tratamiento"}
+                        >
+                          <Select
+                            name="treatmentOptionId"
+                            value={
+                              responses.diagnosisItemTreatments[i]
+                                ?.treatmentOptionId || undefined
+                            }
+                            onChange={(value) =>
+                              handleItemTreatmentChange(
+                                "treatmentOptionId",
+                                value,
+                                key
+                              )
+                            }
+                            placeholder={"Tratamiento"}
+                            disabled={disabled}
+                            allowClear
+                          >
+                            {renderTreatmentOptions(
+                              responses.diagnosisItemTreatments[i]
+                                ?.treatmentTypeId || undefined,
+                              responses.diagnosisItemTreatments[i]
+                                ?.treatmentOptionId || undefined
+                            )}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col span={24}>
+                        <Form.Item
+                          {...restField}
+                          label={"Droga"}
+                          tooltip={{
+                            title: "Fármaco del tratamiento",
+                            icon: <InfoCircleOutlined />,
+                          }}
+                        >
+                          <Select
+                            disabled={disabled}
+                            name="drugId"
+                            placeholder={"Seleccione el fármaco"}
+                            defaultValue={
+                              responses.diagnosisItemTreatments[i]?.drugId ||
+                              undefined
+                            }
+                            allowClear
+                            onChange={(value) =>
+                              handleItemTreatmentChange("drugId", value, key)
+                            }
+                          >
+                            {renderDrugs()}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                      <Col>
+                        <Form.Item
+                          {...restField}
+                          label={"Intervalo"}
+                          //   wrapperCol={wrapper}
+                          tooltip={{
+                            title: "Intervalo en horas del tratamiento",
+                            icon: <InfoCircleOutlined />,
+                          }}
+                        >
+                          <InputNumber
+                            min={0}
+                            max={24}
+                            placeholder={"Ingrese intervalo"}
+                            style={{ width: "100%" }}
+                            name="frecuencyInterval"
+                            addonAfter={"Horas"}
+                            value={
+                              responses.diagnosisItemTreatments[i]
+                                ?.frecuencyInterval || undefined
+                            }
+                            disabled={disabled}
+                            onChange={(value) =>
+                              handleItemTreatmentChange(
+                                "frecuencyInterval",
+                                value,
+                                key
+                              )
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={24}>
+                        <Form.Item
+                          {...restField}
+                          label={"Duración"}
+                          tooltip={{
+                            title: "Duración en días del tratamiento",
+                            icon: <InfoCircleOutlined />,
+                          }}
+                        >
+                          <InputNumber
+                            min={0}
+                            placeholder="Ingrese duración"
+                            style={{ width: "100%" }}
+                            name="frecuencyDuration"
+                            addonAfter={"Días"}
+                            value={
+                              responses.diagnosisItemTreatments[i]
+                                ?.frecuencyDuration || undefined
+                            }
+                            disabled={disabled}
+                            onChange={(value) =>
+                              handleItemTreatmentChange(
+                                "frecuencyDuration",
+                                value,
+                                key
+                              )
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col style={{ marginBottom: "6%" }}>
+                        <Tooltip title={"Borrar tratamiento"} align="left">
+                          <Button
+                            type="primary"
+                            shape="circle"
+                            onClick={() => {
+                              remove(name);
+                              handleRemoveTreatmentItem(key);
                             }}
                           >
-                            <Select
-                              placeholder={"Seleccione tipo de tratamiento"}
-                              disabled={disabled}
-                              name="treatmentTypeId"
-                              defaultValue={responses.diagnosisItemTreatments[i]?.treatmentTypeId || undefined}                              
-                              onChange={(value) =>
-                                handleItemTreatmentChange(
-                                  "treatmentTypeId",
-                                  value,
-                                  key
-                                )
-                              }
-                            >
-                              {renderTreatmentTypes()}
-                            </Select>
-                          </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                          <Form.Item
-                            {...restField}
-                            //name={[name, "treatmentOptionId"]}
-                            label={"Tratamiento"}
-                          >
-                            <Select
-                              name="treatmentOptionId"
-                              defaultValue={responses.diagnosisItemTreatments[i]?.treatmentOptionId || undefined}
-                              onChange={(value) =>
-                                handleItemTreatmentChange(
-                                  "treatmentOptionId",
-                                  value,
-                                  key
-                                )
-                              }
-                              placeholder={"Tratamiento"}
-                              disabled={disabled}
-                              allowClear
-                              
-                            >
-                              {renderTreatmentOptions(responses.diagnosisItemTreatments[i]?.treatmentTypeId || undefined, responses.diagnosisItemTreatments[i]?.treatmentOptionId || undefined)}
-                            </Select>
-                          </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                          <Form.Item
-                            {...restField}
-                            label={"Droga"}
-                            tooltip={{
-                              title: "Fármaco del tratamiento",
-                              icon: <InfoCircleOutlined />,
-                            }}
-                          >
-                            <Select
-                              disabled={disabled}
-                              name="drugId"
-                              placeholder={"Seleccione el fármaco"}
-                              defaultValue={responses.diagnosisItemTreatments[i]?.drugId || undefined}
-                              allowClear
-                              onChange={(value) =>
-                                handleItemTreatmentChange("drugId", value, key)
-                              }
-                            >
-                              {renderDrugs()}
-                            </Select>
-                          </Form.Item>
-                        </Col>
-                        <Col>
-                          <Form.Item
-                            {...restField}
-                            label={"Intervalo"}
-                            //   wrapperCol={wrapper}
-                            tooltip={{
-                              title: "Intervalo en horas del tratamiento",
-                              icon: <InfoCircleOutlined />,
-                            }}
-                          >
-                            <InputNumber
-                              min={0}
-                              max={24}
-                              placeholder={"Ingrese intervalo"}
-                              style={{ width: "100%" }}
-                              name="frecuencyInterval"
-                              addonAfter={"Horas"}
-                              value={responses.diagnosisItemTreatments[i]?.frecuencyInterval || undefined}
-                              disabled={disabled}
-                              onChange={(value) =>
-                                handleItemTreatmentChange(
-                                  "frecuencyInterval",
-                                  value,
-                                  key
-                                )
-                              }
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                          <Form.Item
-                            {...restField}
-                            label={"Duración"}
-                            tooltip={{
-                              title: "Duración en días del tratamiento",
-                              icon: <InfoCircleOutlined />,
-                            }}
-                          >
-                            <InputNumber
-                              min={0}
-                              placeholder="Ingrese duración"
-                              style={{ width: "100%" }}
-                              name="frecuencyDuration"
-                              addonAfter={"Días"}
-                              value={responses.diagnosisItemTreatments[i]?.frecuencyDuration || undefined}
-                              disabled={disabled}
-                              onChange={(value) =>
-                                handleItemTreatmentChange(
-                                  "frecuencyDuration",
-                                  value,
-                                  key
-                                )
-                              }
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col style={{ marginBottom: "6%" }}>
-                          <Tooltip title={"Borrar tratamiento"} align="left">
-                            <Button
-                              type="primary"
-                              shape="circle"
-                              onClick={() => {
-                                remove(name);
-                                handleRemoveTreatmentItem(key);
-                              }}
-                            >
-                              <MinusCircleOutlined />
-                            </Button>
-                          </Tooltip>
-                        </Col>
-                      </div>
-                    ))}
-                    <Col>
-                      <Form.Item
-                        wrapperCol={{
-                          xs: { span: 24 },
-                          sm: { span: 20, offset: 2 },
-                        }}
+                            <MinusCircleOutlined />
+                          </Button>
+                        </Tooltip>
+                      </Col>
+                    </div>
+                  ))}
+                  <Col>
+                    <Form.Item
+                      wrapperCol={{
+                        xs: { span: 24 },
+                        sm: { span: 20, offset: 2 },
+                      }}
+                    >
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
                       >
-                        <Button
-                          type="dashed"
-                          onClick={() => add()}
-                          block
-                          icon={<PlusOutlined />}
-                        >{showMore ? "Ver mas tratamientos" : "Agregar tratamientos"}
-                        </Button>
-                      </Form.Item>
-                    </Col>
-                  </>
-                )}
-              </Form.List>
+                        {showMore
+                          ? "Ver mas tratamientos"
+                          : "Agregar tratamientos"}
+                      </Button>
+                    </Form.Item>
+                  </Col>
+                </>
+              )}
+            </Form.List>
             <Col>
               <Form.Item wrapperCol={{ span: 24 }}>
                 <Tooltip title={disabled ? "Desbloquear" : "Bloquear"}>

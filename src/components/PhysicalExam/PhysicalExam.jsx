@@ -153,6 +153,7 @@ export default function PhysicalExam(props) {
                 <Input
                   name={`mucousMembrane`}
                   allowClear
+                  autoComplete="off"
                   disabled={disabled}
                   placeholder={"Ingrese mucosa"}
                   value={responses["mucousMembrane"] || undefined}

@@ -10,12 +10,15 @@ import {
   Typography,
   Progress,
   Tooltip,
-  Spin,
+  Popconfirm,
 } from "antd";
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import {
   FilePdfOutlined,
   EditOutlined,
+  EyeOutlined,
+  DeleteOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 const { Option } = Select;
@@ -120,24 +123,45 @@ export default function ClinicalRecordsManagement() {
       dataIndex: "indexIdForButton",
       // responsive: ['md'],
       fixed: "right",
-      render: (_, { indexIdForButton }) => (
+      render: (_, { indexIdForButton, progressObject }) => (
         <>
           <Tooltip placement="top" title="Descargar PDF">
             <Button shape="circle" size="large" className="margin-right">
               <FilePdfOutlined />
             </Button>
           </Tooltip>
-          <Tooltip placement="top" title="Continuar la Ficha Clínica">
-            <Button
-              shape="circle"
-              size="large"
-              onClick={(e) => {
-                // console.log(indexIdForButton);
-                goToClinicalRecord(indexIdForButton);
-              }}
+          {progressObject.percentage === 100 ? (
+            <Tooltip placement="top" title="Ver la Ficha Clínica">
+              <Button shape="circle" type="dashed" size="large" className="margin-right">
+                <EyeOutlined />
+              </Button>
+            </Tooltip>
+          ) : (
+            <Tooltip placement="top" title="Continuar la Ficha Clínica">
+              <Button
+                shape="circle"
+                size="large"
+                className="margin-right"
+                onClick={(e) => {
+                  // console.log(indexIdForButton);
+                  goToClinicalRecord(indexIdForButton);
+                }}
+              >
+                <EditOutlined />
+              </Button>
+            </Tooltip>
+          )}
+          <Tooltip placement="top" title="Borrar la Ficha Clínica">
+            <Popconfirm
+              title="¿Seguro que quieres borrar esta ficha?"
+              placement="left"
+              // onConfirm={() => deleteClinicalRecord(indexIdForButton)}
+              icon={<WarningOutlined style={{ color: "red" }} />}
             >
-              <EditOutlined />
-            </Button>
+              <Button shape="circle" danger size="large">
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
           </Tooltip>
         </>
       ),
@@ -149,8 +173,11 @@ export default function ClinicalRecordsManagement() {
   };
 
   function goToClinicalRecord(clinicalRecordId) {
-    sessionStorage.setItem("clinicalRecordId", JSON.stringify(clinicalRecordId));
-    navigate("/clinical-recordT", {
+    sessionStorage.setItem(
+      "clinicalRecordId",
+      JSON.stringify(clinicalRecordId)
+    );
+    navigate("/clinical-record", {
       state: { clinicalRecordId: clinicalRecordId, petId: null },
     });
   }

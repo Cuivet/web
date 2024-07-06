@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Typography, List, Input } from "antd";
-import { FormOutlined, LinkOutlined, UserOutlined } from "@ant-design/icons";
+import { Row,  Typography, List, Input } from "antd";
+import { FormOutlined, LinkOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
+const {  Paragraph } = Typography;
 
 export default function ConsultationHeader(props) {
-  const { id, tutorName, reasonConsultation } = props;
-  // const [reasonConsultation, setReasonConsultation] = useState(
-  //   "Motivo de consulta.."
-  // );
+  const { id, tutorName, reasonConsultation, cStudies } = props;
   const [studies, setStudies] = useState(false);
 
-  //revisarrr!!!!
-  const study = ""; //props.complementaryStudies.complementaryStudies || "";
-  console.log(study);
+  const study = cStudies || "";
   const [complementaryStudies, setComplementaryStudies] = useState(
     JSON.parse(sessionStorage.getItem("complementaryStudies")) || study
   );
@@ -45,14 +40,15 @@ export default function ConsultationHeader(props) {
     };
   }, []);
 
-  const [flag, setFlag]=useState(reasonConsultation || '');
+  const [flag, setFlag] = useState(
+    { reasonConsultation: reasonConsultation } || ""
+  );
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("reasonConsultation")) || flag
-  )
+  );
 
   const handleTextResponseChange = (name, value) => {
     setResponses({
-      ...responses,
       [name]: value,
     });
   };
@@ -85,9 +81,12 @@ export default function ConsultationHeader(props) {
           suffix={<FormOutlined />}
           size="large"
           allowClear
-          style={{ width: "35%"}}
+          style={{ width: "35%" }}
+          value={responses.reasonConsultation || ""}
           placeholder={"Motivo de consulta"}
-          onChange={(e) => handleTextResponseChange("reasonConsultation",e.target.value)}
+          onChange={(e) =>
+            handleTextResponseChange("reasonConsultation", e.target.value)
+          }
         />
 
         {/* <Title
@@ -103,8 +102,11 @@ export default function ConsultationHeader(props) {
         </Title> */}
       </Row>
       {studies ? (
+        <Paragraph>
+          <pre>
         <List
           size="small"
+          style={{fontFamily: "Poppins, sans-serif"}}
           header={"Estudios Complementarios:"}
           grid={{ gutter: 16, column: 1 }}
           dataSource={urls}
@@ -119,6 +121,8 @@ export default function ConsultationHeader(props) {
             </List.Item>
           )}
         />
+        </pre>
+        </Paragraph>
       ) : null}
     </>
   );

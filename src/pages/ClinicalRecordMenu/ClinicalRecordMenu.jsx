@@ -72,7 +72,7 @@ export default function ClinicalRecordMenu() {
   }
 
   const createClinicalRecord = () => {
-    navigate("/clinical-recordT", {
+    navigate("/clinical-record", {
       state: { clinicalRecordId: null, petId: Number(selectedPetId) },
     });
   };
@@ -129,6 +129,7 @@ export default function ClinicalRecordMenu() {
               <Col xs={{ span: 24 }}>
                 <Input
                   type="number"
+                  autoComplete="off"
                   name="phone"
                   placeholder="DNI del tutor a asociar"
                   onChange={refreshDni}

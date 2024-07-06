@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   PageHeader,
   Form,
@@ -9,7 +9,6 @@ import {
   Button,
   Row,
   Col,
-  message,
   List,
   Typography,
 } from "antd";
@@ -18,15 +17,15 @@ import {
   ContainerOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
+import "./ConsultationVisits.scss";
 
 export default function ConsultationVisits(props) {
-  const { id, date, steps, visits } = props;
+  const { date, steps, visits } = props;
   const [showControl, setShowControl] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [control, setControl] = useState("");
   const moment = require("moment");
-  const currentDate = moment();
-
+  const nroVisits = useRef(visits.length + 1);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -35,29 +34,14 @@ export default function ConsultationVisits(props) {
     setIsModalOpen(false);
   };
 
-  const handleControlChange = (e) => {
-    setControl(e.target.value);
-    // console.log(control);
-  };
-  const handleControl = (e) => {
-    //funcion para guardar el control en la visita
-    const newControl = {
-      id: id,
-      clinicalRecordId: 1,
-      control: control,
-      date: currentDate.format("DD/MM/YYYY"),
-    };
-    console.log(newControl);
-    props.sendDataControl(newControl);
-    // message.loading("Guardando..", 0.5, () => {
-    //   sessionStorage.setItem("newVisit", JSON.stringify(newVisit));
-    // });
-    // message.success("Guardado con exito!");
+  const handleControl = () => {
+    props.sendDataControl(control.currentTarget.value);
     setIsModalOpen(false);
-    setShowControl(true);
+    setShowControl(true); //para bloquear la edicion
   };
 
   const renderSteps = () => {
+    // cambiar los nombres para que esten en espaniol
     let render = [];
     steps.forEach((i) => {
       render.push(<Tag color="geekblue">{i}</Tag>);
@@ -69,8 +53,12 @@ export default function ConsultationVisits(props) {
   return (
     <>
       <PageHeader
-        title={`Visita N° ${id}`}
-        subTitle={date}
+        title={`Visita N° ${nroVisits.current}`}
+        subTitle={
+          date === "Sin visitas previas"
+            ? "Sin visitas previas"
+            : moment(date).format("DD/MM/YYYY")
+        }
         style={{ marginTop: "2%" }}
         ghost={false}
         tags={renderSteps()}
@@ -79,16 +67,7 @@ export default function ConsultationVisits(props) {
             <Button shape="round" type="default" onClick={showModal}>
               {showControl ? <EyeOutlined /> : <ContainerOutlined />}
             </Button>
-          </Tooltip>,
-          <Tooltip title={"Guardar visita"}>
-            <Button
-              type="dashed"
-              style={{ borderColor: "#57266a" }}
-              shape="round"
-            >
-              <SaveOutlined />
-            </Button>
-          </Tooltip>,
+          </Tooltip>          
         ]}
       >
         <Row>
@@ -125,30 +104,40 @@ export default function ConsultationVisits(props) {
             <List
               size="small"
               dataSource={visits}
+              // loading={showControl}
+              className="visits-list"
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.date} </Typography.Text>
+                  <Typography.Text strong>
+                    {moment(item.createdAt).format("DD/MM/YYYY")}
+                    {" -> "}
+                  </Typography.Text>
                   {item.control}
                 </List.Item>
               )}
-              footer={
-                <Form onFinish={handleControl}>
-                  <Form.Item>
-                    <Input.TextArea
-                      disabled={showControl}
-                      name="control"
-                      rows={4}
-                      allowClear
-                      placeholder="Ingrese nuevo control..."
-                      maxLength={500}
-                      showCount
-                      onChange={handleControlChange}
-                      autoSize={{ minRows: 4, maxRows: 5 }}
-                    />
-                  </Form.Item>
-                </Form>
-              }
+              // footer={
+
+              // }
             />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Form onFinish={handleControl}>
+              <Form.Item>
+                <Input.TextArea
+                  disabled={showControl}
+                  name="control"
+                  rows={4}
+                  allowClear
+                  placeholder="Ingrese nuevo control..."
+                  maxLength={500}
+                  showCount
+                  onChange={(value) => setControl(value)}
+                  autoSize={{ minRows: 4, maxRows: 5 }}
+                />
+              </Form.Item>
+            </Form>
           </Col>
         </Row>
       </Modal>

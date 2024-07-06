@@ -1,4 +1,4 @@
-import React, { useEffect,  useState } from "react";
+import React, { useState } from "react";
 import { Steps, Tooltip, Button } from "antd";
 import {
   LeftCircleOutlined,
@@ -13,10 +13,7 @@ import PresumptiveDiagnosis from "../../components/PresumptiveDiagnosis/Presumpt
 import Diagnosis from "../../components/Diagnosis/Diagnosis";
 import Prognosis from "../../components/Prognosis/Prognosis";
 
-//prueba
 export default function ConsultationSteps(props) {
-  // export default function ConsultationSteps({saveStepData}){
-  // const clinicalRecord = useClinicalRecord();
   const {
     pet,
     review,
@@ -29,12 +26,7 @@ export default function ConsultationSteps(props) {
 
   const { Step } = Steps;
   const [current, setCurrent] = useState(0);
-  const [stepsClinicalRecord, setStepsClinicalRecord] = useState(null);
 
-  //prueba sacar despues
-  // useEffect(() => {
-  //   console.log(anamnesis);
-  // }, [anamnesis]);
   const next = (stepData) => {
     // saveStepData(stepData);
     setCurrent(current + 1);
@@ -42,6 +34,10 @@ export default function ConsultationSteps(props) {
 
   const prev = () => {
     setCurrent(current - 1);
+  };
+
+  const onChange = (value) => {
+    setCurrent(value);
   };
 
   const steps = [
@@ -106,20 +102,21 @@ export default function ConsultationSteps(props) {
             content: (
               <PresumptiveDiagnosis
                 id={presumptiveDiagnosis.id}
-                presumptiveDiagnosisItem={
-                  presumptiveDiagnosis.presumptiveDiagnosisItem
+                presumptiveDiagnosisItems={
+                  presumptiveDiagnosis.presumptiveDiagnosisItems
                 }
+                complementaryStudies={presumptiveDiagnosis.complementaryStudies}
                 //  stepSave={presumptiveDiagnosisChangeForm}
               />
             ),
           }
         : {
             content: (
-                <PresumptiveDiagnosis
-                  id={null}
-                  presumptiveDiagnosis={null}
-                  // stepSave={presumptiveDiagnosisChangeForm}
-                />
+              <PresumptiveDiagnosis
+                id={null}
+                presumptiveDiagnosis={null}
+                // stepSave={presumptiveDiagnosisChangeForm}
+              />
             ),
           }),
       //   subTitle: Visits(cRecord.presumptiveDiagnosis),
@@ -131,7 +128,7 @@ export default function ConsultationSteps(props) {
             content: (
               <Diagnosis
                 id={diagnosis.id}
-                diagnosis={diagnosis.diagnosisItems[0]}
+                diagnosisItems={diagnosis.diagnosisItems[0]}
                 //    stepSave={diagnosisChangeForm}
               />
             ),
@@ -153,7 +150,8 @@ export default function ConsultationSteps(props) {
         ? {
             content: (
               <Prognosis
-                id={presumptiveDiagnosis.id}
+                id={prognosis.id}
+                prognosis={prognosis}
                 //  stepSave={prognosisChangeForm}
               />
             ),
@@ -162,6 +160,7 @@ export default function ConsultationSteps(props) {
             content: (
               <Prognosis
                 id={null}
+                prognosis={null}
                 //  stepSave={prognosisChangeForm}
               />
             ),
@@ -169,41 +168,57 @@ export default function ConsultationSteps(props) {
       //   subTitle: Visits(cRecord.prognosis),
     },
   ];
+  function updateIdToNull(data) {
+    if (data.id !== undefined && typeof data.id !== "object") {
+      data.id = null;
+      // console.log("entre");
+    }
+    if (Array.isArray(data.diagnosisItemTreatments)) {
+      // console.log("entre2");
+      data.diagnosisItemTreatments.forEach((treatment) => {
+        if (treatment.id !== undefined && typeof treatment.id !== "object") {
+          // console.log("entre3");
+          treatment.id = null;
+        }
+      });
+    }
+    return data;
+  }
   //recopilamos todos los datos que cargamos en la consulta para armar la ficha
   const Save = () => {
-    let anamnesisItems = JSON.parse(sessionStorage.getItem("anamnesisItems"));
-    let physicalExam = JSON.parse(sessionStorage.getItem("physicalExam"));
-    let presumptiveDiagnosisItem = JSON.parse(
-      sessionStorage.getItem("presumptiveDiagnosisItem")
-    );
-    let diagnosisItems = JSON.parse(sessionStorage.getItem("diagnosisItems"));
-    let prognosis = JSON.parse(sessionStorage.getItem("prognosis"));
-    // console.log(
-    //   anamnesisItems,
-    //   physcalExam,
-    //   presumptiveDiagnosisItem,
-    //   diagnosisItems,
-    //   prognosis
-    // );
+    let anamnesisItems =
+      Object.keys(JSON.parse(sessionStorage.getItem("anamnesisItems"))).map(
+        (key) => JSON.parse(sessionStorage.getItem("anamnesisItems"))[key]
+      ) || null;
+    let physicalExam = JSON.parse(sessionStorage.getItem("physicalExam")) || null;
+    let presumptiveDiagnosisItems = Object.keys(
+      JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems"))
+    ).map(
+      (key) =>
+        JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems"))[key]
+    ) || null;
+    let complementaryStudies = JSON.parse(
+      sessionStorage.getItem("complementaryStudies")
+    ) || [];
+    let diagnosisItems = updateIdToNull(
+      JSON.parse(sessionStorage.getItem("diagnosisItems"))
+    ) || (null);
+    let prognosis = JSON.parse(sessionStorage.getItem("prognosis")) || null;
+    let visits = JSON.parse(sessionStorage.getItem("visits"));
+    
     let cRecord = {
       anamnesisItems: anamnesisItems,
       physicalExam: physicalExam,
-      presumptiveDiagnosisItem: presumptiveDiagnosisItem,
+      presumptiveDiagnosisItems: presumptiveDiagnosisItems,
+      complementaryStudies: complementaryStudies,
       diagnosisItems: diagnosisItems,
       prognosis: prognosis,
+      visits: visits,
     };
-    // console.log(cRecord);
-    // setStepsClinicalRecord({
-    //   anamnesisItems: anamnesisItems,
-    //   physcalExam: physcalExam,
-    //   presumptiveDiagnosisItem: presumptiveDiagnosisItem,
-    //   diagnosisItem: diagnosisItem,
-    //   prognosis: prognosis,
-    // });
-    // console.log(stepsClinicalRecord);
-
-    //prueba
-    // props.sendDataClinicalRecord(cRecord);
+    console.log(cRecord);
+    //prueba del guardado de la ficha clinica,
+    //envio los datos recolectados en step a componente padre
+    props.sendDataClinicalRecord(cRecord);
   };
 
   return (
@@ -214,6 +229,7 @@ export default function ConsultationSteps(props) {
         labelPlacement="vertical"
         percent={(current + 1) * 16.7}
         responsive
+        onChange={onChange}
       >
         {steps.map((item) => (
           <Step
@@ -252,7 +268,7 @@ export default function ConsultationSteps(props) {
           </Tooltip>
         )}
         {current === steps.length - 1 && (
-          <Tooltip title="Finalizar">
+          <Tooltip title="Finalizar Ficha Clinica">
             <Button
               type="primary"
               className="steps-action-finish"

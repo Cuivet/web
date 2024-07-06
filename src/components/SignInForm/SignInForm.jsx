@@ -7,7 +7,6 @@ import { Alert } from 'antd';
 import { Spin } from 'antd';
 
 import '../RegisterForm/RegisterForm.scss'
-import { keyboard } from '@testing-library/user-event/dist/keyboard';
 
 const {Link, Paragraph} = Typography;
 

@@ -1,1 +1,1 @@
-export {default} from './ClinicalRecord'
+export {default} from './ClinicalRecord';

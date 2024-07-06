@@ -4,14 +4,12 @@ import {
   Row,
   Col,
   Typography,
-  message,
   Button,
   Input,
   Tooltip,
 } from "antd";
 import {
   InfoCircleOutlined,
-  CheckOutlined,
   LockFilled,
   UnlockFilled,
 } from "@ant-design/icons";
@@ -19,8 +17,8 @@ import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalReco
 
 export default function Prognosis(props) {
   // const [disabled, setIsDisabled] = useState(false);
+  const { prognosis } = props;
   const { disabled, toggleEdit } = useEditContext();
-  const [initValue, setInitValue] = useState([{ name: ["algo"], value: 23 }]);
 
   const wrapper = {
     sm: { offset: 0, span: 14 },
@@ -28,54 +26,14 @@ export default function Prognosis(props) {
       offset: 0,
     },
   };
-
-  // useEffect(() => {
-  //   //caso1: trae TODOS los datos cargados
-  //   if (props.id !== null) {
-  //     // setIsDisabled(true);
-  //   } else {
-  //     //caso2: carga SOLO los campos
-  //     //habilita campo
-  //     // setIsDisabled(false);
-  //     //deja campo vacio, no hace falta recorrer, sobresbribe todo los fields en vacios
-  //     //   for (let i in props) {
-  //     // setInitValue([{ name: toString(i), value: null }]);
-  //     setInitValue([{ name: "empty", value: null }]);
-  //     //   }
-  //   }
-  // }, [props]);
-
-  const changeForm = (e) => {
-    //posible uso en el futuro
-  };
-  const areObjectPropertiesUndefined = (object) => {
-    const propertyNames = Object.keys(object);
-    return propertyNames.every(
-      (property) => typeof object[property] === "undefined"
-    );
-  };
-
-  const register = (e) => {
-    //guardado de datos, sin validaciones
-    message.loading("Guardando..", 1, () => {
-      // Object.keys(e).length === 0
-      areObjectPropertiesUndefined(e)
-        ? sessionStorage.setItem("prognosis", JSON.stringify(null))
-        : sessionStorage.setItem("prognosis", JSON.stringify(e));
-
-      message.success("Guardado con exito!");
-      // setIsDisabled(true);
-    });
-    console.log(e);
-  };
-
+  const [flag, setFlag] = useState(prognosis ||  '');
+  // console.log(flag);
   const [responses, setResponses] = useState(
-    JSON.parse(sessionStorage.getItem("prognosis")) || {}
+    JSON.parse(sessionStorage.getItem("prognosis")) || flag
   );
   useEffect(() => {
     sessionStorage.setItem("prognosis", JSON.stringify(responses));
   }, [responses]);
-  console.log(responses);
   const handleTextResponseChange = (name, value) => {
     setResponses({
       ...responses,
@@ -94,12 +52,11 @@ export default function Prognosis(props) {
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
           <Form
             layout="horizontal"
-            labelCol={{ sm: { span: 8 }, xs: { span: 5 } }}
+            labelCol={{ sm: { span: 10 }, xs: { span: 5 } }}
             wrapperCol={wrapper}
             // onFinish={register}
             className="stepForm"
             // onChange={changeForm}
-            fields={initValue}
           >
             <Col>
               <Form.Item

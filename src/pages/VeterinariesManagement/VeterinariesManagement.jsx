@@ -13,8 +13,7 @@ import {
   Spin,
   message,
 } from "antd";
-import { NodeIndexOutlined } from "@ant-design/icons";
-import SyncDisabledOutlinedIcon from "@mui/icons-material/SyncDisabledOutlined";
+import { NodeIndexOutlined, DisconnectOutlined } from "@ant-design/icons";
 import {
   getVetsByVetOwnerId,
   registerTemporalAssociation,
@@ -101,7 +100,7 @@ export default function VeterinariesManagement() {
       }
       finalData.push({
         key: vet.vet.id,
-        matricula: vet.veterinaryData.veterinary.mp,
+        mp: vet.veterinaryData.veterinary.mp,
         name: vet.veterinaryData.person.name,
         lastName: vet.veterinaryData.person.lastName,
         phone: vet.veterinaryData.person.phone,
@@ -109,12 +108,14 @@ export default function VeterinariesManagement() {
         regent: regent[0],
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular">
+            <Tooltip placement="top" title="Desvincular Veterinario">
               <Button
-                type="link"
-                className="appTableButton"
-                icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}
-              ></Button>
+                shape="circle"
+                size="large"
+                className="margin-right"
+              >
+                <DisconnectOutlined />
+              </Button>
             </Tooltip>
           ) : null,
         id: vet.vet.id,
@@ -128,7 +129,7 @@ export default function VeterinariesManagement() {
     var finalData = [];
     associations.forEach((association) => {
       finalData.push({
-        matricula: association.coveterinaryData.veterinary.mp,
+        mp: association.coveterinaryData.veterinary.mp,
         name: association.coveterinaryData.person.name,
         lastName: association.coveterinaryData.person.lastName,
         phone: association.coveterinaryData.person.phone,
@@ -136,12 +137,14 @@ export default function VeterinariesManagement() {
         address: association.vetData.vet.address,
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular">
+            <Tooltip placement="top" title="Desvincular Veterinario Regente">
               <Button
-                type="link"
-                className="appTableButton"
-                icon={<SyncDisabledOutlinedIcon></SyncDisabledOutlinedIcon>}
-              ></Button>
+                shape="circle"
+                size="large"
+                className="margin-right"
+              > 
+              <DisconnectOutlined />
+              </Button>
             </Tooltip>
           ) : null,
       });
@@ -239,12 +242,12 @@ export default function VeterinariesManagement() {
     }
   };
 
-    const hideModal = () => {
-        setIsModalVetOwner(false);
-        setGeneratedCode(false);
-        setIsModalRegent(false);
-        window.location.replace(''); 
-    };
+  const hideModal = () => {
+    setIsModalVetOwner(false);
+    setGeneratedCode(false);
+    setIsModalRegent(false);
+    window.location.replace("");
+  };
 
   const refreshMP = (e) => {
     setSearchedVeterinaryData(null);

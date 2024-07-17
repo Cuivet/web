@@ -13,15 +13,15 @@ import {
   Spin,
   message,
 } from "antd";
-import { NodeIndexOutlined } from "@ant-design/icons";
+import { FolderOutlined, FormOutlined, NodeIndexOutlined } from "@ant-design/icons";
 import {
   registerTemporalAssociation,
   getAllByVeterinaryId,
 } from "../../services/pet_association.service";
 import { getTutorDataByDni } from "../../services/tutor.service";
 import AvatarSearch from "../../components/AvatarSearch";
-import FolderOpenOutlined from "@mui/icons-material/FolderOpenOutlined";
-import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
+// import FolderOpenOutlined from "@mui/icons-material/FolderOpenOutlined";
+// import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
 import { raceService } from "../../services/race.service";
 import { specieService } from "../../services/specie.service";
 import { Link } from "react-router-dom";
@@ -101,7 +101,7 @@ export default function PetsManagement() {
       title: "ID Mascota",
       dataIndex: "id",
       defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
+      sorter: (a, b) => a.id - b.id,
       responsive: ["md"],
     },
     {
@@ -118,19 +118,19 @@ export default function PetsManagement() {
     {
       title: "DNI Tutor",
       dataIndex: "dni",
-      sorter: (a, b) => a.address.length - b.address.length,
+      sorter: (a, b) => a.dni - b.dni,
       responsive: ["sm"],
     },
     {
       title: "Especie",
       dataIndex: "especie",
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
+      sorter: (a, b) => a.especie.length - b.especie.length,
       // responsive: ['md']
     },
     {
       title: "Raza",
       dataIndex: "raza",
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
+      sorter: (a, b) => a.raza.length - b.raza.length,
       // responsive: ['md']
     },
     {
@@ -140,25 +140,29 @@ export default function PetsManagement() {
       //   responsive: ["md"],
       render: (_, record) => (
         <>
-          <Link
+          {/* <Link
             to={"/clinical-records-management"}
-            className="admin-sider__item"
-          >
+            // className="admin-sider__item"
+          > */}
             <Tooltip placement="top" title="Ver Historial Clínico">
               <Button
-                type="link"
-                className="appTableButton"
-                icon={<FolderOpenOutlined />}
-              ></Button>
+                shape="circle"
+                size="large"
+                className="margin-right"
+                // icon={}
+              ><FolderOutlined /></Button>
             </Tooltip>
-          </Link>
-          <Link to={"/consultation"} className="admin-sider__item">
+          {/* </Link> */}
+          <Link to={"/consultation"} 
+          className="admin-sider__item"
+          >
             <Tooltip placement="top" title="Registrar nueva consulta">
               <Button
-                type="link"
-                className="appTableButton"
-                icon={<ContentPasteOutlinedIcon />}
-              ></Button>
+                shape="circle"
+                size="large"
+                className="margin-right"
+                // icon={<ContentPasteOutlinedIcon />}
+              ><FormOutlined /></Button>
             </Tooltip>
           </Link>
         </>
@@ -186,13 +190,13 @@ export default function PetsManagement() {
     });
   };
 
-    const hideModal = () => {
-        setIsModalOpen(false);
-        setGeneratedCode(false);
-        setSearchedTutorData(null);
-        setTutorDni(null);
-        window.location.replace('');
-    };
+  const hideModal = () => {
+    setIsModalOpen(false);
+    setGeneratedCode(false);
+    setSearchedTutorData(null);
+    setTutorDni(null);
+    window.location.replace("");
+  };
 
   const refreshDni = (e) => {
     setSearchedTutorData(null);

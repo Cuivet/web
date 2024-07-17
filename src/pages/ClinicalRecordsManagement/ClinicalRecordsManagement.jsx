@@ -80,19 +80,22 @@ export default function ClinicalRecordsManagement() {
     {
       title: "Código de Ficha",
       dataIndex: "clinicalRecordId",
-      defaultSortOrder: "descend",
+      defaultSortOrder: "descend",      
+      onFilter: (value, record) => record.clinicalRecordId.includes(value),
+      filterSearch: true,
+      // width: "30%",
       responsive: ["md"],
-      sorter: (a, b) => a.age - b.age,
+      sorter: (a, b) => a.clinicalRecordId - b.clinicalRecordId,
     },
     {
       title: "Paciente",
       dataIndex: "petName",
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.petName.length - b.petName.length,
     },
     {
       title: "Veterinaria",
       dataIndex: "vetName",
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
+      sorter: (a, b) => a.vetName.length - b.vetName.length,
       // responsive: ['sm']
     },
     {
@@ -115,7 +118,7 @@ export default function ClinicalRecordsManagement() {
     {
       title: "Fecha",
       dataIndex: "date",
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
+      sorter: (a, b) => new Date(a.date) - new Date(b.date),
       // responsive: ['md']
     },
     {
@@ -132,7 +135,12 @@ export default function ClinicalRecordsManagement() {
           </Tooltip>
           {progressObject.percentage === 100 ? (
             <Tooltip placement="top" title="Ver la Ficha Clínica">
-              <Button shape="circle" type="dashed" size="large" className="margin-right">
+              <Button
+                shape="circle"
+                type="dashed"
+                size="large"
+                className="margin-right"
+              >
                 <EyeOutlined />
               </Button>
             </Tooltip>
@@ -181,6 +189,7 @@ export default function ClinicalRecordsManagement() {
       state: { clinicalRecordId: clinicalRecordId, petId: null },
     });
   }
+  const filterClinicalRecordId = (e) => {};
 
   return (
     <>
@@ -194,7 +203,11 @@ export default function ClinicalRecordsManagement() {
 
       <Row gutter={[16, 16]}>
         <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input placeholder="Código de la ficha clinica" />
+          <Input
+            placeholder="Código de la ficha clinica"
+            allowClear
+            onChange={filterClinicalRecordId}
+          />
         </Col>
         <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
           <Select

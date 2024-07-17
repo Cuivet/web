@@ -13,7 +13,6 @@ import {
   Typography,
 } from "antd";
 import {
-  SaveOutlined,
   ContainerOutlined,
   EyeOutlined,
 } from "@ant-design/icons";

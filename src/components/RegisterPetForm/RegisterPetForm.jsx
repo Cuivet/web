@@ -22,6 +22,7 @@ import { petSizeService } from "../../services/pet_size.service";
 import { hairColorService } from "../../services/hair_color.service";
 import { hairLengthService } from "../../services/hair_length.service";
 import storage from "../../firebaseConfig";
+import locale from 'antd/lib/date-picker/locale/es_ES';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import "./RegisterPetForm.scss";
 
@@ -351,6 +352,7 @@ export default function RegisterPetForm(props) {
         <Col span={24}>
           <Form.Item>
             <DatePicker
+              locale={locale}
               disabledDate={disabledDate}
               name="dateBirth"
               value={pet.birth}
@@ -417,6 +419,7 @@ export default function RegisterPetForm(props) {
         <Col span={24}>
           <Form.Item>
             <DatePicker
+              locale={locale}
               disabledDate={disabledDate}
               name="castrationDate"
               value={pet.castrationDate}

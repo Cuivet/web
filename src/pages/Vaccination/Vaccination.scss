@@ -1,5 +1,15 @@
 @import "../../scss/index.scss";
 
-.ant-table-row-expand-icon:focus, .ant-table-row-expand-icon:hover {
-    color: $primary-color-hover;
-};
+.ant-table-row-expand-icon:focus,
+.ant-table-row-expand-icon:hover {
+  color: $primary-color-hover;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus + .ant-checkbox-inner{
+  border-color: $primary-color-hover;
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: $secondary-color;
+  border-color: $secondary-color;
+}

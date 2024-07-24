@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Row,
   Col,
@@ -18,12 +18,15 @@ import {
   InputNumber,
   DatePicker,
   Popconfirm,
+  Checkbox,
 } from "antd";
 import {
   DeleteOutlined,
   SettingTwoTone,
   InfoCircleOutlined,
   WarningOutlined,
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
 } from "@ant-design/icons";
 import moment from "moment";
 import AvatarSearch from "../../components/AvatarSearch";
@@ -42,6 +45,7 @@ import {
   deleteVaccination,
 } from "../../services/vaccination.service";
 import { getAllByVeterinaryId } from "../../services/pet_association.service";
+import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -60,11 +64,11 @@ export default function Vaccination() {
   const [species, setSpecies] = useState([]);
   const [isFetchData, setIsFetchData] = useState(false);
   const [isInit, setIsInit] = useState(false);
-  const [responses, setResponses] = useState(null);
   const [petData, setPetData] = useState([]);
   const [vaccinationData, setVaccinationData] = useState([]);
   const [form] = Form.useForm();
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const { selectedVetId } = useContext(VetContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,13 +94,16 @@ export default function Vaccination() {
     getAllByVeterinaryId(profile.veterinary.id).then((associations) => {
       generatePetData(associations);
     });
+    // findAllByVeterinaryId(profile.veterinary.id).then((vaccination) => {
+    //   console.log(vaccination);
+    // });
   };
 
   const generatePetData = (associations) => {
     let finalData = [];
     associations.forEach((association) => {
       finalData.push({
-        key: association.pet.id, //( association.pet.id).toString(),
+        key: association.pet.id,
         id: association.pet.id,
         name: association.pet.name,
         tutorName:
@@ -115,17 +122,17 @@ export default function Vaccination() {
         generatePetVaccinationData(association.pet.id, response);
       });
     });
-    console.log('tabla1: ',finalData);
+    // console.log("tabla1: ", finalData);
     setPetData(finalData);
   };
 
   const generatePetVaccinationData = (petId, vaccinations) => {
     let finalData = [];
-    console.log("vaccinations: ", vaccinations);
+    // console.log("vaccinations: ", vaccinations);
     vaccinations.forEach((vaccination) => {
       finalData.push({
-        key: vaccination.id,//(vaccination.petId).toString(),
-        petId: petId,
+        key: vaccination.id,
+        petId: petId === vaccination.petId ? petId : null,
         id: vaccination.id,
         placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
         drug: drugs.find((drug) => drug.id === vaccination.drugId).name,
@@ -135,6 +142,7 @@ export default function Vaccination() {
             drugs.find((drug) => drug.id === vaccination.drugId).drugTypeId
         ).name,
         weight: vaccination.weight,
+        signed: vaccination.signed,
         nextDate:
           vaccination.nextDate === null
             ? "-"
@@ -142,7 +150,7 @@ export default function Vaccination() {
         observation: vaccination.observation,
       });
     });
-    console.log('tabla2: ',finalData);
+    console.log("tabla2: ", finalData);
     // setVaccinatioData(finalData);
     setVaccinationData((prevData) => [...prevData, ...finalData]);
   };
@@ -215,10 +223,6 @@ export default function Vaccination() {
     sessionStorage.removeItem("petId");
     setIsModalOpen(false);
     window.location.replace("");
-    // setGeneratedCode(false);
-    // setSearchedTutorData(null);
-    // setTutorDni(null);
-    // window.location.replace("");
   };
 
   const refreshDni = (e) => {
@@ -245,55 +249,22 @@ export default function Vaccination() {
       });
   };
 
-  function generatePetOptions(pets) {
+  const generatePetOptions = (pets) => {
     var renderPetOptions = [];
     pets.forEach(function eachPet(pet) {
       renderPetOptions.push(<Option key={pet.id}>{pet.name}</Option>);
     });
     return renderPetOptions;
-  }
+  };
   const refreshSelectedPet = (value) => {
     setSelectedPetId(value);
     sessionStorage.setItem("petId", JSON.stringify(value));
   };
 
   const handleItemTreatmentChange = (field, value, id) => {
-    // console.log(field, value, id);
-    // setResponses((prevState) => {
-      // const treatmentIndex = prevState.diagnosisItemTreatments.findIndex(
-      //   (item) => item.id === id + 1
-      // );
-
-      if (field === "drugTypeId") {
-        onDrugTypeChange(Number(value));
-      }
-
-      // if (treatmentIndex !== -1) {
-      //   // Si el tratamiento existe, lo modificamos
-      //   const updatedTreatments = [...prevState.diagnosisItemTreatments];
-      //   updatedTreatments[treatmentIndex][field] = value;
-
-      //   return {
-      //     ...prevState,
-      //     diagnosisItemTreatments: updatedTreatments,
-      //   };
-      // } else {
-      //   // Si no existe, creamos uno nuevo
-      //   const newTreatment = {
-      //     id: id + 1, // Ajusta según tu necesidad
-      //     diagnosisItemId: null,
-      //     [field]: value, // El campo que cambió
-      //   };
-
-      //   return {
-      //     ...prevState,
-      //     diagnosisItemTreatments: [
-      //       ...prevState.diagnosisItemTreatments,
-      //       newTreatment,
-      //     ],
-      //   };
-      // }
-    // });
+    if (field === "drugTypeId") {
+      onDrugTypeChange(Number(value));
+    }
   };
 
   const createVaccination = (values) => {
@@ -303,8 +274,11 @@ export default function Vaccination() {
       drugTypeId: Number(values.drugTypeId),
       placementDate: new Date().toISOString(),
       weight: values.weight,
+      signed: values.signed === undefined ? false : values.signed,
       nextDate: values.nextDate === undefined ? null : moment(values.nextDate),
       observation: values.observation === undefined ? null : values.observation,
+      veterinaryId: profile.veterinary.id,
+      vetId: selectedVetId,
     };
     // console.log("Received values of form: ", values);
     // console.log("New vaccination: ", newVaccination);
@@ -319,7 +293,6 @@ export default function Vaccination() {
         console.log(error);
         message.error(error.response.data);
       });
-
   };
   const confirm = (id) => {
     message.success("Vacunación borrada");
@@ -328,12 +301,11 @@ export default function Vaccination() {
   };
 
   const expandedRowRender = (pet) => {
-    console.log('pet', pet);
     const columns = [
       {
-        title:'Id',
-        dataIndex:'id',
-        key:'id',
+        title: "Id",
+        dataIndex: "id",
+        key: "id",
         sorter: (a, b) => a.id - b.id,
         width: 50,
         responsive: ["sm"],
@@ -341,32 +313,36 @@ export default function Vaccination() {
       {
         title: "Fecha",
         dataIndex: "placementDate",
-        key:'placementDate',
+        key: "placementDate",
         defaultSortOrder: "descend",
-        sorter: (a, b) => new Date(a.placementeDate) - new Date(b.placementeDate), 
+        sorter: (a, b) => {
+          const dateA = moment(a.placementDate, "DD/MM/YYYY");
+          const dateB = moment(b.placementDate, "DD/MM/YYYY");
+          return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+        },
         // width: 120,
         // responsive: ["sm"],
       },
       {
         title: "Tipo de Droga",
         dataIndex: "drugType",
-        key: 'drugType',
+        key: "drugType",
         sorter: (a, b) => a.drugType.length - b.drugType.length,
         width: 150,
       },
-      { 
+      {
         title: "Droga",
         dataIndex: "drug",
-        key: 'drug',
+        key: "drug",
         sorter: (a, b) => a.drug.length - b.drug.length,
         // width: 100,
         // responsive: ["xs"],
       },
-      
+
       {
         title: "Peso (Kg)",
         dataIndex: "weight",
-        key: 'weight',
+        key: "weight",
         sorter: (a, b) => a.weight - b.weight,
         // responsive: ["xs"],
         // align: "center",
@@ -375,18 +351,43 @@ export default function Vaccination() {
       {
         title: "Proxima Vacuna",
         dataIndex: "nextDate",
-        key: 'nextDate',
-        responsive: ["xs"],
-        sorter: (a, b) => new Date(a.nextDate) - new Date(b.nextDate), 
-        // responsive: ["md"],
+        key: "nextDate",
+        // responsive: ["sm"],
+        sorter: (a, b) => {
+          const dateA = moment(a.nextDate, "DD/MM/YYYY");
+          const dateB = moment(b.nextDate, "DD/MM/YYYY");
+          return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+        },
+        responsive: ["sm"],
       },
       {
         title: "Observaciones",
         dataIndex: "observation",
-        key: 'observation',
+        key: "observation",
         responsive: ["sm"],
         ellipsis: true,
-
+      },
+      {
+        title: "Firma",
+        dataIndex: "signed",
+        key: "signed",
+        width: 70,
+        align: "center",
+        render: (text, record) => (
+          <>
+            {record.signed ? (
+              <CheckCircleTwoTone
+                style={{ fontSize: 20 }}
+                twoToneColor={"#52c41a"}
+              />
+            ) : (
+              <CloseCircleTwoTone
+                style={{ fontSize: 20 }}
+                twoToneColor={"#f5222d"}
+              />
+            )}
+          </>
+        ),
       },
       {
         title: "Acciones",
@@ -394,8 +395,8 @@ export default function Vaccination() {
         fixed: "right",
         align: "center",
         // width: 50,
-          // responsive: ["md"],
-        render: (_, record, index) => (          
+        // responsive: ["md"],
+        render: (_, record, index) => (
           <>
             <Tooltip placement="top" title="Borrar la vacuna">
               <Popconfirm
@@ -421,7 +422,13 @@ export default function Vaccination() {
     );
 
     return (
-      <Table columns={columns} dataSource={petVaccinations} pagination={false} size="small" />
+      <Table
+        columns={columns}
+        dataSource={petVaccinations}
+        pagination={false}
+        bordered
+        size="small"
+      />
     );
   };
 
@@ -468,7 +475,7 @@ export default function Vaccination() {
     <>
       <Row align="middle">
         <Col span={22}>
-          <Title className="appTitle">Vacunacion</Title>
+          <Title className="appTitle">Vacunación</Title>
         </Col>
         <Col span={2}>
           <Tooltip title="Agregar nueva vacuna" placement="right">
@@ -513,24 +520,6 @@ export default function Vaccination() {
               console.log("Validate Failed:", info);
             });
         }}
-        // footer={[
-        //   <Button
-        //     type="default"
-        //     onClick={hideModal}
-        //     className="register-form__button-cancel-modal"
-        //   >
-        //     Cancelar
-        //   </Button>,
-        //   <Button
-        //     type="primary"
-        //     htmlType="submit"
-        //     disabled={findPet}
-        //     className="stepSave"
-        //     // onClick={createVaccination(values)}
-        //   >
-        //     Guardar
-        //   </Button>,
-        // ]}
       >
         {findPet ? (
           <Card
@@ -725,6 +714,20 @@ export default function Vaccination() {
                 <Select placeholder="Seleccione la droga" allowClear>
                   {renderDrugs(selectedDrugTypeId)}
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item
+                name={"signed"}
+                valuePropName="checked"
+                label="Firma: "
+                tooltip={{
+                  title:
+                    "Este firmado no reemplaza el firmado del carnet de vacunacion.",
+                  icon: <InfoCircleOutlined />,
+                }}
+              >
+                <Checkbox size="large">Desea firmar esta vacunacion?</Checkbox>
               </Form.Item>
             </Col>
             <Col>

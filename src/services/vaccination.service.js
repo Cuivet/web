@@ -6,7 +6,8 @@ export var vaccinationService = {
   registerVaccination: registerVaccination,
   updateVaccination: updateVaccination,
   findAllByPetId: findAllByPetId,
-  deleteVaccination: deleteVaccination
+  deleteVaccination: deleteVaccination,
+  findAllByVeterinaryId: findAllByVeterinaryId
 };
 
 async function findAll() {
@@ -76,6 +77,21 @@ export function findAllByPetId(petId) {
   return axios({
     method: "get",
     url: `${basePATH}/vaccination/allByPetId/${petId}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+export function findAllByVeterinaryId(veterinaryId) {
+  var axios = require("axios");
+  return axios({
+    method: "get",
+    url: `${basePATH}/vaccination/allByVeterinaryId/${veterinaryId}`,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

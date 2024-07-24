@@ -241,6 +241,7 @@ export default function VetsAssociations() {
       <Modal
         title="Asociarse con una clínica veterinaria"
         visible={isModalOpen}
+        onCancel={hideModal}
         footer={[
           <Button
             type="default"
@@ -301,7 +302,8 @@ export default function VetsAssociations() {
             <Row>
               <Col span={24}>
                 <Input
-                  name="phone"
+                  name="code"
+                  autoComplete="off"
                   placeholder="Código de asociación"
                   onChange={refreshCode}
                 />

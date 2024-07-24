@@ -21,6 +21,7 @@ import {
   WarningOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import moment from "moment";
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -54,7 +55,7 @@ export default function ClinicalRecordsManagement() {
         petName: clinicalRecord.pet.name,
         vetName: clinicalRecord.vet.name,
         progressObject: calculateProgress(clinicalRecord),
-        date: clinicalRecord.createdAt.slice(0, 10),
+        date: moment(clinicalRecord.createdAt).format("DD/MM/YYYY"), //clinicalRecord.createdAt.slice(0, 10),
         indexIdForButton: clinicalRecord.id,
       });
     });
@@ -80,7 +81,7 @@ export default function ClinicalRecordsManagement() {
     {
       title: "Código de Ficha",
       dataIndex: "clinicalRecordId",
-      defaultSortOrder: "descend",      
+      defaultSortOrder: "descend",
       onFilter: (value, record) => record.clinicalRecordId.includes(value),
       filterSearch: true,
       // width: "30%",
@@ -118,13 +119,18 @@ export default function ClinicalRecordsManagement() {
     {
       title: "Fecha",
       dataIndex: "date",
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      sorter: (a, b) => {
+        const dateA = moment(a.date, "DD/MM/YYYY");
+        const dateB = moment(b.date, "DD/MM/YYYY");
+        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+      },
       // responsive: ['md']
     },
     {
       title: "Acciones",
       dataIndex: "indexIdForButton",
       // responsive: ['md'],
+      align: "center",
       fixed: "right",
       render: (_, { indexIdForButton, progressObject }) => (
         <>

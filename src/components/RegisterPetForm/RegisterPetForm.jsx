@@ -343,6 +343,7 @@ export default function RegisterPetForm(props) {
             <Input
               type="text"
               name="name"
+              autoComplete="off"
               value={pet.name}
               placeholder="Nombre"
               className="register-pet-form__input"
@@ -497,6 +498,7 @@ export default function RegisterPetForm(props) {
             <Input
               type="text"
               name="aspects"
+              autoComplete="off"
               value={pet.aspects}
               placeholder="Otras características físicas"
               className="register-pet-form__input"

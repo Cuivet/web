@@ -7,7 +7,7 @@ import {
   notification,
   Spin,
   Modal,
-  Upload,  
+  Upload,
 } from "antd";
 import {
   emailValidation,
@@ -338,6 +338,7 @@ export default function RegisterForm(props) {
         <Input
           prefix={<MailOutlined className="site-form-item-icon" />}
           type="email"
+          autoComplete="off"
           name="email"
           onChange={inputValidation}
           value={input.email}
@@ -377,6 +378,7 @@ export default function RegisterForm(props) {
           prefix={<UserOutlined className="site-form-item-icon" />}
           type="text"
           name="name"
+          autoComplete="off"
           onChange={inputValidation}
           value={input.name}
           placeholder="Nombre"
@@ -389,6 +391,7 @@ export default function RegisterForm(props) {
           prefix={<UserOutlined className="site-form-item-icon" />}
           type="text"
           name="lastName"
+          autoComplete="off"
           onChange={inputValidation}
           value={input.lastName}
           placeholder="Apellido"
@@ -424,6 +427,7 @@ export default function RegisterForm(props) {
         <Input
           prefix={<HomeOutlined className="site-form-item-icon" />}
           type="text"
+          autoComplete="off"
           name="address"
           onChange={inputValidation}
           value={input.address}
@@ -472,7 +476,7 @@ export default function RegisterForm(props) {
                 onSuccess("ok", null);
               }, 0)
             }
-            style={{ marginBottom: '2%'}}
+            style={{ marginBottom: "2%" }}
             listType="picture-card"
             fileList={fileList}
             onChange={onChange}

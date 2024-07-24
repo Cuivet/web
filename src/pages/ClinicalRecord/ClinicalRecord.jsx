@@ -12,13 +12,19 @@ import {
   Tooltip,
   Spin,
 } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import moment from "moment";
 import { clinicalRecordService } from "../../services/clinical_record.service";
+import { findAllByPetId } from "../../services/vaccination.service";
+import { drugTypeService } from "../../services/drug_type.service";
+import { drugService } from "../../services/drug.service";
 import ConsultationHeader from "../../components/ConsultationHeader/ConsultationHeader";
 import ConsultationVisits from "../../components/ConsultationVisits/ConsultationVisits";
 import ConsultationSteps from "../../components/ConsultationSteps/ConsultationSteps";
+import VaccinationModal from "../../components/VaccinationModal/VaccinationModal";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
+import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
 import "./ClinicalRecord.scss";
 
 const { Title } = Typography;
@@ -31,6 +37,11 @@ export default function ClinicalRecord() {
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [newVisit, setNewVisit] = useState(null);
   const [flag, setFlag] = useState(true);
+  const { selectedVetId } = useContext(VetContext);
+  const [showVaccination, setShowVaccination] = useState(false);
+  const [vaccinationData, setVaccinationData] = useState(null);
+  const [drugs, setDrugs] = useState([]);
+  const [drugTypes, setDrugTypes] = useState([]);
 
   //renderiza los pasos completados en tags en el Header
   const getStepsDone = (cRecord) => {
@@ -51,8 +62,43 @@ export default function ClinicalRecord() {
     });
   };
 
+  const generatePetVaccinationData = (vaccinations) => {
+    let finalData = [];
+    // console.log("vaccinations: ", vaccinations);
+    vaccinations.forEach((vaccination) => {
+      finalData.push({
+        key: vaccination.id,
+        petId: vaccination.petId,
+        id: vaccination.id,
+        placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
+        drug: drugs.find((drug) => drug.id === vaccination.drugId).name,
+        drugType: drugTypes.find(
+          (drugType) =>
+            drugType.id ===
+            drugs.find((drug) => drug.id === vaccination.drugId).drugTypeId
+        ).name,
+        weight: vaccination.weight,
+        signed: vaccination.signed,
+        nextDate:
+          vaccination.nextDate === null
+            ? "-"
+            : moment(vaccination.nextDate).format("DD/MM/YYYY"),
+        observation: vaccination.observation,
+      });
+    });
+    // console.log("tabla2: ", finalData);
+    // setVaccinatioData(finalData);
+    setVaccinationData(finalData);
+  };
+
   useEffect(() => {
     let profile = JSON.parse(sessionStorage.getItem("profile"));
+    drugTypeService.findAll().then((response) => {
+      setDrugTypes(response);
+    });
+    drugService.findAll().then((response) => {
+      setDrugs(response);
+    });
     //busca una empezada
     if (location.state.clinicalRecordId) {
       clinicalRecordService
@@ -70,7 +116,7 @@ export default function ClinicalRecord() {
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,
-        vetId: 1, //traer si tiene, debe traer la clinica a la que pertence, pegar al endpoint
+        vetId: selectedVetId, //el vetId seleccionado en el MenuTop
       };
       clinicalRecordService
         .registerClinicalRecord(cRecord)
@@ -82,6 +128,9 @@ export default function ClinicalRecord() {
           message.error(error.response.data);
         });
     }
+    findAllByPetId(clinicalRecord?.pet.id).then((res) => {
+      generatePetVaccinationData(res);
+    });
     setNewVisit({
       id: null,
       clinicalRecordId: null,
@@ -154,7 +203,9 @@ export default function ClinicalRecord() {
           complementaryStudies: data.complementaryStudies,
         },
         diagnosis: { id: null, diagnosisItems: [data.diagnosisItems] },
-        prognosis: Object.defineProperties(data.prognosis, { id: {value: null} }),
+        prognosis: Object.defineProperties(data.prognosis, {
+          id: { value: null },
+        }),
       };
 
       console.log(cRecord);
@@ -319,6 +370,30 @@ export default function ClinicalRecord() {
       str.toUpperCase()
     );
   }
+  const showVaccinationModal = () => {
+    console.log(vaccinationData);
+    setShowVaccination(true);
+  };
+
+  const handleCancel = () => {
+    setShowVaccination(false);
+  };
+  const IconLink = ({ src, text }) => (
+    <Button
+      type="link"
+      style={{ border: "none" }}
+      className="vaccination"
+      onClick={showVaccinationModal}
+    >
+      <img
+        className="example-link-icon"
+        style={{ marginRight: "5px" }}
+        src={src}
+        alt={text}
+      />
+      {text}
+    </Button>
+  );
 
   return (
     <>
@@ -334,15 +409,6 @@ export default function ClinicalRecord() {
                   type="link"
                   shape="circle"
                   className="goBackButton"
-                  // style={{
-                  //   border: "none",
-                  //   display: "flex",
-                  //   justifyContent: "center",
-                  //   alignItems: "center",
-                  //   fontSize: "2vw",
-                  //   marginTop: "6px",
-                  //   marginLeft: "1%",
-                  // }}
                   ghost
                   size="large"
                   onClick={goBack}
@@ -390,6 +456,7 @@ export default function ClinicalRecord() {
                   style: { backgroundColor: "#f56a00" },
                   // size: "small",
                 }}
+                c
               >
                 <Row>
                   <Col span={24}>
@@ -406,6 +473,18 @@ export default function ClinicalRecord() {
                     ) : (
                       <Spin />
                     )}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} style={{ marginTop: "2%" }}>
+                    <div>
+                      <IconLink
+                        src={
+                          "https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg"
+                        }
+                        text=" Vacunas"
+                      />
+                    </div>
                   </Col>
                 </Row>
               </PageHeader>
@@ -441,6 +520,11 @@ export default function ClinicalRecord() {
               </ClinicalRecordProvider> */}
             </Col>
           </Row>
+          <VaccinationModal
+            visible={showVaccination}
+            onCancel={handleCancel}
+            data={vaccinationData}
+          />
         </>
       ) : (
         <Row justify="center">

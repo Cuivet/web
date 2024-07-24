@@ -384,7 +384,7 @@ export default function VeterinariesManagement() {
                 htmlType="submit"
                 type="primary"
                 onClick={generateCode}
-                className="register-form_button-ok-modal"
+                className="stepSave"
                 disabled={isLoading || !searchedVeterinaryData}
               >
                 Generar

@@ -8,6 +8,7 @@ import MedicalServicesOutlinedIcon from '@mui/icons-material/MedicalServicesOutl
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import ContentPasteOutlinedIcon from '@mui/icons-material/ContentPasteOutlined';
 import FolderOpenOutlined from '@mui/icons-material/FolderOpenOutlined';
+import MedicationOutlinedIcon from '@mui/icons-material/MedicationOutlined';
 import './MenuSider.scss';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import {getAllByRegentId} from '../../services/vet.service';
@@ -102,6 +103,12 @@ export default function MenuSider(props){
                             <Link to={"/clinical-record-menu"} className='admin-sider__item'>                      
                                 <Icon><ContentPasteOutlinedIcon /></Icon>
                                 <span className="nav-text"> Ficha Clínica </span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="Vaccination">
+                            <Link to={"/vaccination"} className='admin-sider__item'>                      
+                                <Icon><MedicationOutlinedIcon /></Icon>
+                                <span className="nav-text"> Vacunación </span>
                             </Link>
                         </Menu.Item>
 

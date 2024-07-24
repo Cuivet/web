@@ -17,7 +17,7 @@ import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
 import { EyeOutlined, DownloadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import locale from 'antd/lib/date-picker/locale/es_ES';
+import locale from "antd/lib/date-picker/locale/es_ES";
 import { complementaryStudiyTypeService } from "../../services/complementary_study_type.service";
 
 const { Title } = Typography;
@@ -60,7 +60,11 @@ export default function Studies() {
       title: "Fecha",
       dataIndex: "date",
       defaultSortOrder: "ascend",
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      sorter: (a, b) => {
+        const dateA = moment(a.date, "DD/MM/YYYY");
+        const dateB = moment(b.date, "DD/MM/YYYY");
+        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+      },
     },
     {
       title: "Mascota",
@@ -93,19 +97,15 @@ export default function Studies() {
       render: (_, record) => (
         <>
           <Tooltip placement="top" title="Ver Estudio">
-            <Button
-              shape="circle"
-              size="large"
-              className="margin-right"
-            ><EyeOutlined /></Button>
+            <Button shape="circle" size="large" className="margin-right">
+              <EyeOutlined />
+            </Button>
           </Tooltip>
 
           <Tooltip placement="top" title="Descargar Estudio">
-            <Button
-              shape="circle"
-              size="large"
-              className="margin-right"
-            ><DownloadOutlined /></Button>
+            <Button shape="circle" size="large" className="margin-right">
+              <DownloadOutlined />
+            </Button>
           </Tooltip>
         </>
       ),
@@ -302,28 +302,28 @@ export default function Studies() {
             ]}
           >
             <Select
-                placeholder={"Estudios"}
-                allowClear
-                // mode="multiple"
-                // labelInValue
-                showSearch
-                name={"complementaryStudyTypeId"}
-                className="select-before full-width"
-                style={{ width: "100%" }}
-                // value={null}
-                onChange={(value) => setComplementaryStudyTypeId(value)}
-                options={setOptions(studies)}
-                // maxTagCount={'responsive'}
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  (option?.label ?? "").includes(input)
-                }
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-              />
+              placeholder={"Estudios"}
+              allowClear
+              // mode="multiple"
+              // labelInValue
+              showSearch
+              name={"complementaryStudyTypeId"}
+              className="select-before full-width"
+              style={{ width: "100%" }}
+              // value={null}
+              onChange={(value) => setComplementaryStudyTypeId(value)}
+              options={setOptions(studies)}
+              // maxTagCount={'responsive'}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+            />
           </Form.Item>
           <Form.Item
             name={"observation"}

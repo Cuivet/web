@@ -73,31 +73,28 @@ export default function Diagnosis(props) {
   }
 
   function renderTreatmentOptions(treatmentTypeId, treatmentOptionId) {
-    let list = [];
-    if (selectedTreatmentTypeId !== null || treatmentTypeId !== null) {
-      treatmentOptions.forEach((treatmentOption) => {
-        //renderizado de opciones cuando selecciona el tipo de tratamiento
-        if (treatmentOption.treatmentTypeId === selectedTreatmentTypeId) {
-          list.push(
-            <Select.Option value={treatmentOption.id}>
-              {treatmentOption.name}
-            </Select.Option>
-          );
-        }
-        //renderizado de opciones cuando viene cargado
-        if (
-          treatmentOption.treatmentTypeId === treatmentTypeId &&
-          treatmentOptionId === treatmentOption.id
-        ) {
-          list.push(
-            <Select.Option value={treatmentOption.id}>
-              {treatmentOption.name}
-            </Select.Option>
-          );
-        }
-      });
+    if (!treatmentTypeId && treatmentOptionId) {
+      treatmentTypeId = getTreatmentTypeIdByOptionId(treatmentOptionId);
     }
-    return list;
+
+    if (!treatmentTypeId) return null;
+
+    const filteredOptions = treatmentOptions.filter(
+      (option) => option.treatmentTypeId === treatmentTypeId
+    );
+
+    return filteredOptions.map((option) => (
+      <Select.Option key={option.id} value={option.id}>
+        {option.name}
+      </Select.Option>
+    ));
+  }
+
+  function getTreatmentTypeIdByOptionId(treatmentOptionId) {
+    const treatmentOption = treatmentOptions.find(
+      (option) => option.id === treatmentOptionId
+    );
+    return treatmentOption ? treatmentOption.treatmentTypeId : null;
   }
 
   function renderDrugs() {
@@ -127,7 +124,7 @@ export default function Diagnosis(props) {
     sessionStorage.setItem("diagnosisItems", JSON.stringify(responses));
     if (Object.keys(responses?.diagnosisItemTreatments).length > 1) {
       setShowMore(true);
-    };
+    }
   }, [responses]);
 
   const handleItemTreatmentChange = (field, value, id) => {
@@ -275,9 +272,13 @@ export default function Diagnosis(props) {
                             placeholder={"Seleccione tipo de tratamiento"}
                             disabled={disabled}
                             name="treatmentTypeId"
-                            defaultValue={
+                            value={
                               responses.diagnosisItemTreatments[i]
-                                ?.treatmentTypeId || undefined
+                                ?.treatmentTypeId ||
+                              getTreatmentTypeIdByOptionId(
+                                responses.diagnosisItemTreatments[i]
+                                  ?.treatmentOptionId
+                              )
                             }
                             onChange={(value) =>
                               handleItemTreatmentChange(
@@ -313,6 +314,10 @@ export default function Diagnosis(props) {
                             placeholder={"Tratamiento"}
                             disabled={disabled}
                             allowClear
+                            notFoundContent={
+                              !!selectedTreatmentTypeId &&
+                              "Seleccione un tipo de tratamiento"
+                            }
                           >
                             {renderTreatmentOptions(
                               responses.diagnosisItemTreatments[i]

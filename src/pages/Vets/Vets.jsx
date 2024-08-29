@@ -3,7 +3,7 @@ import { getVetsByVetOwnerId } from '../../services/vet.service';
 import {Row, Col, Typography, Tooltip, Button, Drawer, Divider} from 'antd';
 import{PlusCircleOutlined} from '@ant-design/icons';
 import clinica from '../../assets/img/jpg/clinica.jpg';
-import CardPet from "../../components/CardPet";
+import CardVet from "../../components/CardVet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 
 const {Title}= Typography;
@@ -35,7 +35,7 @@ export default function Vets(){
         if (vets.length) {
             vets.forEach(vet => {
                 renderVetList.push(                     
-                    <CardPet key={vet.vet.id} item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={vet.vet.photo ? vet.vet.photo : clinica} description={vet.vet.address}></CardPet>
+                    <CardVet key={vet.vet.id} item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={vet.vet.photo ? vet.vet.photo : clinica} description={vet.vet.address}></CardVet>
                 )
             });
         };

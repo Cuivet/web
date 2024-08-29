@@ -47,7 +47,7 @@ export default function ClinicalRecord() {
   const getStepsDone = (cRecord) => {
     const excludedProperties = [
       "id",
-      "CREATEDAT",
+      "createdAt",
       "veterinaryData",
       "tutorData",
       "pet",
@@ -55,11 +55,23 @@ export default function ClinicalRecord() {
       "visits",
     ];
 
-    return Object.keys(cRecord).filter((property) => {
-      return (
-        cRecord[property] !== null && !excludedProperties.includes(property)
-      );
-    });
+    const translations = {
+      reasonConsultation: "motivo Consulta",
+      review: "revisión",
+      anamnesis: "anamnesis",
+      physicalExam: "examen Fisico",
+      presumptiveDiagnosis: "diagnostico Presuntivo",
+      diagnosis: "diagnostico",
+      prognosis: "pronostico",
+    };
+  
+    return Object.keys(cRecord)
+      .filter((property) => {
+        return (
+          cRecord[property] !== null && !excludedProperties.includes(property)
+        );
+      })
+      .map((property) => translations[property] || property);
   };
 
   const generatePetVaccinationData = (vaccinations) => {
@@ -195,14 +207,29 @@ export default function ClinicalRecord() {
               raceId: clinicalRecord.pet.raceId,
               specieId: clinicalRecord.pet.specieId,
             },
-        anamnesis: { id: null, anamnesisItems: data.anamnesisItems },
+        anamnesis: {
+          id:
+            clinicalRecord.anamnesis.id !== null
+              ? clinicalRecord.anamnesis.id
+              : null,
+          anamnesisItems: data.anamnesisItems,
+        },
         physicalExam: data.physicalExam,
         presumptiveDiagnosis: {
-          id: null,
+          id:
+            clinicalRecord.presumptiveDiagnosis.id !== null
+              ? clinicalRecord.presumptiveDiagnosis.id
+              : null,
           presumptiveDiagnosisItems: data.presumptiveDiagnosisItems,
           complementaryStudies: data.complementaryStudies,
         },
-        diagnosis: { id: null, diagnosisItems: [data.diagnosisItems] },
+        diagnosis: {
+          id:
+            clinicalRecord.diagnosis.id !== null
+              ? clinicalRecord.diagnosis.id
+              : null,
+          diagnosisItems: [data.diagnosisItems],
+        },
         prognosis: Object.defineProperties(data.prognosis, {
           id: { value: null },
         }),
@@ -369,6 +396,7 @@ export default function ClinicalRecord() {
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
+    console.log(stepsDone);
   }
   const showVaccinationModal = () => {
     console.log(vaccinationData);
@@ -482,7 +510,7 @@ export default function ClinicalRecord() {
                         src={
                           "https://gw.alipayobjects.com/zos/rmsportal/NbuDUAuBlIApFuDvWiND.svg"
                         }
-                        text=" Vacunas"
+                        text=" Carnet de Vacunación"
                       />
                     </div>
                   </Col>

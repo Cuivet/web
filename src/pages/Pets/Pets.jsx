@@ -39,6 +39,7 @@ export default function Pets() {
         <CardPet
           showPet={displayPet}
           item={pet.id}
+          key={pet.id}
           title={pet.name}
           popTitle={"¿Está seguro que desea borrar la mascota?"}
           img={pet.photo ? pet.photo : paw}

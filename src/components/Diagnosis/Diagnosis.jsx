@@ -17,6 +17,7 @@ import {
   PlusOutlined,
   LockFilled,
   UnlockFilled,
+  EyeOutlined,
 } from "@ant-design/icons";
 import { treatmentTypeService } from "../../services/treatment_type.service";
 import { treatmentOptionService } from "../../services/treatment_option.service";
@@ -127,7 +128,7 @@ export default function Diagnosis(props) {
     sessionStorage.setItem("diagnosisItems", JSON.stringify(responses));
     if (Object.keys(responses?.diagnosisItemTreatments).length > 1) {
       setShowMore(true);
-    };
+    }
   }, [responses]);
 
   const handleItemTreatmentChange = (field, value, id) => {
@@ -434,7 +435,7 @@ export default function Diagnosis(props) {
                         sm: { span: 20, offset: 2 },
                       }}
                     >
-                      <Button
+                      {/* <Button
                         type="dashed"
                         onClick={() => add()}
                         block
@@ -443,7 +444,25 @@ export default function Diagnosis(props) {
                         {showMore
                           ? "Ver mas tratamientos"
                           : "Agregar tratamientos"}
-                      </Button>
+                      </Button> */}
+                      <Tooltip
+                        title={
+                          showMore
+                            ? "Ver mas tratamientos"
+                            : "Agregar tratamientos"
+                        }
+                      >
+                        <Button
+                          type="primary"
+                          size="large"
+                          shape="circle"
+                          onClick={() => {
+                           add();
+                          }}
+                        >
+                          {showMore ? <EyeOutlined /> : <PlusOutlined />}
+                        </Button>
+                      </Tooltip>
                     </Form.Item>
                   </Col>
                 </>

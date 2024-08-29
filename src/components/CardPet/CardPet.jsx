@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Avatar, Popconfirm, message, Tooltip } from "antd";
+import { Card, Avatar, Button, Popconfirm, message, Tooltip, Spin } from "antd";
 import Meta from "antd/lib/card/Meta";
 import Icon, {
   EyeOutlined,
@@ -23,32 +23,91 @@ export default function CardPet(props) {
   const [drugs, setDrugs] = useState([]);
   const [drugTypes, setDrugTypes] = useState([]);
   const [isInit, setIsInit] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
-  if (!isInit) {
-    refreshComponent();
-    setIsInit(true);
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      const drugTypesResponse = await drugTypeService.findAll();
+      const drugsResponse = await drugService.findAll();
 
-  function refreshComponent() {
-    console.log(item);
-    drugTypeService.findAll().then((response) => {
-        setDrugTypes(response);
-      });
-      drugService.findAll().then((response) => {
-        setDrugs(response);
-      });
-      console.log(item)
-      findAllByPetId(item).then((response) => {
-        generatePetVaccinationData(response);
-      });
+      setDrugTypes(drugTypesResponse);
+      setDrugs(drugsResponse);
+      setIsInit(true);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (drugs.length > 0 && drugTypes.length > 0 && isInit) {
+      refreshComponent();
+    }
+  }, [drugs, drugTypes, isInit]);
+
+  const refreshComponent = async () => {
+    setLoadingData(true);
+    try {
+      const response = await findAllByPetId(item);
+      await generatePetVaccinationData(response);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  const generatePetVaccinationData = async (vaccinations) => {
+    const veterinaryCache = {};
+    
+    const finalData = await Promise.all(
+      vaccinations.map(async (vaccination) => {
+        let veterinaryName = veterinaryCache[vaccination.veterinaryId];
+        let vetName = "";
+        if (!veterinaryName) {
+          const response = await veterinaryAssociationService.getAllDataByRegentOrVeterinary(
+            vaccination.veterinaryId
+          );
+          console.log(response[0].veterinaryData.person.name);
+          veterinaryName =
+            response[0].veterinaryData.person.name +
+            " " +
+            response[0].veterinaryData.person.lastName;
+          vetName = response[0].vetData.vet.name;
+          veterinaryCache[vaccination.veterinaryId] = veterinaryName;
+        }
+
+        return {
+          key: vaccination.id,
+          petId: vaccination.petId,
+          id: vaccination.id,
+          placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
+          drug: drugs.find((drug) => drug.id === vaccination.drugId)?.name,
+          drugType: drugTypes.find(
+            (drugType) =>
+              drugType.id ===
+              drugs.find((drug) => drug.id === vaccination.drugId)?.drugTypeId
+          )?.name,
+          weight: vaccination.weight,
+          signed: vaccination.signed,
+          nextDate:
+            vaccination.nextDate === null
+              ? "-"
+              : moment(vaccination.nextDate).format("DD/MM/YYYY"),
+          observation: vaccination.observation,
+          veterinaryName: veterinaryName,
+          vetName: vetName
+        };
+      })
+    );
+    console.log('finalData: ',finalData);
+    setVaccinationData(finalData);
   };
 
 
-//   useEffect(() => {
-    
-//   }, [item]); // Dependencies array with item ensures the useEffect runs when item changes
+  const confirm = () => {
+    message.success(title + " borrada exitosamente.");
+    deletePet(item);
+    window.location.replace("");
+  };
 
-  function AvatarGroup() {
+  const AvatarGroup = () => {
     const group = [];
     if (Array.isArray(avatar)) {
       for (let i = 0; i < avatar.length; i++) {
@@ -72,43 +131,6 @@ export default function CardPet(props) {
       );
     }
     return group;
-  }
-
-  const confirm = () => {
-    message.success(title + " borrada exitosamente.");
-    deletePet(item);
-    window.location.replace("");
-  };
-
-  const generatePetVaccinationData = (vaccinations) => {
-    let finalData = [];
-    vaccinations.forEach((vaccination) => {
-      finalData.push({
-        key: vaccination.id,
-        petId: vaccination.petId,
-        id: vaccination.id,
-        placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
-        drug: drugs.find((drug) => drug.id === vaccination.drugId).name,
-        drugType: drugTypes.find(
-          (drugType) =>
-            drugType.id ===
-            drugs.find((drug) => drug.id === vaccination.drugId).drugTypeId
-        ).name,
-        weight: vaccination.weight,
-        signed: vaccination.signed,
-        nextDate:
-          vaccination.nextDate === null
-            ? "-"
-            : moment(vaccination.nextDate).format("DD/MM/YYYY"),
-        observation: vaccination.observation,
-      });
-      veterinaryAssociationService
-        .getAllByVeterinaryId(vaccination.veterinaryId)
-        .then((response) => {
-          console.log("veterinary: ", response);
-        });
-    });
-    setVaccinationData(finalData);
   };
 
   const showVaccinationModal = () => {
@@ -125,6 +147,7 @@ export default function CardPet(props) {
 
   return (
     <>
+      {/* <> */}
       <Card
         className="appCard"
         hoverable
@@ -132,12 +155,26 @@ export default function CardPet(props) {
         cover={<img alt="required text" src={img}></img>}
         actions={[
           <Tooltip placement="top" title="Ver/Editar Perfil">
-            <EyeOutlined key="edit" onClick={displayPet} />
+            <Button
+              type="link"
+              size="large"
+              style={{ border: "none" }}
+              icon={<EyeOutlined key="edit" />}
+              onClick={displayPet}
+            />
           </Tooltip>,
-          <Tooltip placement="top" title="Vacunaciones">
-            <Icon>
-              <MedicationOutlinedIcon onClick={showVaccinationModal} />
-            </Icon>
+          <Tooltip placement="top" title="Carnet de vacunación">
+            <Button
+              type="link"
+              size="large"
+              style={{ border: "none" }}
+              icon={
+                <Icon>
+                  <MedicationOutlinedIcon />
+                </Icon>
+              }
+              onClick={showVaccinationModal}
+            />
           </Tooltip>,
           <Popconfirm
             title={popTitle}
@@ -153,7 +190,12 @@ export default function CardPet(props) {
               />
             }
           >
-            <DeleteOutlined key="delete" />
+            <Button
+              type="link"
+              size="large"
+              style={{ border: "none" }}
+              icon={<DeleteOutlined key="delete" />}
+            />
           </Popconfirm>,
         ]}
       >
@@ -168,11 +210,15 @@ export default function CardPet(props) {
           description={description}
         />
       </Card>
-      <VaccinationModal
-        visible={showVaccination}
-        onCancel={handleCancel}
-        data={vaccinationData}
-      />
+      {loadingData ? (
+        <Spin tip="Cargando datos de vacunación..." />
+      ) : (
+        <VaccinationModal
+          visible={showVaccination}
+          onCancel={handleCancel}
+          data={vaccinationData}
+        />
+      )}
     </>
   );
 }

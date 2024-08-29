@@ -51,7 +51,7 @@ export default function Landing() {
           </div>
           <div className="footer">
             <p style={{ fontWeight: "bold", fontSize: "1vw" }}>
-              CUIVET © 2023 Created by Proyecto Final
+              CUIVET © 2024 Created by Proyecto Final
             </p>
           </div>
         </div>

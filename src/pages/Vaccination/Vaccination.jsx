@@ -102,10 +102,12 @@ export default function Vaccination() {
   const generatePetData = (associations) => {
     let finalData = [];
     associations.forEach((association) => {
+      console.log(association);
       finalData.push({
         key: association.pet.id,
         id: association.pet.id,
         name: association.pet.name,
+        sex: association.pet.isMale === 1 ? "Macho" : "Hembra",
         tutorName:
           association.tutorData.person.lastName +
           " " +
@@ -324,7 +326,7 @@ export default function Vaccination() {
         // responsive: ["sm"],
       },
       {
-        title: "Tipo de Droga",
+        title: "Profilaxis",
         dataIndex: "drugType",
         key: "drugType",
         sorter: (a, b) => a.drugType.length - b.drugType.length,
@@ -469,13 +471,20 @@ export default function Vaccination() {
       sorter: (a, b) => a.raza.length - b.raza.length,
       // responsive: ['md']
     },
+    {
+      title: "Sexo",
+      dataIndex: "sex",
+      key: "sex",
+      sorter: (a, b) => a.sex.length - b.sex.length,
+      // responsive: ['md']
+    },
   ];
 
   return (
     <>
       <Row align="middle">
         <Col span={22}>
-          <Title className="appTitle">Vacunación</Title>
+          <Title className="appTitle">Vacunación y otras profilaxis</Title>
         </Col>
         <Col span={2}>
           <Tooltip title="Agregar nueva vacuna" placement="right">
@@ -676,7 +685,7 @@ export default function Vaccination() {
             <Col>
               <Form.Item
                 name={"drugTypeId"}
-                label="Tipo de Droga: "
+                label="Profilaxis: "
                 tooltip={{
                   title: "clasificacion ",
                   icon: <InfoCircleOutlined />,

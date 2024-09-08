@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Table,
   Button,
@@ -6,14 +6,14 @@ import {
   Row,
   Divider,
   Input,
-  Select,
   Typography,
   Tooltip,
   Modal,
   Spin,
+  Space,
   message,
 } from "antd";
-import { FolderOutlined, FormOutlined, NodeIndexOutlined } from "@ant-design/icons";
+import { SearchOutlined, FormOutlined, NodeIndexOutlined } from "@ant-design/icons";
 import {
   registerTemporalAssociation,
   getAllByVeterinaryId,
@@ -25,8 +25,7 @@ import AvatarSearch from "../../components/AvatarSearch";
 import { raceService } from "../../services/race.service";
 import { specieService } from "../../services/specie.service";
 import { Link } from "react-router-dom";
-const { Option } = Select;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export default function PetsManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +42,123 @@ export default function PetsManagement() {
   const [species, setSpecies] = useState([]);
   const [isFetchData, setIsFetchData] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Buscar ${dataIndex}`}
+          value={`${selectedKeys[0] || ""}`}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Buscar
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filtrar
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Cerrar
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Text mark style={{ padding: 0, backgroundColor: "#ffc069" }}>
+          {text ? text.toString() : ""}
+        </Text>
+      ) : (
+        // <Highlighter
+        //   highlightStyle={{
+        //     backgroundColor: '#ffc069',
+        //     padding: 0,
+        //   }}
+        //   searchWords={[searchText]}
+        //   autoEscape
+        //   textToHighlight={text ? text.toString() : ''}
+        // />
+        text
+      ),
+  });
 
   if (!isInit && isFetchData) {
     refreshComponent();
@@ -107,17 +223,20 @@ export default function PetsManagement() {
     {
       title: "Nombre Mascota",
       dataIndex: "name",
+      ...getColumnSearchProps("name"),
       sorter: (a, b) => a.name.length - b.name.length,
     },
     {
       title: "Tutor",
       dataIndex: "tutorName",
+      ...getColumnSearchProps("tutorName"),
       sorter: (a, b) => a.tutorName.length - b.tutorName.length,
       // responsive: ['sm']
     },
     {
       title: "DNI Tutor",
       dataIndex: "dni",
+      ...getColumnSearchProps("dni"),
       sorter: (a, b) => a.dni - b.dni,
       responsive: ["sm"],
     },
@@ -144,16 +263,16 @@ export default function PetsManagement() {
             to={"/clinical-records-management"}
             // className="admin-sider__item"
           > */}
-            <Tooltip placement="top" title="Ver Historial Clínico">
+            {/* <Tooltip placement="top" title="Ver Historial Clínico">
               <Button
                 shape="circle"
                 size="large"
                 className="margin-right"
                 // icon={}
               ><FolderOutlined /></Button>
-            </Tooltip>
+            </Tooltip> */}
           {/* </Link> */}
-          <Link to={"/consultation"} 
+          <Link to={"/clinical-record-menu"} 
           className="admin-sider__item"
           >
             <Tooltip placement="top" title="Registrar nueva consulta">
@@ -234,9 +353,8 @@ export default function PetsManagement() {
           </Tooltip>
         </Col>
       </Row>
-
+{/* 
       <Divider orientation="left">Filtros</Divider>
-
       <Row gutter={[16, 16]}>
         <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
           <Input placeholder="ID de la mascota..." />
@@ -264,7 +382,7 @@ export default function PetsManagement() {
             <Option value="https://">Gato</Option>
           </Select>
         </Col>
-      </Row>
+      </Row> */}
 
       <Divider orientation="left"></Divider>
       <Table

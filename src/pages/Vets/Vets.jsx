@@ -65,9 +65,12 @@ export default function Vets(){
                 <RegisterVetForm>
                 </RegisterVetForm>
             </Drawer>
-            <Row>
+            {vets.length ? (
+                <Row>
                 <Vet></Vet>
-            </Row>
+                </Row>
+            ) : <> Aún no tienes clínicas veterinarias registradas </>
+            }
         </>
     );
 };

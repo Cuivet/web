@@ -1,5 +1,5 @@
 //MARTINA
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Meta from "antd/lib/card/Meta";
 import {
   Col,
@@ -29,7 +29,7 @@ import {
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
 const { Title } = Typography;
 
-export default function VetsAssociations() {
+export default function VetsAssociations(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedCode, setGeneratedCode] = useState(false);
   const [completeTemporalAssociation, setCompleteTemporalAssociation] =
@@ -89,44 +89,43 @@ export default function VetsAssociations() {
     }
   };
 
-    const createAssociation = () => {
-        if (generatedCode[0]==="R") {
-            createRegentAssociation();
-        } else {
-            createVeterinaryAssociation();
-        }
+  const createAssociation = () => {
+    if (generatedCode[0] === "R") {
+      createRegentAssociation();
+    } else {
+      createVeterinaryAssociation();
+    }
+  };
+
+  const createRegentAssociation = () => {
+    const regentAssociation = {
+      id: completeTemporalAssociation.vetData.vet.id,
+      name: completeTemporalAssociation.vetData.vet.name,
+      phone: completeTemporalAssociation.vetData.vet.phone,
+      address: completeTemporalAssociation.vetData.vet.address,
+      vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId,
+      veterinaryId: profile.veterinary.id,
     };
-    
-    const createRegentAssociation = () => {
-        const regentAssociation = {
-            id: completeTemporalAssociation.vetData.vet.id,
-            name: completeTemporalAssociation.vetData.vet.name,
-            phone: completeTemporalAssociation.vetData.vet.phone,
-            address: completeTemporalAssociation.vetData.vet.address,
-            vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId, //para que usa todos estos datos??
-            veterinaryId: profile.veterinary.id,
-        };
-        registerRegentOnVet(regentAssociation)
-        .then(response =>{
-            message.success('Asociación establecida exitosamente');
-            refreshComponent();
-        });
-    }
-    
-    const createVeterinaryAssociation = () => {
-        const veterinaryAssociations = [];
-        const veterinaryAssociation = {
-            vetId: completeTemporalAssociation.vetData.vet.id,
-            veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id
-        }
-        veterinaryAssociations.push(veterinaryAssociation);
-        veterinaryAssociationService.register(veterinaryAssociations)
-            .then(response => {
-                message.success('Asociación establecida exitosamente');
-                refreshComponent();
-                window.location.replace('');
-            });
-    }
+    registerRegentOnVet(regentAssociation).then(() => {
+      message.success("Asociación establecida exitosamente");
+      setIsInit(false);
+      window.location.replace("");
+    });
+  };
+
+  const createVeterinaryAssociation = () => {
+    const veterinaryAssociations = [];
+    const veterinaryAssociation = {
+      vetId: completeTemporalAssociation.vetData.vet.id,
+      veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id,
+    };
+    veterinaryAssociations.push(veterinaryAssociation);
+    veterinaryAssociationService.register(veterinaryAssociations).then(() => {
+      message.success("Asociación establecida exitosamente");
+      setIsInit(false);
+      window.location.replace("");
+    });
+  };
 
   function refreshComponent() {
     veterinaryAssociationService
@@ -147,7 +146,7 @@ export default function VetsAssociations() {
           ? true
           : false;
       renderAssociationCards.push(
-        <Col xs={{span: 24 }} lg={{span: 6 }}>
+        <Col xs={{ span: 24 }} lg={{ span: 6 }}>
           <Badge.Ribbon
             text={isRegent ? "Regente" : "Co-Veterinario"}
             color={isRegent ? "pink" : "purple"}

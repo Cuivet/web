@@ -94,7 +94,7 @@ export default function MenuTop(props) {
           <>
             <div className="menu-top__right-select-container">
               <label htmlFor="clinic-select" className="menu-top__right-label">
-                Selecciona una clínica:
+                Seleccione una clínica:
               </label>
               <Select
                 id="clinic-select"

@@ -56,7 +56,6 @@ export default function VeterinariesAssociations() {
       deleteAssociationById(assId);
     });
     message.success("Profesional desasociado correctamente", 5);
-    // refreshComponent();
     window.location.replace("");
   };
 
@@ -95,42 +94,10 @@ export default function VeterinariesAssociations() {
     register(petAssociations).then((response) => {
       message.success("Asociación establecida exitosamente");
       window.location.replace("");
-      // refreshComponent();
     });
   };
 
   function refreshComponent() {
-    // getAllByTutorId(profile.tutor.id).then((associations) => {
-    //   let groupedAssociations = [];
-    //   associations.forEach((association) => {
-    //     const associationsFilterByEachTutorAndVet = associations.filter(
-    //       (as) =>
-    //         as.tutorData.tutor.id === association.tutorData.tutor.id &&
-    //         as.vetData.id === association.vetData.id
-    //     );
-    //     const petList = associationsFilterByEachTutorAndVet.map((as) => as.pet);
-    //     const asIdsList = associationsFilterByEachTutorAndVet.map(
-    //       (as) => as.associationId
-    //     );
-    //     if (
-    //       !groupedAssociations.find(
-    //         (as) =>
-    //           as.tutorData.tutor.id === association.tutorData.tutor.id &&
-    //           as.vetData.id === association.vetData.id
-    //       )
-    //     ) {
-    //       groupedAssociations.push({
-    //         veterinaryData: association.veterinaryData,
-    //         vetData: association.vetData,
-    //         tutorData: association.tutorData,
-    //         pets: petList,
-    //         associationsIds: asIdsList,
-    //       });
-    //     }
-    //   });
-    //   setGroupedAssociations(groupedAssociations);
-    // });
-
     getAllByTutorId(profile.tutor.id).then((associations) => {
       let groupedAssociations = [];
 
@@ -140,19 +107,21 @@ export default function VeterinariesAssociations() {
 
         let existingGroup;
 
-        if (vetData.id) {
-          // Buscar si ya existe un grupo con el mismo tutor y veterinario
+        if (vetData && vetData.id) {
+          // Buscar si ya existe un grupo con el mismo tutor, veterinario y vetData
           existingGroup = groupedAssociations.find(
             (group) =>
               group.tutorData.tutor.id === tutorData.tutor.id &&
-              group.vetData.id === vetData.id
+              group.vetData.id === vetData.id &&
+              group.veterinaryData.veterinary.id ===
+                veterinaryData.veterinary.id
           );
         } else {
-          // Buscar si ya existe un grupo con el mismo veterinario
+          // Buscar si ya existe un grupo con el mismo veterinario sin vetData
           existingGroup = groupedAssociations.find(
             (group) =>
               group.veterinaryData.veterinary.id ===
-              veterinaryData.veterinary.id
+                veterinaryData.veterinary.id && !group.vetData.id
           );
         }
 
@@ -164,7 +133,7 @@ export default function VeterinariesAssociations() {
           // Si el grupo no existe, crear uno nuevo
           groupedAssociations.push({
             veterinaryData,
-            vetData,
+            vetData: vetData || {}, // Asegurarse de que vetData no sea undefined
             tutorData,
             pets: [pet],
             associationsIds: [associationId],
@@ -249,9 +218,6 @@ export default function VeterinariesAssociations() {
           <Meta
             className=""
             title={
-              // association.veterinaryData.person.name +
-              // " " +
-              // association.veterinaryData.person.lastName
               !association.vetData.id
                 ? "Atención Particular de: "
                 : "Clínica Veterinaria: "

@@ -305,37 +305,28 @@ export default function VeterinariesManagement() {
     <>
       <Row align="middle">
         {!isOwner ? (
-          selectedVet?.key ? (
-            <>
-              <Col span={22}>
-                <Title className="appTitle">
-                  Gestión de Co-Veterinarios para la clínica:{" "}
-                  {selectedVet?.children}
-                </Title>
-              </Col>
-              <Col span={2}>
-                <Tooltip title="Asociar Co-Veterinarios" placement="right">
-                  <Button
-                    type="link"
-                    className="appButton"
-                    size="large"
-                    icon={<NodeIndexOutlined />}
-                    onClick={showModalRegent}
-                    hidden={!selectedVet?.value}
-                  />
-                </Tooltip>
-              </Col>
-            </>
-          ) : (
-            <Title className="appTitle">
-              No puede gestionar veterinarios para "Atencion Particular"
-            </Title>
-          )
+          <>
+            <Col span={22}>
+              <Title className="appTitle">Asociación de Co-Veterinarios</Title>
+            </Col>
+            <Col span={2}>
+              <Tooltip title="Asociar Co-Veterinarios" placement="right">
+                <Button
+                  type="link"
+                  className="appButton"
+                  size="large"
+                  icon={<NodeIndexOutlined />}
+                  onClick={showModalRegent}
+                  hidden={!selectedVet?.value}
+                />
+              </Tooltip>
+            </Col>
+          </>
         ) : (
           <>
             <Col span={22}>
               <Title className="appTitle">
-                Gestión de Veterinarios Regentes en Clínicas Veterinarias
+                Asociación de Veterinarios Regentes en Clínicas Veterinarias
               </Title>
             </Col>
             <Col span={2}>
@@ -354,9 +345,7 @@ export default function VeterinariesManagement() {
       </Row>
       <Divider orientation="left"></Divider>
 
-      {selectedVet?.key && (
-        <Table columns={columns} dataSource={data} scroll={{ x: 500 }} />
-      )}
+      <Table columns={columns} dataSource={data} scroll={{ x: 500 }} />
 
       {/* modal para owner */}
       <Modal

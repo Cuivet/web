@@ -46,7 +46,6 @@ export default function PetsManagement() {
   const [isFetchData, setIsFetchData] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const { selectedVet } = useContext(MyContext);
-  console.log(selectedVet);
 
   function refreshComponent() {
     if (!selectedVet) {
@@ -298,10 +297,10 @@ export default function PetsManagement() {
       <Row align="middle">
         <Col span={22}>
           <Title className="appTitle">
-            Mis pacientes asociados para la clínica:{" "}
-            {selectedVet?.key != null
-              ? selectedVet.children
-              : "Atención Particular"}
+            Mis pacientes asociados para
+            {selectedVet?.value
+              ? ` la clínica: ${selectedVet.children}`
+              : ": Atención Particular"}
           </Title>
         </Col>
         <Col span={2}>

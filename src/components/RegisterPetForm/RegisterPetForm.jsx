@@ -22,7 +22,7 @@ import { petSizeService } from "../../services/pet_size.service";
 import { hairColorService } from "../../services/hair_color.service";
 import { hairLengthService } from "../../services/hair_length.service";
 import storage from "../../firebaseConfig";
-import locale from 'antd/lib/date-picker/locale/es_ES';
+import locale from "antd/lib/date-picker/locale/es_ES";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import "./RegisterPetForm.scss";
 
@@ -152,7 +152,8 @@ export default function RegisterPetForm(props) {
     ) {
       return notification["error"]({
         message: "Todos los campos son obligatorios",
-        description: "Debe completar todos los campos para poder registrarse",
+        description:
+          "Debe completar todos los campos para poder registrar una Mascota",
         placement: "top",
       });
     }
@@ -341,11 +342,12 @@ export default function RegisterPetForm(props) {
         <Col span={24}>
           <Form.Item>
             <Input
+              addonBefore="Nombre mascota: "
               type="text"
               name="name"
               autoComplete="off"
               value={pet.name}
-              placeholder="Nombre"
+              placeholder="introduzca el nombre"
               className="register-pet-form__input"
             />
           </Form.Item>
@@ -496,6 +498,7 @@ export default function RegisterPetForm(props) {
         <Col span={24}>
           <Form.Item>
             <Input
+              addonBefore="Observacion: "
               type="text"
               name="aspects"
               autoComplete="off"

@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { numberValidation } from "../../utils/formValidation";
-import { Row, Col, Form, Button, Upload, notification, Input } from "antd";
+import {
+  Row,
+  Col,
+  Form,
+  Button,
+  Upload,
+  notification,
+  Input,
+  Spin,
+} from "antd";
 import ImgCrop from "antd-img-crop";
 import { SaveOutlined } from "@ant-design/icons";
 import { registerVet } from "../../services/vet.service";
@@ -8,25 +17,48 @@ import storage from "../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function RegisterVetForm(props) {
+  const [isInitData, setIsInitData] = useState(false);
+  // const [isFetchData, setIsFetchData] = useState(false);
+  const [vet, setVet] = useState(null);
+  const [formValid, setFormValid] = useState(initFormValid());
   const [fileList, setFileList] = useState([]);
-  const [input, setInput] = useState({
-    name: null,
-    mp: null,
-    phone: null,
-    address: null,
-    photo: null,
-  });
-  const [formValid, setFormValid] = useState({
-    name: false,
-    mp: false,
-    phone: false,
-    address: false,
-  });
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  // console.log(profile);
 
+  if (!isInitData) {
+    initVet();
+    setIsInitData(true);
+  }
+  function initFormValid() {
+    return {
+      name: false,
+      phone: false,
+      address: false,
+    };
+  }
+
+  function initVet() {
+    const vet = props.vet?.vet;
+    console.log(vet);
+    if (vet) {
+      if (vet.photo) {
+        setFileList([
+          { uid: "-1", name: "image.png", status: "done", url: vet.photo },
+        ]);
+      }
+    }
+    setVet({
+      id: vet ? vet.id : null,
+      name: vet ? vet.name : null,
+      phone: vet ? vet.phone : null,
+      address: vet ? vet.address : null,
+      photo: vet ? vet.photo : null,
+      vetOwnerId: profile.vetOwner.id,
+    });
+  }
   const changeForm = (e) => {
-    setInput({
-      ...input,
+    setVet({
+      ...vet,
       [e.target.name]: e.target.value,
     });
   };
@@ -48,18 +80,11 @@ export default function RegisterVetForm(props) {
         [name]: numberValidation(e.target),
       });
     }
-    setInput({ ...input });
+    setVet({ ...vet });
   };
 
   const register = (e) => {
-    const newVet = {
-      name: input.name,
-      mp: null,
-      address: input.address,
-      phone: input.phone,
-      vetOwnerId: profile.vetOwner.id,
-    };
-    if (!input.name || !input.address || !input.phone) {
+    if (!vet.name || !vet.phone || !vet.address) {
       return notification["error"]({
         message: "Todos los campos son obligatorios",
         description:
@@ -67,7 +92,7 @@ export default function RegisterVetForm(props) {
         placement: "top",
       });
     }
-    if (fileList.length > 0 && input.photo == null) {
+    if (fileList.length > 0 && vet.photo == null) {
       const storageRef = ref(storage, `/vets/` + new Date().toString());
       const uploadTask = uploadBytesResumable(
         storageRef,
@@ -85,34 +110,38 @@ export default function RegisterVetForm(props) {
         () => {
           // se cargo la foto, ya tengo el url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            setInput({ ...input, photo: url });
-            newVet.photo = url;
-            registerVet(newVet).then((res) => {
-              resetForm();
-              notification["success"]({
-                message: "Clínica creada correctamente",
-                placement: "top",
-              });
-              window.location.replace("");
-            });
+            // setVet({ ...vet, photo: url });
+            vet.photo = url;
+            uploadVet(vet);
           });
         }
       );
     } else {
-      registerVet(newVet).then((res) => {
-        resetForm();
-        notification["success"]({
-          message: "Clínica creada correctamente",
+      uploadVet(vet);
+    }
+  };
+
+  const uploadVet = (vet) => {
+    console.log("uplaoad: ", vet);
+    registerVet(vet).then((res) => {
+      resetForm();
+      props.registeredVet();
+      if (vet.id) {
+        return notification["success"]({
+          message: "Clínica actualizada correctamente",
           placement: "top",
         });
-        window.location.replace("");
+      }
+      notification["success"]({
+        message: "Clínica creada correctamente",
+        placement: "top",
       });
-    }
+    });
   };
 
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    setInput({ ...input, photo: null });
+    setVet({ ...vet, photo: null });
   };
 
   const onPreview = async (file) => {
@@ -131,72 +160,19 @@ export default function RegisterVetForm(props) {
   };
 
   const resetForm = () => {
-    const inputs = document.getElementsByTagName("input");
-    for (let i = 0; i < inputs.length; i++) {
-      inputs[i].classList.remove("success");
-      inputs[i].classList.remove("error");
-      setInput({
-        name: null,
-        mp: null,
-        address: null,
-      });
-      setFormValid({
-        name: false,
-        mp: false,
-        address: false,
-      });
-    }
+    initVet(null);
+    setFormValid(initFormValid);
   };
 
-  return (
+  return !isInitData ? (
+    <Spin tip="Cargando..." />
+  ) : (
     <Form
       className="register-pet-form"
       onFinish={register}
       onChange={changeForm}
     >
       <Row gutter={16}>
-        <Col span={24}>
-          <Form.Item>
-            <Input
-              type="text"
-              name="name"
-              onChange={inputValidation}
-              value={input.name}
-              autoComplete="off"
-              placeholder="Nombre"
-              className="register-pet-form__input"
-              onSelect={inputValidation}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={24}>
-          <Form.Item>
-            <Input
-              type="number"
-              name="phone"
-              autoComplete="off"
-              onChange={inputValidation}
-              value={input.phone}
-              placeholder="Teléfono"
-              className="register-pet-form__input"
-              onSelect={inputValidation}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={24}>
-          <Form.Item>
-            <Input
-              type="text"
-              name="address"
-              autoComplete="off"
-              onChange={inputValidation}
-              value={input.address}
-              placeholder="Dirección "
-              className="register-pet-form__input"
-              onSelect={inputValidation}
-            />
-          </Form.Item>
-        </Col>
         <Col span={20} offset={4}>
           <Form.Item>
             <ImgCrop rotate>
@@ -218,15 +194,63 @@ export default function RegisterVetForm(props) {
         </Col>
         <Col span={24}>
           <Form.Item>
-            <Button
-              htmlType="submit"
-              className="register-pet-form__button"
-              icon={<SaveOutlined />}
-            >
-              Guardar
-            </Button>
+            <Input
+              addonBefore="Nombre clínica: "
+              type="text"
+              name="name"
+              // onChange={inputValidation}
+              value={vet.name}
+              autoComplete="off"
+              placeholder="introduzca el nombre"
+              className="register-pet-form__input"
+              // onSelect={inputValidation}
+            />
           </Form.Item>
         </Col>
+        <Col span={24}>
+          <Form.Item>
+            <Input
+              addonBefore="Teléfono: "
+              type="number"
+              name="phone"
+              autoComplete="off"
+              // onChange={inputValidation}
+              value={vet.phone}
+              placeholder="introduzca el nómero de teléfono"
+              className="register-pet-form__input"
+              // onSelect={inputValidation}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item>
+            <Input
+              addonBefore="Dirección: "
+              type="text"
+              name="address"
+              autoComplete="off"
+              // onChange={inputValidation}
+              value={vet.address}
+              placeholder="introduzca la dirección"
+              className="register-pet-form__input"
+              // onSelect={inputValidation}
+            />
+          </Form.Item>
+        </Col>
+
+        {props.disabled ? null : (
+          <Col span={24}>
+            <Form.Item>
+              <Button
+                htmlType="submit"
+                className="register-pet-form__button"
+                icon={<SaveOutlined />}
+              >
+                Guardar
+              </Button>
+            </Form.Item>
+          </Col>
+        )}
       </Row>
     </Form>
   );

@@ -50,7 +50,7 @@ export default function Pets() {
     return renderPetList;
   }
 
-  const displayPet = (id) => {
+  const displayPet = (id) => {    
     setPetToDisplay(pets.find((pet) => pet.id === id));
     setDisplayDrawer(true);
   };

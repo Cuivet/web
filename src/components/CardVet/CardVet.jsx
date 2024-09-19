@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Avatar, Popconfirm, message, Tooltip } from "antd";
+import { Card, Avatar, Popconfirm, message, Tooltip, Button } from "antd";
 import Meta from "antd/lib/card/Meta";
 import {
   EyeOutlined,
@@ -44,8 +44,9 @@ export default function CardPet(props) {
     window.location.replace("");
   };
 
-  const displayPet = () => {
-    props.showPet(item);
+  const displayVet = () => {
+    console.log("item: ", item);
+    props.showVet(item);
   };
 
   return (
@@ -56,8 +57,14 @@ export default function CardPet(props) {
         style={{ width: 300 }}
         cover={<img alt="required text" src={img}></img>}
         actions={[
-          <Tooltip placement="top" title="Ver/Editar Perfil">
-            <EyeOutlined key="edit" onClick={displayPet} />
+          <Tooltip placement="top" title="Ver/Editar Clínica">
+            <Button
+              type="link"
+              size="large"
+              style={{ border: "none" }}
+              icon={<EyeOutlined key="edit" />}
+              onClick={displayVet}
+            />
           </Tooltip>,
           <Popconfirm
             title={popTitle}
@@ -73,7 +80,12 @@ export default function CardPet(props) {
               />
             }
           >
-            <DeleteOutlined key="delete" />
+            <Button
+              type="link"
+              size="large"
+              style={{ border: "none" }}
+              icon={<DeleteOutlined key="delete" />}
+            />
           </Popconfirm>,
         ]}
       >

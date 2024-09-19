@@ -154,7 +154,7 @@ export default function CardPet(props) {
         style={{ width: 300 }}
         cover={<img alt="required text" src={img}></img>}
         actions={[
-          <Tooltip placement="top" title="Ver/Editar Perfil">
+          <Tooltip placement="top" title="Ver/Editar Mascota">
             <Button
               type="link"
               size="large"

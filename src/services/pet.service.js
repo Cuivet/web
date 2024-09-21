@@ -23,6 +23,7 @@ export function registerPet(data){
 
 export function getPetsByTutorId(tutorId) {
     var axios = require('axios');
+    console.log(sessionStorage.getItem('token'));
     return axios({
         method: "get",
         url: `${basePATH}/pet/allByTutorId/${tutorId}`,
@@ -39,6 +40,7 @@ export function getPetsByTutorId(tutorId) {
         .catch((err) => {
             return err;
         });
+       
 };
 
 

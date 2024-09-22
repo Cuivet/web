@@ -1,0 +1,18 @@
+@import "../../scss/index.scss";
+
+.studiesButton {
+  color: white;
+  margin-left: 1%;
+
+  button {
+    background-color: gainsboro !important;
+    border-color: gainsboro !important;
+    color: $primary-color-hover !important;
+    
+
+    // &:hover {
+    //   background-color: gainsboro !important;
+    //   // color: $secondary-color!important;
+    // }
+  }
+}

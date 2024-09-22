@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import { Form, Input, Button, Select, notification, Spin, Modal } from 'antd';
+import { Form, Input, Button, Select, notification, Spin, Modal, Upload, Col } from 'antd';
 import { emailValidation, minLengthValidation,numberValidation } from '../../utils/formValidation';
 import { signUpApi, confirmSignUp } from "../../services/user.service";
 import './RegisterForm.scss';
+import ImgCrop from 'antd-img-crop';
 import { LockOutlined, UserOutlined, MailOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined } from "@ant-design/icons";
-
 import Terms from "../Terms/Terms";
 
 export default function RegisterForm(props){
@@ -40,6 +40,7 @@ export default function RegisterForm(props){
     const [confirmationCode, setConfirmationCode] = useState(null);
     const [catchReason, setCatchReason] = useState(null);
     const [vet, setVet] =  useState(false);
+    const [fileList, setFileList] = useState([]);
 
     const changeForm = e =>{
         if(e.target.name === "privacyPolicy"){
@@ -148,19 +149,32 @@ export default function RegisterForm(props){
         }
     }
 
-    const register = e => {
+    const register = async (e) => {
         setIsRegistering(true);
-        const completeProfile = checkFields(); 
-        signUpApi(completeProfile)
-            .then(res => {
+        const completeProfile = checkFields();
+        let file = null; 
+        if (fileList && fileList[0] && fileList[0].originFileObj) {
+            file = fileList[0].originFileObj;
+        } else {
+            console.error('No se encontró un archivo válido en fileList.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+    
+        reader.onload = () => {
+            completeProfile.photo = reader.result;
+            signUpApi(completeProfile)
+            .then((res) => {
                 setIsRegistering(false);
                 setRegisteredUser(res.data);
             })
-            .catch(error => {
+            .catch((error) => {
                 setCatchReason(error.response.data);
                 setIsRegistering(false);
             });
-           
+        };
     };
 
     const confirmRegister = e => {
@@ -189,6 +203,7 @@ export default function RegisterForm(props){
         setVet(false);
         setCatchReason(null);
         setConfirmationCode(null);
+        setFileList([]);
 
         for (let i = 0; i< inputs.length; i++){
             inputs[i].classList.remove("success");
@@ -270,6 +285,25 @@ export default function RegisterForm(props){
         code = code > 9999 ? confirmationCode : code;
         setConfirmationCode(code);
     }
+
+    const onChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+
+    const onPreview = async (file) => {
+        let src = file.url;
+        if (!src) {
+          src = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file.originFileObj);
+            reader.onload = () => resolve(reader.result);
+          });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
     
     return (        
         <Form className="register-form"  onChange={changeForm}>            
@@ -289,7 +323,7 @@ export default function RegisterForm(props){
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} type="text" name="lastName" onChange={inputValidation} value={input.lastName} placeholder="Apellido" className="register-form__input" onSelect={inputValidation}/>
             </Form.Item>
             <Form.Item>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="DNI" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
+                <Input prefix={<IdcardOutlined className="site-form-item-icon" />} type="number" name="dni" value={input.dni} placeholder="DNI" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
             </Form.Item>
             <Form.Item>
                 <Input prefix={<PhoneOutlined className="site-form-item-icon" />} type="number" name="phone" value={input.phone} placeholder="Teléfono" className="register-form__input" onChange={inputValidation}  onSelect={inputValidation} />
@@ -303,7 +337,22 @@ export default function RegisterForm(props){
                     <Select.Option value="veterinary">Veterinario</Select.Option>
                     <Select.Option value="vetOwner">Propietario de Veterinaria</Select.Option>
                 </Select>
-            </Form.Item>  
+            </Form.Item>
+                <Col>
+                    Ingrese una foto de la parte frontal de su DNI
+                    <Form.Item>
+                        <ImgCrop rotate>
+                            <Upload customRequest={({ onSuccess }) => setTimeout(() => { onSuccess("ok", null); }, 0) }
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    onChange={onChange}
+                                    onPreview={onPreview}>
+                                    {fileList.length < 1 && '+ Subir'}
+                            </Upload>
+                        </ImgCrop>
+                    </Form.Item>
+                </Col>
+            
             {
             vet ? 
                 <div> 

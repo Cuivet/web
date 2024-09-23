@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Col,
   Row,
@@ -17,6 +17,8 @@ import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
 import { EyeOutlined, DownloadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import locale from "antd/lib/date-picker/locale/es_ES";
+import { complementaryStudiyTypeService } from "../../services/complementary_study_type.service";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -26,10 +28,25 @@ export default function Studies() {
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generate, setGenerate] = useState(true);
+  const [complementaryStudyTypeId, setComplementaryStudyTypeId] = useState("");
+  const [studies, setStudies] = useState([]);
 
   if (profile.tutor != null) {
     tutor = true;
   }
+  useEffect(() => {
+    const fetchData = async () => {
+      await complementaryStudiyTypeService
+        .findAll()
+        .then((response) => {
+          setStudies(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    fetchData();
+  }, []);
 
   const columns = [
     {
@@ -43,7 +60,11 @@ export default function Studies() {
       title: "Fecha",
       dataIndex: "date",
       defaultSortOrder: "ascend",
-      sorter: (a, b) => a.date - b.date,
+      sorter: (a, b) => {
+        const dateA = moment(a.date, "DD/MM/YYYY");
+        const dateB = moment(b.date, "DD/MM/YYYY");
+        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+      },
     },
     {
       title: "Mascota",
@@ -75,25 +96,22 @@ export default function Studies() {
       fixed: "right",
       render: (_, record) => (
         <>
-          <Tooltip placement="top" title="Ver">
-            <Button
-              type="link"
-              className="appTableButton"
-              icon={<EyeOutlined />}
-            ></Button>
+          <Tooltip placement="top" title="Ver Estudio">
+            <Button shape="circle" size="large" className="margin-right">
+              <EyeOutlined />
+            </Button>
           </Tooltip>
 
-          <Tooltip placement="top" title="Descargar">
-            <Button
-              type="link"
-              className="appTableButton"
-              icon={<DownloadOutlined />}
-            ></Button>
+          <Tooltip placement="top" title="Descargar Estudio">
+            <Button shape="circle" size="large" className="margin-right">
+              <DownloadOutlined />
+            </Button>
           </Tooltip>
         </>
       ),
     },
   ];
+
   const data = [
     {
       key: "1",
@@ -139,6 +157,13 @@ export default function Studies() {
   const disabledDate = (current) => {
     return current && current > moment().endOf("day");
   };
+  const setOptions = (studies) => {
+    let options = [];
+    for (let study of studies) {
+      options.push({ value: study.id, label: study.name });
+    }
+    return options;
+  };
 
   const showStudies = () => {
     setIsModalOpen(true);
@@ -146,9 +171,9 @@ export default function Studies() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const generateChange = e =>{
+  const generateChange = (e) => {
     setGenerate(false);
-  }
+  };
 
   return (
     <>
@@ -179,6 +204,7 @@ export default function Studies() {
         </Col>
         <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 6 }}>
           <DatePicker
+            locale={locale}
             disabledDate={disabledDate}
             name="date"
             placeholder="Fecha de estudio"
@@ -221,11 +247,20 @@ export default function Studies() {
         visible={isModalOpen}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" style={{marginRight:'2%'}} onClick={handleCancel}>
+          <Button
+            key="back"
+            style={{ marginRight: "2%" }}
+            onClick={handleCancel}
+          >
             Cancelar
           </Button>,
           <Link to={"/studies-request"}>
-            <Button key="submit" disabled={generate} className={'stepSave'} type="primary">
+            <Button
+              key="submit"
+              disabled={generate}
+              className={"stepSave"}
+              type="primary"
+            >
               Generar
             </Button>
           </Link>,
@@ -265,21 +300,30 @@ export default function Studies() {
             rules={[
               { required: true, message: "Debe seleccionar un estudio!" },
             ]}
-            
           >
             <Select
-              placeholder="Estudios"
+              placeholder={"Estudios"}
               allowClear
+              // mode="multiple"
+              // labelInValue
               showSearch
-              onChange={generateChange}
+              name={"complementaryStudyTypeId"}
               className="select-before full-width"
               style={{ width: "100%" }}
-            >
-              <Option value={1}>Radiografía</Option>
-              <Option value={2}>Rayos X</Option>
-              <Option value={3}>Particular</Option>
-              <Option value={4}>Ecografía</Option>
-            </Select>
+              // value={null}
+              onChange={(value) => setComplementaryStudyTypeId(value)}
+              options={setOptions(studies)}
+              // maxTagCount={'responsive'}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "").includes(input)
+              }
+              filterSort={(optionA, optionB) =>
+                (optionA?.label ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.label ?? "").toLowerCase())
+              }
+            />
           </Form.Item>
           <Form.Item
             name={"observation"}

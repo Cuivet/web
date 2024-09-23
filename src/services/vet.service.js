@@ -4,7 +4,7 @@ export function registerVet(data){
     var axios = require('axios');
     return axios({
         method: "post",
-        url: `${basePATH}/vet/`,
+        url: `${basePATH}/vet/register`,
         data: data,
         timeout: 1000 * 5, // Wait for 5 seconds
         headers: {

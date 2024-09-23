@@ -1,74 +1,126 @@
-import React, { useState } from 'react';
-import { getVetsByVetOwnerId } from '../../services/vet.service';
-import {Row, Col, Typography, Tooltip, Button, Drawer, Divider} from 'antd';
-import{PlusCircleOutlined} from '@ant-design/icons';
-import clinica from '../../assets/img/jpg/clinica.jpg';
-import CardPet from "../../components/CardPet";
+import React, { useEffect, useState } from "react";
+import { getVetsByVetOwnerId } from "../../services/vet.service";
+import { Row, Col, Typography, Tooltip, Button, Drawer, Divider } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import clinica from "../../assets/img/jpg/clinica.jpg";
+import CardVet from "../../components/CardVet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 
-const {Title}= Typography;
+const { Title } = Typography;
 
-export default function Vets(){
-    const [isInit, setIsInit] = useState(false);
-    const [vets, setVets] = useState([]);
-    const [visible, setVisible] = useState(false);
-    const profile = JSON.parse(sessionStorage.getItem('profile'));
+export default function Vets() {
+  const [isInit, setIsInit] = useState(false);
+  const [isFetchData, setIsFetchData] = useState(false);
+  const [vets, setVets] = useState([]);
+  const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const [displayDrawer, setDisplayDrawer] = useState(false);
+  const [vetToDisplay, setVetToDisplay] = useState(null);
 
-    if (!isInit) {
-        setIsInit(true);
-        getVetsByVetOwnerId(profile.vetOwner.id)
-        .then(response => {
-            setVets(response);
-        });
+  if (!isInit) {
+    setIsInit(true);
+    getVetsByVetOwnerId(profile.vetOwner.id).then((response) => {
+      setVets(response);
+    });
+  }
+
+  const showDrawer = () => {
+    // setVisible(true);
+    setDisplayDrawer(true);
+  };
+
+  const onClose = () => {
+    setVetToDisplay(null);
+    // setVisible(false);
+    setDisplayDrawer(false);
+  };
+  const displayVet = (id) => {
+    setVetToDisplay(vets.find((vet) => vet.vet.id === id));
+    setDisplayDrawer(true);
+  };
+
+  function Vet() {
+    const renderVetList = [];
+    if (vets.length) {
+      vets.forEach((vet) => {
+        renderVetList.push(
+          <CardVet
+            showVet={displayVet}
+            key={vet.vet.id}
+            item={vet.vet.id}
+            title={vet.vet.name}
+            popTitle={"¿Está seguro que desea borrar la clínica?"}
+            img={vet.vet.photo ? vet.vet.photo : clinica}
+            description={vet.vet.address}
+          ></CardVet>
+        );
+      });
     }
-    
-    const showDrawer = () => {
-        setVisible(true);
-    }; 
+    return renderVetList;
+  }
 
-    const onClose = () => {
-        setVisible(false);
-    }; 
-    
-    function Vet(){
-        const renderVetList = [];
-        if (vets.length) {
-            vets.forEach(vet => {
-                renderVetList.push(                     
-                    <CardPet key={vet.vet.id} item={vet.vet.id} title={vet.vet.name} popTitle={"¿Está seguro que desea borrar la clínica?"} img={vet.vet.photo ? vet.vet.photo : clinica} description={vet.vet.address}></CardPet>
-                )
-            });
-        };
-        return renderVetList;
-    };
-
+  function renderDrawer() {
     return (
-        <>   
-            <Row>
-                <Col span={22}>
-                    <Title className="appTitle">
-                        Mis Clínicas Veterinarias                        
-                        </Title>
-                </Col>
-                <Col span={2}>
-                    <Tooltip title="Agregar clínica veterinaria" placement='right'>
-                        <Button type='link' className="appButton" size='large' onClick={showDrawer} icon={<PlusCircleOutlined/>}/>
-                    </Tooltip>
-                </Col>
-            </Row>
-            <Divider></Divider>
-            <Drawer title="Registrar nueva clínica veterinaria"          
-                    onClose={onClose}
-                    visible={visible}
-                    bodyStyle={{
-                    paddingBottom: 80}}>
-                <RegisterVetForm>
-                </RegisterVetForm>
-            </Drawer>
-            <Row>
-                <Vet></Vet>
-            </Row>
-        </>
+      <Drawer
+        title={
+          vetToDisplay
+            ? "Editar mi clínica"
+            : "Registrar nueva clínica veterinaria"
+        }
+        onClose={onClose}
+        visible={true}
+        bodyStyle={{
+          paddingBottom: 80,
+        }}
+      >
+        <RegisterVetForm
+          vet={vetToDisplay}
+          registeredVet={registeredVet}
+        ></RegisterVetForm>
+      </Drawer>
     );
-};
+  }
 
+  const registeredVet = () => {
+    setIsInit(false);
+    setVetToDisplay(null);
+    setDisplayDrawer(false);
+  };
+
+  return (
+    <>
+      <Row>
+        <Col span={22}>
+          <Title className="appTitle">Mis Clínicas Veterinarias</Title>
+        </Col>
+        <Col span={2}>
+          <Tooltip title="Agregar clínica veterinaria" placement="right">
+            <Button
+              type="link"
+              className="appButton"
+              size="large"
+              onClick={showDrawer}
+              icon={<PlusCircleOutlined />}
+            />
+          </Tooltip>
+        </Col>
+      </Row>
+      <Divider></Divider>
+      {displayDrawer ? renderDrawer() : null}
+      {/* <Drawer
+        title="Registrar nueva clínica veterinaria"
+        onClose={onClose}
+        visible={visible}
+        bodyStyle={{
+          paddingBottom: 80,
+        }}
+      >
+        <RegisterVetForm></RegisterVetForm>
+      </Drawer> */}
+      {vets.length ? (
+        <Row>
+          <Vet></Vet>
+        </Row>
+      ) : null}
+    </>
+  );
+}

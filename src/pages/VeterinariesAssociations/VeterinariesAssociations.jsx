@@ -177,63 +177,64 @@ export default function VeterinariesAssociations() {
     const renderAssociationCards = [];
     groupedAssociations.forEach((association) => {
       renderAssociationCards.push(
-        <Card
-          className="appCard"
-          hoverable
-          style={{ width: 300 }}
-          cover={
-            <img
-              alt="required text"
-              src={
-                association.veterinaryData.person.photo
-                  ? association.veterinaryData.person.photo
-                  : DefaultAvatar
-              }
-            ></img>
-          }
-          actions={[
-            <Tooltip title="Desasociar" key="tooltip-desacociarse">
-              <Popconfirm
-                title="¿Está seguro que desea desasociarse?"
-                onConfirm={() => confirm(association.associationsIds)}
-                okText="Si"
-                cancelText="No"
-                placement="top"
-                arrowPointAtCenter
-                icon={
-                  <ExclamationCircleOutlined
-                    fontSize="small"
-                    style={{ color: "red" }}
-                  />
+        <Col xs={{ span: 24 }} lg={{ span: 6 }}>
+          <Card
+            className="appCard"
+            hoverable
+            cover={
+              <img
+                alt="required text"
+                src={
+                  association.veterinaryData.person.photo
+                    ? association.veterinaryData.person.photo
+                    : DefaultAvatar
                 }
-                key="popconfirm-desacociarse"
-              >
-                <Icon>
-                  <SyncDisabledOutlinedIcon key="delete" />
-                </Icon>
-              </Popconfirm>
-            </Tooltip>,
-          ]}
-        >
-          <Meta
-            className=""
-            title={
-              !association.vetData.id
-                ? "Atención Particular de: "
-                : "Clínica Veterinaria: "
+              ></img>
             }
-            description={
-              !association.vetData.id
-                ? association.veterinaryData.person.name +
-                  " " +
-                  association.veterinaryData.person.lastName
-                : association.vetData.name
-              //"Profesional asociado: " + association.veterinaryData.person.name + " " +  association.veterinaryData.person.lastName
-            }
-          />
-          <br></br>
-          {renderPetTags(association.pets)}
-        </Card>
+            actions={[
+              <Tooltip title="Desasociar" key="tooltip-desacociarse">
+                <Popconfirm
+                  title="¿Está seguro que desea desasociarse?"
+                  onConfirm={() => confirm(association.associationsIds)}
+                  okText="Si"
+                  cancelText="No"
+                  placement="top"
+                  arrowPointAtCenter
+                  icon={
+                    <ExclamationCircleOutlined
+                      fontSize="small"
+                      style={{ color: "red" }}
+                    />
+                  }
+                  key="popconfirm-desacociarse"
+                >
+                  <Icon>
+                    <SyncDisabledOutlinedIcon key="delete" />
+                  </Icon>
+                </Popconfirm>
+              </Tooltip>,
+            ]}
+          >
+            <Meta
+              className=""
+              title={
+                !association.vetData.id
+                  ? "Atención Particular de: "
+                  : "Clínica Veterinaria: "
+              }
+              description={
+                !association.vetData.id
+                  ? association.veterinaryData.person.name +
+                    " " +
+                    association.veterinaryData.person.lastName
+                  : association.vetData.name
+                //"Profesional asociado: " + association.veterinaryData.person.name + " " +  association.veterinaryData.person.lastName
+              }
+            />
+            <br></br>
+            {renderPetTags(association.pets)}
+          </Card>
+        </Col>
       );
     });
     return renderAssociationCards;
@@ -275,7 +276,7 @@ export default function VeterinariesAssociations() {
         {groupedAssociations.length ? (
           returnAssociationCards()
         ) : (
-          <>Aún no tienes veterinarios asociados</>
+          <Col span={24}>Aún no tienes veterinarios asociados</Col>
         )}
       </Row>
 
@@ -351,7 +352,7 @@ export default function VeterinariesAssociations() {
                   level={3}
                 >
                   <HomeOutlined />
-                  {`${
+                  {` ${
                     completeTemporalAssociation?.vetData
                       ? completeTemporalAssociation?.vetData.name
                       : "Atención particular"

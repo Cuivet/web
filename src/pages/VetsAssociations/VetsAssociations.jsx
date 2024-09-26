@@ -1,5 +1,5 @@
 //MARTINA
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Meta from "antd/lib/card/Meta";
 import {
   Col,
@@ -17,11 +17,11 @@ import {
 } from "antd";
 import Icon, {
   SyncOutlined,
-  EyeOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import SyncDisabledOutlinedIcon from "@mui/icons-material/SyncDisabledOutlined";
-import vett from "../../assets/img/jpg/vet.jpg";
+import clinica from "../../assets/img/jpg/clinica.jpg";
+
 import {
   getTemporalAssociationByCode,
   registerRegentOnVet,
@@ -155,9 +155,8 @@ export default function VetsAssociations(props) {
             <Card
               className="appCard"
               hoverable
-              cover={<img alt="required text" src={vett}></img>}
+              cover={<img alt="required text" src={clinica}></img>}
               actions={[
-                <EyeOutlined key="edit" />,
                 <Popconfirm
                   title="¿Está seguro que desea desasociar clínica veterinaria?"
                   onConfirm={confirm}
@@ -180,11 +179,21 @@ export default function VetsAssociations(props) {
             >
               <Meta
                 className=""
-                title={association.vetData.vet.name}
+                title={
+                  <Typography.Title
+                    level={4}
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {association.vetData.vet.name}
+                  </Typography.Title>
+                }
                 description={
                   <>
                     <Row>
-                      <Typography.Text type="secondary">
+                      <Typography.Text type="primary">
                         {"Veterinario Regente: " +
                           association.vetData.regentData.person.name +
                           " " +
@@ -192,7 +201,7 @@ export default function VetsAssociations(props) {
                       </Typography.Text>
                     </Row>
                     <Row>
-                      <Typography.Text type="secondary">
+                      <Typography.Text type="primary">
                         {"Dirección: " + association.vetData.vet.address}
                       </Typography.Text>
                     </Row>
@@ -212,7 +221,7 @@ export default function VetsAssociations(props) {
       <Row align="middle">
         <Col span={22}>
           <Title className="appTitle">
-            Asociación con Clínicas Veterinarias
+            Mis clínicas Veterinarias Asociadas
           </Title>
         </Col>
         <Col span={2}>

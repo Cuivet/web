@@ -68,7 +68,7 @@ export default function MenuTop(props) {
     } else if (profile?.tutor != null) {
       return "Tutor: ";
     } else {
-      return "Dueño: ";
+      return "Propietario: ";
     }
   };
 

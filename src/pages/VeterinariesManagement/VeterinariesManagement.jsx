@@ -262,6 +262,7 @@ export default function VeterinariesManagement() {
 
   const refreshMP = (e) => {
     setSearchedVeterinaryData(null);
+    setSelectedVetId(null);
     setMP(e.target.value);
   };
 
@@ -326,7 +327,7 @@ export default function VeterinariesManagement() {
           <>
             <Col span={22}>
               <Title className="appTitle">
-                Asociación de Veterinarios Regentes en Clínicas Veterinarias
+                Asociación de Veterinarios Regentes
               </Title>
             </Col>
             <Col span={2}>
@@ -394,7 +395,7 @@ export default function VeterinariesManagement() {
             <Row>
               <Col span={24}>
                 <Typography.Title level={4}>
-                  {`El código generado para ${completeTemporalAssociation.veterinaryData.person.name} ${completeTemporalAssociation.veterinaryData.person.lastName} MP: ${completeTemporalAssociation.veterinaryData.veterinary.mp} es:`}
+                  {`El código generado para ${completeTemporalAssociation.veterinaryData.person.name} ${completeTemporalAssociation.veterinaryData.person.lastName} MP ${completeTemporalAssociation.veterinaryData.veterinary.mp} es:`}
                 </Typography.Title>
               </Col>
             </Row>
@@ -457,23 +458,42 @@ export default function VeterinariesManagement() {
                       <AvatarSearch
                         person={searchedVeterinaryData.person}
                       ></AvatarSearch>
-                      <Divider
-                        orientation="left"
-                        plain
-                        style={{ marginBottom: "2%", marginTop: "4%" }}
-                      >
-                        Seleccione con que clínica veterinaria desea asociarlo
-                      </Divider>
-                      <Col span={24}>
-                        <Select
-                          allowClear
-                          style={{ width: "100%" }}
-                          placeholder="Clínicas Veteriarias"
-                          onChange={refreshSelectedVets}
-                        >
-                          {vetOptions}
-                        </Select>
-                      </Col>
+                      {searchedVeterinaryData?.isAlreadyRegent ? (
+                        <>
+                          <Divider
+                            plain
+                            style={{
+                              marginBottom: "2%",
+                              marginTop: "4%",
+                            }}
+                          >
+                            El profesional encontrado ya es regente de una
+                            clínica veterinaria
+                          </Divider>
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <Divider
+                            orientation="left"
+                            plain
+                            style={{ marginBottom: "2%", marginTop: "4%" }}
+                          >
+                            Seleccione con que clínica veterinaria desea
+                            asociarlo
+                          </Divider>
+                          <Col span={24}>
+                            <Select
+                              allowClear
+                              style={{ width: "100%" }}
+                              placeholder="Clínicas Veteriarias"
+                              onChange={refreshSelectedVets}
+                            >
+                              {vetOptions}
+                            </Select>
+                          </Col>
+                        </>
+                      )}
                     </>
                   ) : isSearchingVeterinaryData ? (
                     <>

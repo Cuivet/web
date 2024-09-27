@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef} from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   Table,
   Button,
@@ -13,7 +13,11 @@ import {
   Space,
   message,
 } from "antd";
-import { SearchOutlined, FormOutlined, NodeIndexOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  FormOutlined,
+  NodeIndexOutlined,
+} from "@ant-design/icons";
 import {
   registerTemporalAssociation,
   getAllByVeterinaryId,
@@ -58,7 +62,7 @@ export default function PetsManagement() {
     clearFilters();
     setSearchText("");
   };
-  
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -306,9 +310,9 @@ export default function PetsManagement() {
     },
     {
       title: "Veterinario Responsable",
-      dataIndex: "vet",
-      ...getColumnSearchProps("vet"),
-      sorter: (a, b) => a.vet.length - b.vet.length,
+      dataIndex: "veterinary",
+      ...getColumnSearchProps("veterinary"),
+      sorter: (a, b) => a.veterinary.length - b.veterinary.length,
       responsive: ["lg"],
     },
     {
@@ -322,7 +326,7 @@ export default function PetsManagement() {
             to={"/clinical-records-management"}
             // className="admin-sider__item"
           > */}
-            {/* <Tooltip placement="top" title="Ver Historial Clínico">
+          {/* <Tooltip placement="top" title="Ver Historial Clínico">
               <Button
                 shape="circle"
                 size="large"
@@ -331,16 +335,16 @@ export default function PetsManagement() {
               ><FolderOutlined /></Button>
             </Tooltip> */}
           {/* </Link> */}
-          <Link to={"/clinical-record-menu"} 
-          className="admin-sider__item"
-          >
+          <Link to={"/clinical-record-menu"} className="admin-sider__item">
             <Tooltip placement="top" title="Registrar nueva consulta">
               <Button
                 shape="circle"
                 size="large"
                 className="margin-right"
                 // icon={<ContentPasteOutlinedIcon />}
-              ><FormOutlined /></Button>
+              >
+                <FormOutlined />
+              </Button>
             </Tooltip>
           </Link>
         </>
@@ -450,8 +454,8 @@ export default function PetsManagement() {
           <Title className="appTitle">
             Mis pacientes asociados para
             {selectedVet?.value
-              ? ` la clínica: ${selectedVet.children}`
-              : ": Atención Particular"}
+              ? ` ${selectedVet.children}`
+              : " Atención Particular"}
           </Title>
         </Col>
         <Col span={2}>

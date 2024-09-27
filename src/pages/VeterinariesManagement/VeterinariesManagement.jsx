@@ -171,7 +171,7 @@ export default function VeterinariesManagement() {
   const columns = [
     {
       title: "Matrícula Profesional",
-      dataIndex: "matricula",
+      dataIndex: "mp",
       defaultSortOrder: "ascend",
       sorter: (a, b) => a.mp - b.mp,
     },

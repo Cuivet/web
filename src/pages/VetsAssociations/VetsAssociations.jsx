@@ -14,7 +14,6 @@ import {
   Modal,
   Input,
   Badge,
-  Drawer,
 } from "antd";
 import Icon, {
   SyncOutlined,
@@ -28,7 +27,6 @@ import {
   registerRegentOnVet,
 } from "../../services/vet.service";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
-import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 const { Title } = Typography;
 
 export default function VetsAssociations(props) {
@@ -241,7 +239,7 @@ export default function VetsAssociations(props) {
       <Row align="middle">
         <Col span={22}>
           <Title className="appTitle">
-            Mis clínicas Veterinarias Asociadas
+            Mis Clínicas Veterinarias Asociadas
           </Title>
         </Col>
         <Col span={2}>

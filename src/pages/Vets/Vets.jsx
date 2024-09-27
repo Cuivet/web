@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getVetsByVetOwnerId } from "../../services/vet.service";
 import {
   Row,
@@ -20,6 +20,7 @@ import {
 } from "@ant-design/icons";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import CardPet from "../../components/CardPet";
+import CardVet from "../../components/CardVet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 import Meta from "antd/lib/card/Meta";
 
@@ -29,7 +30,10 @@ export default function Vets() {
   const [isInit, setIsInit] = useState(false);
   const [vets, setVets] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [isFetchData, setIsFetchData] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const [displayDrawer, setDisplayDrawer] = useState(false);
+  const [vetToDisplay, setVetToDisplay] = useState(null);
 
   if (!isInit) {
     setIsInit(true);
@@ -39,99 +43,150 @@ export default function Vets() {
   }
 
   const showDrawer = () => {
-    setVisible(true);
+    // setVisible(true);
+    setDisplayDrawer(true);
   };
 
   const onClose = () => {
-    setVisible(false);
+    setVetToDisplay(null);
+    // setVisible(false);
+    setDisplayDrawer(false);
+  };
+  const displayVet = (id) => {
+    setVetToDisplay(vets.find((vet) => vet.vet.id === id));
+    setDisplayDrawer(true);
   };
 
   const tieneRegente = (vet) => {
-    var texto = "Regente: ";
+    var texto = "";
     if (vet?.veterinaryData) {
       texto =
-        texto +
+        "Regente: " +
         `${vet?.veterinaryData?.person.name} ${vet?.veterinaryData?.person.lastName}`;
-    } else {
-      texto = texto + "-";
     }
     return texto;
   };
 
-
-  const confirm = (e) => {
-    message.success("Clínica borrada exitosamente.");
-    // deletePet(item);
-    //to do borrar clínica en cascada ?
-    window.location.replace("");
-  };
-
-  function vet() {
+  function Vet() {
     const renderVetList = [];
     if (vets.length) {
       vets.forEach((vet) => {
         renderVetList.push(
           <Col xs={{ span: 24 }} lg={{ span: 6 }}>
-            <Badge.Ribbon text={tieneRegente(vet)} color={"pink"}>
-              <Card
-                className="appCard"
-                hoverable
-                cover={<img alt="required text" src={clinica}></img>}
-                actions={[
-                  <Popconfirm
-                    title="¿Está seguro que desea borrar la clínica?"
-                    onConfirm={confirm}
-                    okText="Si"
-                    cancelText="No"
-                    placement="top"
-                    arrowPointAtCenter
-                    icon={
-                      <ExclamationCircleOutlined
-                        fontSize="small"
-                        style={{ color: "red" }}
-                      />
-                    }
-                  >
-                    <DeleteOutlined key="delete" />
-                  </Popconfirm>,
-                ]}
-              >
-                <Meta
-                  className=""
-                  title={
-                    <Typography.Title
-                      level={4}
-                      style={{
-                        color: "black",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {vet.vet.name}
-                    </Typography.Title>
-                  }
-                  description={
-                    <>
-                      <Row>
-                        <Typography.Text type="primary">
-                          {vet.vet.address}
-                        </Typography.Text>
-                      </Row>
-                      <Row>
-                        <Typography.Text type="primary">
-                          Horarios de atención:
-                        </Typography.Text>
-                      </Row>
-                    </>
-                  }
-                />
-              </Card>
-            </Badge.Ribbon>
+            <CardVet
+              showVet={displayVet}
+              key={vet.vet.id}
+              item={vet.vet.id}
+              title={vet.vet.name}
+              popTitle={"¿Está seguro que desea borrar la clínica?"}
+              img={vet.vet.photo ? vet.vet.photo : clinica}
+              description={{
+                address: vet.vet.address,
+                hours: "Horarios de atención: ",
+              }}
+              regent={tieneRegente(vet)}
+            ></CardVet>
           </Col>
         );
       });
     }
     return renderVetList;
   }
+
+  // function Vet2() {
+  //   const renderVetList = [];
+  //   if (vets.length) {
+  //     vets.forEach((vet) => {
+  //       renderVetList.push(
+  //         <Col xs={{ span: 24 }} lg={{ span: 6 }}>
+  //           <Badge.Ribbon text={tieneRegente(vet)} color={"pink"}>
+  //             <Card
+  //               className="appCard"
+  //               hoverable
+  //               cover={<img alt="required text" src={clinica}></img>}
+  //               actions={[
+  //                 <Popconfirm
+  //                   title="¿Está seguro que desea borrar la clínica?"
+  //                   onConfirm={confirm}
+  //                   okText="Si"
+  //                   cancelText="No"
+  //                   placement="top"
+  //                   arrowPointAtCenter
+  //                   icon={
+  //                     <ExclamationCircleOutlined
+  //                       fontSize="small"
+  //                       style={{ color: "red" }}
+  //                     />
+  //                   }
+  //                 >
+  //                   <DeleteOutlined key="delete" />
+  //                 </Popconfirm>,
+  //               ]}
+  //             >
+  //               <Meta
+  //                 className=""
+  //                 title={
+  //                   <Typography.Title
+  //                     level={4}
+  //                     style={{
+  //                       color: "black",
+  //                       fontWeight: "bold",
+  //                     }}
+  //                   >
+  //                     {vet.vet.name}
+  //                   </Typography.Title>
+  //                 }
+  //                 description={
+  //                   <>
+  //                     <Row>
+  //                       <Typography.Text type="primary">
+  //                         {vet.vet.address}
+  //                       </Typography.Text>
+  //                     </Row>
+  //                     <Row>
+  //                       <Typography.Text type="primary">
+  //                         Horarios de atención:
+  //                       </Typography.Text>
+  //                     </Row>
+  //                   </>
+  //                 }
+  //               />
+  //             </Card>
+  //           </Badge.Ribbon>
+  //         </Col>
+  //       );
+  //     });
+  //   }
+  //   return renderVetList;
+  // }
+
+  function renderDrawer() {
+    return (
+      <Drawer
+        title={
+          vetToDisplay
+            ? "Editar mi clínica"
+            : "Registrar nueva clínica veterinaria"
+        }
+        onClose={onClose}
+        visible={true}
+        bodyStyle={{
+          paddingBottom: 80,
+        }}
+      >
+        <RegisterVetForm
+          vet={vetToDisplay}
+          registeredVet={registeredVet}
+        ></RegisterVetForm>
+      </Drawer>
+    );
+  }
+
+  const registeredVet = () => {
+    setIsInit(false);
+    setVetToDisplay(null);
+    setDisplayDrawer(false);
+  };
 
   return (
     <>
@@ -152,7 +207,8 @@ export default function Vets() {
         </Col>
       </Row>
       <Divider></Divider>
-      <Drawer
+      {displayDrawer ? renderDrawer() : null}
+      {/* <Drawer
         title="Registrar nueva clínica veterinaria"
         onClose={onClose}
         visible={visible}
@@ -161,9 +217,10 @@ export default function Vets() {
         }}
       >
         <RegisterVetForm></RegisterVetForm>
-      </Drawer>
+      </Drawer> */}
       <Row>
-        {vets.length ? vet() : <>Aún no tienes veterinarios asociados</>}
+        {vets.length ? Vet() : null}
+        {/* {vets.length ? Vet2() : <>Aún no tienes veterinarios asociados</>} */}
       </Row>
     </>
   );

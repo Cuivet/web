@@ -12,6 +12,7 @@ import "./MenuSider.scss";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { getAllByRegentId } from "../../services/vet.service";
 import MyContext from "../../MyContext";
+import MedicationOutlinedIcon from "@mui/icons-material/MedicationOutlined";
 
 export default function MenuSider(props) {
   const { menuCollapsed } = props;
@@ -111,6 +112,14 @@ export default function MenuSider(props) {
                   <ContentPasteOutlinedIcon />
                 </Icon>
                 <span className="nav-text"> Ficha Clínica </span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="Vaccination">
+              <Link to={"/vaccination"} className="admin-sider__item">
+                <Icon>
+                  <MedicationOutlinedIcon />
+                </Icon>
+                <span className="nav-text"> Vacunación </span>
               </Link>
             </Menu.Item>
 

@@ -36,11 +36,7 @@ export default function ConsultationSteps(props) {
     setCurrent(current - 1);
   };
 
-  const onChange = (value) => {
-    setCurrent(value);
-  };
-
-  const steps = [
+   const steps = [
     {
       title: "Reseña",
       ...(review !== null
@@ -229,7 +225,7 @@ export default function ConsultationSteps(props) {
         labelPlacement="vertical"
         percent={(current + 1) * 16.7}
         responsive
-        onChange={onChange}
+        // onChange={onChange}
       >
         {steps.map((item) => (
           <Step

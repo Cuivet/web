@@ -88,18 +88,6 @@ export default function ConsultationHeader(props) {
             handleTextResponseChange("reasonConsultation", e.target.value)
           }
         />
-
-        {/* <Title
-          level={5}
-          className="motive"
-          editable={{
-            tooltip: "click to edit text",
-            onChange: setReasonConsultation,
-            triggerType: "text",
-          }}
-        >
-          {reasonConsultation}
-        </Title> */}
       </Row>
       {studies ? (
         <Paragraph>

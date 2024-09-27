@@ -115,6 +115,7 @@ export default function MenuTop(props) {
           <Link to="/login">
             <Button
               type="link"
+              shape="circle"
               to="/login"
               onClick={logOut}
               icon={<LogoutOutlined />}

@@ -14,6 +14,7 @@ import {
   Modal,
   Input,
   Badge,
+  Drawer,
 } from "antd";
 import Icon, {
   SyncOutlined,
@@ -27,6 +28,7 @@ import {
   registerRegentOnVet,
 } from "../../services/vet.service";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
+import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 const { Title } = Typography;
 
 export default function VetsAssociations(props) {
@@ -38,6 +40,8 @@ export default function VetsAssociations(props) {
     useState([]);
   const [isInit, setIsInit] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  // const [vetToDisplay, setVetToDisplay] = useState(null);
+  // const [displayDrawer, setDisplayDrawer] = useState(false);
 
   if (!isInit) {
     refreshComponent();
@@ -157,6 +161,15 @@ export default function VetsAssociations(props) {
               hoverable
               cover={<img alt="required text" src={clinica}></img>}
               actions={[
+                // <Tooltip placement="top" title="Ver Clínica">
+                //   <Button
+                //     type="link"
+                //     size="large"
+                //     style={{ border: "none" }}
+                //     icon={<EyeOutlined key="edit" />}
+                //     onClick={() => displayVet(association.vetData.vet)}
+                //   />
+                // </Tooltip>,
                 <Popconfirm
                   title="¿Está seguro que desea desasociar clínica veterinaria?"
                   onConfirm={confirm}
@@ -171,9 +184,16 @@ export default function VetsAssociations(props) {
                     />
                   }
                 >
-                  <Icon>
-                    <SyncDisabledOutlinedIcon key="delete" />
-                  </Icon>
+                  <Button
+                    type="link"
+                    size="large"
+                    style={{ border: "none" }}
+                    icon={
+                      <Icon>
+                        <SyncDisabledOutlinedIcon key="delete" />
+                      </Icon>
+                    }
+                  />
                 </Popconfirm>,
               ]}
             >
@@ -249,6 +269,7 @@ export default function VetsAssociations(props) {
       <Modal
         title="Asociarse con una clínica veterinaria"
         visible={isModalOpen}
+        onCancel={hideModal}
         footer={[
           <Button
             type="default"
@@ -309,7 +330,8 @@ export default function VetsAssociations(props) {
             <Row>
               <Col span={24}>
                 <Input
-                  name="phone"
+                  name="code"
+                  autoComplete="off"
                   placeholder="Código de asociación"
                   onChange={refreshCode}
                 />

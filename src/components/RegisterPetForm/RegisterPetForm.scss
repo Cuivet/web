@@ -1,17 +1,28 @@
 @import "../../scss/index.scss";
 
-.ant-upload-list {
-  height: 200px !important;
-}
+// .ant-upload-list {
+//   height: 200px ;
+// }
 
-.ant-upload-select {
-  width: 200px !important;
-  height: 200px !important;
-}
+// .ant-upload-select {
+//   width: 200px ;
+//   height: 200px ;
+// }
 
-.ant-upload-list-item {
-  width: 200px !important;
-  height: 200px !important;
+// .ant-upload-list-item {
+//   width: 200px ;
+//   height: 200px ;
+// }
+// .ant-upload-list-picture-card .ant-upload-list-item{
+//   height: 200px;
+// }
+.ant-upload.ant-upload-select-picture-card {
+  height: 200px;
+  width: 200px;
+}
+.ant-upload-list-picture-card-container {
+  height: 200px;
+  width: 200px;
 }
 
 .register-pet-form {

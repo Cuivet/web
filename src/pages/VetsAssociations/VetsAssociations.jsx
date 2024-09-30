@@ -14,24 +14,22 @@ import {
   Modal,
   Input,
   Badge,
-  Drawer,
 } from "antd";
 import Icon, {
   SyncOutlined,
-  EyeOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import SyncDisabledOutlinedIcon from "@mui/icons-material/SyncDisabledOutlined";
-import vett from "../../assets/img/jpg/vet.jpg";
+import clinica from "../../assets/img/jpg/clinica.jpg";
+
 import {
   getTemporalAssociationByCode,
   registerRegentOnVet,
 } from "../../services/vet.service";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
-import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
 const { Title } = Typography;
 
-export default function VetsAssociations() {
+export default function VetsAssociations(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedCode, setGeneratedCode] = useState(false);
   const [completeTemporalAssociation, setCompleteTemporalAssociation] =
@@ -107,12 +105,13 @@ export default function VetsAssociations() {
       name: completeTemporalAssociation.vetData.vet.name,
       phone: completeTemporalAssociation.vetData.vet.phone,
       address: completeTemporalAssociation.vetData.vet.address,
-      vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId, //para que usa todos estos datos??
+      vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId,
       veterinaryId: profile.veterinary.id,
     };
-    registerRegentOnVet(regentAssociation).then((response) => {
+    registerRegentOnVet(regentAssociation).then(() => {
       message.success("Asociación establecida exitosamente");
-      refreshComponent();
+      setIsInit(false);
+      window.location.replace("");
     });
   };
 
@@ -123,13 +122,11 @@ export default function VetsAssociations() {
       veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id,
     };
     veterinaryAssociations.push(veterinaryAssociation);
-    veterinaryAssociationService
-      .register(veterinaryAssociations)
-      .then((response) => {
-        message.success("Asociación establecida exitosamente");
-        refreshComponent();
-        window.location.replace("");
-      });
+    veterinaryAssociationService.register(veterinaryAssociations).then(() => {
+      message.success("Asociación establecida exitosamente");
+      setIsInit(false);
+      window.location.replace("");
+    });
   };
 
   function refreshComponent() {
@@ -160,7 +157,7 @@ export default function VetsAssociations() {
             <Card
               className="appCard"
               hoverable
-              cover={<img alt="required text" src={vett}></img>}
+              cover={<img alt="required text" src={clinica}></img>}
               actions={[
                 // <Tooltip placement="top" title="Ver Clínica">
                 //   <Button
@@ -200,11 +197,21 @@ export default function VetsAssociations() {
             >
               <Meta
                 className=""
-                title={association.vetData.vet.name}
+                title={
+                  <Typography.Title
+                    level={4}
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {association.vetData.vet.name}
+                  </Typography.Title>
+                }
                 description={
                   <>
                     <Row>
-                      <Typography.Text type="secondary">
+                      <Typography.Text type="primary">
                         {"Veterinario Regente: " +
                           association.vetData.regentData.person.name +
                           " " +
@@ -212,7 +219,7 @@ export default function VetsAssociations() {
                       </Typography.Text>
                     </Row>
                     <Row>
-                      <Typography.Text type="secondary">
+                      <Typography.Text type="primary">
                         {"Dirección: " + association.vetData.vet.address}
                       </Typography.Text>
                     </Row>
@@ -232,7 +239,7 @@ export default function VetsAssociations() {
       <Row align="middle">
         <Col span={22}>
           <Title className="appTitle">
-            Asociación con Clínicas Veterinarias
+            Mis Clínicas Veterinarias Asociadas
           </Title>
         </Col>
         <Col span={2}>

@@ -8,54 +8,68 @@ import {
 } from "@ant-design/icons";
 import CUIVET_logo from "../../assets/img/png/logo2.png";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
-import { VetContext } from "../../context/MenuTopContext/MenuTopContext"; // Adjust the import path as needed
 import "./MenuTop.scss";
+import MyContext from "../../MyContext";
 
 const { Option } = Select;
 
 export default function MenuTop(props) {
   const { menuCollapsed, setMenuCollapsed } = props;
   const [isVet, setIsVet] = useState(false);
-  const [vetOptions, setVetOptions] = useState([]);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
-  const { selectedVetId, setSelectedVetId } = useContext(VetContext);
+  const [veterinariasAsociadas, setVeterinariasAsociadas] = useState([]);
+  const { selectedVet, setSelectedVet } = useContext(MyContext);
+  const [vetsLoaded, setVetsLoaded] = useState(false);
+
+  const veterinariaParticular = {
+    vetData: {
+      vet: {
+        id: null,
+        name: "Atención particular",
+      },
+    },
+  };
 
   useEffect(() => {
     if (profile.veterinary != null) {
       setIsVet(true);
-      if (vetOptions.length === 0) {
-        veterinaryAssociationService
-          .getAllDataByRegentOrVeterinary(profile.veterinary.id)
-          .then((response) => {
-            setVetOptions(generateVetOptions(response));
-          });
-          setSelectedVetId(1);
+      if (!vetsLoaded) {
+        getVets();
       }
     }
-  }, [profile.veterinary, vetOptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vetsLoaded]);
+
+  const getVets = async () => {
+    try {
+      let result =
+        await veterinaryAssociationService.getAllDataByRegentOrVeterinary(
+          profile.veterinary.id
+        );
+      result.push(veterinariaParticular);
+      setVeterinariasAsociadas(result);
+      setVetsLoaded(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const logOut = (e) => {
     sessionStorage.clear();
   };
 
-  function generateVetOptions(vets) {
-    let renderVetOptions = [];
-    let vetsData = [];
-    vets.forEach(function eachVet(vet) {
-      renderVetOptions.push(
-        <Option key={vet.vetData.vet.id} value={vet.vetData.vet.id}>
-          {vet.vetData.vet.name}
-        </Option>
-      );
-      vetsData.push(vet.vetData);
-    });
-    sessionStorage.setItem("vets", JSON.stringify(vetsData));
-    return renderVetOptions;
+  function onChangeSelectVet(value, option) {
+    setSelectedVet(option);
   }
 
-  const handleVetChange = (value) => {
-    setSelectedVetId(value);
-    console.log('Selected value:', value);
+  const tipoPerfil = () => {
+    if (profile?.veterinary != null) {
+      return "Veterinario: ";
+    } else if (profile?.tutor != null) {
+      return "Tutor: ";
+    } else {
+      return "Propietario: ";
+    }
   };
 
   return (
@@ -72,20 +86,31 @@ export default function MenuTop(props) {
           onClick={() => setMenuCollapsed(!menuCollapsed)}
         ></Button>
       </div>
-      <h3 className="menu-top__center">CUIVET</h3>
+      <h3 className="menu-top__center">
+        CUIVET / {tipoPerfil()} {profile.person?.name}
+      </h3>
       <div className="menu-top__right">
-        {isVet ? (
-          <Select
-            placeholder="Clínica"
-            defaultActiveFirstOption
-            defaultValue={selectedVetId}
-            onChange={handleVetChange}
-            className="menu-top__right-select"
-          >
-            {vetOptions}
-          </Select>
-        ) : null}
-
+        {isVet && (
+          <>
+            <div className="menu-top__right-select-container">
+              <label htmlFor="clinic-select" className="menu-top__right-label">
+                Seleccione una clínica:
+              </label>
+              <Select
+                id="clinic-select"
+                className="menu-top__right-select"
+                defaultValue={null}
+                onChange={onChangeSelectVet}
+              >
+                {veterinariasAsociadas?.map((vet) => (
+                  <Option key={vet.vetData?.vet.id} value={vet.vetData?.vet.id}>
+                    {vet.vetData.vet.name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          </>
+        )}
         <Tooltip title="Cerrar sesión" placement="left" color={"#5B2569"}>
           <Link to="/login">
             <Button

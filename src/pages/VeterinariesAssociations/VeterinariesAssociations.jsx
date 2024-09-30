@@ -19,16 +19,18 @@ import {
 import Icon, {
   SyncOutlined,
   ExclamationCircleOutlined,
-  MedicineBoxOutlined
+  MedicineBoxOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import SyncDisabledOutlinedIcon from "@mui/icons-material/SyncDisabledOutlined";
-import { getTemporalAssociationByCode } from "../../services/pet_association.service";
 import {
   register,
   getAllByTutorId,
   deleteAssociationById,
+  getTemporalAssociationByCode,
 } from "../../services/pet_association.service";
 import { getPetsByTutorId } from "../../services/pet.service";
+
 const { Option } = Select;
 
 const { Title } = Typography;
@@ -39,7 +41,7 @@ export default function VeterinariesAssociations() {
   const [completeTemporalAssociation, setCompleteTemporalAssociation] =
     useState(null);
   const [petOptions, setPetOptions] = useState(null);
-  const [selectedPetIds, setSelectePetIds] = useState([]);
+  const [selectedPetIds, setSelectedPetIds] = useState([]);
   const [groupedAssociations, setGroupedAssociations] = useState([]);
   const [isInit, setIsInit] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
@@ -49,89 +51,108 @@ export default function VeterinariesAssociations() {
     setIsInit(true);
   }
 
-    const confirm = (associationsIds) => {
-        associationsIds.forEach(assId =>{
-            deleteAssociationById(assId)
-        })
-        message.success('Profesional desasociado correctamente', 5);
-        refreshComponent();
-        window.location.replace('');
-    };
+  const confirm = (associationsIds) => {
+    associationsIds.forEach((assId) => {
+      deleteAssociationById(assId);
+    });
+    message.success("Profesional desasociado correctamente", 5);
+    window.location.replace("");
+  };
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const tryToAsociate = () => {
-    getTemporalAssociationByCode(generatedCode)
-      .then((temporalAsociation) => {
-        getPetsByTutorId(profile.tutor.id).then((pets) => {
-          setCompleteTemporalAssociation(temporalAsociation);
-          setPetOptions(generatePetOptions(pets));
+    if (!generatedCode) {
+      return message.error("Debe ingresar un código para asociarse");
+    } else {
+      getTemporalAssociationByCode(generatedCode)
+        .then((temporalAsociation) => {
+          getPetsByTutorId(profile.tutor.id).then((pets) => {
+            setCompleteTemporalAssociation(temporalAsociation);
+            setPetOptions(generatePetOptions(pets));
+          });
+        })
+        .catch((error) => {
+          message.error(error.response.data);
         });
-      })
-      .catch((error) => {
-        message.error(error.response.data);
-      });
+    }
   };
 
-
-    const createAssociation = () => {
-        const petAssociations = [];
-        selectedPetIds.forEach( petId => {
-            petAssociations.push({petId: Number(petId), veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id})
-        });
-        register(petAssociations)
-            .then(response => {
-                message.success('Asociación establecida exitosamente');
-                window.location.replace('');
-                refreshComponent();
-                
-            });
-    }
+  const createAssociation = () => {
+    const petAssociations = [];
+    selectedPetIds.forEach((petId) => {
+      petAssociations.push({
+        petId: Number(petId),
+        veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id,
+        vetId: completeTemporalAssociation.vetData
+          ? completeTemporalAssociation.vetData.id
+          : null,
+      });
+    });
+    register(petAssociations).then((response) => {
+      message.success("Asociación establecida exitosamente");
+      window.location.replace("");
+    });
+  };
 
   function refreshComponent() {
     getAllByTutorId(profile.tutor.id).then((associations) => {
       let groupedAssociations = [];
+
       associations.forEach((association) => {
-        const associationsFilterByEachTandV = associations.filter(
-          (as) =>
-            as.tutorData.tutor.id === association.tutorData.tutor.id &&
-            as.veterinaryData.veterinary.id ===
-              association.veterinaryData.veterinary.id
-        );
-        const petList = associationsFilterByEachTandV.map((as) => as.pet);
-        const asIdsList = associationsFilterByEachTandV.map(
-          (as) => as.associationId
-        );
-        if (
-          !groupedAssociations.find(
-            (as) =>
-              as.tutorData.tutor.id === association.tutorData.tutor.id &&
-              as.veterinaryData.veterinary.id ===
-                association.veterinaryData.veterinary.id
-          )
-        ) {
+        const { tutorData, vetData, veterinaryData, pet, associationId } =
+          association;
+
+        let existingGroup;
+
+        if (vetData && vetData.id) {
+          // Buscar si ya existe un grupo con el mismo tutor, veterinario y vetData
+          existingGroup = groupedAssociations.find(
+            (group) =>
+              group.tutorData.tutor.id === tutorData.tutor.id &&
+              group.vetData.id === vetData.id &&
+              group.veterinaryData.veterinary.id ===
+                veterinaryData.veterinary.id
+          );
+        } else {
+          // Buscar si ya existe un grupo con el mismo veterinario sin vetData
+          existingGroup = groupedAssociations.find(
+            (group) =>
+              group.veterinaryData.veterinary.id ===
+                veterinaryData.veterinary.id && !group.vetData.id
+          );
+        }
+
+        if (existingGroup) {
+          // Si el grupo ya existe, agregar la mascota y el ID de la asociación
+          existingGroup.pets.push(pet);
+          existingGroup.associationsIds.push(associationId);
+        } else {
+          // Si el grupo no existe, crear uno nuevo
           groupedAssociations.push({
-            veterinaryData: association.veterinaryData,
-            tutorData: association.tutorData,
-            pets: petList,
-            associationsIds: asIdsList,
+            veterinaryData,
+            vetData: vetData || {}, // Asegurarse de que vetData no sea undefined
+            tutorData,
+            pets: [pet],
+            associationsIds: [associationId],
           });
         }
       });
+
       setGroupedAssociations(groupedAssociations);
     });
     setIsModalOpen(false);
     setGeneratedCode(false);
     setCompleteTemporalAssociation(null);
     setPetOptions(null);
-    setSelectePetIds([]);
+    setSelectedPetIds([]);
     returnAssociationCards();
   }
 
   function generatePetOptions(pets) {
-    var renderPetOptions = [];
+    const renderPetOptions = [];
     pets.forEach(function eachPet(pet) {
       renderPetOptions.push(<Option key={pet.id}>{pet.name}</Option>);
     });
@@ -149,53 +170,71 @@ export default function VeterinariesAssociations() {
   };
 
   const refreshSelectedPets = (value) => {
-    setSelectePetIds(value);
+    setSelectedPetIds(value);
   };
 
   function returnAssociationCards() {
-    var renderAssociationCards = [];
+    const renderAssociationCards = [];
     groupedAssociations.forEach((association) => {
       renderAssociationCards.push(
-        <Card
-          className="appCard"
-          hoverable
-          style={{ width: 300 }}
-          cover={<img alt="required text" src={association.veterinaryData.person.photo ? association.veterinaryData.person.photo : DefaultAvatar}></img>}
-          actions={[
-            <Tooltip title="Desasociar Veterinario">
-              <Popconfirm
-                title="¿Está seguro que desea desasociar el veterinario?"
-                onConfirm={() => confirm(association.associationsIds)}
-                okText="Si"
-                cancelText="No"
-                placement="top"
-                arrowPointAtCenter
-                icon={
-                  <ExclamationCircleOutlined
-                    fontSize="small"
-                    style={{ color: "red" }}
-                  />
+        <Col xs={{ span: 24 }} lg={{ span: 6 }}>
+          <Card
+            className="appCard"
+            hoverable
+            cover={
+              <img
+                alt="required text"
+                src={
+                  association.veterinaryData.person.photo
+                    ? association.veterinaryData.person.photo
+                    : DefaultAvatar
                 }
-              >
-                <Icon>
-                  <SyncDisabledOutlinedIcon key="delete" />
-                </Icon>
-              </Popconfirm>
-            </Tooltip>,
-          ]}
-        >
-          <Meta
-            className=""
-            title={
-              association.veterinaryData.person.name +
-              " " +
-              association.veterinaryData.person.lastName
+              ></img>
             }
-            // description={'Veterinaria: -'}
-          />
-          <br></br>
-          {renderPetTags(association.pets)}
-        </Card>
+            actions={[
+              <Tooltip title="Desasociar" key="tooltip-desacociarse">
+                <Popconfirm
+                  title="¿Está seguro que desea desasociarse?"
+                  onConfirm={() => confirm(association.associationsIds)}
+                  okText="Si"
+                  cancelText="No"
+                  placement="top"
+                  arrowPointAtCenter
+                  icon={
+                    <ExclamationCircleOutlined
+                      fontSize="small"
+                      style={{ color: "red" }}
+                    />
+                  }
+                  key="popconfirm-desacociarse"
+                >
+                  <Icon>
+                    <SyncDisabledOutlinedIcon key="delete" />
+                  </Icon>
+                </Popconfirm>
+              </Tooltip>,
+            ]}
+          >
+            <Meta
+              className=""
+              title={
+                !association.vetData.id
+                  ? "Atención Particular de: "
+                  : "Clínica Veterinaria: "
+              }
+              description={
+                !association.vetData.id
+                  ? association.veterinaryData.person.name +
+                    " " +
+                    association.veterinaryData.person.lastName
+                  : association.vetData.name
+                //"Profesional asociado: " + association.veterinaryData.person.name + " " +  association.veterinaryData.person.lastName
+              }
+            />
+            <br></br>
+            {renderPetTags(association.pets)}
+          </Card>
+        </Col>
       );
     });
     return renderAssociationCards;
@@ -213,10 +252,13 @@ export default function VeterinariesAssociations() {
     <>
       <Row align="middle">
         <Col span={22}>
-          <Title className="appTitle">Veterinarios Asociados</Title>
+          <Title className="appTitle">Clínicas y Veterinarios Asociados</Title>
         </Col>
         <Col span={2}>
-          <Tooltip title="Asociar Veterinario" placement="right">
+          <Tooltip
+            title="Asociar Veterinario/Clínica Veterinaria"
+            placement="right"
+          >
             <Button
               type="link"
               className="appButton"
@@ -234,7 +276,7 @@ export default function VeterinariesAssociations() {
         {groupedAssociations.length ? (
           returnAssociationCards()
         ) : (
-          <>Aún no tienes veterinarios asociados</>
+          <Col span={24}>Aún no tienes veterinarios asociados</Col>
         )}
       </Row>
 
@@ -247,6 +289,7 @@ export default function VeterinariesAssociations() {
             type="default"
             onClick={hideModal}
             className="register-form__button-cancel-modal"
+            key="register-form__button-cancel-modal"
           >
             Cancelar
           </Button>,
@@ -286,15 +329,37 @@ export default function VeterinariesAssociations() {
             </Row>
             <Row>
               <Col span={24}>
-                <Typography.Title style={{textAlign:'center', color: '#523c89'}} level={3}>
-                    <MedicineBoxOutlined />{` ${completeTemporalAssociation.veterinaryData.person.name} ${completeTemporalAssociation.veterinaryData.person.lastName}`}
+                <Typography.Title
+                  style={{ textAlign: "center", color: "#523c89" }}
+                  level={3}
+                >
+                  <MedicineBoxOutlined />
+                  {` ${completeTemporalAssociation.veterinaryData.person.name} ${completeTemporalAssociation.veterinaryData.person.lastName}`}
                 </Typography.Title>
               </Col>
             </Row>
-            {/* <Row>
-                                <Typography.Title level={6}>Clínica: -</Typography.Title>   
-
-                             </Row> */}
+            <Row>
+              <Col span={24}>
+                <Typography.Title level={5}>
+                  Con la clínica veterinaria:
+                </Typography.Title>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Typography.Title
+                  style={{ textAlign: "center", color: "#523c89" }}
+                  level={3}
+                >
+                  <HomeOutlined />
+                  {` ${
+                    completeTemporalAssociation?.vetData
+                      ? completeTemporalAssociation?.vetData.name
+                      : "Atención particular"
+                  }`}
+                </Typography.Title>
+              </Col>
+            </Row>
             <Row>
               <Col span={24}>
                 <Select
@@ -314,7 +379,7 @@ export default function VeterinariesAssociations() {
             <Row>
               <Col span={24}>
                 <Typography.Title level={5}>
-                  Ingrese código de asociacion brindado por el veterinario:
+                  Ingrese código de asociación brindado por el veterinario:
                 </Typography.Title>
               </Col>
             </Row>

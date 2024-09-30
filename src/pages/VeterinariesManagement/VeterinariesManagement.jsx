@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Table,
   Button,
@@ -13,7 +13,12 @@ import {
   Spin,
   message,
 } from "antd";
-import { NodeIndexOutlined, DisconnectOutlined } from "@ant-design/icons";
+import {
+  NodeIndexOutlined,
+  DisconnectOutlined,
+  PlusOutlined,
+  MinusOutlined,
+} from "@ant-design/icons";
 import {
   getVetsByVetOwnerId,
   registerTemporalAssociation,
@@ -22,11 +27,13 @@ import {
 import { getVeterinaryDataByMP } from "../../services/veterinary.service";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
 import AvatarSearch from "../../components/AvatarSearch";
+import MyContext from "../../MyContext";
 const { Option } = Select;
 const { Title } = Typography;
 
 export default function VeterinariesManagement() {
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const { selectedVet } = useContext(MyContext);
   const [isInit, setIsInit] = useState(false);
   const [generatedCode, setGeneratedCode] = useState(false);
   const [vetOptions, setVetOptions] = useState(null);
@@ -61,24 +68,37 @@ export default function VeterinariesManagement() {
           generateDataRegent(associations);
         });
     }
+    setSearchedVeterinaryData(null);
     refreshComponent();
     setIsInit(true);
   }
 
   function generateVetOptionsForOwner(vets) {
-    var renderVetOptions = [];
-    vets.forEach(function eachVet(vet) {
-      renderVetOptions.push(<Option key={vet.vet.id}>{vet.vet.name}</Option>);
-    });
+    let renderVetOptions = [];
+    if (!vets || vets.length === 0) {
+      renderVetOptions.push(
+        <Option key="no-vets" disabled>
+          No tiene veterinarias registradas
+        </Option>
+      );
+    } else {
+      vets?.forEach(function eachVet(vet) {
+        renderVetOptions.push(<Option key={vet.vet.id}>{vet.vet.name}</Option>);
+      });
+    }
     return renderVetOptions;
   }
 
   function generateVetOptionsForRegent(vets) {
-    var renderVetOptions = [];
+    let renderVetOptions = [];
     vets.forEach(function eachVet(vet) {
       renderVetOptions.push(<Option key={vet.id}>{vet.name}</Option>);
     });
-    return renderVetOptions;
+    return vets.map((vet) => (
+      <Option key={vet.id} value={vet.id}>
+        {vet.name}
+      </Option>
+    ));
   }
 
   function refreshComponent() {
@@ -94,11 +114,12 @@ export default function VeterinariesManagement() {
 
   function generateDataOwner(vets) {
     var finalData = [];
+
     vets.forEach((vet) => {
       if (vet.veterinaryData === null) {
         return;
       }
-      finalData.push({
+      let vetEntry = {
         key: vet.vet.id,
         mp: vet.veterinaryData.veterinary.mp,
         name: vet.veterinaryData.person.name,
@@ -109,41 +130,51 @@ export default function VeterinariesManagement() {
         actions:
           regent[0] === "Si" ? (
             <Tooltip placement="top" title="Desvincular Veterinario">
-              <Button
-                shape="circle"
-                size="large"
-                className="margin-right"
-              >
+              <Button shape="circle" size="large" className="margin-right">
                 <DisconnectOutlined />
               </Button>
             </Tooltip>
           ) : null,
         id: vet.vet.id,
         address: vet.vet.address,
-      });
+      };
+
+      if (vet.coveterinaryData && vet.coveterinaryData.length > 0) {
+        vetEntry.coVeterinaries = vet.coveterinaryData.map((coVet, index) => ({
+          key: `${vet.vet.id}-coVet-${index}`,
+          mp: coVet.coveterinary.mp,
+          name: coVet.coperson.name,
+          lastName: coVet.coperson.lastName,
+          phone: coVet.coperson.phone,
+          vet: coVet.coveterinary.name,
+          address: coVet.coperson.address,
+        }));
+      }
+
+      finalData.push(vetEntry);
     });
+
     setData(finalData);
   }
 
   function generateDataRegent(associations) {
     var finalData = [];
-    associations.forEach((association) => {
+    let filteredData = associations.filter(
+      (ass) => ass.vetData.vet.id === selectedVet?.value
+    );
+    filteredData.forEach((association) => {
       finalData.push({
         mp: association.coveterinaryData.veterinary.mp,
         name: association.coveterinaryData.person.name,
         lastName: association.coveterinaryData.person.lastName,
         phone: association.coveterinaryData.person.phone,
         vet: association.vetData.vet.name,
-        address: association.vetData.vet.address,
+        address: association.coveterinaryData.person.address,
         actions:
           regent[0] === "Si" ? (
             <Tooltip placement="top" title="Desvincular Veterinario Regente">
-              <Button
-                shape="circle"
-                size="large"
-                className="margin-right"
-              > 
-              <DisconnectOutlined />
+              <Button shape="circle" size="large" className="margin-right">
+                <DisconnectOutlined />
               </Button>
             </Tooltip>
           ) : null,
@@ -161,7 +192,7 @@ export default function VeterinariesManagement() {
   const columns = [
     {
       title: "Matrícula Profesional",
-      dataIndex: "matricula",
+      dataIndex: "mp",
       defaultSortOrder: "ascend",
       sorter: (a, b) => a.mp - b.mp,
     },
@@ -181,12 +212,12 @@ export default function VeterinariesManagement() {
       dataIndex: "phone",
       responsive: ["md"],
     },
-    {
-      title: "Clínica Veterinaria",
-      dataIndex: "vet",
-      sorter: (a, b) => a.vet.length - b.vet.length,
-      responsive: ["md"],
-    },
+    // {
+    // 	title: "Clínica Veterinaria",
+    // 	dataIndex: "vet",
+    // 	sorter: (a, b) => a.vet.length - b.vet.length,
+    // 	responsive: ["md"],
+    // },
     {
       title: "Dirección",
       dataIndex: "address",
@@ -202,16 +233,12 @@ export default function VeterinariesManagement() {
 
   if (isOwner) {
     columns.splice(4, 0, {
-      title: "Regente",
-      dataIndex: "regent",
-      sorter: (a, b) => a.regent - b.regent,
+      title: "Clínica Veterinaria",
+      dataIndex: "vet",
+      sorter: (a, b) => a.vet.length - b.vet.length,
       responsive: ["md"],
     });
   }
-
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
 
   const showModalOwner = () => {
     setIsModalVetOwner(true);
@@ -246,11 +273,12 @@ export default function VeterinariesManagement() {
     setIsModalVetOwner(false);
     setGeneratedCode(false);
     setIsModalRegent(false);
-    window.location.replace("");
+    setIsLoading(false);
   };
 
   const refreshMP = (e) => {
     setSearchedVeterinaryData(null);
+    setSelectedVetId(null);
     setMP(e.target.value);
   };
 
@@ -258,8 +286,12 @@ export default function VeterinariesManagement() {
     setIsSearchingVeterinaryData(true);
     getVeterinaryDataByMP(mp)
       .then((res) => {
-        setSearchedVeterinaryData(res);
         setIsSearchingVeterinaryData(false);
+        if (res.person.id === profile.person.id) {
+          message.error("No puede asociarse con usted mismo");
+        } else {
+          setSearchedVeterinaryData(res);
+        }
       })
       .catch((error) => {
         message.error(error.response.data);
@@ -267,13 +299,32 @@ export default function VeterinariesManagement() {
       });
   };
 
+  useEffect(() => {
+    if (selectedVet && selectedVet?.value) {
+      setIsLoading(true);
+      setSelectedVetId(selectedVet.value);
+      veterinaryAssociationService
+        .getAllCoVeterinariesDataByRegent(profile.veterinary.id)
+        .then((associations) => {
+          const filteredData = associations.filter(
+            (ass) => ass.vetData.vet.id === selectedVet.value
+          );
+          generateDataRegent(filteredData);
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      //aca solo los que tienen null (atencion particular)
+      setData([]);
+    }
+  }, [selectedVet]);
+
   return (
     <>
       <Row align="middle">
         {!isOwner ? (
           <>
             <Col span={22}>
-              <Title className="appTitle">Gestión de Co-Veterinarios</Title>
+              <Title className="appTitle">Asociación de Co-Veterinarios</Title>
             </Col>
             <Col span={2}>
               <Tooltip title="Asociar Co-Veterinarios" placement="right">
@@ -283,6 +334,7 @@ export default function VeterinariesManagement() {
                   size="large"
                   icon={<NodeIndexOutlined />}
                   onClick={showModalRegent}
+                  hidden={!selectedVet?.value}
                 />
               </Tooltip>
             </Col>
@@ -291,7 +343,7 @@ export default function VeterinariesManagement() {
           <>
             <Col span={22}>
               <Title className="appTitle">
-                Gestión de Veterinarios en Clínicas
+                Asociación de Veterinarios Regentes
               </Title>
             </Col>
             <Col span={2}>
@@ -308,53 +360,74 @@ export default function VeterinariesManagement() {
           </>
         )}
       </Row>
-
-      <Divider orientation="left">Filtros</Divider>
-      <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="MP del veterinario" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="Nombre" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="Apellido" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Select
-            placeholder="Clínica Veterinaria"
-            showSearch
-            className="select-before full-width"
-          >
-            <Option value="NeoZoo">NeoZoo</Option>
-            <Option value="Chocos">Chocos</Option>
-            <Option value="Pecos">Pecos</Option>
-          </Select>
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 4 }}>
-          <Select
-            placeholder="Regente"
-            showSearch
-            className="select-before full-width"
-          >
-            <Option value="Si">Si</Option>
-            <Option value="No">No</Option>
-          </Select>
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 4 }}>
-          <Input placeholder="Telpefono" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 8 }}>
-          <Input placeholder="Dirección" />
-        </Col>
-      </Row>
       <Divider orientation="left"></Divider>
-      <Table
-        columns={columns}
-        dataSource={data}
-        scroll={{ x: 500 }}
-        onChange={onChange}
-      />
+
+      {/* Tabla para coveterinarios */}
+      {!isOwner && (
+        <Table columns={columns} dataSource={data} scroll={{ x: 500 }} />
+      )}
+
+      {isOwner && (
+        <Table
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: "max-content" }}
+          expandable={{
+            expandedRowRender: (vet) => (
+              <Table
+                columns={[
+                  {
+                    title: "Matrícula Profesional",
+                    dataIndex: "mp",
+                    key: "mp",
+                  },
+                  { title: "Nombre", dataIndex: "name", key: "name" },
+                  {
+                    title: "Apellido",
+                    dataIndex: "lastName",
+                    key: "lastName",
+                  },
+                  { title: "Teléfono", dataIndex: "phone", key: "phone" },
+                  {
+                    title: "Dirección",
+                    dataIndex: "address",
+                    key: "address",
+                  },
+                ]}
+                dataSource={vet.coVeterinaries}
+                pagination={false} // No paginamos los co-veterinarios
+              />
+            ),
+            rowExpandable: (vet) =>
+              vet.coVeterinaries && vet.coVeterinaries.length > 0,
+            expandIcon: ({ onExpand, expanded, record }) => {
+              const hasCoVeterinaries =
+                record.coVeterinaries && record.coVeterinaries.length > 0;
+
+              return hasCoVeterinaries ? (
+                <Tooltip
+                  placement="top"
+                  title={
+                    expanded
+                      ? "Ocultar Co-Veterinarios"
+                      : "Mostrar Co-Veterinarios"
+                  }
+                >
+                  <Button
+                    shape="circle"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onExpand(record);
+                    }}
+                  >
+                    {expanded ? <MinusOutlined /> : <PlusOutlined />}
+                  </Button>
+                </Tooltip>
+              ) : null;
+            },
+          }}
+        />
+      )}
 
       {/* modal para owner */}
       <Modal
@@ -374,7 +447,10 @@ export default function VeterinariesManagement() {
               <Button
                 htmlType="submit"
                 type="primary"
-                onClick={hideModal}
+                onClick={() => {
+                  setIsInit(false);
+                  hideModal();
+                }}
                 className="register-form_button-ok-modal"
               >
                 Aceptar
@@ -384,8 +460,10 @@ export default function VeterinariesManagement() {
                 htmlType="submit"
                 type="primary"
                 onClick={generateCode}
+                disabled={
+                  isLoading || !searchedVeterinaryData || !selectedVetId
+                }
                 className="stepSave"
-                disabled={isLoading || !searchedVeterinaryData}
               >
                 Generar
               </Button>
@@ -398,7 +476,7 @@ export default function VeterinariesManagement() {
             <Row>
               <Col span={24}>
                 <Typography.Title level={4}>
-                  {`El código generado para ${completeTemporalAssociation.veterinaryData.person.name} ${completeTemporalAssociation.veterinaryData.person.lastName} MP: ${completeTemporalAssociation.veterinaryData.veterinary.mp} es:`}
+                  {`El código generado para ${completeTemporalAssociation.veterinaryData.person.name} ${completeTemporalAssociation.veterinaryData.person.lastName} MP ${completeTemporalAssociation.veterinaryData.veterinary.mp} es:`}
                 </Typography.Title>
               </Col>
             </Row>
@@ -461,23 +539,42 @@ export default function VeterinariesManagement() {
                       <AvatarSearch
                         person={searchedVeterinaryData.person}
                       ></AvatarSearch>
-                      <Divider
-                        orientation="left"
-                        plain
-                        style={{ marginBottom: "2%", marginTop: "4%" }}
-                      >
-                        Seleccione con que clínica veterinaria desea asociarlo
-                      </Divider>
-                      <Col span={24}>
-                        <Select
-                          allowClear
-                          style={{ width: "100%" }}
-                          placeholder="Clínicas Veteriarias"
-                          onChange={refreshSelectedVets}
-                        >
-                          {vetOptions}
-                        </Select>
-                      </Col>
+                      {searchedVeterinaryData?.isAlreadyRegent ? (
+                        <>
+                          <Divider
+                            plain
+                            style={{
+                              marginBottom: "2%",
+                              marginTop: "4%",
+                            }}
+                          >
+                            El profesional encontrado ya es regente de una
+                            clínica veterinaria
+                          </Divider>
+                        </>
+                      ) : (
+                        <>
+                          {" "}
+                          <Divider
+                            orientation="left"
+                            plain
+                            style={{ marginBottom: "2%", marginTop: "4%" }}
+                          >
+                            Seleccione con que clínica veterinaria desea
+                            asociarlo
+                          </Divider>
+                          <Col span={24}>
+                            <Select
+                              allowClear
+                              style={{ width: "100%" }}
+                              placeholder="Clínicas Veteriarias"
+                              onChange={refreshSelectedVets}
+                            >
+                              {vetOptions}
+                            </Select>
+                          </Col>
+                        </>
+                      )}
                     </>
                   ) : isSearchingVeterinaryData ? (
                     <>
@@ -527,7 +624,9 @@ export default function VeterinariesManagement() {
                 type="primary"
                 onClick={generateCode}
                 className="register-form_button-ok-modal"
-                disabled={isLoading || !searchedVeterinaryData}
+                disabled={
+                  isLoading || !searchedVeterinaryData || !selectedVetId
+                }
               >
                 Generar
               </Button>
@@ -543,7 +642,7 @@ export default function VeterinariesManagement() {
                   El código generado para{" "}
                   {completeTemporalAssociation.veterinaryData.person.name}{" "}
                   {completeTemporalAssociation.veterinaryData.person.lastName}{" "}
-                  MP: {completeTemporalAssociation.veterinaryData.veterinary.mp}{" "}
+                  MP {completeTemporalAssociation.veterinaryData.veterinary.mp}{" "}
                   es:
                 </Typography.Title>
               </Col>
@@ -614,6 +713,7 @@ export default function VeterinariesManagement() {
                         style={{ width: "100%" }}
                         placeholder="Clínicas Veteriarias"
                         onChange={refreshSelectedVets}
+                        value={selectedVetId}
                       >
                         {vetOptions}
                       </Select>

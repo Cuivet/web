@@ -119,7 +119,7 @@ export default function Pets() {
         <Row>
           <Pet></Pet>
         </Row>
-      ) : null}
+      ) : <>Aún no tienes mascotas registradas</>}
     </>
   );
 }

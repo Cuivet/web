@@ -13,7 +13,12 @@ import {
   Spin,
   message,
 } from "antd";
-import { NodeIndexOutlined, DisconnectOutlined } from "@ant-design/icons";
+import {
+  NodeIndexOutlined,
+  DisconnectOutlined,
+  PlusOutlined,
+  MinusOutlined,
+} from "@ant-design/icons";
 import {
   getVetsByVetOwnerId,
   registerTemporalAssociation,
@@ -109,11 +114,12 @@ export default function VeterinariesManagement() {
 
   function generateDataOwner(vets) {
     var finalData = [];
+
     vets.forEach((vet) => {
       if (vet.veterinaryData === null) {
         return;
       }
-      finalData.push({
+      let vetEntry = {
         key: vet.vet.id,
         mp: vet.veterinaryData.veterinary.mp,
         name: vet.veterinaryData.person.name,
@@ -131,8 +137,23 @@ export default function VeterinariesManagement() {
           ) : null,
         id: vet.vet.id,
         address: vet.vet.address,
-      });
+      };
+
+      if (vet.coveterinaryData && vet.coveterinaryData.length > 0) {
+        vetEntry.coVeterinaries = vet.coveterinaryData.map((coVet, index) => ({
+          key: `${vet.vet.id}-coVet-${index}`,
+          mp: coVet.coveterinary.mp,
+          name: coVet.coperson.name,
+          lastName: coVet.coperson.lastName,
+          phone: coVet.coperson.phone,
+          vet: coVet.coveterinary.name,
+          address: coVet.coperson.address,
+        }));
+      }
+
+      finalData.push(vetEntry);
     });
+
     setData(finalData);
   }
 
@@ -341,7 +362,72 @@ export default function VeterinariesManagement() {
       </Row>
       <Divider orientation="left"></Divider>
 
-      <Table columns={columns} dataSource={data} scroll={{ x: 500 }} />
+      {/* Tabla para coveterinarios */}
+      {!isOwner && (
+        <Table columns={columns} dataSource={data} scroll={{ x: 500 }} />
+      )}
+
+      {isOwner && (
+        <Table
+          columns={columns}
+          dataSource={data}
+          scroll={{ x: "max-content" }}
+          expandable={{
+            expandedRowRender: (vet) => (
+              <Table
+                columns={[
+                  {
+                    title: "Matrícula Profesional",
+                    dataIndex: "mp",
+                    key: "mp",
+                  },
+                  { title: "Nombre", dataIndex: "name", key: "name" },
+                  {
+                    title: "Apellido",
+                    dataIndex: "lastName",
+                    key: "lastName",
+                  },
+                  { title: "Teléfono", dataIndex: "phone", key: "phone" },
+                  {
+                    title: "Dirección",
+                    dataIndex: "address",
+                    key: "address",
+                  },
+                ]}
+                dataSource={vet.coVeterinaries}
+                pagination={false} // No paginamos los co-veterinarios
+              />
+            ),
+            rowExpandable: (vet) =>
+              vet.coVeterinaries && vet.coVeterinaries.length > 0,
+            expandIcon: ({ onExpand, expanded, record }) => {
+              const hasCoVeterinaries =
+                record.coVeterinaries && record.coVeterinaries.length > 0;
+
+              return hasCoVeterinaries ? (
+                <Tooltip
+                  placement="top"
+                  title={
+                    expanded
+                      ? "Ocultar Co-Veterinarios"
+                      : "Mostrar Co-Veterinarios"
+                  }
+                >
+                  <Button
+                    shape="circle"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onExpand(record);
+                    }}
+                  >
+                    {expanded ? <MinusOutlined /> : <PlusOutlined />}
+                  </Button>
+                </Tooltip>
+              ) : null;
+            },
+          }}
+        />
+      )}
 
       {/* modal para owner */}
       <Modal

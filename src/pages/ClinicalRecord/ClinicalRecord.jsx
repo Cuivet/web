@@ -26,6 +26,7 @@ import VaccinationModal from "../../components/VaccinationModal/VaccinationModal
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
 import "./ClinicalRecord.scss";
+import MyContext from "../../MyContext";
 
 const { Title } = Typography;
 
@@ -37,11 +38,13 @@ export default function ClinicalRecord() {
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [newVisit, setNewVisit] = useState(null);
   const [flag, setFlag] = useState(true);
-  const { selectedVetId } = useContext(VetContext);
+  // const { selectedVetId } = useContext(VetContext);
   const [showVaccination, setShowVaccination] = useState(false);
   const [vaccinationData, setVaccinationData] = useState(null);
   const [drugs, setDrugs] = useState([]);
   const [drugTypes, setDrugTypes] = useState([]);
+  const { selectedVet } = useContext(MyContext);
+  console.log(selectedVet, "selectedVet");
 
   //renderiza los pasos completados en tags en el Header
   const getStepsDone = (cRecord) => {
@@ -64,7 +67,7 @@ export default function ClinicalRecord() {
       diagnosis: "diagnostico",
       prognosis: "pronostico",
     };
-  
+
     return Object.keys(cRecord)
       .filter((property) => {
         return (
@@ -125,10 +128,11 @@ export default function ClinicalRecord() {
         });
       //crea una de cero
     } else if (profile && profile.veterinary && profile.veterinary.id && flag) {
+      debugger;
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,
-        vetId: selectedVetId, //el vetId seleccionado en el MenuTop
+        vetId: selectedVet?.value, //el vetId seleccionado en el MenuTop
       };
       clinicalRecordService
         .registerClinicalRecord(cRecord)
@@ -155,7 +159,6 @@ export default function ClinicalRecord() {
   //guarda automaticamente el mismo, todos los pasos de una vez
   const saveClinicalRecord = (data) => {
     console.log(data);
-
     let visits = clinicalRecord.visits;
     visits.push(newVisit);
 

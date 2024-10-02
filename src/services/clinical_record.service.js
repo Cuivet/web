@@ -5,7 +5,8 @@ export var clinicalRecordService = {
     findAllByVeterinaryId: findAllByVeterinaryId,
     registerClinicalRecord: registerClinicalRecord,
     updateClinicalRecord: updateClinicalRecord,
-    findAllByPetId: findAllByPetId
+    findAllByTutor: findAllByTutor,
+    findAllByPet: findAllByPet,
 }
 
 async function findOneById(id) {
@@ -77,11 +78,28 @@ async function updateClinicalRecord(data) {
         });
 };
 
-async function findAllByPetId(petId) {
+async function findAllByTutor(tutorId) {
     var axios = require('axios');
     return axios({
         method: "get",
-        url: `${basePATH}/clinical-record/allByPetId/${petId}`,
+        url: `${basePATH}/clinical-record/allByTutor/${tutorId}`,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+};
+
+
+async function findAllByPet(petId) {
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/clinical-record/allByPet/${petId}`,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',

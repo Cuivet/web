@@ -1,140 +1,153 @@
-@import '../../scss/index.scss';
+@import "../../scss/index.scss";
 
-.ant-upload-list {
-    height: 200px!important;
+// .ant-upload-list {
+//   height: 200px ;
+// }
+
+// .ant-upload-select {
+//   width: 200px ;
+//   height: 200px ;
+// }
+
+// .ant-upload-list-item {
+//   width: 200px ;
+//   height: 200px ;
+// }
+// .ant-upload-list-picture-card .ant-upload-list-item{
+//   height: 200px;
+// }
+.ant-upload.ant-upload-select-picture-card {
+  height: 200px;
+  width: 200px;
+}
+.ant-upload-list-picture-card-container {
+  height: 200px;
+  width: 200px;
 }
 
-.ant-upload-select {
-    width: 200px!important;
-    height: 200px!important;
-}
+.register-pet-form {
+  // width: 60%;
+  text-align: left;
+  font-size: 0em + 22px / $defaultFontSize;
+  color: $primary-color;
+  // align-items: center;
+  @media (min-width: $media-breackpoint-up-lg) {
+    // width: 70%;
+  }
 
-.ant-upload-list-item {
-    width: 200px!important;
-    height: 200px!important;
-}
+  //este es solo para el nombre
+  &__input {
+    // font-size: 0em + 22px / $defaultFontSize;
+    color: black;
+    font-size: 16px;
 
-.register-pet-form{
-    // width: 60%;
-    text-align: left;
-    font-size: 0em + 22px / $defaultFontSize;
-    color: $primary-color;
-    // align-items: center;
-    @media (min-width: $media-breackpoint-up-lg) {
-        // width: 70%;
+    &:hover {
+      border-color: $primary-color-hover !important;
     }
-
-    //este es solo para el nombre
-    &__input{
-        // font-size: 0em + 22px / $defaultFontSize;
-        color: black;
-        font-size: 16px;
-        
-        &:hover{
-            border-color: $secondary-color !important;
-        }
-    };
-    &__date{
-        width: 100%;
-        font-size: 0em + 20px / $defaultFontSize!important;
+  }
+  &__date {
+    width: 100%;
+    font-size: 0em + 20px / $defaultFontSize !important;
+  }
+  &__select {
+    font-size: 0em+20px / $defaultFontSize;
+    &:hover {
+      border-color: $primary-color-hover !important;
     }
-    &__select{
-        font-size: 0em+20px/$defaultFontSize;
-        &:hover{
-            border-color: $secondary-color !important;
-        }
-    };
+  }
 
-    &__radio{
-        font-size: 0em+20px/$defaultFontSize;
-        width: 100%;
-        &:hover{
-            border-color: $secondary-color !important;
-        }
-        &-item{
-            width: 50%;
-            text-align: center;
-
-            &:hover, :active{
-                color: $secondary-color;
-                border-color: $secondary-color;
-            }
-        }
-    };
-
-    &__button{
-        width: 100%;
-        font-size: 0em+22px/$defaultFontSize;
-        background-color: $primary-color;
-        color: $font-light;
-        border-radius: 4px;
-        height: 40px;
-
-        &:hover{
-            background-color: $secondary-color!important;
-            color: $font-light;
-            // border-color: $primary-color-hover;
-            border: 0;
-
-        }
-        &:focus, &:active{
-            background-color: $secondary-color;
-            color: $font-light;
-            border:0;
-        }
+  &__radio {
+    font-size: 0em+20px / $defaultFontSize;
+    width: 100%;
+    &:hover {
+      border-color: $primary-color-hover !important;
     }
-    
-    &__datepicker{
-        font-size: 0em+20px/$defaultFontSize !important;
-        &:hover{
-            border-color: $secondary-color !important;
-        }
-        width: 100%;
-    }
-    
+    &-item {
+      width: 50%;
+      text-align: center;
 
+      &:hover,
+      :active {
+        color: $primary-color-hover;
+        border-color: $primary-color-hover;
+      }
+    }
+  }
+
+  &__button {
+    width: 100%;
+    font-size: 0em+22px / $defaultFontSize;
+    background-color: $primary-color;
+    color: $font-light;
+    border-radius: 4px;
+    height: 40px;
+
+    &:hover {
+      background-color: $secondary-color !important;
+      color: $font-light;
+      // border-color: $primary-color-hover;
+      border: 0;
+    }
+    &:focus,
+    &:active {
+      background-color: $secondary-color;
+      color: $font-light;
+      border: 0;
+    }
+  }
+
+  &__datepicker {
+    font-size: 0em+20px / $defaultFontSize !important;
+    &:hover {
+      border-color: $primary-color-hover !important;
+    }
+    width: 100%;
+  }
 }
 
-span.ant-radio + *{
-    font-size: 0em+20px/$defaultFontSize !important;
-    //color: #c3c3c3
+span.ant-radio + * {
+  font-size: 0em+20px / $defaultFontSize !important;
+  //color: #c;3c3c3
 }
 
-.ant-radio-button-wrapper-checked{
-    color: $primary-color!important;
-    border-color: $primary-color!important;
-    transition-property: color, border-color, box-shadow;
-    transition-duration: 0.3s, 0.3s, 0.3s, 0.3s;
+.ant-radio-button-wrapper-checked {
+  color: $primary-color !important;
+  border-color: $primary-color !important;
+  background: $secondary-color !important;
+  transition-property: color, border-color, box-shadow;
+  transition-duration: 0.3s, 0.3s, 0.3s, 0.3s;
+}
+
+.ant-radio-button-wrapper-disabled.ant-radio-button-wrapper-checked {
+  background: #bcbcbc !important;
 }
 
 .ant-upload,
-.ant-upload-drag{
-    &:hover{
-        border-color: $primary-color!important;
-        // color: $secondary-color;
+.ant-upload-drag {
+  &:hover {
+    border-color: $primary-color-hover !important;
+    // color: $secondary-color;
+  }
+  &-icon {
+    span {
+      color: $primary-color !important;
+
+      &:hover {
+        // color: $secondary-color!important;
+      }
     }
-    &-icon{
-        span{
-            color: $primary-color!important;
-    
-            &:hover{
-                // color: $secondary-color!important;
-            }
-        }
-    
-    }
+  }
 }
 .ant-modal-footer {
-    .ant-btn-primary{
-        background-color: $primary-color!important;
-        border: 0;
-    }
-    .ant-btn-default:hover{
-        border-color: $secondary-color!important;
-        color: $secondary-color!important;
-    }
-    
+  .ant-btn-primary {
+    background-color: $primary-color !important;
+    border: 0;
+  }
+  .ant-btn-default:hover {
+    border-color: $primary-color-hover !important;
+    color: $primary-color-hover !important;
+  }
 }
-.ant-modal-title{
-    content: 'Editar imagen'!important;
+.ant-modal-title {
+  content: "Editar imagen" !important;
 }

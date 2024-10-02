@@ -17,11 +17,11 @@ import {
 } from "antd";
 import Icon, {
   SyncOutlined,
-  EyeOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import SyncDisabledOutlinedIcon from "@mui/icons-material/SyncDisabledOutlined";
-import vett from "../../assets/img/jpg/vet.jpg";
+import clinica from "../../assets/img/jpg/clinica.jpg";
+
 import {
   getTemporalAssociationByCode,
   registerRegentOnVet,
@@ -29,7 +29,7 @@ import {
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
 const { Title } = Typography;
 
-export default function VetsAssociations() {
+export default function VetsAssociations(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedCode, setGeneratedCode] = useState(false);
   const [completeTemporalAssociation, setCompleteTemporalAssociation] =
@@ -38,6 +38,8 @@ export default function VetsAssociations() {
     useState([]);
   const [isInit, setIsInit] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  // const [vetToDisplay, setVetToDisplay] = useState(null);
+  // const [displayDrawer, setDisplayDrawer] = useState(false);
 
   if (!isInit) {
     refreshComponent();
@@ -89,44 +91,43 @@ export default function VetsAssociations() {
     }
   };
 
-    const createAssociation = () => {
-        if (generatedCode[0]==="R") {
-            createRegentAssociation();
-        } else {
-            createVeterinaryAssociation();
-        }
+  const createAssociation = () => {
+    if (generatedCode[0] === "R") {
+      createRegentAssociation();
+    } else {
+      createVeterinaryAssociation();
+    }
+  };
+
+  const createRegentAssociation = () => {
+    const regentAssociation = {
+      id: completeTemporalAssociation.vetData.vet.id,
+      name: completeTemporalAssociation.vetData.vet.name,
+      phone: completeTemporalAssociation.vetData.vet.phone,
+      address: completeTemporalAssociation.vetData.vet.address,
+      vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId,
+      veterinaryId: profile.veterinary.id,
     };
-    
-    const createRegentAssociation = () => {
-        const regentAssociation = {
-            id: completeTemporalAssociation.vetData.vet.id,
-            name: completeTemporalAssociation.vetData.vet.name,
-            phone: completeTemporalAssociation.vetData.vet.phone,
-            address: completeTemporalAssociation.vetData.vet.address,
-            vetOwnerId: completeTemporalAssociation.vetData.vet.vetOwnerId, //para que usa todos estos datos??
-            veterinaryId: profile.veterinary.id,
-        };
-        registerRegentOnVet(regentAssociation)
-        .then(response =>{
-            message.success('Asociación establecida exitosamente');
-            refreshComponent();
-        });
-    }
-    
-    const createVeterinaryAssociation = () => {
-        const veterinaryAssociations = [];
-        const veterinaryAssociation = {
-            vetId: completeTemporalAssociation.vetData.vet.id,
-            veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id
-        }
-        veterinaryAssociations.push(veterinaryAssociation);
-        veterinaryAssociationService.register(veterinaryAssociations)
-            .then(response => {
-                message.success('Asociación establecida exitosamente');
-                refreshComponent();
-                window.location.replace('');
-            });
-    }
+    registerRegentOnVet(regentAssociation).then(() => {
+      message.success("Asociación establecida exitosamente");
+      setIsInit(false);
+      window.location.replace("");
+    });
+  };
+
+  const createVeterinaryAssociation = () => {
+    const veterinaryAssociations = [];
+    const veterinaryAssociation = {
+      vetId: completeTemporalAssociation.vetData.vet.id,
+      veterinaryId: completeTemporalAssociation.veterinaryData.veterinary.id,
+    };
+    veterinaryAssociations.push(veterinaryAssociation);
+    veterinaryAssociationService.register(veterinaryAssociations).then(() => {
+      message.success("Asociación establecida exitosamente");
+      setIsInit(false);
+      window.location.replace("");
+    });
+  };
 
   function refreshComponent() {
     veterinaryAssociationService
@@ -139,6 +140,7 @@ export default function VetsAssociations() {
     setCompleteTemporalAssociation(null);
   }
 
+  //renderizado de cards de clinicas
   function returnRegentAssociationCards() {
     var renderAssociationCards = [];
     veterinaryAssociationDataList.forEach((association) => {
@@ -147,7 +149,7 @@ export default function VetsAssociations() {
           ? true
           : false;
       renderAssociationCards.push(
-        <Col xs={{span: 24 }} lg={{span: 6 }}>
+        <Col xs={{ span: 24 }} lg={{ span: 6 }}>
           <Badge.Ribbon
             text={isRegent ? "Regente" : "Co-Veterinario"}
             color={isRegent ? "pink" : "purple"}
@@ -155,9 +157,17 @@ export default function VetsAssociations() {
             <Card
               className="appCard"
               hoverable
-              cover={<img alt="required text" src={vett}></img>}
+              cover={<img alt="required text" src={clinica}></img>}
               actions={[
-                <EyeOutlined key="edit" />,
+                // <Tooltip placement="top" title="Ver Clínica">
+                //   <Button
+                //     type="link"
+                //     size="large"
+                //     style={{ border: "none" }}
+                //     icon={<EyeOutlined key="edit" />}
+                //     onClick={() => displayVet(association.vetData.vet)}
+                //   />
+                // </Tooltip>,
                 <Popconfirm
                   title="¿Está seguro que desea desasociar clínica veterinaria?"
                   onConfirm={confirm}
@@ -172,19 +182,36 @@ export default function VetsAssociations() {
                     />
                   }
                 >
-                  <Icon>
-                    <SyncDisabledOutlinedIcon key="delete" />
-                  </Icon>
+                  <Button
+                    type="link"
+                    size="large"
+                    style={{ border: "none" }}
+                    icon={
+                      <Icon>
+                        <SyncDisabledOutlinedIcon key="delete" />
+                      </Icon>
+                    }
+                  />
                 </Popconfirm>,
               ]}
             >
               <Meta
                 className=""
-                title={association.vetData.vet.name}
+                title={
+                  <Typography.Title
+                    level={4}
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {association.vetData.vet.name}
+                  </Typography.Title>
+                }
                 description={
                   <>
                     <Row>
-                      <Typography.Text type="secondary">
+                      <Typography.Text type="primary">
                         {"Veterinario Regente: " +
                           association.vetData.regentData.person.name +
                           " " +
@@ -192,7 +219,7 @@ export default function VetsAssociations() {
                       </Typography.Text>
                     </Row>
                     <Row>
-                      <Typography.Text type="secondary">
+                      <Typography.Text type="primary">
                         {"Dirección: " + association.vetData.vet.address}
                       </Typography.Text>
                     </Row>
@@ -212,7 +239,7 @@ export default function VetsAssociations() {
       <Row align="middle">
         <Col span={22}>
           <Title className="appTitle">
-            Asociación con Clínicas Veterinarias
+            Mis Clínicas Veterinarias Asociadas
           </Title>
         </Col>
         <Col span={2}>
@@ -240,6 +267,7 @@ export default function VetsAssociations() {
       <Modal
         title="Asociarse con una clínica veterinaria"
         visible={isModalOpen}
+        onCancel={hideModal}
         footer={[
           <Button
             type="default"
@@ -300,7 +328,8 @@ export default function VetsAssociations() {
             <Row>
               <Col span={24}>
                 <Input
-                  name="phone"
+                  name="code"
+                  autoComplete="off"
                   placeholder="Código de asociación"
                   onChange={refreshCode}
                 />

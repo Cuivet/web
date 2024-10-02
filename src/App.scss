@@ -1,8 +1,8 @@
 @import "./scss/variables";
 @import "~antd/dist/antd.css";
 @import "./scss/index.scss";
-.html{
-    scroll-behavior: smooth;
+.html {
+  scroll-behavior: smooth;
 }
 .success {
   //border: 1px solid $success !important;
@@ -13,8 +13,8 @@
   background-color: $background-error;
 }
 //tab en el login para mobile
-.ant-tabs-nav-list{
-    width: 100%!important;
+.ant-tabs-nav-list {
+  width: 100% !important;
 }
 //tooltips en el sistema
 .ant-tooltip-inner {
@@ -62,19 +62,23 @@
 
 //radiobtns del sistema
 .ant-radio-button-wrapper:hover {
-  color: $secondary-color;
+  color: $primary-color-hover;
 }
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within {
+.ant-radio-button-wrapper-checked:not(
+    .ant-radio-button-wrapper-disabled
+  ):focus-within {
   box-shadow: 0 0 0 2px rgba(151, 66, 216, 0.2);
 }
-.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+.ant-radio-button-wrapper-checked:not(
+    .ant-radio-button-wrapper-disabled
+  )::before {
   background-color: $secondary-color !important;
 }
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
 .ant-btn:hover,
 .ant-input:hover {
-  border-color: $secondary-color !important;
+  border-color: $primary-color-hover!important;
 }
 .ant-btn-primary {
   border-color: $primary-color !important;
@@ -85,8 +89,8 @@
 .ant-btn:hover.ant-btn-default,
 .ant-btn-dashed:hover,
 .ant-btn-dashed:focus {
-  color: $secondary-color !important;
-  border-color: $secondary-color !important;
+  color: $primary-color-hover !important;
+  border-color: $primary-color-hover !important;
 }
 // el step en el que estoy
 .ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
@@ -117,6 +121,26 @@
   > .ant-steps-item-tail::after {
   background-color: $primary-color-hover;
 }
+
+.ant-steps
+  .ant-steps-item:not(.ant-steps-item-active):not(.ant-steps-item-process)
+  > .ant-steps-item-container[role="button"]:hover
+  .ant-steps-item-icon {
+  border-color: $primary-color-hover;
+}
+.ant-steps
+  .ant-steps-item:not(.ant-steps-item-active):not(.ant-steps-item-process)
+  > .ant-steps-item-container[role="button"]:hover
+  .ant-steps-item-icon
+  .ant-steps-icon {
+  color: $primary-color-hover
+}
+.ant-steps
+  .ant-steps-item:not(.ant-steps-item-active)
+  > .ant-steps-item-container[role="button"]:hover
+  .ant-steps-item-title {
+  color: $primary-color-hover;
+}
 // progreso general, circulo sobre el step
 .ant-progress-inner:not(.ant-progress-circle-gradient)
   .ant-progress-circle-path {
@@ -133,18 +157,32 @@
 //arrows dentro del input number para incrementar/decrementar cantidad
 .ant-input-number-handler:hover .ant-input-number-handler-up-inner,
 .ant-input-number-handler:hover .ant-input-number-handler-down-inner {
-  color: $secondary-color;
+  color: $primary-color-hover;
 }
 //backtop button
 .ant-back-top-content {
   background-color: $primary-color;
+}
+// hover en el pagination
+// borde
+.ant-pagination-item:hover {
+  border-color: $primary-color-hover;
+} //texto color
+.ant-pagination-item:hover a {
+  color: $primary-color-hover;
+} //para las flechas del paginado
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  border-color: $primary-color-hover;
+  color: $primary-color-hover;
 }
 .ant-back-top-content:hover {
   background-color: $secondary-color;
   color: $primary-color;
 }
 //btn de guardado en cada step
-.stepSave .ant-btn-primary[disabled], .stepSave.ant-btn-primary[disabled] {
+.stepSave .ant-btn-primary[disabled],
+.stepSave.ant-btn-primary[disabled] {
   background-color: #f5f5f5 !important;
   color: #00000040 !important;
   border-color: #00000040 !important;
@@ -193,8 +231,8 @@
   margin: 0;
 
   &:hover {
-    background-color: $secondary-color !important;
-    color: $primary-color !important;
+    background-color: $primary-color-hover !important;
+    color: $font-light !important;
   }
   &:focus,
   &:active {
@@ -236,13 +274,13 @@
   color: $primary-color !important;
 
   &:hover {
-    color: $secondary-color !important;
+    color: $primary-color-hover !important;
   }
 }
 .appDatePicker {
   font-size: 0em+20px / $defaultFontSize !important;
   &:hover {
-    border-color: $secondary-color !important;
+    border-color: $primary-color-hover !important;
   }
   width: 100%;
 }
@@ -268,10 +306,9 @@
 // scrollbar properties
 body::-webkit-scrollbar {
   width: 5px;
-//   @media (min-width: $media-breackpoint-up-md) {
-//     width: 2px;
-//   }
-
+  //   @media (min-width: $media-breackpoint-up-md) {
+  //     width: 2px;
+  //   }
 }
 
 /* Track */
@@ -287,5 +324,5 @@ body::-webkit-scrollbar-thumb {
 
 /* Handle on hover */
 body::-webkit-scrollbar-thumb:hover {
-  background: $primary-color;
+  background: $primary-color-hover;
 }

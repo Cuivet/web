@@ -17,11 +17,12 @@ export default function MenuWeb(){
     const profile = JSON.parse(sessionStorage.getItem('profile')) ;
 
     const veterinary = {
-        module:['Ficha Clínica','Calendario','Mascotas asociadas', 'Reportes'],
-        description:['Iniciar ficha clínica para la Mascota','Visualizá próximos eventos','Visualizá las mascotas asociadas','Visualizá tus reportes'],
+        module:['Ficha Clínica','Vacunacion','Calendario', 'Reportes'],
+        description:['Iniciar ficha clínica para la Mascota','Carga de vacunas a mascotas','Visualizá próximos eventos','Visualizá tus reportes'],
         disabled:[false,true],
         img:[atencion,calendario,huella,visitsReports],
-        routes:['/clinical-record-menu','/calendar','/pets-management','/vetQualification','/reports']
+        routes:['/clinical-record-menu','/vaccination','/calendar','/pets-management','/vetQualification','/reports']
+
     };
 
     const tutor = {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   Table,
   Button,
@@ -6,27 +6,32 @@ import {
   Row,
   Divider,
   Input,
-  Select,
   Typography,
   Tooltip,
   Modal,
   Spin,
+  Space,
   message,
 } from "antd";
-import { NodeIndexOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  FormOutlined,
+  NodeIndexOutlined,
+} from "@ant-design/icons";
 import {
   registerTemporalAssociation,
   getAllByVeterinaryId,
+  getAllByVetId,
 } from "../../services/pet_association.service";
 import { getTutorDataByDni } from "../../services/tutor.service";
 import AvatarSearch from "../../components/AvatarSearch";
-import FolderOpenOutlined from "@mui/icons-material/FolderOpenOutlined";
-import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
+// import FolderOpenOutlined from "@mui/icons-material/FolderOpenOutlined";
+// import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
 import { raceService } from "../../services/race.service";
 import { specieService } from "../../services/specie.service";
 import { Link } from "react-router-dom";
-const { Option } = Select;
-const { Title } = Typography;
+import MyContext from "../../MyContext";
+const { Title, Text } = Typography;
 
 export default function PetsManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +48,126 @@ export default function PetsManagement() {
   const [species, setSpecies] = useState([]);
   const [isFetchData, setIsFetchData] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const { selectedVet } = useContext(MyContext);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Buscar ${dataIndex}`}
+          value={`${selectedKeys[0] || ""}`}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Buscar
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filtrar
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Cerrar
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Text mark style={{ padding: 0, backgroundColor: "#ffc069" }}>
+          {text ? text.toString() : ""}
+        </Text>
+      ) : (
+        // <Highlighter
+        //   highlightStyle={{
+        //     backgroundColor: '#ffc069',
+        //     padding: 0,
+        //   }}
+        //   searchWords={[searchText]}
+        //   autoEscape
+        //   textToHighlight={text ? text.toString() : ''}
+        // />
+        text
+      ),
+  });
 
   if (!isInit && isFetchData) {
     refreshComponent();
@@ -63,9 +188,15 @@ export default function PetsManagement() {
   }, []);
 
   function refreshComponent() {
-    getAllByVeterinaryId(profile.veterinary.id).then((associations) => {
-      generateData(associations);
-    });
+    if (!selectedVet) {
+      getAllByVeterinaryId(profile.veterinary.id).then((associations) => {
+        generateDataParticular(associations);
+      });
+    } else {
+      getAllByVetId(selectedVet?.value).then((associations) => {
+        generateData(associations);
+      });
+    }
     setIsModalOpen(false);
     setGeneratedCode(false);
     setTutorDni(null);
@@ -74,23 +205,64 @@ export default function PetsManagement() {
   }
 
   function generateData(associations) {
+    //para clínicas
     var finalData = [];
-    associations.forEach((association) => {
+    let filteredData = associations.filter(
+      (ass) => ass.vetData.id === selectedVet?.value
+    );
+    filteredData.forEach((association) => {
       finalData.push({
-        key: association.pet.id,
-        id: association.pet.id,
-        name: association.pet.name,
+        key: association?.associationId,
+        id: association?.associationId,
+        name: association?.pet.name,
         tutorName:
-          association.tutorData.person.lastName +
+          association?.tutorData.person.lastName +
           " " +
-          association.tutorData.person.name,
-        dni: association.tutorData.person.dni,
-        especie: species.find(
+          association?.tutorData.person.name,
+        dni: association?.tutorData.person.dni,
+        especie: species?.find(
           (specie) =>
             specie.id ===
             races.find((race) => race.id === association.pet.raceId).specieId
         ).name,
-        raza: races.find((race) => race.id === association.pet.raceId).name,
+        raza: races?.find((race) => race.id === association.pet.raceId).name,
+        vet: association?.vetData.name,
+        veterinary:
+          association?.veterinaryData.person.lastName +
+          " " +
+          association?.veterinaryData.person.name,
+      });
+    });
+    setData(finalData);
+  }
+
+  function generateDataParticular(associations) {
+    //para clínicas
+    var finalData = [];
+    let filteredData = associations.filter(
+      (ass) => ass.vetData.name === "Atención particular"
+    );
+    filteredData.forEach((association) => {
+      finalData.push({
+        key: association?.associationId,
+        id: association?.associationId,
+        name: association?.pet.name,
+        tutorName:
+          association?.tutorData.person.lastName +
+          " " +
+          association?.tutorData.person.name,
+        dni: association?.tutorData.person.dni,
+        especie: species?.find(
+          (specie) =>
+            specie?.id ===
+            races?.find((race) => race.id === association.pet.raceId).specieId
+        ).name,
+        raza: races?.find((race) => race.id === association.pet.raceId).name,
+        // vet: association?.vetData.name,
+        veterinary:
+          association?.veterinaryData.person.lastName +
+          " " +
+          association?.veterinaryData.person.name,
       });
     });
     setData(finalData);
@@ -101,37 +273,47 @@ export default function PetsManagement() {
       title: "ID Mascota",
       dataIndex: "id",
       defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
+      sorter: (a, b) => a.id - b.id,
       responsive: ["md"],
     },
     {
       title: "Nombre Mascota",
       dataIndex: "name",
+      ...getColumnSearchProps("name"),
       sorter: (a, b) => a.name.length - b.name.length,
+    },
+    {
+      title: "Especie",
+      dataIndex: "especie",
+      sorter: (a, b) => a.especie.length - b.especie.length,
+      // responsive: ['md']
+    },
+    {
+      title: "Raza",
+      dataIndex: "raza",
+      sorter: (a, b) => a.raza.length - b.raza.length,
+      // responsive: ['md']
     },
     {
       title: "Tutor",
       dataIndex: "tutorName",
+      ...getColumnSearchProps("tutorName"),
       sorter: (a, b) => a.tutorName.length - b.tutorName.length,
       // responsive: ['sm']
     },
     {
       title: "DNI Tutor",
       dataIndex: "dni",
-      sorter: (a, b) => a.address.length - b.address.length,
+      ...getColumnSearchProps("dni"),
+      sorter: (a, b) => a.dni - b.dni,
       responsive: ["sm"],
     },
     {
-      title: "Especie",
-      dataIndex: "especie",
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
-      // responsive: ['md']
-    },
-    {
-      title: "Raza",
-      dataIndex: "raza",
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
-      // responsive: ['md']
+      title: "Veterinario Responsable",
+      dataIndex: "veterinary",
+      ...getColumnSearchProps("veterinary"),
+      sorter: (a, b) => a.veterinary.length - b.veterinary.length,
+      responsive: ["lg"],
     },
     {
       title: "Acciones",
@@ -140,25 +322,29 @@ export default function PetsManagement() {
       //   responsive: ["md"],
       render: (_, record) => (
         <>
-          <Link
+          {/* <Link
             to={"/clinical-records-management"}
-            className="admin-sider__item"
-          >
-            <Tooltip placement="top" title="Ver Historial Clínico">
+            // className="admin-sider__item"
+          > */}
+          {/* <Tooltip placement="top" title="Ver Historial Clínico">
               <Button
-                type="link"
-                className="appTableButton"
-                icon={<FolderOpenOutlined />}
-              ></Button>
-            </Tooltip>
-          </Link>
-          <Link to={"/consultation"} className="admin-sider__item">
+                shape="circle"
+                size="large"
+                className="margin-right"
+                // icon={}
+              ><FolderOutlined /></Button>
+            </Tooltip> */}
+          {/* </Link> */}
+          <Link to={"/clinical-record-menu"} className="admin-sider__item">
             <Tooltip placement="top" title="Registrar nueva consulta">
               <Button
-                type="link"
-                className="appTableButton"
-                icon={<ContentPasteOutlinedIcon />}
-              ></Button>
+                shape="circle"
+                size="large"
+                className="margin-right"
+                // icon={<ContentPasteOutlinedIcon />}
+              >
+                <FormOutlined />
+              </Button>
             </Tooltip>
           </Link>
         </>
@@ -166,8 +352,27 @@ export default function PetsManagement() {
     },
   ];
 
+  const getAssociations = async () => {
+    if (selectedVet && selectedVet?.value) {
+      setIsLoading(true);
+      getAllByVetId(selectedVet?.value)
+        .then((associations) => {
+          generateData(associations);
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      //aca entra si es atencion particular
+      getAllByVeterinaryId(profile.veterinary.id)
+        .then((associations) => {
+          generateDataParticular(associations);
+        })
+        .finally(() => setIsLoading(false));
+    }
+    setData([]);
+  };
+
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
+    // console.log("params", pagination, filters, sorter, extra);
   };
 
   const showModal = () => {
@@ -179,6 +384,7 @@ export default function PetsManagement() {
     registerTemporalAssociation({
       tutorDni: tutorDni,
       veterinaryId: JSON.parse(sessionStorage.getItem("profile")).veterinary.id,
+      vetId: selectedVet?.key,
     }).then((response) => {
       setCompleteTemporalAssociation(response);
       setIsLoading(false);
@@ -186,13 +392,12 @@ export default function PetsManagement() {
     });
   };
 
-    const hideModal = () => {
-        setIsModalOpen(false);
-        setGeneratedCode(false);
-        setSearchedTutorData(null);
-        setTutorDni(null);
-        window.location.replace('');
-    };
+  const hideModal = () => {
+    setIsModalOpen(false);
+    setGeneratedCode(false);
+    setSearchedTutorData(null);
+    setTutorDni(null);
+  };
 
   const refreshDni = (e) => {
     setSearchedTutorData(null);
@@ -212,11 +417,46 @@ export default function PetsManagement() {
       });
   };
 
+  if (!isInit) {
+    getAssociations();
+    setIsInit(true);
+    refreshComponent();
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await raceService.findAll().then((response) => {
+        setRaces(response);
+      });
+      await specieService.findAll().then((response) => {
+        setSpecies(response);
+      });
+      setIsFetchData(true);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (isFetchData) {
+      getAssociations();
+      setIsInit(true);
+    }
+  }, [isFetchData]);
+
+  useEffect(() => {
+    getAssociations();
+  }, [selectedVet]);
+
   return (
     <>
       <Row align="middle">
         <Col span={22}>
-          <Title className="appTitle">Mis Pacientes Asociados</Title>
+          <Title className="appTitle">
+            Mis pacientes asociados para
+            {selectedVet?.value
+              ? ` ${selectedVet.children}`
+              : " Atención Particular"}
+          </Title>
         </Col>
         <Col span={2}>
           <Tooltip title="Asociar nueva mascota" placement="right">
@@ -230,38 +470,6 @@ export default function PetsManagement() {
           </Tooltip>
         </Col>
       </Row>
-
-      <Divider orientation="left">Filtros</Divider>
-
-      <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="ID de la mascota..." />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="Nombre de la mascota..." />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="Nombre del Tutor..." />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input placeholder="DNI del Tutor..." />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 4 }}>
-          <Select defaultValue="http://" className="select-before full-width">
-            <Option value="http://">Animal</Option>
-            <Option value="http:///">Perro</Option>
-            <Option value="https://">Gato</Option>
-          </Select>
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 4 }}>
-          <Select defaultValue="http://" className="select-before full-width">
-            <Option value="http://">Raza</Option>
-            <Option value="http:///">Perro</Option>
-            <Option value="https://">Gato</Option>
-          </Select>
-        </Col>
-      </Row>
-
       <Divider orientation="left"></Divider>
       <Table
         columns={columns}
@@ -287,7 +495,10 @@ export default function PetsManagement() {
               <Button
                 htmlType="submit"
                 type="primary"
-                onClick={hideModal}
+                onClick={() => {
+                  setIsInit(false);
+                  hideModal();
+                }}
                 className="register-form_button-ok-modal"
               >
                 Aceptar
@@ -339,7 +550,10 @@ export default function PetsManagement() {
             ) : (
               <>
                 <Divider orientation="left" plain>
-                  Ingrese DNI del tutor a asociar
+                  Ingrese DNI del tutor a asociar con la clínica:{" "}
+                  {selectedVet?.key != null
+                    ? selectedVet.children
+                    : "Atención Particular"}
                 </Divider>
                 <Row>
                   <Col span={18}>

@@ -80,3 +80,8 @@
     border: $secondary-color!important;
     box-shadow: 0 0 0 2px rgba(230, 196, 243, 0.614)!important;
 }
+
+.register-form__upload .ant-upload-list-picture-card-container {
+    width: 100%;
+    margin: 0;
+}

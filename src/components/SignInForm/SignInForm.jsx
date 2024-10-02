@@ -7,7 +7,6 @@ import { Alert } from 'antd';
 import { Spin } from 'antd';
 
 import '../RegisterForm/RegisterForm.scss'
-import { keyboard } from '@testing-library/user-event/dist/keyboard';
 
 const {Link, Paragraph} = Typography;
 
@@ -35,7 +34,6 @@ export default function SignInForm(props){
 
 
     const changeForm = e =>{
-        console.log(e.target.name);
         setInput({
             ...input,
             [e.target.name]: e.target.value

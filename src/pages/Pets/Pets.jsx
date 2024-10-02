@@ -39,6 +39,7 @@ export default function Pets() {
         <CardPet
           showPet={displayPet}
           item={pet.id}
+          key={pet.id}
           title={pet.name}
           popTitle={"¿Está seguro que desea borrar la mascota?"}
           img={pet.photo ? pet.photo : paw}
@@ -49,7 +50,7 @@ export default function Pets() {
     return renderPetList;
   }
 
-  const displayPet = (id) => {
+  const displayPet = (id) => {    
     setPetToDisplay(pets.find((pet) => pet.id === id));
     setDisplayDrawer(true);
   };
@@ -118,7 +119,7 @@ export default function Pets() {
         <Row>
           <Pet></Pet>
         </Row>
-      ) : null}
+      ) : <>Aún no tienes mascotas registradas</>}
     </>
   );
 }

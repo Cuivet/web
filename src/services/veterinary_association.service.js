@@ -63,7 +63,7 @@ async function getAllByVeterinaryId(veterinaryId){
     var axios = require('axios');
     return axios({
         method: "get",
-        url: `${basePATH}/veterinary-association/allByVeterinaryId/${veterinaryId}`,
+        url: `${basePATH}/veterinary-association/allDataByVeterinaryId/${veterinaryId}`,
         headers: {
             "Content-Type": "application/json",
             Accept: 'application/json',
@@ -72,10 +72,13 @@ async function getAllByVeterinaryId(veterinaryId){
         })
         .then((response) => {
             return response.data;
+        })
+        .catch((error) => {
+            console.log(error);
         });
 }
 
-async function getAllDataByRegentOrVeterinary(veterinaryId){
+export function getAllDataByRegentOrVeterinary(veterinaryId){
     var axios = require('axios');
     return axios({
         method: "get",

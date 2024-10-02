@@ -1,0 +1,35 @@
+@import "../../scss/index.scss";
+
+.visits-list{
+    max-height: 300px;
+    overflow: auto;
+    margin-bottom: 10px;
+
+    .ant-list-sm .ant-list-item {
+        margin-right: 5%;
+
+    }
+}
+
+.visits-list::-webkit-scrollbar {
+  width: 5px;
+  //   @media (min-width: $media-breackpoint-up-md) {
+  //     width: 2px;
+  //   }
+}
+
+/* Track */
+.visits-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.visits-list::-webkit-scrollbar-thumb {
+  background: $secondary-color;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.visits-list::-webkit-scrollbar-thumb:hover {
+  background: $primary-color-hover;
+}

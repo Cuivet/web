@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Col,
   Row,
@@ -15,8 +15,9 @@ import {
 import { getTutorDataByDni } from "../../services/tutor.service";
 import AvatarSearch from "../../components/AvatarSearch";
 import { SettingTwoTone } from "@ant-design/icons";
-import { getPetsByTutorId } from "../../services/pet.service";
 import { useNavigate } from "react-router-dom";
+import MyContext from "../../MyContext";
+import { getAllByTutorId } from "../../services/pet_association.service";
 const { Option } = Select;
 const { Title, Text } = Typography;
 
@@ -27,6 +28,8 @@ export default function ClinicalRecordMenu() {
   const [searchedTutorData, setSearchedTutorData] = useState(null);
   const [petOptions, setPetOptions] = useState(null);
   const [selectedPetId, setSelectedPetId] = useState(null);
+  const { selectedVet } = useContext(MyContext);
+  const profile = JSON.parse(sessionStorage.getItem("profile"));
 
   const refreshDni = (e) => {
     setSearchedTutorData(null);
@@ -39,10 +42,19 @@ export default function ClinicalRecordMenu() {
     setIsSearchingTutorData(true);
     getTutorDataByDni(tutorDni)
       .then((res) => {
-        setSearchedTutorData(res);
         setIsSearchingTutorData(false);
-        getPetsByTutorId(res.tutor.id).then((pets) => {
-          setPetOptions(generatePetOptions(pets));
+        getAllByTutorId(res.tutor.id).then((pets) => {
+          const petsArray = pets
+            .filter(
+              (item) =>
+                item.veterinaryData.veterinary.id === profile.veterinary.id
+            )
+            .map((item) => item.pet);
+          petsArray.length === 0
+            ? setSearchedTutorData(null)
+            : setSearchedTutorData(res);
+          console.log(petsArray);
+          setPetOptions(generatePetOptions(petsArray));
         });
         sessionStorage.setItem("tutor", JSON.stringify(res));
       })

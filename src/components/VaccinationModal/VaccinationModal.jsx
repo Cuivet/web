@@ -5,7 +5,6 @@ import React from "react";
 import '../ConsultationVisits/ConsultationVisits.scss'
 
 export default function VaccinationModal(props) {
-  console.log("modal vacunas ", props.data);
   const columns = [
     {
       title: "Fecha",

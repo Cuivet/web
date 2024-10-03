@@ -8,6 +8,7 @@ import {
   Spin,
   Modal,
   Upload,
+  message,
 } from "antd";
 import {
   emailValidation,
@@ -193,8 +194,8 @@ export default function RegisterForm(props) {
     if (fileList && fileList[0] && fileList[0].originFileObj) {
       file = fileList[0].originFileObj;
     } else {
-      console.error("No se encontró un archivo válido en fileList.");
-      return;
+      setIsRegistering(false);
+      return message.error("No se encontró un archivo válido en fileList.");
     }
 
     const reader = new FileReader();

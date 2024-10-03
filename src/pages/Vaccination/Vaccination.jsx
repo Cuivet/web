@@ -46,7 +46,7 @@ import {
   deleteVaccination,
 } from "../../services/vaccination.service";
 import { getAllByVeterinaryId } from "../../services/pet_association.service";
-import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
+import MyContext from "../../MyContext";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -69,7 +69,7 @@ export default function Vaccination() {
   const [vaccinationData, setVaccinationData] = useState([]);
   const [form] = Form.useForm();
   const profile = JSON.parse(sessionStorage.getItem("profile"));
-  const { selectedVetId } = useContext(VetContext);
+  const { selectedVet } = useContext(MyContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -294,7 +294,7 @@ export default function Vaccination() {
       nextDate: values.nextDate === undefined ? null : moment(values.nextDate),
       observation: values.observation === undefined ? null : values.observation,
       veterinaryId: profile.veterinary.id,
-      vetId: selectedVetId,
+      vetId: selectedVet?.value,
     };
     // console.log("Received values of form: ", values);
     // console.log("New vaccination: ", newVaccination);

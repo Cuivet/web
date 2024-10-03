@@ -33,6 +33,7 @@ import AvatarSearch from "../../components/AvatarSearch";
 import VaccinesOutlinedIcon from "@mui/icons-material/VaccinesOutlined";
 import { getTutorDataByDni } from "../../services/tutor.service";
 import { getPetsByTutorId } from "../../services/pet.service";
+import { getAllByTutorId } from "../../services/pet_association.service";
 import { drugTypeService } from "../../services/drug_type.service";
 import { drugService } from "../../services/drug.service";
 import { raceService } from "../../services/race.service";
@@ -238,11 +239,24 @@ export default function Vaccination() {
     setIsSearchingTutorData(true);
     getTutorDataByDni(tutorDni)
       .then((res) => {
-        setSearchedTutorData(res);
+        // setSearchedTutorData(res);
         setIsSearchingTutorData(false);
-        getPetsByTutorId(res.tutor.id).then((pets) => {
-          setPetOptions(generatePetOptions(pets));
+        getAllByTutorId(res.tutor.id).then((pets) => {
+          const petsArray = pets
+            .filter(
+              (item) =>
+                item.veterinaryData.veterinary.id === profile.veterinary.id
+            )
+            .map((item) => item.pet);
+          petsArray.length === 0
+            ? setSearchedTutorData(null)
+            : setSearchedTutorData(res);
+          console.log(petsArray);
+          setPetOptions(generatePetOptions(petsArray));
         });
+        // getPetsByTutorId(res.tutor.id).then((pets) => {
+        //   setPetOptions(generatePetOptions(pets));
+        // });
         sessionStorage.setItem("tutor", JSON.stringify(res));
       })
       .catch((error) => {

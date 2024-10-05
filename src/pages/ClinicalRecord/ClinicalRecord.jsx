@@ -24,7 +24,7 @@ import ConsultationVisits from "../../components/ConsultationVisits/Consultation
 import ConsultationSteps from "../../components/ConsultationSteps/ConsultationSteps";
 import VaccinationModal from "../../components/VaccinationModal/VaccinationModal";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
-import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
+import MyContext from "../../MyContext";
 import "./ClinicalRecord.scss";
 
 const { Title } = Typography;
@@ -37,11 +37,11 @@ export default function ClinicalRecord() {
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [newVisit, setNewVisit] = useState(null);
   const [flag, setFlag] = useState(true);
-  const { selectedVetId } = useContext(VetContext);
   const [showVaccination, setShowVaccination] = useState(false);
   const [vaccinationData, setVaccinationData] = useState(null);
   const [drugs, setDrugs] = useState([]);
   const [drugTypes, setDrugTypes] = useState([]);
+  const { selectedVet } = useContext(MyContext);
 
   //renderiza los pasos completados en tags en el Header
   const getStepsDone = (cRecord) => {
@@ -128,7 +128,7 @@ export default function ClinicalRecord() {
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,
-        vetId: selectedVetId, //el vetId seleccionado en el MenuTop
+        vetId: selectedVet?.value, //el vetId seleccionado en el MenuTop
       };
       clinicalRecordService
         .registerClinicalRecord(cRecord)

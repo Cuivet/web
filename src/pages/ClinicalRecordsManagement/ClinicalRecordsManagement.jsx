@@ -172,7 +172,7 @@ export default function ClinicalRecordsManagement() {
         key: clinicalRecord.id,
         clinicalRecordId: clinicalRecord.id,
         petName: clinicalRecord.pet.name,
-        // vetName: clinicalRecord.vet.name,
+        vetName: clinicalRecord.vet.name,
         tutorName:
           clinicalRecord.tutorData.person.name +
           " " +
@@ -380,7 +380,7 @@ export default function ClinicalRecordsManagement() {
       <Table
         columns={columns}
         dataSource={data}
-        scroll={{ x: 500 }}
+        scroll={{ x: 500, y: 500 }}
         onChange={onChange}
         loading={isLoading}
       />

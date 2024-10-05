@@ -163,13 +163,15 @@ export default function ClinicalHistory() {
         clinicalRecordId: clinicalRecord.id,
         petName: clinicalRecord.pet.name,
         vetName: clinicalRecord.vet.name,
-        veterinaryName: clinicalRecord.veterinaryData.person.name + " " +
+        veterinaryName:
+          clinicalRecord.veterinaryData.person.name +
+          " " +
           clinicalRecord.veterinaryData.person.lastName,
         tutorName:
           clinicalRecord.tutorData.person.name +
           " " +
           clinicalRecord.tutorData.person.lastName,
-        visistsNumber: clinicalRecord.visits.length,
+        visistsNumber: clinicalRecord.visits.length === 0 ? '-' : clinicalRecord.visits.length,
         // progressObject: calculateProgress(clinicalRecord),
         date: moment(clinicalRecord.createdAt).format("DD/MM/YYYY"), //clinicalRecord.createdAt.slice(0, 10),
         indexIdForButton: clinicalRecord.id,
@@ -217,7 +219,7 @@ export default function ClinicalHistory() {
       sorter: (a, b) => a.visistsNumber - b.visistsNumber,
       align: "center",
       // responsive: ['md']
-    },   
+    },
 
     {
       title: "Fecha",
@@ -251,14 +253,14 @@ export default function ClinicalHistory() {
     <>
       <Row align="middle">
         <Col span={24}>
-          <Title className="appTitle">Historiales Clinicos</Title>
+          <Title className="appTitle">Historial Clinico</Title>
         </Col>
       </Row>
       <Divider></Divider>
       <Table
         columns={columns}
         dataSource={data}
-        scroll={{ x: 500 }}
+        scroll={{ y: 500 }}
         //   onChange={onChange}
         loading={isLoading}
       />

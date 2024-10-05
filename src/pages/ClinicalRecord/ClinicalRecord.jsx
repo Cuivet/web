@@ -148,13 +148,13 @@ export default function ClinicalRecord() {
       clinicalRecordId: null,
       date: new Date().toISOString(),
     });
-    console.log("en useEffect: ", clinicalRecord);
+    // console.log("en useEffect: ", clinicalRecord);
   }, [location, flag]);
 
   //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
   //guarda automaticamente el mismo, todos los pasos de una vez
   const saveClinicalRecord = (data) => {
-    console.log(data);
+    // console.log(data);
 
     let visits = clinicalRecord.visits;
     visits.push(newVisit);
@@ -235,7 +235,7 @@ export default function ClinicalRecord() {
         }),
       };
 
-      console.log(cRecord);
+      // console.log(cRecord);
       message.loading("Finalizando Ficha Clinica", 1, () => {
         clinicalRecordService
           .updateClinicalRecord(cRecord)
@@ -365,7 +365,7 @@ export default function ClinicalRecord() {
           });
     }
 
-    console.log(cRecord);
+    // console.log(cRecord);
 
     message.loading("Guardando Ficha Clinica", 1, () => {
       clinicalRecordService
@@ -396,10 +396,10 @@ export default function ClinicalRecord() {
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
-    console.log(stepsDone);
+    // console.log(stepsDone);
   }
   const showVaccinationModal = () => {
-    console.log(vaccinationData);
+    // console.log(vaccinationData);
     setShowVaccination(true);
   };
 

@@ -1,39 +1,30 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
-  Table,
-  Button,
   Col,
-  Row,
   Divider,
+  Row,
   Input,
   Space,
-  Typography,
-  Progress,
   Tooltip,
-  Popconfirm,
+  Button,
+  Table,
+  Typography,
 } from "antd";
-import { clinicalRecordService } from "../../services/clinical_record.service";
-import {
-  FilePdfOutlined,
-  EditOutlined,
-  EyeOutlined,
-  DeleteOutlined,
-  WarningOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { useNavigate } from "react-router";
+import { FilePdfOutlined, SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { clinicalRecordService } from "../../services/clinical_record.service";
+
 const { Title, Text } = Typography;
 
-export default function ClinicalRecordsManagement() {
-  let navigate = useNavigate();
+export default function ClinicalHistory() {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [isInit, setIsInit] = useState(false);
-  const profile = JSON.parse(sessionStorage.getItem("profile"));
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const profile = JSON.parse(sessionStorage.getItem("profile"));
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -156,14 +147,13 @@ export default function ClinicalRecordsManagement() {
 
   function refreshComponent() {
     clinicalRecordService
-      .findAllByVeterinaryId(profile.veterinary.id)
-      .then((clinicalRecords) => {
-        console.log(clinicalRecords);
-        generateData(clinicalRecords);
+      .findAllByTutorId(profile.tutor.id)
+      .then((response) => {
+        generateData(response);
         setIsLoading(false);
+        // console.log(response);
       });
   }
-
   function generateData(clinicalRecords) {
     var finalData = [];
     clinicalRecords.forEach((clinicalRecord) => {
@@ -173,31 +163,22 @@ export default function ClinicalRecordsManagement() {
         clinicalRecordId: clinicalRecord.id,
         petName: clinicalRecord.pet.name,
         vetName: clinicalRecord.vet.name,
+        veterinaryName:
+          clinicalRecord.veterinaryData.person.name +
+          " " +
+          clinicalRecord.veterinaryData.person.lastName,
         tutorName:
           clinicalRecord.tutorData.person.name +
           " " +
           clinicalRecord.tutorData.person.lastName,
-        progressObject: calculateProgress(clinicalRecord),
+        visistsNumber: clinicalRecord.visits.length === 0 ? '-' : clinicalRecord.visits.length,
+        // progressObject: calculateProgress(clinicalRecord),
         date: moment(clinicalRecord.createdAt).format("DD/MM/YYYY"), //clinicalRecord.createdAt.slice(0, 10),
         indexIdForButton: clinicalRecord.id,
       });
     });
     setData(finalData);
-  }
-
-  function calculateProgress(clinicalRecord) {
-    let percentage = 0;
-    percentage = clinicalRecord.review ? percentage + 10 : percentage;
-    percentage = clinicalRecord.anamnesis ? percentage + 20 : percentage;
-    percentage = clinicalRecord.physicalExam ? percentage + 20 : percentage;
-    percentage = clinicalRecord.presumptiveDiagnosis
-      ? percentage + 20
-      : percentage;
-    percentage = clinicalRecord.diagnosis ? percentage + 20 : percentage;
-    percentage = clinicalRecord.prognosis ? percentage + 10 : percentage;
-    let fromColor = percentage === 100 ? "#008000" : "#4B0082";
-    let toColor = percentage === 100 ? "#00e600" : "#BA55D3";
-    return { percentage: percentage, fromColor: fromColor, toColor: toColor };
+    console.log(finalData);
   }
 
   const columns = [
@@ -213,42 +194,33 @@ export default function ClinicalRecordsManagement() {
       sorter: (a, b) => a.clinicalRecordId - b.clinicalRecordId,
     },
     {
-      title: "Paciente",
+      title: "Mascota",
       dataIndex: "petName",
       ...getColumnSearchProps("petName"),
       sorter: (a, b) => a.petName.length - b.petName.length,
     },
     {
-      title: "Veterinaria",
+      title: "Clinica",
       dataIndex: "vetName",
       ...getColumnSearchProps("vetName"),
       sorter: (a, b) => a.vetName.length - b.vetName.length,
       // responsive: ['sm']
     },
     {
-      title: "Tutor",
-      dataIndex: "tutorName",
-      ...getColumnSearchProps("tutorName"),
-      sorter: (a, b) => a.tutorName.length - b.tutorName.length,
+      title: "Veterinaria",
+      dataIndex: "veterinaryName",
+      ...getColumnSearchProps("veterinaryName"),
+      sorter: (a, b) => a.veterinaryName.length - b.veterinaryName.length,
       // responsive: ['sm']
     },
     {
-      title: "% Completado",
-      dataIndex: "progressObject",
-      responsive: ["md"],
-      render: (_, { progressObject }) => (
-        <>
-          <Progress
-            percent={progressObject.percentage}
-            size="small"
-            strokeColor={{
-              from: progressObject.fromColor,
-              to: progressObject.toColor,
-            }}
-          />
-        </>
-      ),
+      title: "Nro. Visitas",
+      dataIndex: "visistsNumber",
+      sorter: (a, b) => a.visistsNumber - b.visistsNumber,
+      align: "center",
+      // responsive: ['md']
     },
+
     {
       title: "Fecha",
       dataIndex: "date",
@@ -272,116 +244,24 @@ export default function ClinicalRecordsManagement() {
               <FilePdfOutlined />
             </Button>
           </Tooltip>
-          {progressObject.percentage === 100 ? (
-            <Tooltip placement="top" title="Ver la Ficha Clínica">
-              <Button
-                shape="circle"
-                type="dashed"
-                size="large"
-                className="margin-right"
-                // este boton aun no se que funcionamiento deberia tener
-                onClick={(e) => {
-                  goToClinicalRecord(indexIdForButton);
-                }}
-              >
-                <EyeOutlined />
-              </Button>
-            </Tooltip>
-          ) : (
-            <Tooltip placement="top" title="Continuar la Ficha Clínica">
-              <Button
-                shape="circle"
-                size="large"
-                className="margin-right"
-                onClick={(e) => {
-                  // console.log(indexIdForButton);
-                  goToClinicalRecord(indexIdForButton);
-                }}
-              >
-                <EditOutlined />
-              </Button>
-            </Tooltip>
-          )}
-          <Tooltip placement="top" title="Borrar la Ficha Clínica">
-            <Popconfirm
-              title="¿Seguro que quieres borrar esta ficha?"
-              placement="left"
-              // onConfirm={() => deleteClinicalRecord(indexIdForButton)}
-              icon={<WarningOutlined style={{ color: "red" }} />}
-            >
-              <Button shape="circle" danger size="large">
-                <DeleteOutlined />
-              </Button>
-            </Popconfirm>
-          </Tooltip>
         </>
       ),
     },
   ];
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
-
-  function goToClinicalRecord(clinicalRecordId) {
-    sessionStorage.setItem(
-      "clinicalRecordId",
-      JSON.stringify(clinicalRecordId)
-    );
-    navigate("/clinical-record", {
-      state: { clinicalRecordId: clinicalRecordId, petId: null },
-    });
-  }
-  // const filterClinicalRecordId = (e) => {};
-
   return (
     <>
       <Row align="middle">
         <Col span={24}>
-          <Title className="appTitle">Historiales Clínicos</Title>
+          <Title className="appTitle">Historial Clinico</Title>
         </Col>
       </Row>
-
-      {/* <Divider orientation="left">Filtros</Divider>
-
-      <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input
-            placeholder="Código de la ficha clinica"
-            allowClear
-            onChange={filterClinicalRecordId}
-          />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Select
-            className="full-width"
-            showSearch
-            placeholder="Ingrese nombre o código de la mascota"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().includes(input.toLowerCase())
-            }
-          >
-            <Option value="1">Lima - CuivetID: 200</Option>
-            <Option value="2">Wendy - CuivetID: 2522</Option>
-            <Option value="3">Tom - CuivetID: 32</Option>
-          </Select>
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input placeholder="DNI del tutor..." />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input placeholder="Fecha desde..." />
-        </Col>
-      </Row> */}
-
-      <Divider orientation="left"></Divider>
-
+      <Divider></Divider>
       <Table
         columns={columns}
         dataSource={data}
-        scroll={{ x: 500, y: 500 }}
-        onChange={onChange}
+        scroll={{ y: 500 }}
+        //   onChange={onChange}
         loading={isLoading}
       />
     </>

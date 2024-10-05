@@ -118,6 +118,7 @@ export default function MenuTop(props) {
               shape="circle"
               to="/login"
               onClick={logOut}
+              style={{marginRight: '1vw'}}
               icon={<LogoutOutlined />}
             />
           </Link>

@@ -2,7 +2,8 @@
 
 Este repositorio corresponde al lado del cliente/usuario del proyecto CUIVET desarrollado por estudiantes de la UTN-FRC.
 
-semantic-commits
+> .[!IMPORTANT].
+> semantic-commits
 Detallamos a continuación la semántica a utilizar para realizar los commits:
 
 feat: Nueva funcionalidad de software para el usuario.

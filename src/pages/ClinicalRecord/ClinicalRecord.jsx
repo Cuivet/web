@@ -154,7 +154,7 @@ export default function ClinicalRecord() {
   //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
   //guarda automaticamente el mismo, todos los pasos de una vez
   const saveClinicalRecord = (data) => {
-    // console.log(data);
+    console.log(clinicalRecord);
 
     let visits = clinicalRecord.visits;
     visits.push(newVisit);
@@ -209,25 +209,25 @@ export default function ClinicalRecord() {
             },
         anamnesis: {
           id:
-            clinicalRecord.anamnesis.id !== null
-              ? clinicalRecord.anamnesis.id
-              : null,
+            clinicalRecord.anamnesis === null
+              ? null
+              : clinicalRecord.anamnesis.id,
           anamnesisItems: data.anamnesisItems,
         },
         physicalExam: data.physicalExam,
         presumptiveDiagnosis: {
           id:
-            clinicalRecord.presumptiveDiagnosis.id !== null
-              ? clinicalRecord.presumptiveDiagnosis.id
-              : null,
+            clinicalRecord.presumptiveDiagnosis === null
+              ? null
+              : clinicalRecord.presumptiveDiagnosis.id,
           presumptiveDiagnosisItems: data.presumptiveDiagnosisItems,
           complementaryStudies: data.complementaryStudies,
         },
         diagnosis: {
           id:
-            clinicalRecord.diagnosis.id !== null
-              ? clinicalRecord.diagnosis.id
-              : null,
+            clinicalRecord.diagnosis === null
+              ? null
+              : clinicalRecord.diagnosis.id,
           diagnosisItems: [data.diagnosisItems],
         },
         prognosis: Object.defineProperties(data.prognosis, {

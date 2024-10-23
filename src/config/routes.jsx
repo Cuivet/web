@@ -28,6 +28,7 @@ import Reports from "../pages/VisitReports/VisitReports";
 import PetsReports from "../pages/PetsReports/PetsReports";
 import Qualification from "../pages/Qualification/Qualification";
 import Vaccination from "../pages/Vaccination/Vaccination";
+import vetQualification from "../pages/VetQualification/VetQualification";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -140,6 +141,11 @@ const routesAdmin = [
     path: "/qualification",
     component: Qualification,
     layout: LayoutAdmin,
+},
+{
+  path: "/vetQualification",
+  component: vetQualification,
+  layout: LayoutAdmin,
 },
 ];
 

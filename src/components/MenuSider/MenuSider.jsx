@@ -151,10 +151,10 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Historiales Clínicos </span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="qualifications">
+            <Menu.Item key="vetQualification">
                             <Link to={"/vetQualification"} className='admin-sider__item'>                      
                                 <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Calificaciones </span>
+                                <span className="nav-text"> Calificaciones obtenidas</span>
                             </Link>
                         </Menu.Item>
 

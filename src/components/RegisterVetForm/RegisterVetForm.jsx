@@ -10,6 +10,7 @@ import {
   Input,
   Spin,
 } from "antd";
+import Autocomplete from "../Autocomplete/Autocomplete";
 import ImgCrop from "antd-img-crop";
 import { SaveOutlined } from "@ant-design/icons";
 import { registerVet } from "../../services/vet.service";
@@ -22,8 +23,9 @@ export default function RegisterVetForm(props) {
   const [vet, setVet] = useState(null);
   const [formValid, setFormValid] = useState(initFormValid());
   const [fileList, setFileList] = useState([]);
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
   const profile = JSON.parse(sessionStorage.getItem("profile"));
-  // console.log(profile);
 
   if (!isInitData) {
     initVet();
@@ -39,7 +41,6 @@ export default function RegisterVetForm(props) {
 
   function initVet() {
     const vet = props.vet?.vet;
-    console.log(vet);
     if (vet) {
       if (vet.photo) {
         setFileList([
@@ -55,32 +56,17 @@ export default function RegisterVetForm(props) {
       photo: vet ? vet.photo : null,
       vetOwnerId: profile.vetOwner.id,
     });
+    setLatitude(vet ? vet.lat : "");
+    setLongitude(vet ? vet.lng : "");
   }
+
+  console.log(props.vet, "vet");
+
   const changeForm = (e) => {
     setVet({
       ...vet,
       [e.target.name]: e.target.value,
     });
-  };
-
-  const inputValidation = (e) => {
-    const { type, name } = e.target;
-    if (type === "radio") {
-      setFormValid({
-        ...formValid,
-        [name]: e.target.checked,
-      });
-    }
-    if (type === "text") {
-      setFormValid({ ...formValid, [name]: e.target });
-    }
-    if (type === "number") {
-      setFormValid({
-        ...formValid,
-        [name]: numberValidation(e.target),
-      });
-    }
-    setVet({ ...vet });
   };
 
   const register = (e) => {
@@ -92,6 +78,7 @@ export default function RegisterVetForm(props) {
         placement: "top",
       });
     }
+    const vetData = { ...vet, lat: latitude, lng: longitude };
     if (fileList.length > 0 && vet.photo == null) {
       const storageRef = ref(storage, `/vets/` + new Date().toString());
       const uploadTask = uploadBytesResumable(
@@ -111,13 +98,13 @@ export default function RegisterVetForm(props) {
           // se cargo la foto, ya tengo el url
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             // setVet({ ...vet, photo: url });
-            vet.photo = url;
-            uploadVet(vet);
+            vetData.photo = url;
+            uploadVet(vetData);
           });
         }
       );
     } else {
-      uploadVet(vet);
+      uploadVet(vetData);
     }
   };
 
@@ -162,6 +149,12 @@ export default function RegisterVetForm(props) {
   const resetForm = () => {
     initVet(null);
     setFormValid(initFormValid);
+  };
+
+  const handlePlaceSelected = (place) => {
+    setLatitude(place.geometry.location.lat());
+    setLongitude(place.geometry.location.lng());
+    setVet({ ...vet, address: place.formatted_address });
   };
 
   return !isInitData ? (
@@ -216,7 +209,7 @@ export default function RegisterVetForm(props) {
               autoComplete="off"
               // onChange={inputValidation}
               value={vet.phone}
-              placeholder="introduzca el nómero de teléfono"
+              placeholder="introduzca el número de teléfono"
               className="register-pet-form__input"
               // onSelect={inputValidation}
             />
@@ -224,20 +217,12 @@ export default function RegisterVetForm(props) {
         </Col>
         <Col span={24}>
           <Form.Item>
-            <Input
-              addonBefore="Dirección: "
-              type="text"
-              name="address"
-              autoComplete="off"
-              // onChange={inputValidation}
+            <Autocomplete
+              onPlaceSelected={handlePlaceSelected}
               value={vet.address}
-              placeholder="introduzca la dirección"
-              className="register-pet-form__input"
-              // onSelect={inputValidation}
             />
           </Form.Item>
         </Col>
-
         {props.disabled ? null : (
           <Col span={24}>
             <Form.Item>

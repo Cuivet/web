@@ -28,6 +28,7 @@ import Reports from "../pages/VisitReports/VisitReports";
 import PetsReports from "../pages/PetsReports/PetsReports";
 import Vaccination from "../pages/Vaccination/Vaccination";
 import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";
+import ViewVets from "../pages/ViewVets/ViewVets";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -140,6 +141,11 @@ const routesAdmin = [
     component: Error404,
     layout: LayoutLanding,
     path: "*",
+  },
+  {
+    component: ViewVets,
+    layout: LayoutAdmin,
+    path: "/vetsMap",
   },
 ];
 

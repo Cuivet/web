@@ -1,0 +1,49 @@
+/* VetsMap.css */
+
+/* Estilos generales */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.list-container {
+  width: 100%;
+  margin-bottom: 15px;
+  overflow-y: scroll;
+  height: 50vh;
+}
+
+.google-map {
+  width: 100%;
+  height: 50%;
+}
+
+/* Media queries para pantallas más grandes */
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+  .list-container {
+    width: 30%;
+    height: 100%;
+    margin-right: 15px;
+  }
+  .google-map {
+    width: 70%;
+    height: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .list-container {
+    width: 30%;
+    height: 100%;
+    margin-right: 15px;
+  }
+
+  .google-map {
+    width: 100%;
+    height: 100%;
+  }
+}

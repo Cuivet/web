@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { numberValidation } from "../../utils/formValidation";
 import {
   Row,
   Col,
@@ -9,6 +8,9 @@ import {
   notification,
   Input,
   Spin,
+  Checkbox,
+  TimePicker,
+  Typography,
 } from "antd";
 import Autocomplete from "../Autocomplete/Autocomplete";
 import ImgCrop from "antd-img-crop";
@@ -16,27 +18,32 @@ import { SaveOutlined } from "@ant-design/icons";
 import { registerVet } from "../../services/vet.service";
 import storage from "../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+
+const { RangePicker } = TimePicker;
 
 export default function RegisterVetForm(props) {
   const [isInitData, setIsInitData] = useState(false);
-  // const [isFetchData, setIsFetchData] = useState(false);
   const [vet, setVet] = useState(null);
-  const [formValid, setFormValid] = useState(initFormValid());
   const [fileList, setFileList] = useState([]);
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const [hours, setHours] = useState([
+    { dayOfWeek: "Lunes", openTime: null, closeTime: null, closed: false },
+    { dayOfWeek: "Martes", openTime: null, closeTime: null, closed: false },
+    { dayOfWeek: "Miércoles", openTime: null, closeTime: null, closed: false },
+    { dayOfWeek: "Jueves", openTime: null, closeTime: null, closed: false },
+    { dayOfWeek: "Viernes", openTime: null, closeTime: null, closed: false },
+    { dayOfWeek: "Sábado", openTime: null, closeTime: null, closed: false },
+    { dayOfWeek: "Domingo", openTime: null, closeTime: null, closed: false },
+  ]);
 
   if (!isInitData) {
     initVet();
     setIsInitData(true);
-  }
-  function initFormValid() {
-    return {
-      name: false,
-      phone: false,
-      address: false,
-    };
   }
 
   function initVet() {
@@ -58,9 +65,55 @@ export default function RegisterVetForm(props) {
     });
     setLatitude(vet ? vet.lat : "");
     setLongitude(vet ? vet.lng : "");
+    setHours(
+      vet
+        ? props.vet?.hours
+        : [
+            {
+              dayOfWeek: "Lunes",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+            {
+              dayOfWeek: "Martes",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+            {
+              dayOfWeek: "Miércoles",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+            {
+              dayOfWeek: "Jueves",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+            {
+              dayOfWeek: "Viernes",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+            {
+              dayOfWeek: "Sábado",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+            {
+              dayOfWeek: "Domingo",
+              openTime: null,
+              closeTime: null,
+              closed: false,
+            },
+          ]
+    );
   }
-
-  console.log(props.vet, "vet");
 
   const changeForm = (e) => {
     setVet({
@@ -70,7 +123,10 @@ export default function RegisterVetForm(props) {
   };
 
   const register = (e) => {
-    if (!vet.name || !vet.phone || !vet.address) {
+    const invalidHours = hours.some(
+      (hour) => !hour.closed && (!hour.openTime || !hour.closeTime)
+    );
+    if (!vet.name || !vet.phone || !vet.address || invalidHours) {
       return notification["error"]({
         message: "Todos los campos son obligatorios",
         description:
@@ -78,7 +134,8 @@ export default function RegisterVetForm(props) {
         placement: "top",
       });
     }
-    const vetData = { ...vet, lat: latitude, lng: longitude };
+
+    const vetData = { ...vet, lat: latitude, lng: longitude, hours };
     if (fileList.length > 0 && vet.photo == null) {
       const storageRef = ref(storage, `/vets/` + new Date().toString());
       const uploadTask = uploadBytesResumable(
@@ -109,7 +166,6 @@ export default function RegisterVetForm(props) {
   };
 
   const uploadVet = (vet) => {
-    console.log("uplaoad: ", vet);
     registerVet(vet).then((res) => {
       resetForm();
       props.registeredVet();
@@ -148,13 +204,37 @@ export default function RegisterVetForm(props) {
 
   const resetForm = () => {
     initVet(null);
-    setFormValid(initFormValid);
   };
 
   const handlePlaceSelected = (place) => {
     setLatitude(place.geometry.location.lat());
     setLongitude(place.geometry.location.lng());
     setVet({ ...vet, address: place.formatted_address });
+  };
+
+  const handleTimeChange = (times, timeStrings, day) => {
+    setHours((prevHours) =>
+      prevHours?.map((hour) =>
+        hour.dayOfWeek === day
+          ? { ...hour, openTime: timeStrings[0], closeTime: timeStrings[1] }
+          : hour
+      )
+    );
+  };
+
+  const handleClosedChange = (day) => {
+    setHours((prevHours) =>
+      prevHours?.map((hour) =>
+        hour.dayOfWeek === day
+          ? {
+              ...hour,
+              closed: !hour.closed,
+              openTime: !hour.closed ? null : hour.openTime,
+              closeTime: !hour.closed ? null : hour.closeTime,
+            }
+          : hour
+      )
+    );
   };
 
   return !isInitData ? (
@@ -191,12 +271,10 @@ export default function RegisterVetForm(props) {
               addonBefore="Nombre clínica: "
               type="text"
               name="name"
-              // onChange={inputValidation}
               value={vet.name}
               autoComplete="off"
               placeholder="introduzca el nombre"
               className="register-pet-form__input"
-              // onSelect={inputValidation}
             />
           </Form.Item>
         </Col>
@@ -207,11 +285,9 @@ export default function RegisterVetForm(props) {
               type="number"
               name="phone"
               autoComplete="off"
-              // onChange={inputValidation}
               value={vet.phone}
               placeholder="introduzca el número de teléfono"
               className="register-pet-form__input"
-              // onSelect={inputValidation}
             />
           </Form.Item>
         </Col>
@@ -223,6 +299,51 @@ export default function RegisterVetForm(props) {
             />
           </Form.Item>
         </Col>
+        <Col span={24} align="center">
+          <Typography.Text type="primary">
+            {"Horarios de atención: "}
+          </Typography.Text>
+        </Col>
+        {hours?.map((hour) => (
+          <Row key={hour.dayOfWeek} gutter={[16, 16]} align="middle">
+            <Col span={6}>
+              <Form.Item style={{ marginBottom: 0 }}>
+                <span>{hour.dayOfWeek}: </span>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item style={{ marginBottom: "5px" }}>
+                <RangePicker
+                  value={
+                    hour.openTime && hour.closeTime
+                      ? [
+                          dayjs(hour.openTime, "HH:mm"),
+                          dayjs(hour.closeTime, "HH:mm"),
+                        ]
+                      : [null, null]
+                  }
+                  onChange={(times, timeStrings) =>
+                    handleTimeChange(times, timeStrings, hour.dayOfWeek)
+                  }
+                  format="HH:mm"
+                  placeholder={["Hora de apertura", "Hora de cierre"]}
+                  disabled={hour.closed}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item style={{ marginBottom: 0 }}>
+                <Checkbox
+                  checked={hour.closed}
+                  onChange={() => handleClosedChange(hour.dayOfWeek)}
+                >
+                  Cerrado
+                </Checkbox>
+              </Form.Item>
+            </Col>
+          </Row>
+        ))}
+
         {props.disabled ? null : (
           <Col span={24}>
             <Form.Item>

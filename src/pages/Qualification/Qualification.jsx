@@ -40,7 +40,7 @@ export default function Qualification() {
       petName: item.clinicalRecord.pet.name,
       qualification: item.qualification.qualification,
       observation: item.qualification.observation_qa,
-      isSaved: item.qualification.qualification !== null || item.qualification.observation_qa !== null,
+      isSaved: item.qualification.qualification !== null || item.qualification.observation_qa !== null,//para manejar edicion
     }));
     setData(finalData);
   }

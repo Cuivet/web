@@ -26,7 +26,6 @@ import VaccinationModal from "../../components/VaccinationModal/VaccinationModal
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
 import MyContext from "../../MyContext";
 import "./ClinicalRecord.scss";
-import MyContext from "../../MyContext";
 
 const { Title } = Typography;
 

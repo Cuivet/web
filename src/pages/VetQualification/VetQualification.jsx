@@ -16,7 +16,7 @@ export default function VetQualification() {
 
     useEffect(() => {
         refreshComponent();
-    }, []); // Ejecutar solo una vez al montar el componente
+    }, []); // Ejecuta solo una vez 
 
     function refreshComponent() {
         qualificationService.findAllByVeterinaryId(profile.veterinary.id)
@@ -27,14 +27,17 @@ export default function VetQualification() {
     }
 
     function generateData(responseQualifications) {
-        const finalData = responseQualifications.map(item => ({
-            key: item.qualification.id,
-            date: item.qualification.updatedAt.slice(0, 10),
-            tutorName: item.clinicalRecord.tutorData.person.name,
-            petName: item.clinicalRecord.pet.name,
-            qualification: item.qualification.qualification,
-            observation: item.qualification.observation_qa,
-        }));
+        const finalData = responseQualifications
+            .map(item => ({
+                key: item.qualification.id,
+                date: item.qualification.updatedAt.slice(0, 10),
+                tutorName: item.clinicalRecord.tutorData.person.name,
+                petName: item.clinicalRecord.pet.name,
+                qualification: item.qualification.qualification,
+                observation: item.qualification.observation_qa,
+            }))
+            .filter(record => record.qualification != null || record.observation != null); // Filtrar registros con ambos valores en null
+    
         console.log("Final Data:", finalData); // Debug: Muestra el finalData
         setData(finalData);
         calculateAverage(finalData); // Calcular promedio después de setear los datos

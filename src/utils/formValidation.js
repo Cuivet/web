@@ -59,6 +59,25 @@ export function numberValidation(inputData){
         return false;
     };
 }
+export function textValidation(inputData) {
+    const textValid = /^[A-Za-z\s]+$/; // This regex matches letters and spaces
+    const { value } = inputData;
+    const parent = inputData.parentElement;
+
+    removeClassErrorSuccess(inputData, parent);
+
+    const resultValidation = textValid.test(value);
+
+    if(resultValidation) {
+        parent.classList.add("success");
+        inputData.classList.add("success");
+        return true;
+    } else {
+        parent.classList.add("error");
+        inputData.classList.add("error");
+        return false;
+    }
+}
 
 
 

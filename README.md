@@ -1,8 +1,10 @@
 # CUIVET - web
+> [!NOTE]
+>Este repositorio corresponde al lado del cliente/usuario del proyecto CUIVET desarrollado por estudiantes de la UTN-FRC.
 
-Este repositorio corresponde al lado del cliente/usuario del proyecto CUIVET desarrollado por estudiantes de la UTN-FRC.
-
-semantic-commits
+> [!IMPORTANT]
+> semantic-commits
+> 
 Detallamos a continuación la semántica a utilizar para realizar los commits:
 
 feat: Nueva funcionalidad de software para el usuario.
@@ -29,8 +31,9 @@ El enrutamiento de paginas se realiza en el archivo 'route.jsx'
 Las validaciones en los formularios se realizan con funciones creadas por el equipo de desarrollo y no con funcionalidades del framework, estan son definidas en el archivo 'formValidation.js'
 
 -------------------------------------------------------------------------------------------------------------------------------
-#Otras consideraciones
+> [!TIP]
+> Otras consideraciones
 
-Gestión de X: tabla de datos (gran volumen)
-Asociación de X: cards (volumen moderado)
-Mis X: abmc (administracion)
+Gestión de X: tabla de datos (gran volumen).  
+Asociación de X: cards (volumen moderado).  
+Mis X: abmc (administracion).  

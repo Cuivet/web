@@ -29,6 +29,7 @@ import PetsReports from "../pages/PetsReports/PetsReports";
 import Qualification from "../pages/Qualification/Qualification";
 import Vaccination from "../pages/Vaccination/Vaccination";
 import vetQualification from "../pages/VetQualification/VetQualification";
+import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -130,6 +131,11 @@ const routesAdmin = [
   {
     path: "/vaccination",
     component: Vaccination,
+    layout: LayoutAdmin,
+  },
+  {
+    path: "/clinical-history",
+    component: ClinicalHistory,
     layout: LayoutAdmin,
   },
   {

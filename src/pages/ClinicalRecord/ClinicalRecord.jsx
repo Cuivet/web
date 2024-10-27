@@ -24,7 +24,7 @@ import ConsultationVisits from "../../components/ConsultationVisits/Consultation
 import ConsultationSteps from "../../components/ConsultationSteps/ConsultationSteps";
 import VaccinationModal from "../../components/VaccinationModal/VaccinationModal";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
-import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
+import MyContext from "../../MyContext";
 import "./ClinicalRecord.scss";
 import MyContext from "../../MyContext";
 
@@ -38,13 +38,11 @@ export default function ClinicalRecord() {
   const [clinicalRecord, setClinicalRecord] = useState(null);
   const [newVisit, setNewVisit] = useState(null);
   const [flag, setFlag] = useState(true);
-  // const { selectedVetId } = useContext(VetContext);
   const [showVaccination, setShowVaccination] = useState(false);
   const [vaccinationData, setVaccinationData] = useState(null);
   const [drugs, setDrugs] = useState([]);
   const [drugTypes, setDrugTypes] = useState([]);
   const { selectedVet } = useContext(MyContext);
-  console.log(selectedVet, "selectedVet");
 
   //renderiza los pasos completados en tags en el Header
   const getStepsDone = (cRecord) => {
@@ -152,13 +150,14 @@ export default function ClinicalRecord() {
       clinicalRecordId: null,
       date: new Date().toISOString(),
     });
-    console.log("en useEffect: ", clinicalRecord);
+    // console.log("en useEffect: ", clinicalRecord);
   }, [location, flag]);
 
   //trae de ConsultationSteps 'data' y setea los datos en el clinicalRecord
   //guarda automaticamente el mismo, todos los pasos de una vez
   const saveClinicalRecord = (data) => {
-    console.log(data);
+    console.log(clinicalRecord);
+
     let visits = clinicalRecord.visits;
     visits.push(newVisit);
 
@@ -212,25 +211,25 @@ export default function ClinicalRecord() {
             },
         anamnesis: {
           id:
-            clinicalRecord.anamnesis.id !== null
-              ? clinicalRecord.anamnesis.id
-              : null,
+            clinicalRecord.anamnesis === null
+              ? null
+              : clinicalRecord.anamnesis.id,
           anamnesisItems: data.anamnesisItems,
         },
         physicalExam: data.physicalExam,
         presumptiveDiagnosis: {
           id:
-            clinicalRecord.presumptiveDiagnosis.id !== null
-              ? clinicalRecord.presumptiveDiagnosis.id
-              : null,
+            clinicalRecord.presumptiveDiagnosis === null
+              ? null
+              : clinicalRecord.presumptiveDiagnosis.id,
           presumptiveDiagnosisItems: data.presumptiveDiagnosisItems,
           complementaryStudies: data.complementaryStudies,
         },
         diagnosis: {
           id:
-            clinicalRecord.diagnosis.id !== null
-              ? clinicalRecord.diagnosis.id
-              : null,
+            clinicalRecord.diagnosis === null
+              ? null
+              : clinicalRecord.diagnosis.id,
           diagnosisItems: [data.diagnosisItems],
         },
         prognosis: Object.defineProperties(data.prognosis, {
@@ -238,7 +237,7 @@ export default function ClinicalRecord() {
         }),
       };
 
-      console.log(cRecord);
+      // console.log(cRecord);
       message.loading("Finalizando Ficha Clinica", 1, () => {
         clinicalRecordService
           .updateClinicalRecord(cRecord)
@@ -368,7 +367,7 @@ export default function ClinicalRecord() {
           });
     }
 
-    console.log(cRecord);
+    // console.log(cRecord);
 
     message.loading("Guardando Ficha Clinica", 1, () => {
       clinicalRecordService
@@ -399,10 +398,10 @@ export default function ClinicalRecord() {
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
-    console.log(stepsDone);
+    // console.log(stepsDone);
   }
   const showVaccinationModal = () => {
-    console.log(vaccinationData);
+    // console.log(vaccinationData);
     setShowVaccination(true);
   };
 

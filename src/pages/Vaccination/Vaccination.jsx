@@ -33,6 +33,7 @@ import AvatarSearch from "../../components/AvatarSearch";
 import VaccinesOutlinedIcon from "@mui/icons-material/VaccinesOutlined";
 import { getTutorDataByDni } from "../../services/tutor.service";
 import { getPetsByTutorId } from "../../services/pet.service";
+import { getAllByTutorId } from "../../services/pet_association.service";
 import { drugTypeService } from "../../services/drug_type.service";
 import { drugService } from "../../services/drug.service";
 import { raceService } from "../../services/race.service";
@@ -45,7 +46,7 @@ import {
   deleteVaccination,
 } from "../../services/vaccination.service";
 import { getAllByVeterinaryId } from "../../services/pet_association.service";
-import { VetContext } from "../../context/MenuTopContext/MenuTopContext";
+import MyContext from "../../MyContext";
 const { Title, Text } = Typography;
 const { Option } = Select;
 
@@ -68,7 +69,7 @@ export default function Vaccination() {
   const [vaccinationData, setVaccinationData] = useState([]);
   const [form] = Form.useForm();
   const profile = JSON.parse(sessionStorage.getItem("profile"));
-  const { selectedVetId } = useContext(VetContext);
+  const { selectedVet } = useContext(MyContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -238,11 +239,24 @@ export default function Vaccination() {
     setIsSearchingTutorData(true);
     getTutorDataByDni(tutorDni)
       .then((res) => {
-        setSearchedTutorData(res);
+        // setSearchedTutorData(res);
         setIsSearchingTutorData(false);
-        getPetsByTutorId(res.tutor.id).then((pets) => {
-          setPetOptions(generatePetOptions(pets));
+        getAllByTutorId(res.tutor.id).then((pets) => {
+          const petsArray = pets
+            .filter(
+              (item) =>
+                item.veterinaryData.veterinary.id === profile.veterinary.id
+            )
+            .map((item) => item.pet);
+          petsArray.length === 0
+            ? setSearchedTutorData(null)
+            : setSearchedTutorData(res);
+          console.log(petsArray);
+          setPetOptions(generatePetOptions(petsArray));
         });
+        // getPetsByTutorId(res.tutor.id).then((pets) => {
+        //   setPetOptions(generatePetOptions(pets));
+        // });
         sessionStorage.setItem("tutor", JSON.stringify(res));
       })
       .catch((error) => {
@@ -280,7 +294,7 @@ export default function Vaccination() {
       nextDate: values.nextDate === undefined ? null : moment(values.nextDate),
       observation: values.observation === undefined ? null : values.observation,
       veterinaryId: profile.veterinary.id,
-      vetId: selectedVetId,
+      vetId: selectedVet?.value,
     };
     // console.log("Received values of form: ", values);
     // console.log("New vaccination: ", newVaccination);

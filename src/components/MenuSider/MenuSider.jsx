@@ -1,14 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Layout, Menu } from "antd";
-import Icon, { HomeOutlined, SettingOutlined } from "@ant-design/icons";
+import Icon, {
+  HomeOutlined,
+  SettingOutlined,
+  FolderOpenOutlined,
+} from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
 import ScienceIcon from "@mui/icons-material/Science";
 import StarBorderIcon from '@mui/icons-material/StarBorder'; 
 import MedicalServicesOutlinedIcon from "@mui/icons-material/MedicalServicesOutlined";
 import PersonPinCircleOutlinedIcon from "@mui/icons-material/PersonPinCircleOutlined";
 import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
-import FolderOpenOutlined from "@mui/icons-material/FolderOpenOutlined";
 import "./MenuSider.scss";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { getAllByRegentId } from "../../services/vet.service";
@@ -73,6 +76,12 @@ export default function MenuSider(props) {
 
         {tutor ? (
           <>
+            <Menu.Item key="clinicalHistory">
+              <Link to={"/clinical-history"} className="admin-sider__item">
+                <FolderOpenOutlined />
+                <span className="nav-text"> Historiales Clínicos </span>
+              </Link>
+            </Menu.Item>
             <Menu.Item key="tutorStudies">
               <Link to={"/studies"} className="admin-sider__item">
                 <Icon component={""}>
@@ -141,6 +150,20 @@ export default function MenuSider(props) {
             </Menu.Item>
 
             <Menu.Item key="veterinaryClinicalRecordManagement">
+              <Link to={"/clinical-records-management"} className="admin-sider__item">
+                <FolderOpenOutlined />
+                <span className="nav-text"> Historiales Clínicos </span>
+              </Link>
+            </Menu.Item>
+
+            <Menu.Item key="vetQualification">
+              <Link to={"/vetQualification"} className='admin-sider__item'>                      
+                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
+                  <span className="nav-text"> Calificaciones obtenidas</span>
+              </Link>
+            </Menu.Item>
+
+            {/* <Menu.Item key="veterinaryClinicalRecordManagement">
               <Link
                 to={"/clinical-records-management"}
                 className="admin-sider__item"
@@ -150,13 +173,7 @@ export default function MenuSider(props) {
                 </Icon>
                 <span className="nav-text"> Historiales Clínicos </span>
               </Link>
-            </Menu.Item>
-            <Menu.Item key="vetQualification">
-                            <Link to={"/vetQualification"} className='admin-sider__item'>                      
-                                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
-                                <span className="nav-text"> Calificaciones obtenidas</span>
-                            </Link>
-                        </Menu.Item>
+            </Menu.Item> */}
 
             {regentOfSelectedVet ? (
               <Menu.Item key="veterinaryVeterinariesManagement">

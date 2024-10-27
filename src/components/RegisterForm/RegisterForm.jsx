@@ -8,11 +8,13 @@ import {
   Spin,
   Modal,
   Upload,
+  message,
 } from "antd";
 import {
   emailValidation,
   minLengthValidation,
   numberValidation,
+  textValidation,
 } from "../../utils/formValidation";
 import { signUpApi, confirmSignUp } from "../../services/user.service";
 import ImgCrop from "antd-img-crop";
@@ -27,6 +29,7 @@ import {
 } from "@ant-design/icons";
 import Terms from "../Terms/Terms";
 import "./RegisterForm.scss";
+import { type } from "os";
 
 const { Dragger } = Upload;
 
@@ -94,8 +97,12 @@ export default function RegisterForm(props) {
         [name]: minLengthValidation(e.target, 8),
       });
     }
-    if (type === "text") {
-      setFormValid({ ...formValid, [name]: minLengthValidation(e.target, 2) });
+    if (type === "text" && name !== "address") {
+      setFormValid({
+        ...formValid,
+        [name]: minLengthValidation(e.target, 2),
+        [name]: textValidation(e.target),
+      });
     }
     if (type === "checkbox") {
       setFormValid({
@@ -118,8 +125,8 @@ export default function RegisterForm(props) {
 
   const checkFields = () => {
     const person = {
-      name: input.name,
-      lastName: input.lastName,
+      name: input.name.toUpperCase(),
+      lastName: input.lastName.toUpperCase(),
       dni: input.dni,
       phone: input.phone,
       address: input.address,
@@ -187,8 +194,8 @@ export default function RegisterForm(props) {
     if (fileList && fileList[0] && fileList[0].originFileObj) {
       file = fileList[0].originFileObj;
     } else {
-      console.error("No se encontró un archivo válido en fileList.");
-      return;
+      setIsRegistering(false);
+      return message.error("No se encontró un archivo válido en fileList.");
     }
 
     const reader = new FileReader();

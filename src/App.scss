@@ -326,3 +326,24 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-thumb:hover {
   background: $primary-color-hover;
 }
+
+// scrollbar properties of table
+.ant-table-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.ant-table-body::-webkit-scrollbar-thumb {
+  background: $secondary-color;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: $primary-color-hover;
+}

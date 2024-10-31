@@ -20,6 +20,8 @@ export default function MenuTop(props) {
   const [veterinariasAsociadas, setVeterinariasAsociadas] = useState([]);
   const { selectedVet, setSelectedVet } = useContext(MyContext);
   const [vetsLoaded, setVetsLoaded] = useState(false);
+  const [selectedVetId, setSelectedVetId] = useState(undefined);
+
 
   const veterinariaParticular = {
     vetData: {
@@ -46,7 +48,7 @@ export default function MenuTop(props) {
         await veterinaryAssociationService.getAllDataByRegentOrVeterinary(
           profile.veterinary.id
         );
-      result.push(veterinariaParticular);
+      // result.push(veterinariaParticular);
       setVeterinariasAsociadas(result);
       setVetsLoaded(true);
     } catch (error) {
@@ -60,6 +62,7 @@ export default function MenuTop(props) {
 
   function onChangeSelectVet(value, option) {
     setSelectedVet(option);
+    setSelectedVetId(value);
   }
 
   const tipoPerfil = () => {
@@ -71,6 +74,19 @@ export default function MenuTop(props) {
       return "Propietario: ";
     }
   };
+
+  useEffect(() => {
+    if (veterinariasAsociadas.length > 0) {
+      const defaultVet = veterinariasAsociadas[0];
+      setSelectedVetId(defaultVet.vetData.vet.id);
+      const defaultOption = {
+        key: defaultVet.vetData.vet.id,
+        value: defaultVet.vetData.vet.id,
+        children: defaultVet.vetData.vet.name
+      };
+      setSelectedVet(defaultOption);
+    }
+  }, [veterinariasAsociadas]);
 
   return (
     <div className="menu-top">
@@ -99,8 +115,9 @@ export default function MenuTop(props) {
               <Select
                 id="clinic-select"
                 className="menu-top__right-select"
-                defaultValue={null}
                 onChange={onChangeSelectVet}
+                style={{ width: "100px" }}
+                value={selectedVetId}
               >
                 {veterinariasAsociadas?.map((vet) => (
                   <Option key={vet.vetData?.vet.id} value={vet.vetData?.vet.id}>
@@ -118,7 +135,7 @@ export default function MenuTop(props) {
               shape="circle"
               to="/login"
               onClick={logOut}
-              style={{marginRight: '1vw'}}
+              style={{ marginRight: "1vw" }}
               icon={<LogoutOutlined />}
             />
           </Link>

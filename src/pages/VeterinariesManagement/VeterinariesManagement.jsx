@@ -129,7 +129,7 @@ export default function VeterinariesManagement() {
         regent: regent[0],
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular Veterinario">
+            <Tooltip placement="top" title="Desvincular Veterinario Regente">
               <Button shape="circle" size="large" className="margin-right">
                 <DisconnectOutlined />
               </Button>
@@ -172,7 +172,7 @@ export default function VeterinariesManagement() {
         address: association.coveterinaryData.person.address,
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular Veterinario Regente">
+            <Tooltip placement="top" title="Desvincular Co-Veterinario">
               <Button shape="circle" size="large" className="margin-right">
                 <DisconnectOutlined />
               </Button>

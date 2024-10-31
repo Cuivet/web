@@ -1,36 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { getVetsByVetOwnerId } from "../../services/vet.service";
-import {
-  Row,
-  Col,
-  Typography,
-  Tooltip,
-  Button,
-  Drawer,
-  Divider,
-  Badge,
-  Card,
-  Popconfirm,
-  message,
-} from "antd";
-import {
-  DeleteOutlined,
-  ExclamationCircleOutlined,
-  PlusCircleOutlined,
-} from "@ant-design/icons";
+import { Row, Col, Typography, Tooltip, Button, Drawer, Divider } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import clinica from "../../assets/img/jpg/clinica.jpg";
-import CardPet from "../../components/CardPet";
 import CardVet from "../../components/CardVet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
-import Meta from "antd/lib/card/Meta";
+//  avatar={vet.photo ? vet.photo : vetDefault}
 
 const { Title } = Typography;
 
 export default function Vets() {
   const [isInit, setIsInit] = useState(false);
   const [vets, setVets] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const [isFetchData, setIsFetchData] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const [displayDrawer, setDisplayDrawer] = useState(false);
   const [vetToDisplay, setVetToDisplay] = useState(null);
@@ -43,13 +24,11 @@ export default function Vets() {
   }
 
   const showDrawer = () => {
-    // setVisible(true);
     setDisplayDrawer(true);
   };
 
   const onClose = () => {
     setVetToDisplay(null);
-    // setVisible(false);
     setDisplayDrawer(false);
   };
   const displayVet = (id) => {
@@ -92,73 +71,6 @@ export default function Vets() {
     }
     return renderVetList;
   }
-
-  // function Vet2() {
-  //   const renderVetList = [];
-  //   if (vets.length) {
-  //     vets.forEach((vet) => {
-  //       renderVetList.push(
-  //         <Col xs={{ span: 24 }} lg={{ span: 6 }}>
-  //           <Badge.Ribbon text={tieneRegente(vet)} color={"pink"}>
-  //             <Card
-  //               className="appCard"
-  //               hoverable
-  //               cover={<img alt="required text" src={clinica}></img>}
-  //               actions={[
-  //                 <Popconfirm
-  //                   title="¿Está seguro que desea borrar la clínica?"
-  //                   onConfirm={confirm}
-  //                   okText="Si"
-  //                   cancelText="No"
-  //                   placement="top"
-  //                   arrowPointAtCenter
-  //                   icon={
-  //                     <ExclamationCircleOutlined
-  //                       fontSize="small"
-  //                       style={{ color: "red" }}
-  //                     />
-  //                   }
-  //                 >
-  //                   <DeleteOutlined key="delete" />
-  //                 </Popconfirm>,
-  //               ]}
-  //             >
-  //               <Meta
-  //                 className=""
-  //                 title={
-  //                   <Typography.Title
-  //                     level={4}
-  //                     style={{
-  //                       color: "black",
-  //                       fontWeight: "bold",
-  //                     }}
-  //                   >
-  //                     {vet.vet.name}
-  //                   </Typography.Title>
-  //                 }
-  //                 description={
-  //                   <>
-  //                     <Row>
-  //                       <Typography.Text type="primary">
-  //                         {vet.vet.address}
-  //                       </Typography.Text>
-  //                     </Row>
-  //                     <Row>
-  //                       <Typography.Text type="primary">
-  //                         Horarios de atención:
-  //                       </Typography.Text>
-  //                     </Row>
-  //                   </>
-  //                 }
-  //               />
-  //             </Card>
-  //           </Badge.Ribbon>
-  //         </Col>
-  //       );
-  //     });
-  //   }
-  //   return renderVetList;
-  // }
 
   function renderDrawer() {
     return (

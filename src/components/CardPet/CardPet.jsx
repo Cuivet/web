@@ -24,6 +24,8 @@ export default function CardPet(props) {
   const [drugTypes, setDrugTypes] = useState([]);
   const [isInit, setIsInit] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const userPhoto = profile.person.photo;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,15 +57,16 @@ export default function CardPet(props) {
 
   const generatePetVaccinationData = async (vaccinations) => {
     const veterinaryCache = {};
-    
+
     const finalData = await Promise.all(
       vaccinations.map(async (vaccination) => {
         let veterinaryName = veterinaryCache[vaccination.veterinaryId];
         let vetName = "";
         if (!veterinaryName) {
-          const response = await veterinaryAssociationService.getAllDataByRegentOrVeterinary(
-            vaccination.veterinaryId
-          );
+          const response =
+            await veterinaryAssociationService.getAllDataByRegentOrVeterinary(
+              vaccination.veterinaryId
+            );
           console.log(response[0].veterinaryData.person.name);
           veterinaryName =
             response[0].veterinaryData.person.name +
@@ -92,14 +95,13 @@ export default function CardPet(props) {
               : moment(vaccination.nextDate).format("DD/MM/YYYY"),
           observation: vaccination.observation,
           veterinaryName: veterinaryName,
-          vetName: vetName
+          vetName: vetName,
         };
       })
     );
-    console.log('finalData: ',finalData);
+    console.log("finalData: ", finalData);
     setVaccinationData(finalData);
   };
-
 
   const confirm = () => {
     message.success(title + " borrada exitosamente.");
@@ -107,7 +109,7 @@ export default function CardPet(props) {
     window.location.replace("");
   };
 
-  const AvatarGroup = () => {
+  const AvatarGroup = ({ avatar }) => {
     const group = [];
     if (Array.isArray(avatar)) {
       for (let i = 0; i < avatar.length; i++) {
@@ -203,7 +205,7 @@ export default function CardPet(props) {
           className="card-pet__meta"
           avatar={
             <Avatar.Group>
-              <AvatarGroup />
+              <AvatarGroup avatar={userPhoto ? userPhoto : img} />
             </Avatar.Group>
           }
           title={title}

@@ -23,6 +23,9 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import moment from "moment";
+import ClinicalRecordExport from "./ClinicalRecodExport";
+import { PDFDownloadLink } from "@react-pdf/renderer"; // Importa PDFDownloadLink
+
 const { Title, Text } = Typography;
 
 export default function ClinicalRecordsManagement() {
@@ -200,6 +203,24 @@ export default function ClinicalRecordsManagement() {
     return { percentage: percentage, fromColor: fromColor, toColor: toColor };
   }
 
+  function handleDownloadPDF(petName, clinicalRecordId, registroClinical) {
+    const currentDate = moment().format("DDMMYY"); // Obtener la fecha actual en formato ddmmaa
+    const fileName = `${petName}_HistoriaClinica_${currentDate}.pdf`; // Formato del nombre del archivo
+    const clinicalrecord = data.find(record => record.clinicalRecordId === clinicalRecordId); // Encuentra el registro correspondiente
+    //console.log("Regstro" + registroClinical);
+    return (
+      <PDFDownloadLink
+        document={<ClinicalRecordExport petName={petName} clinicalRecord={clinicalrecord} />} // Pasa clinicalRecord a tu componente PDF
+        fileName={fileName} // Nombre del archivo
+        style={{ textDecoration: "none", color: "inherit" }} // Estilo del enlace
+      >
+        <Button shape="circle" size="large" className="margin-right">
+          <FilePdfOutlined />
+        </Button>
+      </PDFDownloadLink>
+    );
+  } 
+
   const columns = [
     {
       title: "Código de Ficha",
@@ -262,15 +283,12 @@ export default function ClinicalRecordsManagement() {
     {
       title: "Acciones",
       dataIndex: "indexIdForButton",
-      // responsive: ['md'],
       align: "center",
       fixed: "right",
-      render: (_, { indexIdForButton, progressObject }) => (
+      render: (_, { indexIdForButton, progressObject, petName, record }) => (
         <>
           <Tooltip placement="top" title="Descargar PDF">
-            <Button shape="circle" size="large" className="margin-right">
-              <FilePdfOutlined />
-            </Button>
+            {handleDownloadPDF(petName, indexIdForButton, record)} {/* Llama a la función aquí */}
           </Tooltip>
           {progressObject.percentage === 100 ? (
             <Tooltip placement="top" title="Ver la Ficha Clínica">
@@ -279,7 +297,6 @@ export default function ClinicalRecordsManagement() {
                 type="dashed"
                 size="large"
                 className="margin-right"
-                // este boton aun no se que funcionamiento deberia tener
                 onClick={(e) => {
                   goToClinicalRecord(indexIdForButton);
                 }}
@@ -294,7 +311,6 @@ export default function ClinicalRecordsManagement() {
                 size="large"
                 className="margin-right"
                 onClick={(e) => {
-                  // console.log(indexIdForButton);
                   goToClinicalRecord(indexIdForButton);
                 }}
               >
@@ -306,7 +322,6 @@ export default function ClinicalRecordsManagement() {
             <Popconfirm
               title="¿Seguro que quieres borrar esta ficha?"
               placement="left"
-              // onConfirm={() => deleteClinicalRecord(indexIdForButton)}
               icon={<WarningOutlined style={{ color: "red" }} />}
             >
               <Button shape="circle" danger size="large">

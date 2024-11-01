@@ -1,6 +1,8 @@
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
 import CUIVET_logo from "../../assets/img/png/logo2.png";
+import paw_logo from "../../assets/img/png/paw.png";
+
 
 const styles = StyleSheet.create({
     page: {
@@ -116,10 +118,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#000',
     },
-    photoLabel: {
-        fontSize: 12,
-        marginBottom: 5,
-    },
     photoImage: {
         width: 100,  // Ajusta el ancho según sea necesario
         height: 100, // Ajusta la altura según sea necesario
@@ -230,6 +228,8 @@ const VisitList = ({ visits }) => (
 const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
     const date = new Date();
     const formattedDate = formatDate(date);
+    const perrito = 'https://firebasestorage.googleapis.com/v0/b/cuivet-5596d.appspot.com/o/pets%2FMon%20Oct%2028%202024%2017%3A26%3A48%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)?alt=media&token=3e0637db-d130-4ab3-8337-98ece9f668c1';
+    
     const renderVisits = (visits) => (
         <>
             {visits.map((visit, index) => (
@@ -285,13 +285,21 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                 </View>
                 <View>
                     <Text style={styles.infoTitle}>INFORMACIÓN DE LA MASCOTA</Text>
-                    <View style={styles.detailsContainer}>
-                        <View style={styles.photoBox}>
-                        <Image 
-                            style={styles.photoImage} 
-                            src={clinicalRecord.pet.photo} // Usa la URL de Firebase aquí
-                        />
-                        </View>
+                    <View style={styles.detailsContainer}> 
+                        {clinicalRecord.pet.photo ? ( 
+                            <View style={styles.photoBox}> 
+                                <Image 
+                                    style={styles.photoImage} 
+                                    src = {perrito}
+                                    // src={{ uri: clinicalRecord.pet.photo }} 
+                                /> 
+                            </View> 
+                        ) : ( 
+                            <View style={styles.photoBox}> 
+                                <Image style={styles.photoImage} 
+                                src={paw_logo} /> 
+                            </View> )}
+                    
                         <View style={styles.detailColumnContainer}>
                             <View style={styles.detailColumn}>
                                 <View style={styles.detailTextContainer}>
@@ -389,25 +397,29 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                         <View style={styles.tableFourCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Temperatura: </Text>
-                                {/* <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.temperature}</Text>  */}
+                                {clinicalRecord.physicalExam && clinicalRecord.physicalExam.temperature && ( 
+                                <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.temperature} °C</Text> )}
                             </View>
                         </View>
                         <View style={styles.tableFourCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Peso: </Text>
-                                {/* <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.weight}</Text>  */}
+                                {clinicalRecord.physicalExam && clinicalRecord.physicalExam.weight && ( 
+                                <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.weight} Kg</Text> )}
                             </View>
                         </View>
                         <View style={styles.tableFourCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Pulso: </Text>
-                                <View style={styles.detailLine} />
+                                {clinicalRecord.physicalExam && clinicalRecord.physicalExam.pulse && ( 
+                                <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.pulse} lpm</Text> )}
                             </View>
                         </View>
                         <View style={styles.tableFourCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Mucosa: </Text>
-                                <View style={styles.detailLine} />
+                                {clinicalRecord.physicalExam && clinicalRecord.physicalExam.mucousMembrane && ( 
+                                <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.mucousMembrane}</Text> )}
                             </View>
                         </View>
                     </View>
@@ -422,7 +434,8 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                             </View>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Observación:</Text>
-                                <View style={styles.detailLine} />
+                                {clinicalRecord.physicalExam && clinicalRecord.physicalExam.observation && ( 
+                                <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.observation}</Text> )}
                             </View>
                         </View>
                         
@@ -520,7 +533,8 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                         <View style={styles.tableCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Observación: </Text>
-                                {/* <Text style={styles.detailTextBD}>{clinicalRecord.prognosis.observation}</Text> */}
+                                {clinicalRecord.prognosis && clinicalRecord.prognosis.observation && ( 
+                                <Text style={styles.detailTextBD}>{clinicalRecord.prognosis.observation}</Text> )}
                             </View>
                         </View>
                                                    

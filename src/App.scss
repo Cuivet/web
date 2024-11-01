@@ -78,7 +78,7 @@
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
 .ant-btn:hover,
 .ant-input:hover {
-  border-color: $primary-color-hover!important;
+  border-color: $primary-color-hover !important;
 }
 .ant-btn-primary {
   border-color: $primary-color !important;
@@ -133,7 +133,7 @@
   > .ant-steps-item-container[role="button"]:hover
   .ant-steps-item-icon
   .ant-steps-icon {
-  color: $primary-color-hover
+  color: $primary-color-hover;
 }
 .ant-steps
   .ant-steps-item:not(.ant-steps-item-active)

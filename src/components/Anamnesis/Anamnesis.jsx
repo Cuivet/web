@@ -12,37 +12,47 @@ import React, { useState, useEffect } from "react";
 // import { useForm } from "react-hook-form";
 import { LockFilled, UnlockFilled } from "@ant-design/icons";
 import { useEditContext } from "../../context/ClinicalRecordContext/ClinicalRecordContext";
+import { anamnesisQuestionService } from "../../services/anamnesis_question.service";
 export default function Anamnesis(props) {
   // console.log(props);
   const { disabled, toggleEdit } = useEditContext();
+  const [questions, setQuestions] = useState([]);
 
   //preguntas de anamnesis, cambiar por la pegada al endpoint que traiga las preguntas
-  const questions = [
-    {
-      id: 1,
-      question: "¿Presenta lesiones expuestas? Describa cuales",
-      isBooleanResponse: true,
-      isTextResponse: true,
-    },
-    {
-      id: 2,
-      question: "¿El pulso es correcto?",
-      isBooleanResponse: true,
-      isTextResponse: false,
-    },
-    {
-      id: 3,
-      question: "¿Cómo ve el estado de la mascota en general?",
-      isBooleanResponse: false,
-      isTextResponse: true,
-    },
-    {
-      id: 4,
-      question: "¿Presenta algo? Describa que",
-      isBooleanResponse: true,
-      isTextResponse: true,
-    },
-  ];
+  // const questions = [
+  //   {
+  //     id: 1,
+  //     question: "¿Presenta lesiones expuestas? Describa cuales",
+  //     isBooleanResponse: true,
+  //     isTextResponse: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     question: "¿El pulso es correcto?",
+  //     isBooleanResponse: true,
+  //     isTextResponse: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     question: "¿Cómo ve el estado de la mascota en general?",
+  //     isBooleanResponse: false,
+  //     isTextResponse: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     question: "¿Presenta algo? Describa que",
+  //     isBooleanResponse: true,
+  //     isTextResponse: true,
+  //   },
+  // ];
+  useEffect(() => {
+    const fetchData = async () => {
+      await anamnesisQuestionService.findAll().then((response) => {
+        setQuestions(response);
+      });
+    }
+    fetchData();
+  })
 
   const wrapper = {
     sm: { offset: 5, span: 14 },
@@ -52,7 +62,7 @@ export default function Anamnesis(props) {
   };
 
   const [flag, setFlag] = useState(props.answers || "");
-  console.log(flag);
+  console.log(questions);
   const [responses, setResponses] = useState(
     JSON.parse(sessionStorage.getItem("anamnesisItems")) || flag
   );
@@ -103,7 +113,7 @@ export default function Anamnesis(props) {
             {questions.map((q, i) => (
               <Col key={q.id}>
                 <Form.Item label={q.question} name={`question${q.id}`}>
-                  {q.isBooleanResponse && (
+                  {q.isBooleanResponse === 1 && (
                     <Radio.Group
                       optionType="button"
                       disabled={disabled}
@@ -122,7 +132,7 @@ export default function Anamnesis(props) {
                       </Radio>
                     </Radio.Group>
                   )}
-                  {q.isTextResponse && (
+                  {q.isTextResponse === 1 && (
                     <Input
                       type="text"
                       disabled={disabled}

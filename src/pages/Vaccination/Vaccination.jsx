@@ -607,7 +607,7 @@ export default function Vaccination() {
                   type="number"
                   autoComplete="off"
                   name="phone"
-                  placeholder="DNI del tutor a asociar"
+                  placeholder="DNI del tutor a buscar"
                   onChange={refreshDni}
                   allowClear
                 />

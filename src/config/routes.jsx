@@ -30,6 +30,7 @@ import Qualification from "../pages/Qualification/Qualification";
 import Vaccination from "../pages/Vaccination/Vaccination";
 import vetQualification from "../pages/VetQualification/VetQualification";
 import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";
+import ViewVets from "../pages/ViewVets/ViewVets";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -153,6 +154,11 @@ const routesAdmin = [
   component: vetQualification,
   layout: LayoutAdmin,
 },
+{
+    component: ViewVets,
+    layout: LayoutAdmin,
+    path: "/vetsMap",
+}
 ];
 
 const routesClient = [

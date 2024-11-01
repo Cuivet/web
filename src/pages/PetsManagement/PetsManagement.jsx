@@ -189,9 +189,7 @@ export default function PetsManagement() {
 
   function refreshComponent() {
     if (!selectedVet) {
-      getAllByVeterinaryId(profile.veterinary.id).then((associations) => {
-        generateDataParticular(associations);
-      });
+      console.log("no hay seleccionada");
     } else {
       getAllByVetId(selectedVet?.value).then((associations) => {
         generateData(associations);
@@ -210,63 +208,63 @@ export default function PetsManagement() {
     let filteredData = associations.filter(
       (ass) => ass.vetData.id === selectedVet?.value
     );
-    filteredData.forEach((association) => {
+    filteredData?.forEach((association) => {
       finalData.push({
         key: association?.associationId,
         id: association?.associationId,
-        name: association?.pet.name,
+        name: association?.pet?.name,
         tutorName:
           association?.tutorData.person.lastName +
           " " +
-          association?.tutorData.person.name,
+          association?.tutorData.person?.name,
         dni: association?.tutorData.person.dni,
         especie: species?.find(
           (specie) =>
             specie.id ===
             races.find((race) => race.id === association.pet.raceId).specieId
-        ).name,
-        raza: races?.find((race) => race.id === association.pet.raceId).name,
-        vet: association?.vetData.name,
+        )?.name,
+        raza: races?.find((race) => race.id === association.pet.raceId)?.name,
+        vet: association?.vetData?.name,
         veterinary:
           association?.veterinaryData.person.lastName +
           " " +
-          association?.veterinaryData.person.name,
+          association?.veterinaryData.person?.name,
       });
     });
     setData(finalData);
   }
 
-  function generateDataParticular(associations) {
-    //para clínicas
-    var finalData = [];
-    let filteredData = associations.filter(
-      (ass) => ass.vetData.name === "Atención particular"
-    );
-    filteredData.forEach((association) => {
-      finalData.push({
-        key: association?.associationId,
-        id: association?.associationId,
-        name: association?.pet.name,
-        tutorName:
-          association?.tutorData.person.lastName +
-          " " +
-          association?.tutorData.person.name,
-        dni: association?.tutorData.person.dni,
-        especie: species?.find(
-          (specie) =>
-            specie?.id ===
-            races?.find((race) => race.id === association.pet.raceId).specieId
-        ).name,
-        raza: races?.find((race) => race.id === association.pet.raceId).name,
-        // vet: association?.vetData.name,
-        veterinary:
-          association?.veterinaryData.person.lastName +
-          " " +
-          association?.veterinaryData.person.name,
-      });
-    });
-    setData(finalData);
-  }
+  // function generateDataParticular(associations) {
+  //   //para clínicas
+  //   var finalData = [];
+  //   let filteredData = associations.filter(
+  //     (ass) => ass.vetData.name === "Atención particular"
+  //   );
+  //   filteredData.forEach((association) => {
+  //     finalData.push({
+  //       key: association?.associationId,
+  //       id: association?.associationId,
+  //       name: association?.pet.name,
+  //       tutorName:
+  //         association?.tutorData.person.lastName +
+  //         " " +
+  //         association?.tutorData.person.name,
+  //       dni: association?.tutorData.person.dni,
+  //       especie: species?.find(
+  //         (specie) =>
+  //           specie?.id ===
+  //           races?.find((race) => race.id === association.pet.raceId).specieId
+  //       ).name,
+  //       raza: races?.find((race) => race.id === association.pet.raceId).name,
+  //       // vet: association?.vetData.name,
+  //       veterinary:
+  //         association?.veterinaryData.person.lastName +
+  //         " " +
+  //         association?.veterinaryData.person.name,
+  //     });
+  //   });
+  //   setData(finalData);
+  // }
 
   const columns = [
     {
@@ -280,7 +278,7 @@ export default function PetsManagement() {
       title: "Nombre Mascota",
       dataIndex: "name",
       ...getColumnSearchProps("name"),
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name.length - b?.name.length,
     },
     {
       title: "Especie",
@@ -362,11 +360,7 @@ export default function PetsManagement() {
         .finally(() => setIsLoading(false));
     } else {
       //aca entra si es atencion particular
-      getAllByVeterinaryId(profile.veterinary.id)
-        .then((associations) => {
-          generateDataParticular(associations);
-        })
-        .finally(() => setIsLoading(false));
+      console.log("no hay vet seleccionada");
     }
     setData([]);
   };
@@ -438,7 +432,7 @@ export default function PetsManagement() {
 
   useEffect(() => {
     if (isFetchData) {
-      getAssociations();
+      // getAssociations();
       setIsInit(true);
     }
   }, [isFetchData]);
@@ -522,7 +516,7 @@ export default function PetsManagement() {
             <Row>
               <Col span={24}>
                 <Typography.Title level={4}>
-                  {` El código generado para ${completeTemporalAssociation.tutorData.person.name} ${completeTemporalAssociation.tutorData.person.lastName} es:`}
+                  {` El código generado para ${completeTemporalAssociation.tutorData.person?.name} ${completeTemporalAssociation.tutorData.person.lastName} es:`}
                 </Typography.Title>
               </Col>
             </Row>

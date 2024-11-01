@@ -22,7 +22,6 @@ export default function MenuTop(props) {
   const [vetsLoaded, setVetsLoaded] = useState(false);
   const [selectedVetId, setSelectedVetId] = useState(undefined);
 
-
   const veterinariaParticular = {
     vetData: {
       vet: {
@@ -82,7 +81,7 @@ export default function MenuTop(props) {
       const defaultOption = {
         key: defaultVet.vetData.vet.id,
         value: defaultVet.vetData.vet.id,
-        children: defaultVet.vetData.vet.name
+        children: defaultVet.vetData.vet.name,
       };
       setSelectedVet(defaultOption);
     }
@@ -118,6 +117,9 @@ export default function MenuTop(props) {
                 onChange={onChangeSelectVet}
                 style={{ width: "100px" }}
                 value={selectedVetId}
+                notFoundContent={
+                  !!veterinariasAsociadas && "No tiene clínicas asociadas"
+                }
               >
                 {veterinariasAsociadas?.map((vet) => (
                   <Option key={vet.vetData?.vet.id} value={vet.vetData?.vet.id}>

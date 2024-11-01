@@ -24,7 +24,7 @@ import Diary from "../pages/Diary";
 import ClinicalRecord from "../pages/ClinicalRecord/ClinicalRecord";
 import ClinicalRecordMenu from "../pages/ClinicalRecordMenu/ClinicalRecordMenu";
 import StudiesRequest from "../pages/StudiesRequest/StudiesRequest";
-import Reports from "../pages/VisitReports/VisitReports";
+import Reports from "../pages/Reports/Reports";
 import PetsReports from "../pages/PetsReports/PetsReports";
 import Vaccination from "../pages/Vaccination/Vaccination";
 import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";

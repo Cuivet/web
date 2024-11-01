@@ -16,6 +16,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { getAllByRegentId } from "../../services/vet.service";
 import MyContext from "../../MyContext";
 import MedicationOutlinedIcon from "@mui/icons-material/MedicationOutlined";
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 export default function MenuSider(props) {
   const { menuCollapsed } = props;
@@ -218,6 +219,13 @@ export default function MenuSider(props) {
             </Menu.Item>
           </>
         ) : null}
+
+        <Menu.Item key="Reports">
+            <Link to={"/reports"} className='admin-sider__item'>            
+              <Icon component={''}><BarChartIcon fontSize="small" /></Icon>
+                  <span className="nav-text"> Reportes </span>
+            </Link>
+          </Menu.Item>
 
         <Menu.Item key="user">
           <Link to={"/settings/user"} className="admin-sider__item">

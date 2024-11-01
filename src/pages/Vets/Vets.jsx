@@ -1,20 +1,10 @@
-import {
-  PlusCircleOutlined
-} from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  Divider,
-  Drawer,
-  Row,
-  Tooltip,
-  Typography
-} from "antd";
 import React, { useState } from "react";
+import { getVetsByVetOwnerId } from "../../services/vet.service";
+import { Row, Col, Typography, Tooltip, Button, Drawer, Divider } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import CardVet from "../../components/CardVet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
-import { getVetsByVetOwnerId } from "../../services/vet.service";
 
 const { Title } = Typography;
 

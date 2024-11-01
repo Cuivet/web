@@ -19,10 +19,11 @@ import {
 import { deletePet } from "../../services/pet.service";
 import AvatarUser from "../AvatarUser/AvatarUser";
 
-export default function CardPet(props) {
-  const { img, title, description, avatar, item, popTitle, regent } = props;
-
-  function AvatarGroup() {
+export default function CardVet(props) {
+  const { img, title, description, item, popTitle, regent } = props;
+  const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const userPhoto = profile.person.photo;
+  function AvatarGroup({ avatar }) {
     const group = [];
     if (Array.isArray(avatar)) {
       for (let i = 0; i < avatar.length; i++) {
@@ -68,7 +69,6 @@ export default function CardPet(props) {
         <Card
           className="appCard"
           hoverable
-          // style={{ width: 300 }}
           cover={<img alt="required text" src={img}></img>}
           actions={[
             <Tooltip placement="top" title="Ver/Editar Clínica">
@@ -108,7 +108,7 @@ export default function CardPet(props) {
             className="card-pet__meta"
             avatar={
               <Avatar.Group>
-                <AvatarGroup />
+                <AvatarGroup avatar={userPhoto ? userPhoto : img} />
               </Avatar.Group>
             }
             title={title}

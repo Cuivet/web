@@ -304,7 +304,12 @@ export default function RegisterForm(props) {
   };
 
   const showModal = () => {
-    checkFields().then(setIsModalVisible(true));
+    const completeProfile = checkFields();
+    if (completeProfile) {
+      setIsModalVisible(true);
+    } else {
+      return message.error("Complete todos los campos");
+    }
   };
 
   const hideModal = () => {

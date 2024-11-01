@@ -168,31 +168,31 @@ export default function VetsAssociations(props) {
                 //     onClick={() => displayVet(association.vetData.vet)}
                 //   />
                 // </Tooltip>,
-                <Popconfirm
-                  title="¿Está seguro que desea desasociar clínica veterinaria?"
-                  onConfirm={confirm}
-                  okText="Si"
-                  cancelText="No"
-                  placement="top"
-                  arrowPointAtCenter
-                  icon={
-                    <ExclamationCircleOutlined
-                      fontSize="small"
-                      style={{ color: "red" }}
-                    />
-                  }
-                >
-                  <Button
-                    type="link"
-                    size="large"
-                    style={{ border: "none" }}
-                    icon={
-                      <Icon>
-                        <SyncDisabledOutlinedIcon key="delete" />
-                      </Icon>
-                    }
-                  />
-                </Popconfirm>,
+                // <Popconfirm
+                //   title="¿Está seguro que desea desasociar clínica veterinaria?"
+                //   onConfirm={confirm}
+                //   okText="Si"
+                //   cancelText="No"
+                //   placement="top"
+                //   arrowPointAtCenter
+                //   icon={
+                //     <ExclamationCircleOutlined
+                //       fontSize="small"
+                //       style={{ color: "red" }}
+                //     />
+                //   }
+                // >
+                //   <Button
+                //     type="link"
+                //     size="large"
+                //     style={{ border: "none" }}
+                //     icon={
+                //       <Icon>
+                //         <SyncDisabledOutlinedIcon key="delete" />
+                //       </Icon>
+                //     }
+                //   />
+                // </Popconfirm>,
               ]}
             >
               <Meta

@@ -28,6 +28,7 @@ import { getVeterinaryDataByMP } from "../../services/veterinary.service";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
 import AvatarSearch from "../../components/AvatarSearch";
 import MyContext from "../../MyContext";
+import { lightGreen } from "@mui/material/colors";
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -83,7 +84,7 @@ export default function VeterinariesManagement() {
       );
     } else {
       vets?.forEach(function eachVet(vet) {
-        renderVetOptions.push(<Option key={vet.vet.id}>{vet.vet.name}</Option>);
+        renderVetOptions.push(<Option key={vet.vet.id} value={vet.vet.id}>{vet.vet.name}</Option>);
       });
     }
     return renderVetOptions;
@@ -129,8 +130,15 @@ export default function VeterinariesManagement() {
         regent: regent[0],
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular Veterinario">
-              <Button shape="circle" size="large" className="margin-right">
+            <Tooltip placement="top" title="Desvincular Veterinario Regente">
+              <Button
+                shape="circle"
+                size="large"
+                className="margin-right"
+                onClick={() => {
+                  desvincularRegente(vet);
+                }}
+              >
                 <DisconnectOutlined />
               </Button>
             </Tooltip>
@@ -172,7 +180,7 @@ export default function VeterinariesManagement() {
         address: association.coveterinaryData.person.address,
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular Veterinario Regente">
+            <Tooltip placement="top" title="Desvincular Co-Veterinario">
               <Button shape="circle" size="large" className="margin-right">
                 <DisconnectOutlined />
               </Button>
@@ -278,7 +286,7 @@ export default function VeterinariesManagement() {
 
   const refreshMP = (e) => {
     setSearchedVeterinaryData(null);
-    setSelectedVetId(null);
+    // setSelectedVetId(null);
     setMP(e.target.value);
   };
 
@@ -317,6 +325,11 @@ export default function VeterinariesManagement() {
       setData([]);
     }
   }, [selectedVet]);
+
+  const desvincularRegente = (vet) => {
+    setSelectedVetId(vet.vet.id);
+    setIsModalVetOwner(true);
+  };
 
   return (
     <>
@@ -569,6 +582,7 @@ export default function VeterinariesManagement() {
                               style={{ width: "100%" }}
                               placeholder="Clínicas Veteriarias"
                               onChange={refreshSelectedVets}
+                              value={selectedVetId}
                             >
                               {vetOptions}
                             </Select>

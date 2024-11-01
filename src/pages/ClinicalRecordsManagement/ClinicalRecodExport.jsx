@@ -108,11 +108,22 @@ const styles = StyleSheet.create({
         fontSize: 10,
     },
     photoBox: {
-        width: '3cm',
-        height: '3cm',
+        // estilos del cuadro de foto
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 5,
         borderWidth: 1,
         borderColor: '#000',
-        margin: 10,
+    },
+    photoLabel: {
+        fontSize: 12,
+        marginBottom: 5,
+    },
+    photoImage: {
+        width: 100,  // Ajusta el ancho según sea necesario
+        height: 100, // Ajusta la altura según sea necesario
+        objectFit: 'cover', // Recorta la imagen si es necesario
     },
     detailsContainer: {
         flexDirection: 'row',
@@ -137,16 +148,16 @@ const styles = StyleSheet.create({
     detailText: {
         fontSize: 10,
         marginRight: 5,
+        borderBottomWidth: 1, // Grosor de la línea de subrayado 
+        borderBottomColor: '#5b2569', // Color de la línea de subrayado width: '100%',
+    },
+    detailTextBD: {
+        fontSize: 10,
+        marginRight: 5,
     },
     detailValue: {
         fontSize: 10,
         marginRight: 5,
-    },
-    detailLine: {
-        flex: 1,
-        height: 1,
-        backgroundColor: '#e9c4f2',
-        marginLeft: 5,
     },
     thickLine: {
         height: 2,             // Altura de la línea gruesa
@@ -168,6 +179,26 @@ const formatDate = (date) => {
     const yyyy = String(date.getFullYear());
     return dd + "/" + mm + "/" + yyyy;
 };
+
+const formatDate2 = (dateString) => { 
+    const date = new Date(dateString); 
+    const dd = String(date.getDate()).padStart(2, '0'); const mm = String(date.getMonth() + 1).padStart(2, '0'); 
+    const yyyy = String(date.getFullYear()); 
+    return `${dd}/${mm}/${yyyy}`; };
+
+    const getAgeContent = (birth) => { 
+        const today = new Date(); 
+        const birthDate = new Date(birth); 
+        let years = today.getFullYear() - birthDate.getFullYear(); // Ajustar los meses si la fecha de nacimiento es más tarde en el año 
+        const monthDiff = today.getMonth() - birthDate.getMonth(); 
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+             years--; } 
+             if (years > 0) 
+             { return years === 1 ? "1 año" : `${years} años`; } 
+        else { 
+            const months = today.getMonth() - birthDate.getMonth() + (12 * (today.getFullYear() - birthDate.getFullYear())); 
+            return months === 1 ? "1 mes" : `${months} meses`; } 
+        };
 // Crear el componente Footer
 const Header = () => ( 
 <View style={styles.header}> 
@@ -182,23 +213,41 @@ const Footer = ({ formattedDate }) => (
 <View style={styles.footer}> 
     <Text style={styles.footerText}>Fecha de emisión: {formattedDate}</Text> 
 </View> );
-  
 
-const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
+const VisitList = ({ visits }) => (
+    <React.Fragment>
+        {visits.map((visit, index) => (
+            <View key={visit.id}>
+                <Text style={styles.infoSubTitle}>VISITA {index + 1} - {formatDate2(visit.createdAt)}</Text>
+                <Text style={styles.detailTextBD}>    Control: {visit.control || "(No se ingresó)"}</Text>
+                <View style={styles.thickLine} />
+            </View>
+        ))}
+    </React.Fragment>
+);
+
+
+const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
     const date = new Date();
     const formattedDate = formatDate(date);
-    const { tutorData } = clinicalRecord;
+    const renderVisits = (visits) => (
+        <>
+            {visits.map((visit, index) => (
+                <View key={visit.id}>
+                    <View style={styles.thickLine} />
+                    <Text style={styles.infoSubTitle}>VISITA {index + 1} - {formatDate(visit.createdAt)}</Text>
+
+                    <Text style={styles.detailText}>Fecha de Visita: {formatDate(visit.createdAt)}</Text>
+                    <Text style={styles.detailText}>Control: {visit.control || "Sin Control"}</Text>
+                </View>
+            ))}
+        </>
+    );
     return (
         <Document>
             <Page style={styles.page}>
             <Header />
-                {/* <View style={styles.header}>
-                    <Text style={styles.centerText}>FICHA CLÍNICA</Text>
-                    <View style={styles.rightContainer}>
-                        <Image src={CUIVET_logo} style={styles.logo} />
-                        <Text style={styles.cuivetText}>CUIVET</Text>
-                    </View>
-                </View> */}
+            
                 <View>
                     <Text style={styles.infoTitle}>INFORMACIÓN DEL TUTOR</Text>
                 </View>
@@ -207,15 +256,15 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                         <View style={styles.tableCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Nombre y Apellido:</Text>
-                                {/* <Text style={styles.detailValue}>{tutorData.person.name} {tutorData.person.lastName}</Text> */}
-                                <View style={styles.detailLine} />
+                                <Text style={styles.detailTextBD}>{clinicalRecord.tutorData.person.name} {clinicalRecord.tutorData.person.lastName}
+                                </Text>
                             </View>
                         </View>
                         <View style={styles.tableCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>DNI:</Text>
-                                {/* <Text>{tutorData.person.dni}</Text> */}
-                                {/* <View style={styles.detailLine} /> */}
+                                <Text style={styles.detailTextBD}>{clinicalRecord.tutorData.person.dni}</Text>
+                                
                             </View>
                         </View>
                     </View>
@@ -223,13 +272,13 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                         <View style={styles.tableCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Teléfono:</Text>
-                                <View style={styles.detailLine} />
+                                <Text style={styles.detailTextBD}>{clinicalRecord.tutorData.person.phone}</Text>
                             </View>
                         </View>
                         <View style={styles.tableCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Dirección: </Text>
-                                <View style={styles.detailLine} />
+                                <Text style={styles.detailTextBD}>{clinicalRecord.tutorData.person.address}</Text>
                             </View>
                         </View>
                     </View>
@@ -238,32 +287,39 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                     <Text style={styles.infoTitle}>INFORMACIÓN DE LA MASCOTA</Text>
                     <View style={styles.detailsContainer}>
                         <View style={styles.photoBox}>
-                            <Text>Foto</Text>
+                        <Image 
+                            style={styles.photoImage} 
+                            src={clinicalRecord.pet.photo} // Usa la URL de Firebase aquí
+                        />
                         </View>
                         <View style={styles.detailColumnContainer}>
                             <View style={styles.detailColumn}>
                                 <View style={styles.detailTextContainer}>
-                                    <Text style={styles.detailText}>Nombre:</Text>
-                                    <View style={styles.detailLine} />
+                                    <Text style={styles.detailText}>Nombre: </Text>
+                                    <Text style={styles.detailTextBD}>{clinicalRecord.pet.name}</Text>
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Fecha de nacimiento:</Text>
-                                    <View style={styles.detailLine} />
+                                    <Text style={styles.detailTextBD}>{formatDate2(clinicalRecord.pet.birth)}</Text>
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Edad:</Text>
-                                    <View style={styles.detailLine} />
+                                    <Text style={styles.detailTextBD}>{getAgeContent(clinicalRecord.pet.birth)}</Text>
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Sexo:</Text>
-                                    <View style={styles.detailLine} />
+                                    <Text style={styles.detailTextBD}>{clinicalRecord.pet.isMale ? 'Macho' : 'Hembra'}</Text>
+                                </View>
+                                <View style={styles.detailTextContainer}>
+                                    <Text style={styles.detailText}>Tiene chip:</Text>
+                                    <Text style={styles.detailTextBD}>{clinicalRecord.pet.haveChip ? 'Si' : 'No'}</Text>
                                 </View>
                             </View>
 
                             <View style={styles.detailColumn}>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Especie:</Text>
-                                    <View style={styles.detailLine} />
+                                    {/* <Text style={styles.detailTextBD}>{clinicalRecord.pet.spicie}</Text> */}
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Raza:</Text>
@@ -285,17 +341,16 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                         </View>
                     </View>
                 </View>
-                <View style={styles.thickLine} />  {/* Línea gruesa debajo */}
-                <Text style={styles.infoSubTitle}>VISITAS</Text>
+                <View style={styles.thickLine} />
+                <VisitList visits={clinicalRecord.visits} />
                 <View>
                     <Text style={styles.infoStep}>ANAMNESIS</Text>
                     <View style={styles.table}>
                     <View style={styles.tableRow}>
                         <View style={styles.tableTotalCol}>
-                            <View style={styles.detailTextContainer}>
+                            <View style={styles.detailTextContainer}>                            
                                 <Text style={styles.detailText}>Lesiones expuestas:</Text>
-                                <View style={styles.detailLine} />
-                            </View>
+                                </View>
                         </View>
                         
                     </View>
@@ -325,6 +380,7 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
 
                     
                 </View>
+                <View style={styles.thickLine} />
                 <Text style={styles.infoStep}>EXÁMEN FÍSICO</Text>
                     <View style={styles.table}>
                     
@@ -333,13 +389,13 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                         <View style={styles.tableFourCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Temperatura: </Text>
-                                <View style={styles.detailLine} />
+                                {/* <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.temperature}</Text>  */}
                             </View>
                         </View>
                         <View style={styles.tableFourCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Peso: </Text>
-                                <View style={styles.detailLine} />
+                                {/* <Text style={styles.detailTextBD}>{clinicalRecord.physicalExam.weight}</Text>  */}
                             </View>
                         </View>
                         <View style={styles.tableFourCol}>
@@ -372,6 +428,7 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                         
                     </View>
                     </View>
+                    <View style={styles.thickLine} />
                     <Text style={styles.infoStep}>DIAGNÓSTICO PRESUNTIVO</Text>
                     <View style={styles.table}>
                     <View style={styles.tableRow}>
@@ -392,7 +449,7 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                         </View>
                     </View>
                     </View>   
-
+                    <View style={styles.thickLine} />
                     <Text style={styles.infoStep}>DIAGNÓSTICO FINAL</Text>
                     <View style={styles.table}>
                     <View style={styles.tableRow}>
@@ -412,7 +469,8 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                             </View>
                         </View>
                     </View>
-                    </View>   
+                    </View> 
+                    <View style={styles.thickLine} />  
                     <Text style={styles.infoStep}>TRATAMIENTO</Text>
                     <View style={styles.table}>
                     <View style={styles.tableRow}>
@@ -453,6 +511,21 @@ const ClinicalRecordExport = ({ petname, clinicalRecord }) => {
                             </View>
                         </View>                        
                     </View>
+                    </View> 
+                    <View style={styles.thickLine} />  
+                    <Text style={styles.infoStep}>PRONÓSTICO</Text>
+                    <View style={styles.table}>
+                    <View style={styles.tableRow}>
+                       
+                        <View style={styles.tableCol}>
+                            <View style={styles.detailTextContainer}>
+                                <Text style={styles.detailText}>Observación: </Text>
+                                {/* <Text style={styles.detailTextBD}>{clinicalRecord.prognosis.observation}</Text> */}
+                            </View>
+                        </View>
+                                                   
+                    </View>
+                    <View style={styles.thickLine} />  
                     </View> 
                       
                 </View>

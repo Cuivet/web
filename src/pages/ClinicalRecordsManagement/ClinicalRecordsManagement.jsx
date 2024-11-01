@@ -37,6 +37,7 @@ export default function ClinicalRecordsManagement() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [clinicalRecordPDF, setClinicalRecordPDF] = useState([]);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -164,6 +165,7 @@ export default function ClinicalRecordsManagement() {
         console.log(clinicalRecords);
         generateData(clinicalRecords);
         setIsLoading(false);
+        setClinicalRecordPDF(clinicalRecords);
       });
   }
 
@@ -203,11 +205,12 @@ export default function ClinicalRecordsManagement() {
     return { percentage: percentage, fromColor: fromColor, toColor: toColor };
   }
 
-  function handleDownloadPDF(petName, clinicalRecordId, registroClinical) {
+  function handleDownloadPDF(petName, clinicalRecordId) {
+    //debugger
     const currentDate = moment().format("DDMMYY"); // Obtener la fecha actual en formato ddmmaa
     const fileName = `${petName}_HistoriaClinica_${currentDate}.pdf`; // Formato del nombre del archivo
-    const clinicalrecord = data.find(record => record.clinicalRecordId === clinicalRecordId); // Encuentra el registro correspondiente
-    //console.log("Regstro" + registroClinical);
+    const clinicalrecord = clinicalRecordPDF.find(record => record.id === clinicalRecordId); // Encuentra el registro correspondiente
+    //console.log("Regstro"+ registroClinical);
     return (
       <PDFDownloadLink
         document={<ClinicalRecordExport petName={petName} clinicalRecord={clinicalrecord} />} // Pasa clinicalRecord a tu componente PDF
@@ -288,7 +291,7 @@ export default function ClinicalRecordsManagement() {
       render: (_, { indexIdForButton, progressObject, petName, record }) => (
         <>
           <Tooltip placement="top" title="Descargar PDF">
-            {handleDownloadPDF(petName, indexIdForButton, record)} {/* Llama a la función aquí */}
+            {handleDownloadPDF(petName, indexIdForButton)} {/* Llama a la función aquí */}
           </Tooltip>
           {progressObject.percentage === 100 ? (
             <Tooltip placement="top" title="Ver la Ficha Clínica">

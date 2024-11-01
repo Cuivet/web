@@ -56,7 +56,6 @@ export default function CardVet(props) {
   };
 
   const displayVet = () => {
-    console.log("item: ", item);
     props.showVet(item);
   };
 
@@ -120,11 +119,21 @@ export default function CardVet(props) {
                     {description.address}
                   </Typography.Text>
                 </Row>
-                <Row>
-                  <Typography.Text type="secondary">
-                    {description.hours}
-                  </Typography.Text>
-                </Row>
+                {/* {description?.hours.map((hour, index) => (
+                  <Row key={index} justify="center">
+                    <Typography.Text type="secondary">
+                      {hour.openTime && hour.closeTime
+                        ? `${hour.dayOfWeek}: ${moment(
+                            hour.openTime,
+                            "HH:mm:ss"
+                          ).format("HH:mm")} - ${moment(
+                            hour.closeTime,
+                            "HH:mm:ss"
+                          ).format("HH:mm")}`
+                        : `${hour.dayOfWeek}: Cerrado`}
+                    </Typography.Text>
+                  </Row>
+                ))} */}
               </>
             }
           />

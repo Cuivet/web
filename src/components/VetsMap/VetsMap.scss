@@ -1,0 +1,75 @@
+/* VetsMap.css */
+// @import "../scss/variables";
+@import "../../scss/variables";
+
+/* Estilos generales */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.list-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  // overflow: hidden; // Ocultar el desbordamiento en el contenedor principal
+}
+
+.list-item-container {
+  flex: 1;
+  margin-bottom: 10px;
+  overflow-y: auto;
+  height: 50vh;
+  width: 99%;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $secondary-color;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: $primary-color-hover;
+  }
+  .button-container {
+    padding: 10px 0;
+  }
+}
+.google-map {
+  width: 100%;
+  height: 50%;
+}
+
+/* Media queries para pantallas más grandes */
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+  .list-container {
+    width: 30%;
+    height: 100%;
+    margin-right: 15px;
+  }
+  .google-map {
+    width: 70%;
+    height: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .list-container {
+    width: 30%;
+    height: 100%;
+    margin-right: 15px;
+  }
+
+  .google-map {
+    width: 100%;
+    height: 100%;
+  }
+}

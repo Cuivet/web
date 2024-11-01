@@ -308,7 +308,7 @@ export default function RegisterForm(props) {
     if (completeProfile) {
       setIsModalVisible(true);
     } else {
-      setIsModalVisible(false);
+      return message.error("Complete todos los campos");
     }
   };
 

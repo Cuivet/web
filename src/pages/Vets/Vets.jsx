@@ -5,7 +5,6 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import CardVet from "../../components/CardVet";
 import RegisterVetForm from "../../components/RegisterVetForm/RegisterVetForm";
-//  avatar={vet.photo ? vet.photo : vetDefault}
 
 const { Title } = Typography;
 
@@ -61,7 +60,7 @@ export default function Vets() {
               img={vet.vet.photo ? vet.vet.photo : clinica}
               description={{
                 address: vet.vet.address,
-                hours: "Horarios de atención: ",
+                hours: vet?.hours,
               }}
               regent={tieneRegente(vet)}
             ></CardVet>
@@ -120,19 +119,8 @@ export default function Vets() {
       </Row>
       <Divider></Divider>
       {displayDrawer ? renderDrawer() : null}
-      {/* <Drawer
-        title="Registrar nueva clínica veterinaria"
-        onClose={onClose}
-        visible={visible}
-        bodyStyle={{
-          paddingBottom: 80,
-        }}
-      >
-        <RegisterVetForm></RegisterVetForm>
-      </Drawer> */}
       <Row>
         {vets.length ? Vet() : null}
-        {/* {vets.length ? Vet2() : <>Aún no tienes veterinarios asociados</>} */}
       </Row>
     </>
   );

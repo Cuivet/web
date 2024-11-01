@@ -116,3 +116,22 @@ export function getAllByRegentId(id){
             return err;
         });
 };
+
+export function getAllVets(){
+    var axios = require('axios');
+    return axios({
+        method: "get",
+        url: `${basePATH}/vet/all`,
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+        .catch((err) => {
+            return err;
+        });
+};

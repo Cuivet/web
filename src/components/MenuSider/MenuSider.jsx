@@ -5,6 +5,7 @@ import Icon, {
   HomeOutlined,
   SettingOutlined,
   FolderOpenOutlined,
+  PushpinOutlined
 } from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
 import ScienceIcon from "@mui/icons-material/Science";
@@ -236,6 +237,13 @@ export default function MenuSider(props) {
             </Menu.Item>
           </>
         ) : null}
+
+        <Menu.Item key="map">
+          <Link to={"/vetsMap"} className="admin-sider__item">
+          <PushpinOutlined />
+            <span className="nav-text"> Mapa </span>
+          </Link>
+        </Menu.Item>
 
         <Menu.Item key="user">
           <Link to={"/settings/user"} className="admin-sider__item">

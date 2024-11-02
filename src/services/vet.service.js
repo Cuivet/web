@@ -134,3 +134,45 @@ export function getAllVets() {
       return err;
     });
 }
+
+export function deactivateVet(id) {
+  var axios = require("axios");
+  return axios({
+    method: "put",
+    url: `${basePATH}/vet/deactivate/${id}`,
+    data: { id: id },
+    timeout: 1000 * 60,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
+export function activateVet(id) {
+  var axios = require("axios");
+  return axios({
+    method: "put",
+    url: `${basePATH}/vet/activate/${id}`,
+    data: { id: id },
+    timeout: 1000 * 5,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
+}

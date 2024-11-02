@@ -69,8 +69,10 @@ export default function MenuTop(props) {
       return "Veterinario: ";
     } else if (profile?.tutor != null) {
       return "Tutor: ";
-    } else {
+    } else if (profile?.owner != null) {
       return "Propietario: ";
+    } else {
+      return "";
     }
   };
 

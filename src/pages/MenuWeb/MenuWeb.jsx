@@ -7,6 +7,7 @@ import calendario from "../../assets/img/jpg/calendario.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import visitsReports from "../../assets/img/jpg/reportes.jpg";
+
 import '../Settings/UserSettings/UserSettings.scss';
 
 const {Title} = Typography;
@@ -19,16 +20,17 @@ export default function MenuWeb(){
         module:['Ficha Clínica','Vacunacion','Calendario', 'Reportes'],
         description:['Iniciar ficha clínica para la Mascota','Carga de vacunas a mascotas','Visualizá próximos eventos','Visualizá tus reportes'],
         disabled:[false,true],
-        img:[atencion,huella, calendario,visitsReports],
-        routes:['/clinical-record-menu','/vaccination','/calendar','/reports']
+        img:[atencion,calendario,huella,visitsReports],
+        routes:['/clinical-record-menu','/vaccination','/calendar','/pets-management','/vetQualification','/reports']
+
     };
 
     const tutor = {
-        module:['Mis Mascotas','Calendario','Valorar Veterinarios','Historial Clínico',],
-        description:['Visualizá tus Mascotas registradas','Visualizá próximos eventos','Registrá una reseña a tus Veterinarios asociados','Visualizá el Historial Clínico de tus Mascotas',],
+        module:['Mis Mascotas','Calendario','Calificar Veterinarios','Historial Clínico',],
+        description:['Visualizá tus Mascotas registradas','Visualizá próximos eventos','Registrá una calificación a tus Veterinarios asociados','Visualizá el Historial Clínico de tus Mascotas',],
         disabled:[false,true],
         img:[huella,calendario,valorar,atencion],
-        routes:['/pets','/calendar','/admin','/admin']
+        routes:['/pets','/calendar','/qualification','/admin']
     };
 
     const vetOwner = {

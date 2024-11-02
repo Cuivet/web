@@ -26,7 +26,9 @@ import ClinicalRecordMenu from "../pages/ClinicalRecordMenu/ClinicalRecordMenu";
 import StudiesRequest from "../pages/StudiesRequest/StudiesRequest";
 import Reports from "../pages/VisitReports/VisitReports";
 import PetsReports from "../pages/PetsReports/PetsReports";
+import Qualification from "../pages/Qualification/Qualification";
 import Vaccination from "../pages/Vaccination/Vaccination";
+import vetQualification from "../pages/VetQualification/VetQualification";
 import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";
 import ViewVets from "../pages/ViewVets/ViewVets";
 
@@ -143,10 +145,20 @@ const routesAdmin = [
     path: "*",
   },
   {
+    path: "/qualification",
+    component: Qualification,
+    layout: LayoutAdmin,
+},
+{
+  path: "/vetQualification",
+  component: vetQualification,
+  layout: LayoutAdmin,
+},
+{
     component: ViewVets,
     layout: LayoutAdmin,
     path: "/vetsMap",
-  },
+}
 ];
 
 const routesClient = [

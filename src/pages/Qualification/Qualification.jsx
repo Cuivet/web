@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { qualificationService } from "../../services/qualification.service";
-import { Input, Button, Tooltip, Typography, Table, Form, Popconfirm } from "antd";
+import { Input, Button, Tooltip, Typography, Table, Form, Popconfirm, } from "antd";
+import { EditFilled } from "@ant-design/icons";
 import "./Qualification.scss";
 import StarSelector from './StarSelector';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import TextField from '@mui/material/TextField';
+import { TextField } from "@mui/material";
+//import TextField from '@mui/material/TextField';
 
 
 const { Title } = Typography;
@@ -33,7 +35,7 @@ export default function Qualification() {
   }
 
   function generateData(responseQualifications) {
-    const finalData = responseQualifications.map(item => ({
+    const finalData = responseQualifications?.map(item => ({
       key: item.qualification.id,
       date: item.clinicalRecord.createdAt.slice(0, 10),
       vetName: `${item.clinicalRecord.veterinaryData.person.name} ${item.clinicalRecord.veterinaryData.person.lastName}`,
@@ -54,6 +56,7 @@ export default function Qualification() {
 
   const cancel = () => {
     setEditingKey('');
+    refreshComponent();
   };
 
   const save = async (key) => {
@@ -78,20 +81,14 @@ export default function Qualification() {
     }
   };
 
-  const handleDataChange = (rowIndex, field, value) => {
-    const record = data[rowIndex];
-  
-    // Verificar si la edición debe permitirse
-    if (record.observation === null && record.qualification === null) {
-      // Crear una copia de los datos para mantener la inmutabilidad
-      const updatedData = [...data];
-      updatedData[rowIndex] = {
-        ...record,
-        [field]: value,
-      };
-  
-      setData(updatedData);
-    }
+  const handleDataChange = (key, field, value) => {
+    setData((prevData) => 
+      prevData.map((item) => 
+        item.key === key
+          ? { ...item, [field]: value }
+          : item
+      )
+    );
   };
 
   const columns = [
@@ -118,7 +115,7 @@ export default function Qualification() {
       render: (_, record) => (
         <StarSelector
           qualification={record.qualification}
-          onChange={(value) => handleDataChange(value, record, 'qualification')}
+          onChange={(value) => handleDataChange(record.key, 'qualification', value)} // Se asegura de enviar el key y el campo correcto
           disabled={editingKey !== record.key && record.isSaved}
         />
       ),
@@ -127,20 +124,18 @@ export default function Qualification() {
       title: "Observación",
       dataIndex: "observation",
       key: "observation",
-      render: (_, record, rowIndex) => {
+      render: (_, record) => {
         const isEditingRow = editingKey === record.key;
-        const isDisabled = !isEditingRow || record.observation !== null || record.qualification !== null;
-    
-        // Mostrar el input solo cuando la fila está en edición y las condiciones lo permitan
-        return isEditingRow && !isDisabled ? (
+        
+        return isEditingRow ? (
           <TextField
             placeholder="Ingrese observación"
             value={record.observation || ""}
-            onChange={(e) => handleDataChange(rowIndex, "observation", e.target.value)}
+            onChange={(e) => handleDataChange(record.key, "observation", e.target.value)}
             variant="outlined"
           />
         ) : (
-          <span onClick={() => !isDisabled && setEditingKey(record.key)}>
+          <span onClick={() => edit(record)}>
             {record.observation || ""}
           </span>
         );
@@ -169,7 +164,7 @@ export default function Qualification() {
             <Button
               type="link"
               className="appTableButton"
-              icon={<ModeEditOutlineOutlinedIcon />}
+              icon={<EditFilled />}
               onClick={() => edit(record)}
               disabled={editingKey !== '' || record.isSaved}
             />

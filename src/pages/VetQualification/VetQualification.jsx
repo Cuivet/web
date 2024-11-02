@@ -27,6 +27,7 @@ export default function VetQualification() {
     }
 
     function generateData(responseQualifications) {
+        //debugger
         const finalData = responseQualifications
             .map(item => ({
                 key: item.qualification.id,

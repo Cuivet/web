@@ -77,7 +77,6 @@ export function getTemporalAssociationByCode(code) {
 }
 
 export function registerRegentOnVet(data) {
-  debugger;
   var axios = require("axios");
   return axios({
     method: "put",

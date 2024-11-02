@@ -5,6 +5,7 @@ import Icon, {
   HomeOutlined,
   SettingOutlined,
   FolderOpenOutlined,
+  PushpinOutlined
 } from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
 import ScienceIcon from "@mui/icons-material/Science";
@@ -23,6 +24,7 @@ export default function MenuSider(props) {
   const { Sider } = Layout;
   const [regentVets, setRegentVets] = useState([]);
   const [regentOfSelectedVet, setRegentOfSelectedVet] = useState(false);
+  const [veterinaryWithNoVets, setVeterinaryWithNoVets] = useState(false);
   const [isInit, setIsInit] = useState(false);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const { selectedVet } = useContext(MyContext);
@@ -51,6 +53,14 @@ export default function MenuSider(props) {
       navigate("/menu"); // O la ruta que prefieras
     }
   }, [selectedVet]);
+
+  useEffect(() => {
+    if (veterinary && !!selectedVet?.value) {
+      setVeterinaryWithNoVets(false);
+    } else {
+      setVeterinaryWithNoVets(true);
+    }
+  }, [veterinary, selectedVet]);
 
   return (
     <Sider
@@ -116,7 +126,7 @@ export default function MenuSider(props) {
 
         {veterinary ? (
           <>
-            <Menu.Item key="ClinicalRecordMenu">
+            <Menu.Item key="ClinicalRecordMenu" hidden={veterinaryWithNoVets}>
               <Link to={"/clinical-record-menu"} className="admin-sider__item">
                 <Icon>
                   <ContentPasteOutlinedIcon />
@@ -124,7 +134,7 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Ficha Clínica </span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="Vaccination">
+            <Menu.Item key="Vaccination" hidden={veterinaryWithNoVets}>
               <Link to={"/vaccination"} className="admin-sider__item">
                 <Icon>
                   <MedicationOutlinedIcon />
@@ -133,7 +143,7 @@ export default function MenuSider(props) {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="veterinaryStudies">
+            <Menu.Item key="veterinaryStudies" hidden={veterinaryWithNoVets}>
               <Link to={"/studies"} className="admin-sider__item">
                 <Icon component={""}>
                   <ScienceIcon fontSize="small" />
@@ -142,8 +152,14 @@ export default function MenuSider(props) {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="veterinaryClinicalRecordManagement">
-              <Link to={"/clinical-records-management"} className="admin-sider__item">
+            <Menu.Item
+              key="veterinaryClinicalRecordManagement"
+              hidden={veterinaryWithNoVets}
+            >
+              <Link
+                to={"/clinical-records-management"}
+                className="admin-sider__item"
+              >
                 <FolderOpenOutlined />
                 <span className="nav-text"> Historiales Clínicos </span>
               </Link>
@@ -175,7 +191,10 @@ export default function MenuSider(props) {
               </Menu.Item>
             ) : null}
 
-            <Menu.Item key="veterinaryPetsManagement">
+            <Menu.Item
+              key="veterinaryPetsManagement"
+              hidden={veterinaryWithNoVets}
+            >
               <Link to={"/pets-management"} className="admin-sider__item">
                 <Icon component={""}>
                   <PetsIcon fontSize="small" />
@@ -225,7 +244,14 @@ export default function MenuSider(props) {
               <Icon component={''}><BarChartIcon fontSize="small" /></Icon>
                   <span className="nav-text"> Reportes </span>
             </Link>
-          </Menu.Item>
+        </Menu.Item>
+        
+        <Menu.Item key="map">
+          <Link to={"/vetsMap"} className="admin-sider__item">
+          <PushpinOutlined />
+            <span className="nav-text"> Mapa </span>
+          </Link>
+        </Menu.Item>
 
         <Menu.Item key="user">
           <Link to={"/settings/user"} className="admin-sider__item">

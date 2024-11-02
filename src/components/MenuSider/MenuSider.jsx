@@ -5,7 +5,8 @@ import Icon, {
   HomeOutlined,
   SettingOutlined,
   FolderOpenOutlined,
-  PushpinOutlined
+  PushpinOutlined,
+  StarOutlined,
 } from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
 import ScienceIcon from "@mui/icons-material/Science";
@@ -120,6 +121,13 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Veterinarios Asociados </span>
               </Link>
             </Menu.Item>
+            <Menu.Item key="qualifications">
+              <Link to={"/qualification"} className="admin-sider__item">
+                  <StarOutlined />
+                {/* <Icon component={''}><StarBorderIcon fontSize="small" /></Icon> */}
+                <span className="nav-text"> Calificaciones </span>
+              </Link>
+            </Menu.Item>
           </>
         ) : null}
 
@@ -161,6 +169,13 @@ export default function MenuSider(props) {
               >
                 <FolderOpenOutlined />
                 <span className="nav-text"> Historiales Clínicos </span>
+              </Link>
+            </Menu.Item>
+
+            <Menu.Item key="vetQualification">
+              <Link to={"/vetQualification"} className="admin-sider__item">
+                  <StarOutlined />
+                <span className="nav-text"> Calificaciones</span>
               </Link>
             </Menu.Item>
 
@@ -240,7 +255,7 @@ export default function MenuSider(props) {
 
         <Menu.Item key="map">
           <Link to={"/vetsMap"} className="admin-sider__item">
-          <PushpinOutlined />
+            <PushpinOutlined />
             <span className="nav-text"> Mapa </span>
           </Link>
         </Menu.Item>

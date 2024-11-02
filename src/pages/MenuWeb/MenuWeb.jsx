@@ -20,6 +20,7 @@ export default function MenuWeb() {
       "Vacunacion",
       "Estudios Complementarios",
       "Historial Clinico",
+      "Calificaciones",
       "Gestion de Veterinarios",
       "Mis Pacientes",
       "Clinicas Veterinarias",
@@ -31,6 +32,7 @@ export default function MenuWeb() {
       "Gestion de vacunas a mascotas",
       "Visualizar estudios complementarios de mascotas",
       "Visualizar los historiales clinicos de las mascotas asociadas",
+      "Aqui puedes ver las claificaciones que tus atenciones han recibido",
       "Gestiona todos los veterinarios asociados a la Clínicas",
       "Visualizá tus pacientes asociados",
       "Visualizá las Clínicas asociadas",
@@ -45,6 +47,7 @@ export default function MenuWeb() {
       huella,
       huella,
       huella,
+      huella,
       clinica,
       huella,
       visitsReports,
@@ -54,10 +57,11 @@ export default function MenuWeb() {
       "/vaccination",
       "/studies",
       "/clinical-records-management",
+      "/vetQualification",
       "/veterinaries-management",
       "/pets-management",
-      '/vets-associations',
-      '/vetsMap',
+      "/vets-associations",
+      "/vetsMap",
       "/reports",
     ],
   };
@@ -67,22 +71,29 @@ export default function MenuWeb() {
       "Historial Clínico",
       "Estudios Complementarios",
       "Mis Mascotas",
-      "Calificaciones",
+      
       "Veterinarios Asociados",
-      "Valorar Veterinarios",
+      "Calificaciones",
       "Mapa",
     ],
     description: [
       "Visualizá el Historial Clínico de tus Mascotas",
       "Visualizá estudios complementarios de tus Mascotas",
       "Gestiona tus Mascotas",
-      "Registra la calificación la consulta ",
       "Gestiona todos los Veterinarios asociados a tus mascotas",
       "Registrá una reseña a tus Veterinarios asociados",
+      "Mapa de las Clínicas Veterinarias",
     ],
     disabled: [false, true],
     img: [huella, huella, valorar, atencion, huella, huella, huella],
-    routes: ["/clinical-history", "/studies", "/pets",'/qualifications', "/veterinaries-associations", '/vetsMap'],
+    routes: [
+      "/clinical-history",
+      "/studies",
+      "/pets",
+      "/qualification",
+      "/veterinaries-associations",
+      "/vetsMap",
+    ],
   };
 
   const vetOwner = {
@@ -93,8 +104,8 @@ export default function MenuWeb() {
       "Mapa de las Clínicas Veterinarias",
     ],
     disabled: [false, true],
-    img: [atencion, clinica, huella, ],
-    routes: ["/veterinaries-management", "/vets",'/vetsMap'],
+    img: [atencion, clinica, huella],
+    routes: ["/veterinaries-management", "/vets", "/vetsMap"],
   };
 
   function cantMod() {

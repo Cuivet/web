@@ -366,8 +366,15 @@ export default function VeterinariesAssociations() {
                   mode="multiple"
                   allowClear
                   style={{ width: "100%" }}
-                  placeholder="Seleccione las mascotas a asociar"
+                  placeholder={
+                    petOptions.length > 0
+                      ? "Seleccione las mascotas a asociar"
+                      : "No tiene mascotas registradas"
+                  }
                   onChange={refreshSelectedPets}
+                  // notFoundContent={
+                  //   !!petOptions && "No tiene mascotas registradas"
+                  // }
                 >
                   {petOptions}
                 </Select>

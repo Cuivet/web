@@ -64,7 +64,7 @@ export default function ClinicalRecord() {
       diagnosis: "diagnostico",
       prognosis: "pronostico",
     };
-  
+
     return Object.keys(cRecord)
       .filter((property) => {
         return (
@@ -125,6 +125,7 @@ export default function ClinicalRecord() {
         });
       //crea una de cero
     } else if (profile && profile.veterinary && profile.veterinary.id && flag) {
+      debugger;
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,

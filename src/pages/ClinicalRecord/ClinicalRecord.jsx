@@ -43,6 +43,24 @@ export default function ClinicalRecord() {
   const [drugTypes, setDrugTypes] = useState([]);
   const { selectedVet } = useContext(MyContext);
 
+  useEffect(() => {
+    // Función para limpiar el sessionStorage cuando se cambia de ruta
+    const handleRouteChange = () => {
+        // Aquí eliminamos las variables específicas de sessionStorage
+        sessionStorage.removeItem('anamnesisItems');
+        sessionStorage.removeItem('complementaryStudies');
+        sessionStorage.removeItem('diagnosisItems');
+        sessionStorage.removeItem('physicalExam');
+        sessionStorage.removeItem('presumptiveDiagnosisItems');
+        sessionStorage.removeItem('prognosis');
+        sessionStorage.removeItem('reasonConsultation');
+    };
+
+    // Escucha de cambios en la ubicación para limpiar sessionStorage
+    return () => handleRouteChange();
+
+}, [location]);
+
   //renderiza los pasos completados en tags en el Header
   const getStepsDone = (cRecord) => {
     const excludedProperties = [
@@ -432,7 +450,7 @@ export default function ClinicalRecord() {
             className="appTitle"
             style={{ display: "flex", alignItems: "center" }}
           >
-            <div style={{ marginRight: "2%", marginLeft: "1%" }}>
+            {/* <div style={{ marginRight: "2%", marginLeft: "1%" }}>
               <Tooltip placement="bottom" title="Volver">
                 <Button
                   type="link"
@@ -446,7 +464,7 @@ export default function ClinicalRecord() {
                 </Button>
                 {"   "}
               </Tooltip>
-            </div>
+            </div> */}
             Consulta Médica
           </Title>
         </Col>

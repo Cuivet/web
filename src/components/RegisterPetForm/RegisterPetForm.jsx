@@ -359,6 +359,7 @@ export default function RegisterPetForm(props) {
               disabledDate={disabledDate}
               name="dateBirth"
               value={pet.birth}
+              inputReadOnly={true}
               size="large"
               onChange={onDateBirthChange}
               placeholder="Fecha de nacimiento"
@@ -426,6 +427,7 @@ export default function RegisterPetForm(props) {
               disabledDate={disabledDate}
               name="castrationDate"
               value={pet.castrationDate}
+              inputReadOnly={true}
               size="large"
               onChange={onCastrationDateChange}
               placeholder="Fecha de castración"

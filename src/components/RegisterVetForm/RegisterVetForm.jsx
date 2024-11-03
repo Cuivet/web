@@ -20,6 +20,8 @@ import storage from "../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import './RegisterVetForm.scss';
+
 dayjs.extend(customParseFormat);
 
 const { RangePicker } = TimePicker;
@@ -303,54 +305,55 @@ export default function RegisterVetForm(props) {
           <Typography.Text type="primary">
             {"Horarios de atención: "}
           </Typography.Text>
+          {hours?.map((hour) => (
+            <Row key={hour.dayOfWeek} gutter={[16, 16]} align="middle">
+              <Col span={6}>
+                <Form.Item style={{ marginBottom: 0 }}>
+                  <span>{hour.dayOfWeek}: </span>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item style={{ marginBottom: "5px" }}>
+                  <RangePicker
+                    value={
+                      hour.openTime && hour.closeTime
+                        ? [
+                            dayjs(hour.openTime, "HH:mm"),
+                            dayjs(hour.closeTime, "HH:mm"),
+                          ]
+                        : [null, null]
+                    }
+                    onChange={(times, timeStrings) =>
+                      handleTimeChange(times, timeStrings, hour.dayOfWeek)
+                    }
+                    format="HH:mm"
+                    placeholder={["Hora de apertura", "Hora de cierre"]}
+                    disabled={hour.closed}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item style={{ marginBottom: 0 }}>
+                  <Checkbox
+                    checked={hour.closed}
+                    onChange={() => handleClosedChange(hour.dayOfWeek)}
+                  >
+                    Cerrado
+                  </Checkbox>
+                </Form.Item>
+              </Col>
+            </Row>
+          ))}
         </Col>
-        {hours?.map((hour) => (
-          <Row key={hour.dayOfWeek} gutter={[16, 16]} align="middle">
-            <Col span={6}>
-              <Form.Item style={{ marginBottom: 0 }}>
-                <span>{hour.dayOfWeek}: </span>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item style={{ marginBottom: "5px" }}>
-                <RangePicker
-                  value={
-                    hour.openTime && hour.closeTime
-                      ? [
-                          dayjs(hour.openTime, "HH:mm"),
-                          dayjs(hour.closeTime, "HH:mm"),
-                        ]
-                      : [null, null]
-                  }
-                  onChange={(times, timeStrings) =>
-                    handleTimeChange(times, timeStrings, hour.dayOfWeek)
-                  }
-                  format="HH:mm"
-                  placeholder={["Hora de apertura", "Hora de cierre"]}
-                  disabled={hour.closed}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item style={{ marginBottom: 0 }}>
-                <Checkbox
-                  checked={hour.closed}
-                  onChange={() => handleClosedChange(hour.dayOfWeek)}
-                >
-                  Cerrado
-                </Checkbox>
-              </Form.Item>
-            </Col>
-          </Row>
-        ))}
 
         {props.disabled ? null : (
-          <Col span={24}>
+          <Col span={24} style={{ marginTop: "10%" }}>
             <Form.Item>
               <Button
                 htmlType="submit"
                 className="register-pet-form__button"
                 icon={<SaveOutlined />}
+                
               >
                 Guardar
               </Button>

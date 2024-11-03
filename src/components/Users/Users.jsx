@@ -5,7 +5,11 @@ import {
   deactivateUser,
 } from "../../services/user.service.js";
 import { Table, Button, Tooltip, Input, Space, Modal, message } from "antd";
-import { SearchOutlined, FormOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  UserDeleteOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 
 const AllUsers = () => {
   const [users, setUsers] = useState([]);
@@ -192,9 +196,10 @@ const AllUsers = () => {
                 shape="circle"
                 onClick={() => showConfirm(record, "desactivar")}
               >
-                {" "}
-                <FormOutlined />{" "}
-              </Button>{" "}
+                <UserDeleteOutlined
+                  style={{ fontSize: "24px", color: "#5B2569" }}
+                />
+              </Button>
             </Tooltip>
           ) : (
             <Tooltip placement="top" title="Activar Usuario">
@@ -203,14 +208,15 @@ const AllUsers = () => {
                 shape="circle"
                 onClick={() => showConfirm(record, "activar")}
               >
-                {" "}
-                <FormOutlined />{" "}
+                <UserAddOutlined
+                  style={{ fontSize: "24px", color: "#5B2569" }}
+                />
               </Button>{" "}
             </Tooltip>
           )}{" "}
         </>
       ),
-      align: "center"
+      align: "center",
     },
   ];
 

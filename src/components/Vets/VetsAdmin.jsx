@@ -233,6 +233,9 @@ const AllVets = () => {
         name: vet?.name,
         phone: vet?.phone,
         active: vet?.active,
+        owner: vet?.owner?.name + " " + vet?.owner?.lastName,
+        // ownerName: vet?.owner?.name,
+        // ownerLastName: vet?.owner?.lastName,
       });
     });
     setData(finalData);

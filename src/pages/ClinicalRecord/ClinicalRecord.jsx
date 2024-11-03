@@ -450,7 +450,7 @@ export default function ClinicalRecord() {
             className="appTitle"
             style={{ display: "flex", alignItems: "center" }}
           >
-            <div style={{ marginRight: "2%", marginLeft: "1%" }}>
+            {/* <div style={{ marginRight: "2%", marginLeft: "1%" }}>
               <Tooltip placement="bottom" title="Volver">
                 <Button
                   type="link"
@@ -464,7 +464,7 @@ export default function ClinicalRecord() {
                 </Button>
                 {"   "}
               </Tooltip>
-            </div>
+            </div> */}
             Consulta Médica
           </Title>
         </Col>

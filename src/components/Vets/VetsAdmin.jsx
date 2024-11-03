@@ -175,6 +175,12 @@ const AllVets = () => {
       sorter: (a, b) => a.phone.length - b.phone.length,
     },
     {
+      title: "Propietario",
+      dataIndex: "owner",
+      ...getColumnSearchProps("owner"),
+      sorter: (a, b) => a.owner.length - b.owner.length,
+    },
+    {
       title: "Estado",
       dataIndex: "active",
       sorter: (a, b) => a.active - b.active,

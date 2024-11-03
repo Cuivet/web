@@ -7,6 +7,7 @@ import calendario from "../../assets/img/jpg/calendario.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import visitsReports from "../../assets/img/jpg/reportes.jpg";
+import users from "../../assets/img/jpg/users.jpg";
 
 import "../Settings/UserSettings/UserSettings.scss";
 
@@ -65,14 +66,14 @@ export default function MenuWeb() {
   };
 
   const admin = {
-    module: ["Clínicas Veterinarias", "Usuarios"],
+    module: ["Usuarios", "Clínicas Veterinarias"],
     description: [
-      "Visualizá los datos de Clínicas Veterinaria/s",
       "Visualizá los Usuarios",
+      "Visualizá los datos de Clínicas Veterinaria/s",
     ],
     disabled: [false, true],
-    img: [clinica, calendario],
-    routes: ["/admin-vets", "/users"],
+    img: [users, clinica],
+    routes: ["/users", "/vetsList"],
   };
 
   function cantMod() {

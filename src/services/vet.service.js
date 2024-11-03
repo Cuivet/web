@@ -176,3 +176,23 @@ export function activateVet(id) {
       return err;
     });
 }
+
+export function deleteVet(vetId) {
+  var axios = require('axios');
+  return axios({
+      method: "delete",
+      url: `${basePATH}/vet/${vetId}`,
+      timeout: 1000 * 5, // Wait for 5 seconds
+      headers: {
+          "Content-Type": "application/json",
+          Accept: 'application/json',
+          "token": sessionStorage.getItem('token'),
+      }
+      })
+      .then((response) => {
+          return response.data;
+      })
+      .catch((err) => {
+          return err;
+      });
+};

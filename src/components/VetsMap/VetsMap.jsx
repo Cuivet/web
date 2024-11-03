@@ -23,7 +23,8 @@ const VetsMap = () => {
     const fetchVets = async () => {
       try {
         const data = await getAllVets();
-        setVets(data);
+        const activeVets = data.filter((vet) => vet.active !== 0);
+        setVets(activeVets);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       }

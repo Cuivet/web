@@ -6,6 +6,7 @@ import Icon, {
   SettingOutlined,
   FolderOpenOutlined,
   PushpinOutlined,
+  UserOutlined,
   StarOutlined,
 } from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
@@ -33,6 +34,7 @@ export default function MenuSider(props) {
   var tutor = profile.tutor != null;
   var veterinary = profile.veterinary != null;
   var vetOwner = profile.vetOwner != null;
+  var admin = !vetOwner && !veterinary && !tutor;
 
   if (!isInit) {
     if (veterinary) {
@@ -123,7 +125,7 @@ export default function MenuSider(props) {
             </Menu.Item>
             <Menu.Item key="qualifications">
               <Link to={"/qualification"} className="admin-sider__item">
-                  <StarOutlined />
+                <StarOutlined />
                 {/* <Icon component={''}><StarBorderIcon fontSize="small" /></Icon> */}
                 <span className="nav-text"> Calificaciones </span>
               </Link>
@@ -174,7 +176,7 @@ export default function MenuSider(props) {
 
             <Menu.Item key="vetQualification" hidden={veterinaryWithNoVets}>
               <Link to={"/vetQualification"} className="admin-sider__item">
-                  <StarOutlined />
+                <StarOutlined />
                 <span className="nav-text"> Calificaciones</span>
               </Link>
             </Menu.Item>
@@ -259,6 +261,25 @@ export default function MenuSider(props) {
             <span className="nav-text"> Mapa </span>
           </Link>
         </Menu.Item>
+
+        {admin ? (
+          <>
+            <Menu.Item key="users">
+              <Link to={"/users"} className="admin-sider__item">
+                <UserOutlined />
+                <span className="nav-text"> Usuarios </span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="adminVets">
+              <Link to={"/vetsList"} className="admin-sider__item">
+                <Icon component={""}>
+                  <PersonPinCircleOutlinedIcon fontSize="small" />
+                </Icon>
+                <span className="nav-text"> Clínicas Registradas </span>
+              </Link>
+            </Menu.Item>
+          </>
+        ) : null}
 
         <Menu.Item key="user">
           <Link to={"/settings/user"} className="admin-sider__item">

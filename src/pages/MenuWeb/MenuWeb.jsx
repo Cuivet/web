@@ -7,6 +7,7 @@ import atencion from "../../assets/img/jpg/AtencionClinica.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import visitsReports from "../../assets/img/jpg/reportes.jpg";
+import users from "../../assets/img/jpg/users.jpg";
 import MyContext from "../../MyContext";
 import "../Settings/UserSettings/UserSettings.scss";
 
@@ -132,6 +133,18 @@ export default function MenuWeb() {
     routes: ["/veterinaries-management", "/vets", "/vetsMap"],
   };
 
+  const admin = {
+    module: ["Usuarios", "Clínicas Veterinarias", "Mapa"],
+    description: [
+      "Visualiza los datos los usuarios registrados",
+      "Visualizá los datos de las Clinica/s registrada/s",
+      "Mapa de las Clínicas Veterinarias",
+    ],
+    disabled: [false, true],
+    img: [users, clinica, huella],
+    routes: ["/users", "/vetsList", "/vetsMap"],
+  };
+
   function cantMod() {
     //definir modulos comunes en todos los perfiles, calendar por ejemplo
     let cards = {
@@ -147,18 +160,21 @@ export default function MenuWeb() {
       cards.description.push(tutor.description);
       cards.img.push(tutor.img);
       cards.routes.push(tutor.routes);
-    }
-    if (profile.veterinary != null) {
+    } else if (profile.veterinary != null) {
       cards.module.push(veterinary.module);
       cards.description.push(veterinary.description);
       cards.img.push(veterinary.img);
       cards.routes.push(veterinary.routes);
-    }
-    if (profile.vetOwner != null) {
+    } else if (profile.vetOwner != null) {
       cards.module.push(vetOwner.module);
       cards.description.push(vetOwner.description);
       cards.img.push(vetOwner.img);
       cards.routes.push(vetOwner.routes);
+    } else {
+      cards.module.push(admin.module);
+      cards.description.push(admin.description);
+      cards.img.push(admin.img);
+      cards.routes.push(admin.routes);
     }
     return cards;
   }

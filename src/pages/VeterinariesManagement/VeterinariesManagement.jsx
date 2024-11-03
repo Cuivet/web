@@ -83,8 +83,13 @@ export default function VeterinariesManagement() {
         </Option>
       );
     } else {
-      vets?.forEach(function eachVet(vet) {
-        renderVetOptions.push(<Option key={vet.vet.id} value={vet.vet.id}>{vet.vet.name}</Option>);
+      const activeVets = vets.filter((vet) => vet.vet.active !== 0);
+      activeVets?.forEach(function eachVet(vet) {
+        renderVetOptions.push(
+          <Option key={vet.vet.id} value={vet.vet.id}>
+            {vet.vet.name}
+          </Option>
+        );
       });
     }
     return renderVetOptions;
@@ -130,7 +135,7 @@ export default function VeterinariesManagement() {
         regent: regent[0],
         actions:
           regent[0] === "Si" ? (
-            <Tooltip placement="top" title="Desvincular Veterinario Regente">
+            <Tooltip placement="top" title="Vincular Nuevo Veterinario Regente">
               <Button
                 shape="circle"
                 size="large"
@@ -145,6 +150,7 @@ export default function VeterinariesManagement() {
           ) : null,
         id: vet.vet.id,
         address: vet.vet.address,
+        active: vet?.active,
       };
 
       if (vet.coveterinaryData && vet.coveterinaryData.length > 0) {
@@ -379,7 +385,6 @@ export default function VeterinariesManagement() {
       {!isOwner && (
         <Table columns={columns} dataSource={data} scroll={{ x: 500 }} />
       )}
-
       {isOwner && (
         <Table
           columns={columns}

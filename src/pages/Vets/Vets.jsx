@@ -82,6 +82,7 @@ export default function Vets() {
         }
         onClose={onClose}
         visible={true}
+        // size="large"
         bodyStyle={{
           paddingBottom: 80,
         }}

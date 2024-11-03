@@ -116,12 +116,12 @@ const VetsMap = () => {
               )}
             />
           </div>
-          <div className="button-container">
+          <div className="button-container" style={{ marginRight:'2%' }}>
             <Button
               shape="round"
               type="primary"
               onClick={() => setSelectedVet(null)}
-              style={{ width: "100%" }}
+              style={{ width: "100%"}}
             >
               Ver todas
             </Button>

@@ -7,10 +7,10 @@ import Icon, {
   FolderOpenOutlined,
   PushpinOutlined,
   UserOutlined,
+  StarOutlined,
 } from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
 import ScienceIcon from "@mui/icons-material/Science";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 import MedicalServicesOutlinedIcon from "@mui/icons-material/MedicalServicesOutlined";
 import PersonPinCircleOutlinedIcon from "@mui/icons-material/PersonPinCircleOutlined";
 import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
@@ -125,9 +125,8 @@ export default function MenuSider(props) {
             </Menu.Item>
             <Menu.Item key="qualifications">
               <Link to={"/qualification"} className="admin-sider__item">
-                <Icon component={""}>
-                  <StarBorderIcon fontSize="small" />
-                </Icon>
+                <StarOutlined />
+                {/* <Icon component={''}><StarBorderIcon fontSize="small" /></Icon> */}
                 <span className="nav-text"> Calificaciones </span>
               </Link>
             </Menu.Item>
@@ -175,12 +174,10 @@ export default function MenuSider(props) {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="vetQualification">
+            <Menu.Item key="vetQualification" hidden={veterinaryWithNoVets}>
               <Link to={"/vetQualification"} className="admin-sider__item">
-                <Icon component={""}>
-                  <StarBorderIcon fontSize="small" />
-                </Icon>
-                <span className="nav-text"> Calificaciones obtenidas</span>
+                <StarOutlined />
+                <span className="nav-text"> Calificaciones</span>
               </Link>
             </Menu.Item>
 
@@ -266,12 +263,22 @@ export default function MenuSider(props) {
         </Menu.Item>
 
         {admin ? (
-          <Menu.Item key="users">
-            <Link to={"/users"} className="admin-sider__item">
-              <UserOutlined />
-              <span className="nav-text"> Usuarios </span>
-            </Link>
-          </Menu.Item>
+          <>
+            <Menu.Item key="users">
+              <Link to={"/users"} className="admin-sider__item">
+                <UserOutlined />
+                <span className="nav-text"> Usuarios </span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="adminVets">
+              <Link to={"/vetsList"} className="admin-sider__item">
+                <Icon component={""}>
+                  <PersonPinCircleOutlinedIcon fontSize="small" />
+                </Icon>
+                <span className="nav-text"> Clínicas Registradas </span>
+              </Link>
+            </Menu.Item>
+          </>
         ) : null}
 
         <Menu.Item key="user">

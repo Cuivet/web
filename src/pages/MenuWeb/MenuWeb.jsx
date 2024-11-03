@@ -1,79 +1,148 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Typography, Divider } from "antd";
 import CardMenu from "../../components/CardMenu";
 import huella from "../../assets/img/jpg/Huella1.jpg";
 import atencion from "../../assets/img/jpg/AtencionClinica.jpg";
-import calendario from "../../assets/img/jpg/calendario.jpg";
+// import calendario from "../../assets/img/jpg/calendario.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import visitsReports from "../../assets/img/jpg/reportes.jpg";
 import users from "../../assets/img/jpg/users.jpg";
-
+import MyContext from "../../MyContext";
 import "../Settings/UserSettings/UserSettings.scss";
 
 const { Title } = Typography;
 
 export default function MenuWeb() {
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const [veterinaryWithNoVets, setVeterinaryWithNoVets] = useState(false);
+  const [regentVets, setRegentVets] = useState([]);
+  const [regentOfSelectedVet, setRegentOfSelectedVet] = useState(false);
+  const { selectedVet } = useContext(MyContext);
+
+  useEffect(() => {
+    if (profile.veterinary && !!selectedVet?.value) {
+      setVeterinaryWithNoVets(false);
+    } else {
+      setVeterinaryWithNoVets(true);
+    }
+  }, [profile.veterinary, selectedVet]);
 
   const veterinary = {
-    module: ["Ficha Clínica", "Vacunacion", "Calendario", "Reportes"],
-    description: [
-      "Iniciar ficha clínica para la Mascota",
-      "Carga de vacunas a mascotas",
-      "Visualizá próximos eventos",
-      "Visualizá tus reportes",
-    ],
+    module: veterinaryWithNoVets
+      ? ["Clinicas Veterinarias", "Mapa"]
+      : [
+          "Ficha Clínica",
+          "Vacunacion",
+          "Estudios Complementarios",
+          "Historial Clinico",
+          "Calificaciones",
+          "Gestion de Veterinarios",
+          "Mis Pacientes",
+          "Clinicas Veterinarias",
+          "Mapa",
+          "Reportes",
+        ],
+    description: veterinaryWithNoVets
+      ? [
+          "Visualizá las Clínicas asociadas",
+          "Mapa con las Clínicas Veterinarias",
+        ]
+      : [
+          "Iniciar una nueva consulta",
+          "Gestion de vacunas a mascotas",
+          "Visualizar estudios complementarios de mascotas",
+          "Visualizar los historiales clinicos de las mascotas asociadas",
+          "Aqui puedes ver las claificaciones que tus atenciones han recibido",
+          "Gestiona todos los veterinarios asociados a la Clínicas",
+          "Visualizá tus pacientes asociados",
+          "Visualizá las Clínicas asociadas",
+          "Mapa con las Clínicas Veterinarias",
+          "Visualizá tus reportes",
+        ],
     disabled: [false, true],
-    img: [atencion, calendario, huella, visitsReports],
-    routes: [
-      "/clinical-record-menu",
-      "/vaccination",
-      "/calendar",
-      "/pets-management",
-      "/vetQualification",
-      "/reports",
-    ],
+    img: veterinaryWithNoVets
+      ? [clinica, huella]
+      : [
+          atencion,
+          huella,
+          huella,
+          huella,
+          huella,
+          huella,
+          huella,
+          clinica,
+          huella,
+          visitsReports,
+        ],
+    routes: veterinaryWithNoVets
+      ? ["/vets-associations", "/vetsMap"]
+      : [
+          "/clinical-record-menu",
+          "/vaccination",
+          "/studies",
+          "/clinical-records-management",
+          "/vetQualification",
+          "/veterinaries-management",
+          "/pets-management",
+          "/vets-associations",
+          "/vetsMap",
+          "/reports",
+        ],
   };
 
   const tutor = {
     module: [
-      "Mis Mascotas",
-      "Calendario",
-      "Calificar Veterinarios",
       "Historial Clínico",
+      "Estudios Complementarios",
+      "Mis Mascotas",
+
+      "Veterinarios Asociados",
+      "Calificaciones",
+      "Mapa",
     ],
     description: [
-      "Visualizá tus Mascotas registradas",
-      "Visualizá próximos eventos",
-      "Registrá una calificación a tus Veterinarios asociados",
       "Visualizá el Historial Clínico de tus Mascotas",
+      "Visualizá estudios complementarios de tus Mascotas",
+      "Gestiona tus Mascotas",
+      "Gestiona todos los Veterinarios asociados a tus mascotas",
+      "Registrá una reseña a tus Veterinarios asociados",
+      "Mapa de las Clínicas Veterinarias",
     ],
     disabled: [false, true],
-    img: [huella, calendario, valorar, atencion],
-    routes: ["/pets", "/calendar", "/qualification", "/admin"],
+    img: [huella, huella, valorar, atencion, huella, huella, huella],
+    routes: [
+      "/clinical-history",
+      "/studies",
+      "/pets",
+      "/qualification",
+      "/veterinaries-associations",
+      "/vetsMap",
+    ],
   };
 
   const vetOwner = {
-    module: ["Mis Clínicas Veterinarias", "Calendario"],
+    module: ["Mis Veterinarios", "Mis Clínicas Veterinarias", "Mapa"],
     description: [
-      "Visualizá los datos de tu/s Veterinaria/s",
-      "Visualizá próximos eventos",
+      "Visualiza los datos los Veterinarios asociados",
+      "Visualizá los datos de tu/s Clinica/s",
+      "Mapa de las Clínicas Veterinarias",
     ],
     disabled: [false, true],
-    img: [clinica, calendario],
-    routes: ["/vets", "/calendar"],
+    img: [atencion, clinica, huella],
+    routes: ["/veterinaries-management", "/vets", "/vetsMap"],
   };
 
   const admin = {
-    module: ["Usuarios", "Clínicas Veterinarias"],
+    module: ["Usuarios", "Clínicas Veterinarias", "Mapa"],
     description: [
-      "Visualizá los Usuarios",
-      "Visualizá los datos de Clínicas Veterinaria/s",
+      "Visualiza los datos los usuarios registrados",
+      "Visualizá los datos de las Clinica/s registrada/s",
+      "Mapa de las Clínicas Veterinarias",
     ],
     disabled: [false, true],
-    img: [users, clinica],
-    routes: ["/users", "/vetsList"],
+    img: [users, clinica, huella],
+    routes: ["/users", "/vetsList", "/vetsMap"],
   };
 
   function cantMod() {
@@ -107,7 +176,6 @@ export default function MenuWeb() {
       cards.img.push(admin.img);
       cards.routes.push(admin.routes);
     }
-
     return cards;
   }
 

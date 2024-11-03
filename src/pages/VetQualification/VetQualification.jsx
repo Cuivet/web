@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { qualificationService } from "../../services/qualification.service";
 import { Typography, Table, Row, Col, Divider } from "antd";
 import "./vetQualification.scss";
-import StarSelector from "./StarSelector";
+import StarSelector from "../../components/StarDisplay/StarDisplay";
 import { StarTwoTone } from "@ant-design/icons"; // Importa el icono
+import moment from "moment";
 
 const { Title } = Typography;
 
@@ -31,7 +32,8 @@ export default function VetQualification() {
     const finalData = responseQualifications
       .map((item) => ({
         key: item.qualification.id,
-        date: item.qualification.updatedAt.slice(0, 10),
+        date: moment(item.clinicalRecord.createdAt).format("DD/MM/YYYY"), //clinicalRecord.createdAt.slice(0, 10),
+        
         tutorName: item.clinicalRecord.tutorData.person.name,
         petName: item.clinicalRecord.pet.name,
         qualification: item.qualification.qualification,
@@ -73,7 +75,11 @@ export default function VetQualification() {
       title: "Fecha Calificación",
       dataIndex: "date",
       key: "date",
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      sorter: (a, b) => {
+        const dateA = moment(a.date, "DD/MM/YYYY");
+        const dateB = moment(b.date, "DD/MM/YYYY");
+        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+      },
       responsive: ["sm"],
     },
     {
@@ -113,10 +119,15 @@ export default function VetQualification() {
       <Row align={"middle"}>
         <Col span={24} style={{ display: "flex", alignItems: "center" }}>
           <Title className="appTitle" style={{ marginBottom: 0 }}>
-            Calificaciones{" "}
+            Calificaciones Obtenidas{" "}
           </Title>
-          <StarTwoTone style={{ fontSize: '28px' , marginLeft: '2%'}} twoToneColor="rgba(88, 9, 114, 0.329)" />
-            <span style={{ marginLeft: '1%', fontSize: '28px' }}>{averageQualification.toFixed(2)}</span>
+          <StarTwoTone
+            style={{ fontSize: "28px", marginLeft: "2%" }}
+            twoToneColor="rgba(88, 9, 114, 0.329)"
+          />
+          <span style={{ marginLeft: "1%", fontSize: "28px" }}>
+            {averageQualification.toFixed(2)}
+          </span>
         </Col>
       </Row>
       {/* <div className="qualifications__average" style={{ marginLeft: '40px', display: 'flex', alignItems: 'center' }}>

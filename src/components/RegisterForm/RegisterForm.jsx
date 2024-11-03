@@ -418,6 +418,7 @@ export default function RegisterForm(props) {
           name="dni"
           value={input.dni}
           placeholder="DNI"
+          autoComplete="off"
           className="register-form__input"
           onChange={inputValidation}
           onSelect={inputValidation}
@@ -429,6 +430,7 @@ export default function RegisterForm(props) {
           type="number"
           name="phone"
           value={input.phone}
+          autoComplete="off"
           placeholder="Teléfono"
           className="register-form__input"
           onChange={inputValidation}

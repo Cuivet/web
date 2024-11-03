@@ -1,7 +1,7 @@
-import React , {useState,useEffect }from 'react';
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import { StarOutlined, StarFilled} from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
+import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import { StarOutlined, StarFilled } from "@ant-design/icons";
 
 const StarSelector = ({ qualification, onChange }) => {
   const [currentRating, setCurrentRating] = useState(qualification || 0);
@@ -34,9 +34,13 @@ const StarSelector = ({ qualification, onChange }) => {
           onMouseLeave={handleMouseLeave}
         >
           {value <= (hoverRating || currentRating) ? (
-            <StarFilled style={{ color: 'rgba(88, 9, 114, 0.329)' }} />
+            <StarFilled
+              style={{ fontSize: 20, color: "rgba(88, 9, 114, 0.329)" }}
+            />
           ) : (
-            <StarOutlined style={{ color: 'rgba(88, 9, 114, 0.329)' }} />
+            <StarOutlined
+              style={{ fontSize: 20, color: "rgba(88, 9, 114, 0.329)" }}
+            />
           )}
         </span>
       ))}

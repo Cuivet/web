@@ -20,6 +20,8 @@ import storage from "../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import './RegisterVetForm.scss';
+
 dayjs.extend(customParseFormat);
 
 const { RangePicker } = TimePicker;
@@ -345,12 +347,13 @@ export default function RegisterVetForm(props) {
         </Col>
 
         {props.disabled ? null : (
-          <Col span={24} style={{ marginTop: "2%" }}>
+          <Col span={24} style={{ marginTop: "10%" }}>
             <Form.Item>
               <Button
                 htmlType="submit"
                 className="register-pet-form__button"
                 icon={<SaveOutlined />}
+                
               >
                 Guardar
               </Button>

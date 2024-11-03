@@ -8,16 +8,13 @@ import {
   Typography,
   Table,
   Form,
-  Popconfirm,
   Col,
   Divider,
 } from "antd";
-import { EditFilled } from "@ant-design/icons";
+import { EditOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import "./Qualification.scss";
-import StarSelector from "./StarSelector";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import { TextField } from "@mui/material";
-//import TextField from '@mui/material/TextField';
+import StarSelector from "../../components/StarSelector/StarSelector";
+import moment from "moment";
 
 const { Title } = Typography;
 
@@ -48,7 +45,7 @@ export default function Qualification() {
   function generateData(responseQualifications) {
     const finalData = responseQualifications?.map((item) => ({
       key: item.qualification.id,
-      date: item.clinicalRecord.createdAt.slice(0, 10),
+      date: moment(item.clinicalRecord.createdAt).format("DD/MM/YYYY"), //clinicalRecord.createdAt.slice(0, 10),
       vetName: `${item.clinicalRecord.veterinaryData.person.name} ${item.clinicalRecord.veterinaryData.person.lastName}`,
       petName: item.clinicalRecord.pet.name,
       qualification: item.qualification.qualification,
@@ -107,7 +104,11 @@ export default function Qualification() {
       title: "Fecha Consulta",
       dataIndex: "date",
       key: "date",
-      sorter: (a, b) => a.date.localeCompare(b.date),
+      sorter: (a, b) => {
+        const dateA = moment(a.date, "DD/MM/YYYY");
+        const dateB = moment(b.date, "DD/MM/YYYY");
+        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+      },
     },
     {
       title: "Veterinario",
@@ -141,7 +142,7 @@ export default function Qualification() {
         const isEditingRow = editingKey === record.key;
 
         return isEditingRow ? (
-          <TextField
+          <Input
             placeholder="Ingrese observación"
             value={record.observation || ""}
             onChange={(e) =>
@@ -161,26 +162,41 @@ export default function Qualification() {
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{ marginRight: 8 }}
-            >
-              Guardar
-            </Typography.Link>
-            <Popconfirm title="Cancelar cambios?" onConfirm={cancel}>
-              <a>Cancelar</a>
-            </Popconfirm>
-          </span>
+          <>
+            <Tooltip placement="top" title="Guardar cambios">
+              <Button
+                shape="circle"
+                size="large"
+                onClick={() => save(record.key)}
+                // style={{marginRight: '5%'}}
+                className="margin-right"
+                disabled={editingKey !== record.key}
+              >
+                <CheckOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="top" title="Cancelar cambios">
+              <Button
+                shape="circle"
+                size="large"
+                onClick={cancel}
+                disabled={editingKey !== record.key}
+              >
+                <CloseOutlined />
+              </Button>
+            </Tooltip>
+          </>
         ) : (
           <Tooltip placement="top" title="Editar calificación u observación">
             <Button
-              type="link"
+              shape="circle"
+              size="large"
               className="appTableButton"
-              icon={<EditFilled />}
               onClick={() => edit(record)}
               disabled={editingKey !== "" || record.isSaved}
-            />
+            >
+              <EditOutlined />
+            </Button>
           </Tooltip>
         );
       },
@@ -201,10 +217,11 @@ export default function Qualification() {
             cell: EditableCell,
           },
         }}
-        bordered
+        // bordered
         dataSource={data}
         columns={columns}
         rowClassName="editable-row"
+        scroll={{ x: 500 }}
         loading={isLoading}
         pagination={{ onChange: cancel }}
       />

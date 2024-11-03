@@ -1,69 +1,93 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Typography, Divider } from "antd";
 import CardMenu from "../../components/CardMenu";
 import huella from "../../assets/img/jpg/Huella1.jpg";
 import atencion from "../../assets/img/jpg/AtencionClinica.jpg";
-import calendario from "../../assets/img/jpg/calendario.jpg";
+// import calendario from "../../assets/img/jpg/calendario.jpg";
 import valorar from "../../assets/img/jpg/valorar.jpg";
 import clinica from "../../assets/img/jpg/clinica.jpg";
 import visitsReports from "../../assets/img/jpg/reportes.jpg";
+import MyContext from "../../MyContext";
 import "../Settings/UserSettings/UserSettings.scss";
 
 const { Title } = Typography;
 
 export default function MenuWeb() {
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+  const [veterinaryWithNoVets, setVeterinaryWithNoVets] = useState(false);
+  const [regentVets, setRegentVets] = useState([]);
+  const [regentOfSelectedVet, setRegentOfSelectedVet] = useState(false);
+  const { selectedVet } = useContext(MyContext);
+
+  useEffect(() => {
+    if (profile.veterinary && !!selectedVet?.value) {
+      setVeterinaryWithNoVets(false);
+    } else {
+      setVeterinaryWithNoVets(true);
+    }
+  }, [profile.veterinary, selectedVet]);
 
   const veterinary = {
-    module: [
-      "Ficha Clínica",
-      "Vacunacion",
-      "Estudios Complementarios",
-      "Historial Clinico",
-      "Calificaciones",
-      "Gestion de Veterinarios",
-      "Mis Pacientes",
-      "Clinicas Veterinarias",
-      "Mapa",
-      "Reportes",
-    ],
-    description: [
-      "Iniciar una nueva consulta",
-      "Gestion de vacunas a mascotas",
-      "Visualizar estudios complementarios de mascotas",
-      "Visualizar los historiales clinicos de las mascotas asociadas",
-      "Aqui puedes ver las claificaciones que tus atenciones han recibido",
-      "Gestiona todos los veterinarios asociados a la Clínicas",
-      "Visualizá tus pacientes asociados",
-      "Visualizá las Clínicas asociadas",
-      "Mapa con las Clínicas Veterinarias",
-      "Visualizá tus reportes",
-    ],
+    module: veterinaryWithNoVets
+      ? ["Clinicas Veterinarias", "Mapa"]
+      : [
+          "Ficha Clínica",
+          "Vacunacion",
+          "Estudios Complementarios",
+          "Historial Clinico",
+          "Calificaciones",
+          "Gestion de Veterinarios",
+          "Mis Pacientes",
+          "Clinicas Veterinarias",
+          "Mapa",
+          "Reportes",
+        ],
+    description: veterinaryWithNoVets
+      ? [
+          "Visualizá las Clínicas asociadas",
+          "Mapa con las Clínicas Veterinarias",
+        ]
+      : [
+          "Iniciar una nueva consulta",
+          "Gestion de vacunas a mascotas",
+          "Visualizar estudios complementarios de mascotas",
+          "Visualizar los historiales clinicos de las mascotas asociadas",
+          "Aqui puedes ver las claificaciones que tus atenciones han recibido",
+          "Gestiona todos los veterinarios asociados a la Clínicas",
+          "Visualizá tus pacientes asociados",
+          "Visualizá las Clínicas asociadas",
+          "Mapa con las Clínicas Veterinarias",
+          "Visualizá tus reportes",
+        ],
     disabled: [false, true],
-    img: [
-      atencion,
-      huella,
-      huella,
-      huella,
-      huella,
-      huella,
-      huella,
-      clinica,
-      huella,
-      visitsReports,
-    ],
-    routes: [
-      "/clinical-record-menu",
-      "/vaccination",
-      "/studies",
-      "/clinical-records-management",
-      "/vetQualification",
-      "/veterinaries-management",
-      "/pets-management",
-      "/vets-associations",
-      "/vetsMap",
-      "/reports",
-    ],
+    img: veterinaryWithNoVets
+      ? [clinica, huella]
+      : [
+          atencion,
+          huella,
+          huella,
+          huella,
+          huella,
+          huella,
+          huella,
+          clinica,
+          huella,
+          visitsReports,
+        ],
+    routes: veterinaryWithNoVets
+      ? ["/vets-associations", "/vetsMap"]
+      : [
+          "/clinical-record-menu",
+          "/vaccination",
+          "/studies",
+          "/clinical-records-management",
+          "/vetQualification",
+          "/veterinaries-management",
+          "/pets-management",
+          "/vets-associations",
+          "/vetsMap",
+          "/reports",
+        ],
   };
 
   const tutor = {
@@ -71,7 +95,7 @@ export default function MenuWeb() {
       "Historial Clínico",
       "Estudios Complementarios",
       "Mis Mascotas",
-      
+
       "Veterinarios Asociados",
       "Calificaciones",
       "Mapa",

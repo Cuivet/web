@@ -172,7 +172,7 @@ export default function MenuSider(props) {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="vetQualification">
+            <Menu.Item key="vetQualification" hidden={veterinaryWithNoVets}>
               <Link to={"/vetQualification"} className="admin-sider__item">
                   <StarOutlined />
                 <span className="nav-text"> Calificaciones</span>

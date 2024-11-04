@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import {
   Col,
@@ -19,6 +19,10 @@ import VetVisitsKPI from "../../components/VetVisitsKPI";
 import locale from "antd/lib/date-picker/locale/es_ES";
 import moment from "moment";
 import '../Settings/UserSettings/UserSettings.scss';
+import { specieService } from "../../services/specie.service";
+import { getPetsByTutorId } from "../../services/pet.service";
+import { getTutorDataByDni } from "../../services/tutor.service";
+import { getAllByTutorId } from "../../services/pet_association.service";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -26,6 +30,66 @@ const { Option } = Select;
 function Reports() {
 
     const profile = JSON.parse(sessionStorage.getItem('profile'));
+
+    const [species, setSpecies] = useState([]);
+    const [pets, setPets] = useState([]);
+    const [tutorName, setTutorName] = useState("");
+    const [dni, setDni] = useState("");
+    const [errorMessage, setErrorMessage] = useState(""); // Nuevo estado para el mensaje de error
+
+    useEffect(() => {
+      // Función para obtener las especies (se ejecuta para cualquier perfil)
+      const fetchSpecies = async () => {
+        try {
+          const speciesData = await specieService.findAll();
+          setSpecies(speciesData);
+        } catch (error) {
+          console.error("Error fetching species:", error);
+        }
+      };
+  
+      fetchSpecies();
+  
+      // Cargar mascotas sólo si el perfil es de tipo tutor
+      if (profile && profile.tutor) {
+        const fetchPets = async () => {
+          try {
+            const petsData = await getPetsByTutorId(profile.tutor.id);
+            console.log("Mascotas obtenidas:", petsData);
+            setPets(Array.isArray(petsData) ? petsData : []);
+          } catch (error) {
+            console.error("Error al obtener las mascotas:", error);
+            setPets([]);
+          }
+        };
+  
+        fetchPets();
+      }
+    }, []); // Dependencias vacías para ejecutar solo una vez al montar el componente
+
+    const fetchTutorData = async () => {
+      try {
+        const { tutor, person } = await getTutorDataByDni(dni);
+        
+        if (person && person.name && person.lastName) {
+          setTutorName(`${person.name} ${person.lastName}`); // Muestra nombre y apellido
+          setErrorMessage(""); // Limpiamos el mensaje de error si se encuentra un tutor
+        } else {
+          setTutorName("");
+          setErrorMessage("DNI no asociado"); // Mensaje cuando no hay tutor
+        }
+      } catch (error) {
+        console.error("Error fetching tutor data:", error);
+        setTutorName("");
+        setErrorMessage("DNI no asociado"); // Mensaje de error si hay una excepción
+      }
+    };
+  
+    useEffect(() => {
+      if (dni) {
+        fetchTutorData();
+      }
+    }, [dni]);
 
     const currentYear = new Date().getFullYear(); // Obtener el año actual
 
@@ -110,19 +174,21 @@ function Reports() {
         if (profile.veterinary) {
           return (
             <>
-              <Col className="gutter-row" xs={{ span: 5 }} md={{ span: 5 }}>
+            <Col className="gutter-row" xs={{ span: 5 }} md={{ span: 5 }}>
                 <Select
-                  placeholder="Especie"
-                  showSearch
-                  mode="multiple"
-                  className="select-before full-width"
+                placeholder="Especie"
+                showSearch
+                mode="multiple"
+                className="select-before full-width"
                 >
-                  <Option value="1">Perro</Option>
-                  <Option value="2">Gato</Option>
-                  <Option value="3">Conejo</Option>
-                  <Option value="4">Caballos</Option>
+                {species.map((specie) => (
+                    <Option key={specie.id} value={specie.id}>
+                    {specie.name}
+                    </Option>
+                ))}
                 </Select>
-              </Col>
+            </Col>
+
               <Col className="gutter-row" xs={{ span: 5 }} md={{ span: 5 }}>
                 <DatePicker
                   locale={locale}
@@ -144,8 +210,32 @@ function Reports() {
                 />
               </Col>
               <Col className="gutter-row" xs={{ span: 5 }} md={{ span: 5 }}>
-                <Input placeholder="Tutor" />
-              </Col>
+                <Input
+                  placeholder="Ingrese DNI del Tutor"
+                  value={dni}
+                  onChange={(e) => setDni(e.target.value)}
+                  onKeyPress={(e) => {
+                    // Permitir solo dígitos del 0 al 9
+                    if (!/[0-9]/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                />
+                
+                {/* Mostrar "Tutor: Nombre Apellido" solo si hay un tutorName y un dni */}
+                {tutorName && dni && (
+                  <div style={{ marginTop: '10px' }}>
+                    Tutor: {tutorName}
+                  </div>
+                )}
+
+                {/* Mostrar mensaje de error si no hay un tutor asociado y se ha ingresado un dni */}
+                {errorMessage && dni && (
+                  <div style={{ color: "red", marginTop: '10px' }}>
+                    {errorMessage}
+                  </div>
+                )}
+            </Col>
             </>
           );
         } else if (profile.tutor) {
@@ -172,17 +262,19 @@ function Reports() {
                 />
               </Col>
               <Col className="gutter-row" xs={{ span: 5 }} md={{ span: 5 }}>
-                <Select
-                  placeholder="Mascota"
-                  showSearch
-                  mode="multiple"
-                  className="select-before full-width"
-                >
-                  <Option value="Olivia">Olivia</Option>
-                  <Option value="Duki">Duki</Option>
-                  {/* Agrega más opciones según tus datos */}
-                </Select>
-              </Col>
+            <Select
+              placeholder="Mascota"
+              showSearch
+              mode="multiple"
+              className="select-before full-width"
+            >
+              {pets.map((pet) => (
+                <Option key={pet.id} value={pet.name}>
+                  {pet.name}
+                </Option>
+              ))}
+            </Select>
+          </Col>
             </>
           );
         }
@@ -211,7 +303,7 @@ function Reports() {
     
               <Col xs={{ span: 24 }} lg={{ span: 8 }}>
                 <div style={{ height: '600px' }}> {/* Ajusta la altura aquí */}
-                  <LineChart data={monthlyData} title={`Visitas Mensuales en el Año ${currentYear}`} />
+                  <LineChart data={monthlyData} title={`Visitas Mensuales en el Año ${currentYear}`} /> {/* Corregido aquí */}
                 </div>
               </Col>
             </>
@@ -220,14 +312,14 @@ function Reports() {
           return (
             <>
               <Col xs={{ span: 24 }} lg={{ span: 8 }}>
-                <div style={{ height: '600px' }}>
-                  <WeightEvolutionChart data={weightData} title="Evolución del Peso de las Mascotas (en KG)" />
-                </div>
-              </Col>
-    
-              <Col xs={{ span: 24 }} lg={{ span: 8 }}>
                 <div style={{ height: '200px' }}>
                   <VetVisitsKPI visits={visitasPorMascota} />
+                </div>
+              </Col>
+
+              <Col xs={{ span: 24 }} lg={{ span: 8 }}>
+                <div style={{ height: '600px' }}>
+                  <WeightEvolutionChart data={weightData} title="Evolución del Peso de las Mascotas (en KG)" />
                 </div>
               </Col>
     
@@ -291,9 +383,3 @@ function Reports() {
     }
     
     export default Reports;
-
-
-
-
-
-

@@ -1,4 +1,3 @@
-// RingChart.jsx
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -13,18 +12,21 @@ const RingChart = ({ data }) => {
       {
         data: data.map(item => item.percentage),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 206, 86, 0.6)',
-          'rgba(75, 192, 192, 0.6)',
-          'rgba(153, 102, 255, 0.6)',
+          '#5b2569',   // Púrpura fuerte
+          '#e9c4f2',   // Púrpura claro
+          '#ff69b4',   // Rosa fuerte
+          '#ffb6c1',   // Rosa claro
+          '#40e0d0',   // Turquesa fuerte
+          '#afeeee',   // Turquesa claro
+          // Agrega más colores si es necesario
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
+          '#5b2569',
+          '#e9c4f2',
+          '#ff69b4',
+          '#ffb6c1',
+          '#40e0d0',
+          '#afeeee',
         ],
         borderWidth: 1,
       },
@@ -40,7 +42,7 @@ const RingChart = ({ data }) => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.label}: ${context.raw}%`;
+            return `${context.label}: ${context.raw}%`; // Corregido
           },
         },
       },
@@ -48,11 +50,11 @@ const RingChart = ({ data }) => {
         color: 'black',
         font: {
           weight: 'bold',
-          size: 14,
+          size: 12,
         },
         formatter: (value, context) => {
           const name = context.chart.data.labels[context.dataIndex];
-          return `${name}\n${value}%`; // Muestra el nombre y el porcentaje
+          return `${name}\n${value}%`; // Corregido
         },
       },
     },
@@ -66,6 +68,16 @@ const RingChart = ({ data }) => {
 };
 
 export default RingChart;
+
+
+
+
+
+
+
+
+
+
 
 
 

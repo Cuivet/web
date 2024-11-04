@@ -28,8 +28,7 @@ export default function VetQualification() {
 
     function generateData(responseQualifications) {
         //debugger
-        const finalData = responseQualifications
-            .map(item => ({
+        const finalData = responseQualifications?.map(item => ({
                 key: item.qualification.id,
                 date: item.qualification.updatedAt.slice(0, 10),
                 tutorName: item.clinicalRecord.tutorData.person.name,

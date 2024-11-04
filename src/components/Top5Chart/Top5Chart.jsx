@@ -13,8 +13,8 @@ const Top5Chart = ({ data }) => {
       {
         label: 'Diagnósticos',
         data: data.map(item => item.count),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: '#e9c4f2', // Cambia el color de fondo de las barras
+        borderColor: '#e9c4f2', // Cambia el color del borde de las barras
         borderWidth: 1,
       },
     ],
@@ -72,6 +72,7 @@ const Top5Chart = ({ data }) => {
 };
 
 export default Top5Chart;
+
 
 
 

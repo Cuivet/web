@@ -10,27 +10,55 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     header: {
-        position: 'fixed',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 10,
-        paddingBottom: 10,
-        borderBottomWidth: 0.25,
-        borderBottomColor: 'black',
-        marginTop: 8,
+        padding: 10,
+        backgroundColor: '#f5f5f5',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        flexDirection: 'row', // Cambiado a fila para alinear elementos
+        justifyContent: 'space-between', // Espaciado entre el logo y el título
+        alignItems: 'center', // Alinear elementos al centro verticalmente
+    },
+    leftContainer: {
+        flexDirection: 'column', // Mantener el contenido en columna
+    },
+    rowContainer: {
+        flexDirection: 'column', // Alinear filas en columna
+        marginBottom: 10, // Espacio entre las filas y el logo
     },
     rightContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: 'row', // Alinear logo y texto en fila
+        alignItems: 'center', // Centrar verticalmente
+        marginLeft: 'auto', // Empujar el contenedor a la derecha
     },
     logo: {
-        width: 20,
-        height: 'auto',
+        width: 50, // Ancho del logo
+        height: 50, // Alto del logo
+        marginRight: 5, // Espacio entre logo y texto
     },
     cuivetText: {
+        fontSize: 12,
+        color: '#5b2569',
+    },
+    rowHeader: {
+        flexDirection: 'row', // Alinear elementos en fila
+        justifyContent: 'flex-start', // Alinear a la izquierda
+        marginVertical: 5, // Espacio vertical entre filas
+    },
+    detailTextHeader: {
         fontSize: 10,
-        marginLeft: 5,
+        textDecorationLine: 'underline',
+        fontWeight: 'bold', // Negrita
+    },
+    detailTextHeaderBD: {
+        fontSize: 10,
+        // color: '#5b2569', // Color personalizado
+        fontWeight: 'bold', // Negrita
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#5b2569',
+        marginBottom: 10, // Espacio debajo del título
     },
     footer: {
         position: 'fixed',
@@ -69,9 +97,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         margin: 10,
         padding: 5,
+        borderRadius: 5,
         // Eliminar margin y padding
         // width: 'auto', // No necesitas esto ya que el ancho se ajusta automáticamente
         alignSelf: 'flex-start', // Esto se aplica al contenedor, no al estilo del texto
+    },
+    infoSubTitleStep: {
+        fontSize: 12,
+        margin: 5,
+        color: '#5b2569',  // Color personalizado
+        fontWeight: 'bold', // Negrita
+        marginleft:5,
+        textAlign: 'left',
     },
     infoStep: {
         fontSize: 12,
@@ -169,6 +206,34 @@ const styles = StyleSheet.create({
         marginVertical: 5,  // Espaciado vertical para el texto
         fontWeight: 'bold',
     },
+    sectionTitle: {
+        fontSize: 16,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    questionText: {
+        fontSize: 12,
+        marginRight: 5,
+        //height:10,
+        //borderBottomWidth: 1, // Grosor de la línea de subrayado 
+        //borderBottomColor: '#5b2569',
+        marginBottom: 8
+    },
+    bullet: {
+        width: 5,
+        height: 5,
+        borderRadius: 4, // Crea un círculo
+        backgroundColor: '#5b2569', // Color de la viñeta
+        marginRight: 8, // Espaciado entre viñeta y texto
+    },
+    itemContainer: {
+        flexDirection: 'row', // Alinea horizontalmente viñeta y texto
+        alignItems: 'center', // Centra verticalmente los elementos
+        marginBottom: 5, // Espaciado entre ítems
+    },
+   
+    responseText: { fontSize: 10, marginBottom: 10 , color: '#5b2569',marginLeft: 20 },
+    row: { flexDirection: 'row', alignItems: 'flex-start' },
 });
 
 const formatDate = (date) => {
@@ -184,7 +249,7 @@ const formatDate2 = (dateString) => {
     const yyyy = String(date.getFullYear()); 
     return `${dd}/${mm}/${yyyy}`; };
 
-    const getAgeContent = (birth) => { 
+const getAgeContent = (birth) => { 
         const today = new Date(); 
         const birthDate = new Date(birth); 
         let years = today.getFullYear() - birthDate.getFullYear(); // Ajustar los meses si la fecha de nacimiento es más tarde en el año 
@@ -197,16 +262,44 @@ const formatDate2 = (dateString) => {
             const months = today.getMonth() - birthDate.getMonth() + (12 * (today.getFullYear() - birthDate.getFullYear())); 
             return months === 1 ? "1 mes" : `${months} meses`; } 
         };
-// Crear el componente Footer
-const Header = () => ( 
-<View style={styles.header}> 
-    <Text>FICHA CLÍNICA</Text> 
-    <View style={styles.rightContainer}> 
-        <Image src={CUIVET_logo} style={styles.logo} /> 
-        <Text style={styles.cuivetText}>CUIVET</Text> 
-    </View> 
-</View> ); 
 
+    const getSpecie = (petRace, species) => {
+        // Comprueba si petRace existe
+        if (petRace) {
+            // Busca la especie que coincida con el specieId de la raza
+            const specie = species.find(specie => specie.id === petRace.specieId);
+            return specie ? specie.name : "Especie no encontrada"; // Retorna el nombre de la especie o un mensaje si no se encuentra
+        }
+        return "Raza no encontrada"; // Si no hay petRace
+    };
+        
+// Crear el componente Footer
+const Header = ({ clinicalRecord }) => (
+    <View style={styles.header}>
+        {/* Contenedor para el título y la información del veterinario y clínica */}
+        <View style={styles.leftContainer}>
+            <Text style={styles.headerTitle}>FICHA CLÍNICA</Text>
+            <View style={styles.rowContainer}>
+                <View style={styles.rowHeader}>
+                    <Text style={styles.detailTextHeader}>Veterinario: </Text>
+                    <Text style={styles.detailTextHeaderBD}>
+                        {clinicalRecord.veterinaryData.person.name} {clinicalRecord.veterinaryData.person.lastName} MP: {clinicalRecord.veterinaryData.tutor.mp}
+                    </Text>
+                </View>
+                <View style={styles.rowHeader}>
+                    <Text style={styles.detailTextHeader}>Clínica: </Text>
+                    <Text style={styles.detailTextHeaderBD}>{clinicalRecord.vet.name}</Text>
+                </View>
+            </View>
+        </View>
+
+        {/* Contenedor para el logo y texto adicional alineado a la derecha */}
+        <View style={styles.rightContainer}>
+            <Image source={{ uri: CUIVET_logo }} style={styles.logo} />
+            <Text style={styles.cuivetText}>CUIVET</Text>
+        </View>
+    </View>
+);
 const Footer = ({ formattedDate }) => ( 
 <View style={styles.footer}> 
     <Text style={styles.footerText}>Fecha de emisión: {formattedDate}</Text> 
@@ -224,12 +317,68 @@ const VisitList = ({ visits }) => (
     </React.Fragment>
 );
 
+const bodyCondition = (bodyCondition)=> {
+    if (bodyCondition === 1) return "Muy Flaco";
+    if (bodyCondition === 2) return "Flaco";
+    if (bodyCondition === 3) return "Normal";
+    if (bodyCondition === 4) return "Exceso de Peso";
+    if (bodyCondition === 5) return "Obeso";
+    
+    // Valor por defecto si no coincide con los casos esperados
+    return "Condición no especificada";
+}
 
-const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
+const drugName =  (drugID,drugs) => {
+    for (let i = 0; i < drugs.length; i++) {
+        if (drugID === drugs[i].id) {
+          return drugs[i].name;
+        }
+      }
+      // Valor por defecto si no coincide con los casos esperados
+      return "Condición no especificada";
+}
+
+const getTreatmentOptionName = (treatmentOptionId, treatmentOptions) => {
+    // Verificar si treatmentOptions es un array válido
+    if (!Array.isArray(treatmentOptions) || treatmentOptions.length === 0) {
+        return "Tratamiento desconocido"; // Devuelve un valor por defecto si está vacío o indefinido
+    }
+    for (let option of treatmentOptions) {
+        if (option.id === treatmentOptionId) {
+            return option.name;
+        }
+    }
+    return "Tratamiento desconocido"; // Valor por defecto si no se encuentra coincidencia
+};
+
+const typeTreatmentName = (typeTreatmentId, selectedTreatmentTypeId) => {
+    // Verificar si selectedTreatmentTypeId es un array válido
+    if (!Array.isArray(selectedTreatmentTypeId) || selectedTreatmentTypeId.length === 0) {
+        return "Condición no especificada"; // Devuelve un valor por defecto si está vacío o indefinido
+    }
+    for (let type of selectedTreatmentTypeId) {
+        if (type.id === typeTreatmentId) {
+            return type.name;
+        }
+    }
+    return "Condición no especificada"; // Valor por defecto si no se encuentra coincidencia
+};
+
+
+
+const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace, species,petHairColor,petHairLenght,petSize,
+                                drugs,drugTypes,treatmentOptions,selectedTreatmentTypeId}
+                                ) => {
     const date = new Date();
     const formattedDate = formatDate(date);
     const perrito = 'https://firebasestorage.googleapis.com/v0/b/cuivet-5596d.appspot.com/o/pets%2FMon%20Oct%2028%202024%2017%3A26%3A48%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)?alt=media&token=3e0637db-d130-4ab3-8337-98ece9f668c1';
-    
+    const { anamnesis } = clinicalRecord || {};
+    const { anamnesisItems = [] } = anamnesis || {};
+    const { presumptiveDiagnosis } = clinicalRecord || {};
+    const { presumptiveDiagnosisItems = [] } = presumptiveDiagnosis || {};
+
+
+
     const renderVisits = (visits) => (
         <>
             {visits.map((visit, index) => (
@@ -246,7 +395,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
     return (
         <Document>
             <Page style={styles.page}>
-            <Header />
+            <Header clinicalRecord = {clinicalRecord} />
             
                 <View>
                     <Text style={styles.infoTitle}>INFORMACIÓN DEL TUTOR</Text>
@@ -327,23 +476,48 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                             <View style={styles.detailColumn}>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Especie:</Text>
-                                    {/* <Text style={styles.detailTextBD}>{clinicalRecord.pet.spicie}</Text> */}
+                                    <Text style={styles.detailTextBD}>{getSpecie(petRace, species)}</Text>
+                                    
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Raza:</Text>
-                                    <View style={styles.detailLine} />
+                                    {petRace ? (
+                                      <>
+                                        <Text style={styles.detailTextBD}>{petRace.name}</Text>
+                                      </>
+                                    ) : (
+                                      <Text>Raza desconocida</Text>
+                                    )}
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Color pelaje:</Text>
-                                    <View style={styles.detailLine} />
+                                    {petHairColor ? (
+                                      <>
+                                        <Text style={styles.detailTextBD}>{petHairColor.name}</Text>
+                                      </>
+                                    ) : (
+                                      <Text>Sin color ingresado</Text>
+                                    )}
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Largo pelaje:</Text>
-                                    <View style={styles.detailLine} />
+                                    {petHairLenght ? (
+                                      <>
+                                        <Text style={styles.detailTextBD}>{petHairLenght.name}</Text>
+                                      </>
+                                    ) : (
+                                      <Text>Sin largo ingresado</Text>
+                                    )}
                                 </View>
                                 <View style={styles.detailTextContainer}>
                                     <Text style={styles.detailText}>Tamaño:</Text>
-                                    <View style={styles.detailLine} />
+                                    {petSize ? (
+                                      <>
+                                        <Text style={styles.detailTextBD}>{petSize.name}</Text>
+                                      </>
+                                    ) : (
+                                      <Text>Sin tamaño ingresado</Text>
+                                    )}
                                 </View>
                             </View>
                         </View>
@@ -353,41 +527,40 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                 <VisitList visits={clinicalRecord.visits} />
                 <View>
                     <Text style={styles.infoStep}>ANAMNESIS</Text>
+                    {questions.map((question) => {
+                    // Busca el `anamnesisItem` con el mismo `id` que `question.id`
+                        const anamnesisItem = anamnesisItems.find(
+                            (item) => item.id === question.id
+                        );
+
+                    // Verifica si se encontró el anamnesisItem y su booleanResponse
+                        const booleanResponse = anamnesisItem ? anamnesisItem.booleanResponse : null;
+                        const textResponse = anamnesisItem ? anamnesisItem.textResponse : "Sin respuesta";
+
+                    // Determina el texto a mostrar según el valor de booleanResponse
+                        let responseText;
+                        if (booleanResponse === 0) {
+                            responseText = textResponse ? `    SI - ${textResponse}` : "    SI  ";
+                        } else {
+                            responseText = "    NO";
+                        }
+
+                        return (
+                            <React.Fragment key={question.id}>
+                            <View style={styles.row}></View>
+                            <Text style={styles.questionText}>
+                                {`${question.id} - ${question.question}`}
+                            </Text>
+                            <Text style={styles.responseText}>
+                                {responseText}
+                            </Text>
+                        </React.Fragment>
+                    );
+                })}
                     <View style={styles.table}>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableTotalCol}>
-                            <View style={styles.detailTextContainer}>                            
-                                <Text style={styles.detailText}>Lesiones expuestas:</Text>
-                                </View>
-                        </View>
-                        
-                    </View>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Pulso: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Estado de mascota: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableTotalCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Observación: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>
-                    </View>
-
-
-                    
+                
                 </View>
+                    
                 <View style={styles.thickLine} />
                 <Text style={styles.infoStep}>EXÁMEN FÍSICO</Text>
                     <View style={styles.table}>
@@ -430,7 +603,9 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
 
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Condición corporal:</Text>
-                                <View style={styles.detailLine} />
+                                {clinicalRecord.physicalExam && clinicalRecord.physicalExam.bodyCondition && ( 
+                                <Text style={styles.detailTextBD}>{bodyCondition(clinicalRecord.physicalExam.bodyCondition)}</Text>)}
+                                
                             </View>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Observación:</Text>
@@ -447,19 +622,17 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                     <View style={styles.tableRow}>
                        
                         <View style={styles.tableTotalCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Diagnostico presuntivo: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
+                        {presumptiveDiagnosisItems.length > 0 ? (
+                            presumptiveDiagnosisItems.map(item => (
+                                <View key={item.id} style={styles.itemContainer}>
+                                    <View style={styles.bullet} /> {/* Viñeta */}
+                                    <Text style={styles.detailTextBD}>{item.observation}</Text>
+                                </View>
+                            ))
+                        ) : (
+                            <Text style={styles.detailTextBD}>No hay diagnósticos presuntivos disponibles.</Text>
+                        )}
                         </View>                        
-                    </View>
-                    <View style={styles.tableRow}>
-                        <View style={styles.tableTotalCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Diagnostico diferencial: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>
                     </View>
                     </View>   
                     <View style={styles.thickLine} />
@@ -470,7 +643,13 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                         <View style={styles.tableTotalCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Diagnostico Final: </Text>
-                                <View style={styles.detailLine} />
+                                {clinicalRecord.diagnosis && clinicalRecord.diagnosis.diagnosisItems && clinicalRecord.diagnosis.diagnosisItems.length > 0 && (
+                                    clinicalRecord.diagnosis.diagnosisItems.map(item => (
+                                        <Text key={item.id} style={styles.detailTextBD}>
+                                            {item.diagnosisResult}
+                                        </Text>
+                                    ))
+                                )}
                             </View>
                         </View>                        
                     </View>
@@ -478,7 +657,13 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                         <View style={styles.tableTotalCol}>
                             <View style={styles.detailTextContainer}>
                                 <Text style={styles.detailText}>Observación: </Text>
-                                <View style={styles.detailLine} />
+                                {clinicalRecord.diagnosis && clinicalRecord.diagnosis.diagnosisItems && clinicalRecord.diagnosis.diagnosisItems.length > 0 && (
+                                    clinicalRecord.diagnosis.diagnosisItems.map(item => (
+                                        <Text key={item.id} style={styles.detailTextBD}>
+                                            {item.observation}
+                                        </Text>
+                                    ))
+                                )}
                             </View>
                         </View>
                     </View>
@@ -486,53 +671,88 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                     <View style={styles.thickLine} />  
                     <Text style={styles.infoStep}>TRATAMIENTO</Text>
                     <View style={styles.table}>
-                    <View style={styles.tableRow}>
                        
-                        <View style={styles.tableCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Tipo de tratamiento: </Text>
-                                <View style={styles.detailLine} />
+        {clinicalRecord.diagnosis && clinicalRecord.diagnosis.diagnosisItems && clinicalRecord.diagnosis.diagnosisItems.length > 0 && (
+            clinicalRecord.diagnosis.diagnosisItems.map(diagnosisItem => (
+                <View key={diagnosisItem.id} style={styles.diagnosisContainer}>
+                    
+                    {/* Acceder a diagnosisItem.diagnosisItemTreatments en lugar de clinicalRecord.diagnosis.diagnosisItem.diagnosisItemTreatments */}
+                    {diagnosisItem.diagnosisItemTreatments && diagnosisItem.diagnosisItemTreatments.length > 0 ? (
+                        diagnosisItem.diagnosisItemTreatments.map(treatment => (
+                            <View key={treatment.id} style={styles.table}>
+                                <View style={styles.tableRow}>
+                                    <Text style={styles.infoSubTitleStep}>Tratamiento N° {treatment.id}</Text>
+                                </View>
+                                {/* Fila 1: Tipo de tratamiento y Nombre del tratamiento */}
+                                <View style={styles.tableRow}>
+                                    <View style={styles.tableTotalCol}>
+                                        <View style={styles.detailTextContainer}>
+                                            <Text style={styles.detailText}>Tipo de tratamiento:</Text>
+                                            <Text style={styles.detailTextBD}>
+                                            {typeTreatmentName(treatment.treatmentOptionId, selectedTreatmentTypeId)}
+                                            </Text>
+                                            <View style={styles.detailLine} />
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={styles.tableRow}>
+                                    <View style={styles.tableCol}>
+                                        <View style={styles.detailTextContainer}>
+                                            <Text style={styles.detailText}> Nombre del tratamiento:</Text>
+                                            <Text style={styles.detailTextBD}>
+                                                {getTreatmentOptionName(treatment.treatmentOptionId, treatmentOptions)}
+                                            </Text>
+                                            <View style={styles.detailLine} />
+                                        </View>
+                                        
+                                    </View>
+                                    <View style={styles.tableCol}>
+                                        <View style={styles.detailTextContainer}>
+                                            <Text style={styles.detailText}>Droga:</Text>
+                                            <Text style={styles.detailTextBD}>{drugName(treatment.drugId,drugs)}</Text>
+                                            <View style={styles.detailLine} />
+                                        </View>
+                                    </View>
+                                    
+                                </View>
+                                
+                                {/* Fila 2: Intervalo y Duración */}
+                                <View style={styles.tableRow}>
+                                    <View style={styles.tableCol}>
+                                        <View style={styles.detailTextContainer}>
+                                            <Text style={styles.detailText}>Intervalo:</Text>
+                                            <Text style={styles.detailTextBD}>{treatment.frecuencyInterval} horas</Text>
+                                            <View style={styles.detailLine} />
+                                        </View>
+                                    </View>
+                                    <View style={styles.tableCol}>
+                                        <View style={styles.detailTextContainer}>
+                                            <Text style={styles.detailText}>Duración:</Text>
+                                            <Text style={styles.detailTextBD}>{treatment.frecuencyDuration} días</Text>
+                                            <View style={styles.detailLine} />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                {/* Fila 3: Droga */}
+                                
                             </View>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Nombre del tratamiento: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>                                
-                    </View>
-                    <View style={styles.tableRow}>
-                    <View style={styles.tableCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Intervalo: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>
-                        <View style={styles.tableCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Duración: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>       
-                    </View>
-                    <View style={styles.tableRow}>
-                       
-                        <View style={styles.tableTotalCol}>
-                            <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Droga: </Text>
-                                <View style={styles.detailLine} />
-                            </View>
-                        </View>                        
-                    </View>
+                            ))
+                    ) : (
+                        /* Si no hay tratamientos, muestra un mensaje alternativo o deja el campo vacío */
+                        <Text style={styles.noTreatmentText}>Sin tratamientos asignados</Text>
+                    )}
+                </View>
+            ))
+        )}
                     </View> 
                     <View style={styles.thickLine} />  
                     <Text style={styles.infoStep}>PRONÓSTICO</Text>
                     <View style={styles.table}>
                     <View style={styles.tableRow}>
                        
-                        <View style={styles.tableCol}>
+                        <View style={styles.tableTotalCol}>
                             <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Observación: </Text>
                                 {clinicalRecord.prognosis && clinicalRecord.prognosis.observation && ( 
                                 <Text style={styles.detailTextBD}>{clinicalRecord.prognosis.observation}</Text> )}
                             </View>
@@ -541,11 +761,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord }) => {
                     </View>
                     <View style={styles.thickLine} />  
                     </View> 
-                      
                 </View>
-                {/* <View style={styles.footer}>
-                    <Text style={styles.footerText}>Fecha de emisión: {formattedDate}</Text>
-                </View> */}
               <Footer formattedDate={formattedDate} />  
             </Page>
         </Document>

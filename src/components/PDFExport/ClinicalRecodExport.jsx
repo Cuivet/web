@@ -1,13 +1,19 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
+import { Page, Text, View, Document, StyleSheet, Image,Font } from '@react-pdf/renderer';
 import CUIVET_logo from "../../assets/img/png/logo2.png";
 import paw_logo from "../../assets/img/png/paw.png";
+//import RobotoFont from './path/to/Roboto-Regular.ttf'; 
 
+// Font.register({
+//     family: 'Roboto',
+//     src: RobotoFont,
+//   });
 
 const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
         padding: 30,
+        //fontFamily: 'Roboto',
     },
     header: {
         padding: 10,

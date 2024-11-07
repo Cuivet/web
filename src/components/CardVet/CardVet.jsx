@@ -16,11 +16,11 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { deletePet } from "../../services/pet.service";
+import { deleteVet } from "../../services/vet.service";
 import AvatarUser from "../AvatarUser/AvatarUser";
 
 export default function CardVet(props) {
-  const { img, title, description, item, popTitle, regent } = props;
+  const { img, title, description, item, popTitle, regent, active } = props;
   const profile = JSON.parse(sessionStorage.getItem("profile"));
   const userPhoto = profile.person.photo;
   function AvatarGroup({ avatar }) {
@@ -51,7 +51,7 @@ export default function CardVet(props) {
 
   const confirm = () => {
     message.success(title + " borrada exitosamente.");
-    deletePet(item);
+    deleteVet(item);
     window.location.replace("");
   };
 
@@ -66,78 +66,70 @@ export default function CardVet(props) {
         text={regent}
         color={"pink"}
       >
-        <Card
-          className="appCard"
-          hoverable
-          cover={<img alt="required text" src={img}></img>}
-          actions={[
-            <Tooltip placement="top" title="Ver/Editar Clínica">
-              <Button
-                type="link"
-                size="large"
-                style={{ border: "none" }}
-                icon={<EyeOutlined key="edit" />}
-                onClick={displayVet}
-              />
-            </Tooltip>,
-            <Popconfirm
-              title={popTitle}
-              onConfirm={confirm}
-              okText="Si"
-              cancelText="No"
-              placement="top"
-              arrowPointAtCenter
-              icon={
-                <ExclamationCircleOutlined
-                  fontSize="small"
-                  style={{ color: "red" }}
-                />
-              }
-            >
-              <Button
-                disabled={!!regent}
-                type="link"
-                size="large"
-                style={{ border: "none" }}
-                icon={<DeleteOutlined key="delete" />}
-              />
-            </Popconfirm>,
-          ]}
+        <Badge.Ribbon
+          style={{ display: !active && !regent ? "block" : "none" }}
+          text="Deshabilitada"
+          color="gray"
         >
-          <Meta
-            className="card-pet__meta"
-            avatar={
-              <Avatar.Group>
-                <AvatarGroup avatar={userPhoto ? userPhoto : img} />
-              </Avatar.Group>
-            }
-            title={title}
-            description={
-              <>
-                <Row>
-                  <Typography.Text type="primary">
-                    {description.address}
-                  </Typography.Text>
-                </Row>
-                {/* {description?.hours.map((hour, index) => (
-                  <Row key={index} justify="center">
-                    <Typography.Text type="secondary">
-                      {hour.openTime && hour.closeTime
-                        ? `${hour.dayOfWeek}: ${moment(
-                            hour.openTime,
-                            "HH:mm:ss"
-                          ).format("HH:mm")} - ${moment(
-                            hour.closeTime,
-                            "HH:mm:ss"
-                          ).format("HH:mm")}`
-                        : `${hour.dayOfWeek}: Cerrado`}
+          <Card
+            className="appCard"
+            hoverable={active}
+            cover={<img alt="required text" src={img}></img>}
+            actions={[
+              <Tooltip placement="top" title="Ver/Editar Clínica">
+                <Button
+                  type="link"
+                  size="large"
+                  style={{ border: "none" }}
+                  icon={<EyeOutlined key="edit" />}
+                  onClick={displayVet}
+                  disabled={!active}
+                />
+              </Tooltip>,
+              <Popconfirm
+                title={popTitle}
+                onConfirm={confirm}
+                okText="Si"
+                cancelText="No"
+                placement="top"
+                arrowPointAtCenter
+                icon={
+                  <ExclamationCircleOutlined
+                    fontSize="small"
+                    style={{ color: "red" }}
+                  />
+                }
+              >
+                <Button
+                  disabled={!!regent || !active}
+                  type="link"
+                  size="large"
+                  style={{ border: "none" }}
+                  icon={<DeleteOutlined key="delete" />}
+                />
+              </Popconfirm>,
+            ]}
+          >
+            <Meta
+              className="card-pet__meta"
+              avatar={
+                <Avatar.Group>
+                  <AvatarGroup avatar={userPhoto ? userPhoto : img} />
+                </Avatar.Group>
+              }
+              title={title}
+              description={
+                <>
+                  <Row>
+                    <Typography.Text type="primary">
+                      {description.address}
                     </Typography.Text>
                   </Row>
-                ))} */}
-              </>
-            }
-          />
-        </Card>
+                </>
+              }
+            />
+          </Card>
+        </Badge.Ribbon>
       </Badge.Ribbon>
     </>
   );

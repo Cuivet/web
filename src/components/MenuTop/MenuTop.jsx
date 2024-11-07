@@ -69,8 +69,10 @@ export default function MenuTop(props) {
       return "Veterinario: ";
     } else if (profile?.tutor != null) {
       return "Tutor: ";
-    } else {
+    } else if (profile?.vetOwner != null) {
       return "Propietario: ";
+    } else {
+      return "";
     }
   };
 
@@ -109,7 +111,7 @@ export default function MenuTop(props) {
           <>
             <div className="menu-top__right-select-container">
               <label htmlFor="clinic-select" className="menu-top__right-label">
-                Seleccione una clínica:
+                Atendiendo en clínica:
               </label>
               <Select
                 id="clinic-select"

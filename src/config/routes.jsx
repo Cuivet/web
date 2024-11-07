@@ -31,6 +31,8 @@ import Vaccination from "../pages/Vaccination/Vaccination";
 import vetQualification from "../pages/VetQualification/VetQualification";
 import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";
 import ViewVets from "../pages/ViewVets/ViewVets";
+import UsersList from "../pages/Users/UsersList";
+import VetsList from "../pages/VetsAdmin/VetsList";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
@@ -148,17 +150,27 @@ const routesAdmin = [
     path: "/qualification",
     component: Qualification,
     layout: LayoutAdmin,
-},
-{
-  path: "/vetQualification",
-  component: vetQualification,
-  layout: LayoutAdmin,
-},
-{
+  },
+  {
+    path: "/vetQualification",
+    component: vetQualification,
+    layout: LayoutAdmin,
+  },
+  {
     component: ViewVets,
     layout: LayoutAdmin,
     path: "/vetsMap",
-}
+  },
+  {
+    component: UsersList,
+    layout: LayoutAdmin,
+    path: "/users",
+  },
+  {
+    component: VetsList,
+    layout: LayoutAdmin,
+    path: "/vetsList",
+  },
 ];
 
 const routesClient = [

@@ -361,7 +361,7 @@ export default function ClinicalHistory() {
     <>
       <Row align="middle">
         <Col span={24}>
-          <Title className="appTitle">Historiales Clínicos</Title>
+          <Title className="appTitle">Historias Clínico</Title>
         </Col>
       </Row>
       <Divider></Divider>

@@ -2,18 +2,23 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image,Font } from '@react-pdf/renderer';
 import CUIVET_logo from "../../assets/img/png/logo2.png";
 import paw_logo from "../../assets/img/png/paw.png";
-//import RobotoFont from './path/to/Roboto-Regular.ttf'; 
+import RobotoFont from '../../assets/fonts/Roboto/Roboto-Regular.ttf'; 
+import RobotoBold from '../../assets/fonts/Roboto/Roboto-Bold.ttf'; 
 
-// Font.register({
-//     family: 'Roboto',
-//     src: RobotoFont,
-//   });
+Font.register({
+    family: 'Roboto',
+    src: RobotoFont,
+  });
+Font.register({
+   family: 'Roboto-Bold',
+   src: RobotoBold,  // Fuente Roboto-Bold
+});
 
 const styles = StyleSheet.create({
     page: {
         flexDirection: 'column',
         padding: 30,
-        //fontFamily: 'Roboto',
+        fontFamily: 'Roboto',
     },
     header: {
         padding: 10,
@@ -44,50 +49,70 @@ const styles = StyleSheet.create({
     cuivetText: {
         fontSize: 12,
         color: '#5b2569',
+        fontFamily: 'Roboto',
     },
     rowHeader: {
         flexDirection: 'row', // Alinear elementos en fila
         justifyContent: 'flex-start', // Alinear a la izquierda
-        marginVertical: 5, // Espacio vertical entre filas
+        marginVertical: 3, // Espacio vertical entre filas
     },
     detailTextHeader: {
         fontSize: 10,
         textDecorationLine: 'underline',
         fontWeight: 'bold', // Negrita
+        fontFamily: 'Roboto-Bold',
     },
     detailTextHeaderBD: {
         fontSize: 10,
-        // color: '#5b2569', // Color personalizado
         fontWeight: 'bold', // Negrita
+        fontFamily: 'Roboto',
     },
     headerTitle: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: 'bold',
         color: '#5b2569',
-        marginBottom: 10, // Espacio debajo del título
+        marginBottom: 5, // Espacio debajo del título
+        fontFamily: 'Roboto-Bold',
     },
+    content: {
+        paddingBottom: 40, // Espacio para el footer
+      },
     footer: {
-        position: 'fixed',
-        marginTop: 'auto',
-        paddingTop: 3,
-        borderTopWidth: 0.25,
-        borderTopColor: 'black',
+         marginTop: 8,
+         paddingTop: 3,
+         borderTopWidth: 0.25,
+         borderTopColor: 'black',
         marginBottom: 2,
-        flexDirection: 'row',
         justifyContent: 'flex-start',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        padding: 10,
+        fontSize: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 28,   // Margen de aproximadamente 1 cm a la izquierda
+        paddingRight: 28,
+        fontFamily: 'Roboto',
+        
     },
     footerText: {
-        fontSize: 7,
+        fontSize: 8,
+        color: '#000',
+        fontFamily: 'Roboto',
     },
-    centerText: {
-        fontSize: 16,
-        textAlign: 'center',
-        flex: 1,
-        marginLeft: 50,
-        marginRight: 50,
-    },
+    footerPage:{
+        position: 'absolute',
+        bottom: 10,
+        right: 20,
+        fontSize: 8,
+        color: '#000',
+      },
+ 
     infoTitle: {
-        fontSize: 14,
+        fontSize: 12,
         margin: 10,
         padding: 5,
         backgroundColor: '#5b2569', 
@@ -95,30 +120,32 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: 'white', 
         fontWeight: 'bold',
+        fontFamily: 'Roboto',
     },
     infoSubTitle: {
-        fontSize: 14,
+        fontSize: 12,
         backgroundColor: '#e9c4f2',  // Mantener el fondo
         color: '#5b2569', 
         fontWeight: 'bold',
-        margin: 10,
-        padding: 5,
+        margin: 8,
+        padding: 3,
         borderRadius: 5,
-        // Eliminar margin y padding
-        // width: 'auto', // No necesitas esto ya que el ancho se ajusta automáticamente
         alignSelf: 'flex-start', // Esto se aplica al contenedor, no al estilo del texto
+        fontFamily: 'Roboto-Bold',
     },
     infoSubTitleStep: {
-        fontSize: 12,
-        margin: 5,
-        color: '#5b2569',  // Color personalizado
-        fontWeight: 'bold', // Negrita
-        marginleft:5,
-        textAlign: 'left',
+        fontSize: 11,
+         marginVertical: 2, // Ajustado para reducir separación vertical 
+        color: '#5b2569', // Color personalizado 
+        fontWeight: 'bold', // Negrita 
+        marginLeft: 5, // Asegúrate de que 'left' esté en minúsculas 
+        textAlign: 'left', 
+        marginTop: 0,
+        fontFamily: 'Roboto',
     },
     infoStep: {
         fontSize: 12,
-        margin: 5,
+        marginVertical: 2,
         padding: 3,
         backgroundColor: '#5b2569', 
         textAlign: 'left',
@@ -126,6 +153,19 @@ const styles = StyleSheet.create({
         color: 'white', 
         fontWeight: 'bold',
         alignSelf: 'flex-start',
+        fontFamily: 'Roboto',
+    },
+    infoStep2: {
+        fontSize: 12,
+        margin: 2,
+        padding: 3,
+        backgroundColor: '#5b2569', 
+        textAlign: 'left',
+        borderRadius: 5,
+        color: 'white', 
+        fontWeight: 'bold',
+        alignSelf: 'flex-start',
+        fontFamily: 'Roboto',
     },
     table: {
         display: 'table',
@@ -185,20 +225,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 5,
+        fontFamily: 'Roboto',
     },
     detailText: {
         fontSize: 10,
         marginRight: 5,
-        borderBottomWidth: 1, // Grosor de la línea de subrayado 
-        borderBottomColor: '#5b2569', // Color de la línea de subrayado width: '100%',
+        fontWeight: 'bold',
+        fontFamily: 'Roboto-Bold',
+        // borderBottomWidth: 1, // Grosor de la línea de subrayado 
+        // borderBottomColor: '#5b2569', // Color de la línea de subrayado width: '100%',
+    },
+    detailTextControl: {
+        fontSize: 10,
+        marginRight: 5,
+        fontWeight: 'bold',
+        fontFamily: 'Roboto-Bold',
+        marginLeft:76,
     },
     detailTextBD: {
         fontSize: 10,
         marginRight: 5,
+        fontFamily: 'Roboto',
     },
     detailValue: {
         fontSize: 10,
         marginRight: 5,
+        fontFamily: 'Roboto',
     },
     thickLine: {
         height: 2,             // Altura de la línea gruesa
@@ -206,24 +258,20 @@ const styles = StyleSheet.create({
         marginVertical: 5,     // Espacio arriba y abajo de la línea
     },
     visitText: {
-        fontSize: 15,
+        fontSize: 12,
         color: '#5b2569',  // Color del texto
         textAlign: 'left', // Centra el texto
         marginVertical: 5,  // Espaciado vertical para el texto
         fontWeight: 'bold',
+        fontFamily: 'Roboto',
     },
-    sectionTitle: {
-        fontSize: 16,
-        marginBottom: 10,
-        fontWeight: 'bold',
-    },
+
     questionText: {
-        fontSize: 12,
+        fontSize: 10,
         marginRight: 5,
-        //height:10,
-        //borderBottomWidth: 1, // Grosor de la línea de subrayado 
-        //borderBottomColor: '#5b2569',
-        marginBottom: 8
+        marginBottom: 8,
+        fontFamily: 'Roboto-Bold',
+        marginLeft: 20
     },
     bullet: {
         width: 5,
@@ -238,7 +286,7 @@ const styles = StyleSheet.create({
         marginBottom: 5, // Espaciado entre ítems
     },
    
-    responseText: { fontSize: 10, marginBottom: 10 , color: '#5b2569',marginLeft: 20 },
+    responseText: { fontSize: 10, marginBottom: 10 , marginLeft: 25 ,fontFamily: 'Roboto'},
     row: { flexDirection: 'row', alignItems: 'flex-start' },
 });
 
@@ -284,12 +332,13 @@ const Header = ({ clinicalRecord }) => (
     <View style={styles.header}>
         {/* Contenedor para el título y la información del veterinario y clínica */}
         <View style={styles.leftContainer}>
-            <Text style={styles.headerTitle}>FICHA CLÍNICA</Text>
+            <Text style={styles.headerTitle}>FICHA CLÍNICA {clinicalRecord.id}</Text>
             <View style={styles.rowContainer}>
                 <View style={styles.rowHeader}>
                     <Text style={styles.detailTextHeader}>Veterinario: </Text>
                     <Text style={styles.detailTextHeaderBD}>
-                        {clinicalRecord.veterinaryData.person.name} {clinicalRecord.veterinaryData.person.lastName} MP: {clinicalRecord.veterinaryData.tutor.mp}
+                        {clinicalRecord.veterinaryData.person.name} {clinicalRecord.veterinaryData.person.lastName}{' '}
+                        <Text style={styles.detailTextHeader}>MP:</Text> {clinicalRecord.veterinaryData.tutor.mp}
                     </Text>
                 </View>
                 <View style={styles.rowHeader}>
@@ -306,17 +355,23 @@ const Header = ({ clinicalRecord }) => (
         </View>
     </View>
 );
-const Footer = ({ formattedDate }) => ( 
-<View style={styles.footer}> 
-    <Text style={styles.footerText}>Fecha de emisión: {formattedDate}</Text> 
-</View> );
 
+const Footer = ({ formattedDate }) => (
+    <View style={styles.footer} fixed>
+      <Text style={styles.footerText}>Fecha de emisión: {formattedDate}</Text>
+    </View>
+  );
+
+  
 const VisitList = ({ visits }) => (
     <React.Fragment>
         {visits.map((visit, index) => (
             <View key={visit.id}>
                 <Text style={styles.infoSubTitle}>VISITA {index + 1} - {formatDate2(visit.createdAt)}</Text>
-                <Text style={styles.detailTextBD}>    Control: {visit.control || "(No se ingresó)"}</Text>
+                <Text style={styles.detailTextBD}>
+                    <Text style={styles.detailTextControl}>Control: </Text>
+                    {visit.control || "(No se ingresó)"}
+                </Text>
                 <View style={styles.thickLine} />
             </View>
         ))}
@@ -377,7 +432,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                                 ) => {
     const date = new Date();
     const formattedDate = formatDate(date);
-    const perrito = 'https://firebasestorage.googleapis.com/v0/b/cuivet-5596d.appspot.com/o/pets%2FMon%20Oct%2028%202024%2017%3A26%3A48%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)?alt=media&token=3e0637db-d130-4ab3-8337-98ece9f668c1';
+    const perrito = "https://firebasestorage.googleapis.com/v0/b/cuivet-5596d.appspot.com/o/pets%2FMon%20Oct%2028%202024%2017%3A26%3A48%20GMT-0300%20(hora%20est%C3%A1ndar%20de%20Argentina)?alt=media&token=3e0637db-d130-4ab3-8337-98ece9f668c1";
     const { anamnesis } = clinicalRecord || {};
     const { anamnesisItems = [] } = anamnesis || {};
     const { presumptiveDiagnosis } = clinicalRecord || {};
@@ -441,7 +496,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                 <View>
                     <Text style={styles.infoTitle}>INFORMACIÓN DE LA MASCOTA</Text>
                     <View style={styles.detailsContainer}> 
-                        {clinicalRecord.pet.photo ? ( 
+                        {/* {clinicalRecord.pet.photo ? ( 
                             <View style={styles.photoBox}> 
                                 <Image 
                                     style={styles.photoImage} 
@@ -453,7 +508,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                             <View style={styles.photoBox}> 
                                 <Image style={styles.photoImage} 
                                 src={paw_logo} /> 
-                            </View> )}
+                            </View> )} */}
                     
                         <View style={styles.detailColumnContainer}>
                             <View style={styles.detailColumn}>
@@ -492,7 +547,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                                         <Text style={styles.detailTextBD}>{petRace.name}</Text>
                                       </>
                                     ) : (
-                                      <Text>Raza desconocida</Text>
+                                      <Text style={styles.detailTextBD}>Raza desconocida</Text>
                                     )}
                                 </View>
                                 <View style={styles.detailTextContainer}>
@@ -502,7 +557,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                                         <Text style={styles.detailTextBD}>{petHairColor.name}</Text>
                                       </>
                                     ) : (
-                                      <Text>Sin color ingresado</Text>
+                                      <Text style={styles.detailTextBD}>Sin color ingresado</Text>
                                     )}
                                 </View>
                                 <View style={styles.detailTextContainer}>
@@ -512,7 +567,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                                         <Text style={styles.detailTextBD}>{petHairLenght.name}</Text>
                                       </>
                                     ) : (
-                                      <Text>Sin largo ingresado</Text>
+                                      <Text style={styles.detailTextBD}>Sin largo ingresado</Text>
                                     )}
                                 </View>
                                 <View style={styles.detailTextContainer}>
@@ -522,7 +577,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                                         <Text style={styles.detailTextBD}>{petSize.name}</Text>
                                       </>
                                     ) : (
-                                      <Text>Sin tamaño ingresado</Text>
+                                      <Text style={styles.detailTextBD}>Sin tamaño ingresado</Text>
                                     )}
                                 </View>
                             </View>
@@ -534,21 +589,27 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                 <View>
                     <Text style={styles.infoStep}>ANAMNESIS</Text>
                     {questions.map((question) => {
-                    // Busca el `anamnesisItem` con el mismo `id` que `question.id`
+                        // Busca el `anamnesisItem` con el mismo `id` que `question.id`
                         const anamnesisItem = anamnesisItems.find(
                             (item) => item.id === question.id
                         );
-
-                    // Verifica si se encontró el anamnesisItem y su booleanResponse
+                        
+                        // Verifica si se encontró el anamnesisItem y sus respuestas
                         const booleanResponse = anamnesisItem ? anamnesisItem.booleanResponse : null;
-                        const textResponse = anamnesisItem ? anamnesisItem.textResponse : "Sin respuesta";
-
-                    // Determina el texto a mostrar según el valor de booleanResponse
+                        const textResponse = anamnesisItem ? anamnesisItem.textResponse : null;
+                        
+                        // Determina el texto a mostrar según el valor de booleanResponse
                         let responseText;
+                        
                         if (booleanResponse === 0) {
+                            // Si booleanResponse es 0 (SI), muestra la respuesta y el texto asociado si existe
                             responseText = textResponse ? `    SI - ${textResponse}` : "    SI  ";
-                        } else {
+                        } else if (booleanResponse === 1) {
+                            // Si booleanResponse es 1 (NO), muestra "NO"
                             responseText = "    NO";
+                        } else {
+                            // Si no hay respuesta (ni booleanResponse ni textResponse), muestra "Sin respuesta"
+                            responseText = "    Sin respuesta";
                         }
 
                         return (
@@ -563,12 +624,12 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                         </React.Fragment>
                     );
                 })}
-                    <View style={styles.table}>
+                    {/* <View style={styles.table}>
                 
-                </View>
+                </View> */}
                     
                 <View style={styles.thickLine} />
-                <Text style={styles.infoStep}>EXÁMEN FÍSICO</Text>
+                <Text style={styles.infoStep}>EXAMEN FÍSICO</Text>
                     <View style={styles.table}>
                     
                     <View style={styles.tableRow}>
@@ -648,7 +709,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                        
                         <View style={styles.tableTotalCol}>
                             <View style={styles.detailTextContainer}>
-                                <Text style={styles.detailText}>Diagnostico Final: </Text>
+                                <Text style={styles.detailText}>Diagnóstico Final: </Text>
                                 {clinicalRecord.diagnosis && clinicalRecord.diagnosis.diagnosisItems && clinicalRecord.diagnosis.diagnosisItems.length > 0 && (
                                     clinicalRecord.diagnosis.diagnosisItems.map(item => (
                                         <Text key={item.id} style={styles.detailTextBD}>
@@ -675,7 +736,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                     </View>
                     </View> 
                     <View style={styles.thickLine} />  
-                    <Text style={styles.infoStep}>TRATAMIENTO</Text>
+                    <Text style={styles.infoStep2}>TRATAMIENTO</Text>
                     <View style={styles.table}>
                        
         {clinicalRecord.diagnosis && clinicalRecord.diagnosis.diagnosisItems && clinicalRecord.diagnosis.diagnosisItems.length > 0 && (
@@ -684,10 +745,11 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                     
                     {/* Acceder a diagnosisItem.diagnosisItemTreatments en lugar de clinicalRecord.diagnosis.diagnosisItem.diagnosisItemTreatments */}
                     {diagnosisItem.diagnosisItemTreatments && diagnosisItem.diagnosisItemTreatments.length > 0 ? (
-                        diagnosisItem.diagnosisItemTreatments.map(treatment => (
+                         diagnosisItem.diagnosisItemTreatments.map((treatment, index) => (
                             <View key={treatment.id} style={styles.table}>
                                 <View style={styles.tableRow}>
-                                    <Text style={styles.infoSubTitleStep}>Tratamiento N° {treatment.id}</Text>
+                                    {/* Usar el índice del map para mostrar el número de tratamiento */}
+                                    <Text style={styles.infoSubTitleStep}>Tratamiento N° {index + 1}</Text>
                                 </View>
                                 {/* Fila 1: Tipo de tratamiento y Nombre del tratamiento */}
                                 <View style={styles.tableRow}>
@@ -704,7 +766,7 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                                 <View style={styles.tableRow}>
                                     <View style={styles.tableCol}>
                                         <View style={styles.detailTextContainer}>
-                                            <Text style={styles.detailText}> Nombre del tratamiento:</Text>
+                                            <Text style={styles.detailText}>Nombre del tratamiento:</Text>
                                             <Text style={styles.detailTextBD}>
                                                 {getTreatmentOptionName(treatment.treatmentOptionId, treatmentOptions)}
                                             </Text>
@@ -765,10 +827,16 @@ const ClinicalRecordExport = ({ petName, clinicalRecord ,questions,races,petRace
                         </View>
                                                    
                     </View>
-                    <View style={styles.thickLine} />  
+
                     </View> 
+                    {/* <View style={styles.thickLine} />   */}
                 </View>
-              <Footer formattedDate={formattedDate} />  
+                <Footer formattedDate={formattedDate} />
+                <Text
+                  style={styles.footerPage}
+                  render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`}
+                  fixed
+                />
             </Page>
         </Document>
     );

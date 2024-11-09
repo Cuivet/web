@@ -275,7 +275,7 @@ export default function ClinicalRecordsManagement() {
     
 
     const currentDate = moment().format("DDMMYY");
-    const fileName = `${petName}_HistoriaClinica_${currentDate}.pdf`;
+    const fileName = `${petName}_Ficha${clinicalRecordId}_${currentDate}.pdf`;
     const clinicalrecord = clinicalRecordPDF.find(record => record.id === clinicalRecordId);
     
     const petRace = races.find((race) => race.id === clinicalrecord.pet.raceId);

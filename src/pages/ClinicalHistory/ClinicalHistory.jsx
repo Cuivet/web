@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import {
   Col,
   Divider,
@@ -12,7 +12,20 @@ import {
 } from "antd";
 import { FilePdfOutlined, SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { useNavigate } from "react-router";
 import { clinicalRecordService } from "../../services/clinical_record.service";
+import ClinicalRecordExport from "../../components/PDFExport/ClinicalRecodExport";
+import { PDFDownloadLink } from "@react-pdf/renderer"; // Importa PDFDownloadLink
+import { anamnesisQuestionService } from "../../services/anamnesis_question.service";
+import { drugTypeService } from "../../services/drug_type.service";
+import { drugService } from "../../services/drug.service";
+import { raceService } from "../../services/race.service";
+import { specieService } from "../../services/specie.service";
+import { hairColorService } from "../../services/hair_color.service";
+import { petSizeService } from "../../services/pet_size.service";
+import { hairLengthService } from "../../services/hair_length.service";
+import { treatmentTypeService } from "../../services/treatment_type.service";
+import { treatmentOptionService } from "../../services/treatment_option.service";
 
 const { Title, Text } = Typography;
 
@@ -24,6 +37,60 @@ export default function ClinicalHistory() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const profile = JSON.parse(sessionStorage.getItem("profile"));
+
+  let navigate = useNavigate();
+  const [clinicalRecordPDF, setClinicalRecordPDF] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [races, setRaces] = useState([]);
+  const [species, setSpecies] = useState([]);
+  const [petSizes, setPetSizes] = useState([]);
+  const [hairColors, setHairColors] = useState([]);
+  const [hairLengths, setHairLengths] = useState([]);
+  const [isFetchData, setIsFetchData] = useState(false);
+  const [selectedTreatmentTypeId, setSelectedTreatmentTypeId] = useState(null);
+  const [treatmentOptions, setTreatmentOptions] = useState([]);
+  const [drugs, setDrugs] = useState([]);
+  const [drugTypes, setDrugTypes] = useState([]);
+
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      await raceService.findAll().then((response) => {
+        setRaces(response);
+      });
+      await specieService.findAll().then((response) => {
+        setSpecies(response);
+      });
+      await drugTypeService.findAll().then((response) => {
+        setDrugTypes(response);
+      });
+      await drugService.findAll().then((response) => {
+        setDrugs(response);
+      });
+      await anamnesisQuestionService.findAll().then((response) => {
+        setQuestions(response);
+      });
+      await hairColorService.findAll().then((response) => {
+        setHairColors(response);
+      });
+      await hairLengthService.findAll().then((response) => {
+        setHairLengths(response);
+      });
+      await petSizeService.findAll().then((response) => {
+        setPetSizes(response);
+      });
+      await treatmentTypeService.findAll().then((response) => {
+        setSelectedTreatmentTypeId(response);
+      });
+      await treatmentOptionService.findAll().then((response) => {
+        setTreatmentOptions(response);
+      });
+      setIsFetchData(true);
+      console.log("Info obtenida" + {species})
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -143,6 +210,7 @@ export default function ClinicalHistory() {
   if (!isInit) {
     refreshComponent();
     setIsInit(true);
+    
   }
 
   function refreshComponent() {
@@ -151,7 +219,8 @@ export default function ClinicalHistory() {
       .then((response) => {
         generateData(response);
         setIsLoading(false);
-        // console.log(response);
+        console.log(response);
+        setClinicalRecordPDF(response);
       });
   }
   function generateData(clinicalRecords) {
@@ -234,26 +303,65 @@ export default function ClinicalHistory() {
     {
       title: "Acciones",
       dataIndex: "indexIdForButton",
-      // responsive: ['md'],
       align: "center",
       fixed: "right",
-      render: (_, { indexIdForButton, progressObject }) => (
-        <>
+      render: (_, { indexIdForButton, petName }) => (
           <Tooltip placement="top" title="Descargar PDF">
-            <Button shape="circle" size="large" className="margin-right">
-              <FilePdfOutlined />
-            </Button>
+              {handleDownloadPDF(petName, indexIdForButton)}
           </Tooltip>
-        </>
       ),
-    },
+  },
   ];
+
+
+  function handleDownloadPDF(petName, clinicalRecordId) {
+    const currentDate = moment().format("DDMMYY");
+    const fileName = `${petName}_Ficha${clinicalRecordId}_${currentDate}.pdf`;
+
+    const clinicalrecord = clinicalRecordPDF.find(record => record.id === clinicalRecordId);
+    if (!clinicalrecord) {
+        return <Text>No se encontró el registro clínico</Text>;
+    }
+
+    const petRace = races.find((race) => race.id === clinicalrecord.pet.raceId);
+    const petHairColor = hairColors.find((hairColor) => hairColor.id === clinicalrecord.pet.hairColorId);
+    const petHairLenght = hairLengths.find((hairLength) => hairLength.id === clinicalrecord.pet.hairLengthId);
+    const petSize = petSizes.find((petSize) => petSize.id === clinicalrecord.pet.petSizeId);
+    
+    return (
+        <PDFDownloadLink
+            document={
+                <ClinicalRecordExport
+                    petName={petName}
+                    clinicalRecord={clinicalrecord}
+                    questions={questions}
+                    petRace={petRace}
+                    races={races}
+                    species={species}
+                    petHairColor={petHairColor}
+                    petHairLenght={petHairLenght}
+                    petSize={petSize}
+                    drugs={drugs}
+                    drugTypes={drugTypes}
+                    treatmentOptions={treatmentOptions}
+                    selectedTreatmentTypeId={selectedTreatmentTypeId}
+                />
+            }
+            fileName={fileName}
+            style={{ textDecoration: "none", color: "inherit" }}
+        >
+            <Button shape="circle" size="large" className="margin-right">
+                <FilePdfOutlined />
+            </Button>
+        </PDFDownloadLink>
+    );
+}
 
   return (
     <>
       <Row align="middle">
         <Col span={24}>
-          <Title className="appTitle">Historial Clinico</Title>
+          <Title className="appTitle">Historias Clínico</Title>
         </Col>
       </Row>
       <Divider></Divider>

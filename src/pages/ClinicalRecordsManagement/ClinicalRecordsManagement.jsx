@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Table,
   Button,
@@ -13,6 +13,16 @@ import {
   Popconfirm,
 } from "antd";
 import { clinicalRecordService } from "../../services/clinical_record.service";
+import { anamnesisQuestionService } from "../../services/anamnesis_question.service";
+import { drugTypeService } from "../../services/drug_type.service";
+import { drugService } from "../../services/drug.service";
+import { raceService } from "../../services/race.service";
+import { specieService } from "../../services/specie.service";
+import { hairColorService } from "../../services/hair_color.service";
+import { petSizeService } from "../../services/pet_size.service";
+import { hairLengthService } from "../../services/hair_length.service";
+import { treatmentTypeService } from "../../services/treatment_type.service";
+import { treatmentOptionService } from "../../services/treatment_option.service";
 import {
   FilePdfOutlined,
   EditOutlined,
@@ -23,6 +33,10 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import moment from "moment";
+
+import ClinicalRecordExport from "../../components/PDFExport/ClinicalRecodExport";
+import { PDFDownloadLink } from "@react-pdf/renderer"; // Importa PDFDownloadLink
+
 const { Title, Text } = Typography;
 
 export default function ClinicalRecordsManagement() {
@@ -34,6 +48,61 @@ export default function ClinicalRecordsManagement() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [clinicalRecordPDF, setClinicalRecordPDF] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [races, setRaces] = useState([]);
+  const [species, setSpecies] = useState([]);
+  const [petSizes, setPetSizes] = useState([]);
+  const [hairColors, setHairColors] = useState([]);
+  const [hairLengths, setHairLengths] = useState([]);
+  const [isFetchData, setIsFetchData] = useState(false);
+  const [selectedTreatmentTypeId, setSelectedTreatmentTypeId] = useState(null);
+  const [treatmentOptions, setTreatmentOptions] = useState([]);
+  const [drugs, setDrugs] = useState([]);
+  const [drugTypes, setDrugTypes] = useState([]);
+
+
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      await raceService.findAll().then((response) => {
+        setRaces(response);
+      });
+      await specieService.findAll().then((response) => {
+        setSpecies(response);
+      });
+      await drugTypeService.findAll().then((response) => {
+        setDrugTypes(response);
+      });
+      await drugService.findAll().then((response) => {
+        setDrugs(response);
+      });
+      await anamnesisQuestionService.findAll().then((response) => {
+        setQuestions(response);
+      });
+      await hairColorService.findAll().then((response) => {
+        setHairColors(response);
+      });
+      await hairLengthService.findAll().then((response) => {
+        setHairLengths(response);
+      });
+      await petSizeService.findAll().then((response) => {
+        setPetSizes(response);
+      });
+      await treatmentTypeService.findAll().then((response) => {
+        setSelectedTreatmentTypeId(response);
+      });
+      await treatmentOptionService.findAll().then((response) => {
+        setTreatmentOptions(response);
+      });
+      setIsFetchData(true);
+      console.log("Info obtenida" + {species})
+    };
+
+    fetchData();
+  }, []);
+
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -161,6 +230,7 @@ export default function ClinicalRecordsManagement() {
         console.log(clinicalRecords);
         generateData(clinicalRecords);
         setIsLoading(false);
+        setClinicalRecordPDF(clinicalRecords);
       });
   }
 
@@ -199,6 +269,50 @@ export default function ClinicalRecordsManagement() {
     let toColor = percentage === 100 ? "#00e600" : "#BA55D3";
     return { percentage: percentage, fromColor: fromColor, toColor: toColor };
   }
+
+  function handleDownloadPDF(petName, clinicalRecordId) {
+    // Llama a refreshSpeciesAndRaces antes de generar el enlace del PDF
+    
+
+    const currentDate = moment().format("DDMMYY");
+    const fileName = `${petName}_Ficha${clinicalRecordId}_${currentDate}.pdf`;
+    const clinicalrecord = clinicalRecordPDF.find(record => record.id === clinicalRecordId);
+    
+    const petRace = races.find((race) => race.id === clinicalrecord.pet.raceId);
+    const petHairColor = hairColors.find((hairColor) => hairColor.id === clinicalrecord.pet.hairColorId);
+    const petHairLenght = hairLengths.find((hairLength) => hairLength.id === clinicalrecord.pet.hairLengthId);
+    const petSize = petSizes.find((petSize) => petSize.id === clinicalrecord.pet.petSizeId);
+    
+
+
+    return (
+        <PDFDownloadLink
+            document={
+                <ClinicalRecordExport
+                    petName={petName}
+                    clinicalRecord={clinicalrecord}
+                    questions={questions}
+                    petRace={petRace}
+                    races={races}
+                    species={species}
+                    petHairColor={petHairColor}
+                    petHairLenght={petHairLenght} 
+                    petSize={petSize} // Validar si `petRace` existe
+                    drugs={drugs}
+                    drugTypes = {drugTypes}
+                    treatmentOptions = {treatmentOptions}
+                    selectedTreatmentTypeId= {selectedTreatmentTypeId}
+                />
+            }
+            fileName={fileName}
+            style={{ textDecoration: "none", color: "inherit" }}
+        >
+            <Button shape="circle" size="large" className="margin-right">
+                <FilePdfOutlined />
+            </Button>
+        </PDFDownloadLink>
+    );
+}
 
   const columns = [
     {
@@ -262,15 +376,12 @@ export default function ClinicalRecordsManagement() {
     {
       title: "Acciones",
       dataIndex: "indexIdForButton",
-      // responsive: ['md'],
       align: "center",
       fixed: "right",
-      render: (_, { indexIdForButton, progressObject }) => (
+      render: (_, { indexIdForButton, progressObject, petName, record }) => (
         <>
           <Tooltip placement="top" title="Descargar PDF">
-            <Button shape="circle" size="large" className="margin-right">
-              <FilePdfOutlined />
-            </Button>
+            {handleDownloadPDF(petName, indexIdForButton)} {/* Llama a la función aquí */}
           </Tooltip>
           {progressObject.percentage === 100 ? (
             <Tooltip placement="top" title="Ver la Ficha Clínica">
@@ -279,7 +390,6 @@ export default function ClinicalRecordsManagement() {
                 type="dashed"
                 size="large"
                 className="margin-right"
-                // este boton aun no se que funcionamiento deberia tener
                 onClick={(e) => {
                   goToClinicalRecord(indexIdForButton);
                 }}
@@ -294,7 +404,6 @@ export default function ClinicalRecordsManagement() {
                 size="large"
                 className="margin-right"
                 onClick={(e) => {
-                  // console.log(indexIdForButton);
                   goToClinicalRecord(indexIdForButton);
                 }}
               >
@@ -306,7 +415,6 @@ export default function ClinicalRecordsManagement() {
             <Popconfirm
               title="¿Seguro que quieres borrar esta ficha?"
               placement="left"
-              // onConfirm={() => deleteClinicalRecord(indexIdForButton)}
               icon={<WarningOutlined style={{ color: "red" }} />}
             >
               <Button shape="circle" danger size="large">

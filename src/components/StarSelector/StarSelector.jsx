@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import StarOutlinedIcon from "@mui/icons-material/StarOutlined";
-import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 
-const StarSelector = ({ qualification, onChange }) => {
+const StarSelector = ({ qualification, onChange, disabled }) => {
   const [currentRating, setCurrentRating] = useState(qualification || 0);
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -12,16 +10,18 @@ const StarSelector = ({ qualification, onChange }) => {
   }, [qualification]);
 
   const handleMouseOver = (value) => {
-    setHoverRating(value);
+    if (!disabled) setHoverRating(value);
   };
 
   const handleMouseLeave = () => {
-    setHoverRating(0);
+    if (!disabled) setHoverRating(0);
   };
 
   const handleClick = (value) => {
-    setCurrentRating(value);
-    onChange(value); // Notifica al componente padre el cambio de calificación
+    if (!disabled && onChange) {
+      setCurrentRating(value);
+      onChange(value);
+    }
   };
 
   return (
@@ -29,22 +29,19 @@ const StarSelector = ({ qualification, onChange }) => {
       {[1, 2, 3, 4, 5].map((value) => (
         <span
           key={value}
-          onClick={() => handleClick(value)}
-          onMouseOver={() => handleMouseOver(value)}
-          onMouseLeave={handleMouseLeave}
+          onClick={() => handleClick(value)}   // Solo activado si no está deshabilitado
+          onMouseOver={() => handleMouseOver(value)}   // Solo activado si no está deshabilitado
+          onMouseLeave={handleMouseLeave}    // Solo activado si no está deshabilitado
         >
           {value <= (hoverRating || currentRating) ? (
-            <StarFilled
-              style={{ fontSize: 20, color: "rgba(88, 9, 114, 0.329)" }}
-            />
+            <StarFilled style={{ fontSize: 20, color: "rgba(88, 9, 114, 0.329)" }} />
           ) : (
-            <StarOutlined
-              style={{ fontSize: 20, color: "rgba(88, 9, 114, 0.329)" }}
-            />
+            <StarOutlined style={{ fontSize: 20, color: "rgba(88, 9, 114, 0.329)" }} />
           )}
         </span>
       ))}
     </div>
   );
 };
+
 export default StarSelector;

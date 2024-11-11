@@ -1,18 +1,26 @@
-import React , {useState}from 'react';
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import { StarOutlined, StarFilled} from "@ant-design/icons";
-import { Star } from '@mui/icons-material';
 
-const StarDisplay = ({ qualification, onChange }) => {
+import React, { useState } from 'react';
+import { StarOutlined, StarFilled } from "@ant-design/icons";
+
+const StarDisplay = ({ qualification, onChange, disabled }) => {
   const [hoverRating, setHoverRating] = useState(0);
 
   const handleMouseOver = (value) => {
-    setHoverRating(value);
+    if (!disabled) {
+      setHoverRating(value);  // Solo mostrar el hover si no está deshabilitado
+    }
   };
 
   const handleMouseLeave = () => {
-    setHoverRating(0);
+    if (!disabled) {
+      setHoverRating(0);  // Solo quitar el hover si no está deshabilitado
+    }
+  };
+
+  const handleClick = (value) => {
+    if (!disabled && onChange) {  // Solo ejecutar si no está deshabilitado y hay un onChange
+      onChange(value);  // Solo se ejecuta si no está deshabilitado
+    }
   };
 
   return (
@@ -20,21 +28,19 @@ const StarDisplay = ({ qualification, onChange }) => {
       {[1, 2, 3, 4, 5].map((value) => (
         <span
           key={value}
-          onClick={() => onChange(value)}
+          onClick={() => handleClick(value)}  // Solo ejecutará onChange si no está deshabilitado
           onMouseOver={() => handleMouseOver(value)}
           onMouseLeave={handleMouseLeave}
         >
           {value <= (hoverRating || qualification) ? (
-            // pasar todo el estilo a una claseeeeeee!
             <StarFilled style={{ fontSize: 20, color: 'rgba(88, 9, 114, 0.329)' }} />
           ) : (
-            <StarOutlined StarFilled style={{ fontSize: 20, color: 'rgba(88, 9, 114, 0.329)' }} />
+            <StarOutlined style={{ fontSize: 20, color: 'rgba(88, 9, 114, 0.329)' }} />
           )}
         </span>
       ))}
     </div>
   );
-
 };
 
 export default StarDisplay;

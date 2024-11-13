@@ -129,8 +129,8 @@ export default function Qualification() {
           qualification={record.qualification}
           onChange={(value) =>
             handleDataChange(record.key, "qualification", value)
-          } // Se asegura de enviar el key y el campo correcto
-          disabled={editingKey !== record.key && record.isSaved}
+          }
+          disabled={editingKey !== record.key || record.qualification !== null || record.observation !== null}
         />
       ),
     },
@@ -140,7 +140,7 @@ export default function Qualification() {
       key: "observation",
       render: (_, record) => {
         const isEditingRow = editingKey === record.key;
-
+    
         return isEditingRow ? (
           <Input
             placeholder="Ingrese observación"
@@ -151,7 +151,9 @@ export default function Qualification() {
             variant="outlined"
           />
         ) : (
-          <span onClick={() => edit(record)}>{record.observation || ""}</span>
+          <span onClick={() => (record.qualification === null && record.observation === null ? edit(record) : null)}>
+            {record.observation || ""}
+          </span>
         );
       },
     },
@@ -160,17 +162,17 @@ export default function Qualification() {
       dataIndex: "actions",
       key: "actions",
       render: (_, record) => {
-        const editable = isEditing(record);
-        return editable ? (
+        const canEdit = record.qualification === null && record.observation === null;
+        const isEditing = editingKey === record.key;
+    
+        return isEditing ? (
           <>
             <Tooltip placement="top" title="Guardar cambios">
               <Button
                 shape="circle"
                 size="large"
                 onClick={() => save(record.key)}
-                // style={{marginRight: '5%'}}
                 className="margin-right"
-                disabled={editingKey !== record.key}
               >
                 <CheckOutlined />
               </Button>
@@ -180,7 +182,6 @@ export default function Qualification() {
                 shape="circle"
                 size="large"
                 onClick={cancel}
-                disabled={editingKey !== record.key}
               >
                 <CloseOutlined />
               </Button>
@@ -192,8 +193,8 @@ export default function Qualification() {
               shape="circle"
               size="large"
               className="appTableButton"
-              onClick={() => edit(record)}
-              disabled={editingKey !== "" || record.isSaved}
+              onClick={() => canEdit && edit(record)}
+              disabled={!canEdit}
             >
               <EditOutlined />
             </Button>

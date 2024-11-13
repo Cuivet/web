@@ -347,3 +347,15 @@ body::-webkit-scrollbar-thumb:hover {
 .ant-table-body::-webkit-scrollbar-thumb:hover {
   background: $primary-color-hover;
 }
+
+// color en placeholder en inputs
+::placeholder {
+  color: $font-grey!important;
+  // color: red!important;
+  opacity: 1; /* Firefox */
+}
+
+::-ms-input-placeholder { /* Edge 12 -18 */
+  color: $font-grey!important;
+
+}

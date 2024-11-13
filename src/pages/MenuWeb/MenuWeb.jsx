@@ -1,13 +1,25 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Typography, Divider } from "antd";
 import CardMenu from "../../components/CardMenu";
-import huella from "../../assets/img/jpg/Huella1.jpg";
+import mascota from "../../assets/img/jpg/home/mascota.jpeg";
+import fichaClinica from "../../assets/img/jpg/home/fichaclinica.jpeg";
+import estudios from "../../assets/img/jpg/home/estudioscomplementarios.jpeg";
+import vacunacion from "../../assets/img/jpg/home/vacunacion.jpeg";
+import calificacion from "../../assets/img/jpg/home/calificacion.jpeg";
+import clinica from "../../assets/img/jpg/home/clinica.jpeg";
+import historial from "../../assets/img/jpg/home/historialclinico.jpeg";
+import mapa from "../../assets/img/jpg/home/mapa.jpeg";
+import reportes from "../../assets/img/jpg/home/reportes.jpeg";
+import user from "../../assets/img/jpg/home/user.jpeg";
+import veterinario from "../../assets/img/jpg/home/veterinario.jpeg";
+import veterinarios from "../../assets/img/jpg/home/veterinarios.jpeg";
+// import huella from "../../assets/img/jpg/Huella1.jpg";
 import atencion from "../../assets/img/jpg/AtencionClinica.jpg";
 // import calendario from "../../assets/img/jpg/calendario.jpg";
-import valorar from "../../assets/img/jpg/valorar.jpg";
-import clinica from "../../assets/img/jpg/clinica.jpg";
-import visitsReports from "../../assets/img/jpg/reportes.jpg";
-import users from "../../assets/img/jpg/users.jpg";
+// import valorar from "../../assets/img/jpg/valorar.jpg";
+// import clinica from "../../assets/img/jpg/clinica.jpg";
+// import visitsReports from "../../assets/img/jpg/reportes.jpg";
+// import users from "../../assets/img/jpg/users.jpg";
 import MyContext from "../../MyContext";
 import "../Settings/UserSettings/UserSettings.scss";
 
@@ -45,35 +57,35 @@ export default function MenuWeb() {
         ],
     description: veterinaryWithNoVets
       ? [
-          "Visualizá las Clínicas asociadas",
-          "Mapa con las Clínicas Veterinarias",
+          "Visualiza las clínicas veterinarias asociadas.",
+          "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
         ]
       : [
-          "Iniciar una nueva consulta",
-          "Gestion de vacunas a mascotas",
-          "Visualizar estudios complementarios de mascotas",
-          "Visualizar los historiales clinicos de las mascotas asociadas",
-          "Aqui puedes ver las claificaciones que tus atenciones han recibido",
-          "Gestiona todos los veterinarios asociados a la Clínicas",
-          "Visualizá tus pacientes asociados",
-          "Visualizá las Clínicas asociadas",
-          "Mapa con las Clínicas Veterinarias",
-          "Visualizá tus reportes",
+          "Inicia la consulta médica de cada Mascota, registrando sus datos clínicos.",
+          "Gestiona las vacunaciones a Mascotas, llevando un control detallado.",
+          "Visualiza los estudios complementarios realizados a las Mascotas.",
+          "Accede a los historiales clinicos de las Mascotas, facilitando un seguimiento exhaustivo de su evolución.",
+          "Consulta las valoraciones que han recibido tus servicios.",
+          "Gestiona a los veterinarios asociados a la clínica.",
+          "Visualiza y accede rápidamente a la lista de pacientes asociados.",
+          "Visualiza las clínicas veterinarias asociadas.",
+          "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
+          "Consulta y genera reportes sobre el rendimiento y la actividad de los diferentes servicios del sistema.",
         ],
     disabled: [false, true],
     img: veterinaryWithNoVets
-      ? [clinica, huella]
+      ? [clinica, mapa]
       : [
-          atencion,
-          huella,
-          huella,
-          huella,
-          huella,
-          huella,
-          huella,
+          fichaClinica,
+          vacunacion,
+          estudios,
+          historial,
+          calificacion,
+          veterinarios,
+          mascota,
           clinica,
-          huella,
-          visitsReports,
+          mapa,
+          reportes,
         ],
     routes: veterinaryWithNoVets
       ? ["/vets-associations", "/vetsMap"]
@@ -96,21 +108,20 @@ export default function MenuWeb() {
       "Historial Clínico",
       "Estudios Complementarios",
       "Mis Mascotas",
-
       "Veterinarios Asociados",
       "Calificaciones",
       "Mapa",
     ],
     description: [
-      "Visualizá el Historial Clínico de tus Mascotas",
-      "Visualizá estudios complementarios de tus Mascotas",
-      "Gestiona tus Mascotas",
-      "Gestiona todos los Veterinarios asociados a tus mascotas",
-      "Registrá una reseña a tus Veterinarios asociados",
-      "Mapa de las Clínicas Veterinarias",
+      "Accede a los historiales clinicos de las Mascotas, facilitando un seguimiento exhaustivo de su evolución.",
+      "Visualiza los estudios complementarios realizados a las Mascotas.",
+      "Gestiona y accede rápidamente a la lista de Mascotas.",
+      "Gestiona a los veterinarios asociados.",
+      "Registrá valoraciones a tus Veterinarios asociados",
+      "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
-    img: [huella, huella, valorar, atencion, huella, huella, huella],
+    img: [historial, estudios, mascota, veterinarios, calificacion, mapa],
     routes: [
       "/clinical-history",
       "/studies",
@@ -124,24 +135,24 @@ export default function MenuWeb() {
   const vetOwner = {
     module: ["Mis Veterinarios", "Mis Clínicas Veterinarias", "Mapa"],
     description: [
-      "Visualiza los datos los Veterinarios asociados",
-      "Visualizá los datos de tu/s Clinica/s",
-      "Mapa de las Clínicas Veterinarias",
+      "Gestiona a los veterinarios asociados a tus clínicas.",
+      "Gestiona tus clínicas veterinarias.",
+      "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
-    img: [atencion, clinica, huella],
+    img: [veterinarios, clinica, mapa],
     routes: ["/veterinaries-management", "/vets", "/vetsMap"],
   };
 
   const admin = {
     module: ["Usuarios", "Clínicas Veterinarias", "Mapa"],
     description: [
-      "Visualiza los datos los usuarios registrados",
-      "Visualizá los datos de las Clinica/s registrada/s",
-      "Mapa de las Clínicas Veterinarias",
+      "Visualiza los datos los usuarios registrados.",
+      "Visualizá los datos de las clinicas registradas.",
+      "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
-    img: [users, clinica, huella],
+    img: [user, clinica, mapa],
     routes: ["/users", "/vetsList", "/vetsMap"],
   };
 

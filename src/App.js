@@ -12,23 +12,23 @@ function App() {
   // }
   return (
     <Router>
-      <VetProvider>
-        <EditProvider>
-          <Routes>
-            {routes.map((route, index) => (
-              <Route
-                key={index}
-                path={route.path}
-                element={
-                  <route.layout>
-                    <route.component />
-                  </route.layout>
-                }
-              />
-            ))}
-          </Routes>
-        </EditProvider>
-      </VetProvider>
+        <VetProvider>
+          <EditProvider>
+            <Routes>
+              {routes.map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    <route.layout>
+                      <route.component />
+                    </route.layout>
+                  }
+                />
+              ))}
+            </Routes>
+          </EditProvider>
+        </VetProvider>
     </Router>
   );
 }

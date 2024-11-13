@@ -32,7 +32,6 @@ import moment from "moment";
 import AvatarSearch from "../../components/AvatarSearch";
 import VaccinesOutlinedIcon from "@mui/icons-material/VaccinesOutlined";
 import { getTutorDataByDni } from "../../services/tutor.service";
-import { getPetsByTutorId } from "../../services/pet.service";
 import { getAllByTutorId } from "../../services/pet_association.service";
 import { drugTypeService } from "../../services/drug_type.service";
 import { drugService } from "../../services/drug.service";
@@ -546,7 +545,6 @@ export default function Vaccination() {
       >
         {findPet ? (
           <Card
-            title="Datos para la nueva ficha"
             bordered={false}
             actions={[
               <Col>

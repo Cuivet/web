@@ -12,6 +12,8 @@ export default function CardMenu(props){
         <Link to={route} style={{cursor: 'pointer'}}>
             <Card hoverable
                 cover={<img alt='required field' src={img}></img>}
+                // style={{ height: 300 }}
+                size="small"
                 loading={disabled}
                 className='card-menu'>
                 <Meta title={text} description={description} className='card-menu__meta'></Meta>

@@ -39,6 +39,7 @@ import Landing from "../pages/Landing/Landing";
 import Contact from "../pages/Contact";
 import path from "path";
 import { layouts } from "chart.js";
+import ComplementaryStudy from "../components/ComplementaryStudy";
 
 const routesAdmin = [
   {
@@ -171,6 +172,11 @@ const routesAdmin = [
     layout: LayoutAdmin,
     path: "/vetsList",
   },
+  {
+    component: ComplementaryStudy,
+    layout: LayoutAdmin,
+    path: "/publicstudy/:id",
+  },
 ];
 
 const routesClient = [
@@ -183,6 +189,11 @@ const routesClient = [
     path: "/contact",
     layout: LayoutBasic,
     component: Contact,
+  },
+  {
+    path: "/study/:encodedId",
+    layout: LayoutBasic,
+    component: ComplementaryStudy,
   },
 ];
 

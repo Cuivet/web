@@ -121,7 +121,6 @@ export default function PresumptiveDiagnosis(props) {
                 className="studiesButton"
                 shape="circle"
                 size="small"
-                disabled={blocked}
                 icon={<BiotechOutlinedIcon />}
                 onClick={showModal}
               />

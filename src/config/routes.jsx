@@ -31,12 +31,15 @@ import Vaccination from "../pages/Vaccination/Vaccination";
 import vetQualification from "../pages/VetQualification/VetQualification";
 import ClinicalHistory from "../pages/ClinicalHistory/ClinicalHistory";
 import ViewVets from "../pages/ViewVets/ViewVets";
+import UsersList from "../pages/Users/UsersList";
+import VetsList from "../pages/VetsAdmin/VetsList";
 
 //Client pages
 import Landing from "../pages/Landing/Landing";
 import Contact from "../pages/Contact";
 import path from "path";
 import { layouts } from "chart.js";
+import ComplementaryStudy from "../components/ComplementaryStudy";
 
 const routesAdmin = [
   {
@@ -148,17 +151,32 @@ const routesAdmin = [
     path: "/qualification",
     component: Qualification,
     layout: LayoutAdmin,
-},
-{
-  path: "/vetQualification",
-  component: vetQualification,
-  layout: LayoutAdmin,
-},
-{
+  },
+  {
+    path: "/vetQualification",
+    component: vetQualification,
+    layout: LayoutAdmin,
+  },
+  {
     component: ViewVets,
     layout: LayoutAdmin,
     path: "/vetsMap",
-}
+  },
+  {
+    component: UsersList,
+    layout: LayoutAdmin,
+    path: "/users",
+  },
+  {
+    component: VetsList,
+    layout: LayoutAdmin,
+    path: "/vetsList",
+  },
+  {
+    component: ComplementaryStudy,
+    layout: LayoutAdmin,
+    path: "/publicstudy/:id",
+  },
 ];
 
 const routesClient = [
@@ -171,6 +189,11 @@ const routesClient = [
     path: "/contact",
     layout: LayoutBasic,
     component: Contact,
+  },
+  {
+    path: "/study/:encodedId",
+    layout: LayoutBasic,
+    component: ComplementaryStudy,
   },
 ];
 

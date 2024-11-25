@@ -5,11 +5,12 @@ import Icon, {
   HomeOutlined,
   SettingOutlined,
   FolderOpenOutlined,
-  PushpinOutlined
+  PushpinOutlined,
+  UserOutlined,
+  StarOutlined,
 } from "@ant-design/icons";
 import PetsIcon from "@mui/icons-material/Pets";
 import ScienceIcon from "@mui/icons-material/Science";
-import StarBorderIcon from '@mui/icons-material/StarBorder'; 
 import MedicalServicesOutlinedIcon from "@mui/icons-material/MedicalServicesOutlined";
 import PersonPinCircleOutlinedIcon from "@mui/icons-material/PersonPinCircleOutlined";
 import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
@@ -34,6 +35,7 @@ export default function MenuSider(props) {
   var tutor = profile.tutor != null;
   var veterinary = profile.veterinary != null;
   var vetOwner = profile.vetOwner != null;
+  var admin = !vetOwner && !veterinary && !tutor;
 
   if (!isInit) {
     if (veterinary) {
@@ -182,10 +184,10 @@ export default function MenuSider(props) {
               </Link>
             </Menu.Item>
 
-            <Menu.Item key="vetQualification">
-              <Link to={"/vetQualification"} className='admin-sider__item'>                      
-                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
-                  <span className="nav-text"> Calificaciones obtenidas</span>
+            <Menu.Item key="vetQualification" hidden={veterinaryWithNoVets}>
+              <Link to={"/vetQualification"} className="admin-sider__item">
+                <StarOutlined />
+                <span className="nav-text"> Calificaciones</span>
               </Link>
             </Menu.Item>
 
@@ -275,10 +277,29 @@ export default function MenuSider(props) {
 
         <Menu.Item key="map">
           <Link to={"/vetsMap"} className="admin-sider__item">
-          <PushpinOutlined />
+            <PushpinOutlined />
             <span className="nav-text"> Mapa </span>
           </Link>
         </Menu.Item>
+
+        {admin ? (
+          <>
+            <Menu.Item key="users">
+              <Link to={"/users"} className="admin-sider__item">
+                <UserOutlined />
+                <span className="nav-text"> Usuarios </span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="adminVets">
+              <Link to={"/vetsList"} className="admin-sider__item">
+                <Icon component={""}>
+                  <PersonPinCircleOutlinedIcon fontSize="small" />
+                </Icon>
+                <span className="nav-text"> Clínicas Registradas </span>
+              </Link>
+            </Menu.Item>
+          </>
+        ) : null}
 
         <Menu.Item key="user">
           <Link to={"/settings/user"} className="admin-sider__item">

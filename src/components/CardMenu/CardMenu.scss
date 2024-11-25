@@ -4,11 +4,12 @@
     margin: 40px 30px 30px 40px;
 
     .ant-card-meta-title{
-        color: $secondary-color;
+        color: $primary-color-hover;
         text-align: center;
+        font-size: 20px;
     }
     .ant-card-meta-description{
-        color: $font-grey;
+        color: $font-dark;
         text-align: center;
     }
     .ant-card-meta-detail{

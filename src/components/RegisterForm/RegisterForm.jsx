@@ -195,7 +195,7 @@ export default function RegisterForm(props) {
       file = fileList[0].originFileObj;
     } else {
       setIsRegistering(false);
-      return message.error("No se encontró un archivo válido en fileList.");
+      message.error("No se encontró un archivo válido en fileList.");
     }
 
     const reader = new FileReader();
@@ -418,6 +418,7 @@ export default function RegisterForm(props) {
           name="dni"
           value={input.dni}
           placeholder="DNI"
+          autoComplete="off"
           className="register-form__input"
           onChange={inputValidation}
           onSelect={inputValidation}
@@ -429,6 +430,7 @@ export default function RegisterForm(props) {
           type="number"
           name="phone"
           value={input.phone}
+          autoComplete="off"
           placeholder="Teléfono"
           className="register-form__input"
           onChange={inputValidation}

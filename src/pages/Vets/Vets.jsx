@@ -56,13 +56,14 @@ export default function Vets() {
               key={vet.vet.id}
               item={vet.vet.id}
               title={vet.vet.name}
-              popTitle={"¿Está seguro que desea borrar la clínica?"}
+              popTitle={"¿Está seguro que desea eliminar la clínica?"}
               img={vet.vet.photo ? vet.vet.photo : clinica}
               description={{
                 address: vet.vet.address,
                 hours: vet?.hours,
               }}
               regent={tieneRegente(vet)}
+              active={vet.vet.active}
             ></CardVet>
           </Col>
         );
@@ -81,6 +82,7 @@ export default function Vets() {
         }
         onClose={onClose}
         visible={true}
+        // size="large"
         bodyStyle={{
           paddingBottom: 80,
         }}
@@ -119,9 +121,7 @@ export default function Vets() {
       </Row>
       <Divider></Divider>
       {displayDrawer ? renderDrawer() : null}
-      <Row>
-        {vets.length ? Vet() : null}
-      </Row>
+      <Row>{vets.length ? Vet() : null}</Row>
     </>
   );
 }

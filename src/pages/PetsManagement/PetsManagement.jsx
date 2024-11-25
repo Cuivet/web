@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import {
   registerTemporalAssociation,
-  getAllByVeterinaryId,
+  // getAllByVeterinaryId,
   getAllByVetId,
 } from "../../services/pet_association.service";
 import { getTutorDataByDni } from "../../services/tutor.service";
@@ -47,7 +47,7 @@ export default function PetsManagement() {
   const [races, setRaces] = useState([]);
   const [species, setSpecies] = useState([]);
   const [isFetchData, setIsFetchData] = useState(false);
-  const profile = JSON.parse(sessionStorage.getItem("profile"));
+  // const profile = JSON.parse(sessionStorage.getItem("profile"));
   const { selectedVet } = useContext(MyContext);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -168,8 +168,24 @@ export default function PetsManagement() {
         text
       ),
   });
+// revisar si realmente sirve, mismo comportamiento que refreshcomponent()
+  // const getAssociations = async () => {
+  //   if (selectedVet && selectedVet?.value) {
+  //     setIsLoading(true);
+      // getAllByVetId(selectedVet?.value)
+  //       .then((associations) => {
+  //         generateData(associations);
+  //       })
+  //       .finally(() => setIsLoading(false));
+  //   } else {
+  //     //aca entra si es atencion particular
+  //     console.log("no hay vet seleccionada");
+  //   }
+  //   setData([]);
+  // };
 
   if (!isInit && isFetchData) {
+    // getAssociations();
     refreshComponent();
     setIsInit(true);
   }
@@ -203,8 +219,10 @@ export default function PetsManagement() {
   }
 
   function generateData(associations) {
-    //para clínicas
+    // if (species.length === 0 || races.length === 0) return;
+
     var finalData = [];
+    console.log(species);
     let filteredData = associations.filter(
       (ass) => ass.vetData.id === selectedVet?.value
     );
@@ -218,12 +236,12 @@ export default function PetsManagement() {
           " " +
           association?.tutorData.person?.name,
         dni: association?.tutorData.person.dni,
-        especie: species?.find(
+        especie: species.find(
           (specie) =>
             specie.id ===
             races.find((race) => race.id === association.pet.raceId).specieId
-        )?.name,
-        raza: races?.find((race) => race.id === association.pet.raceId)?.name,
+        ).name,
+        raza: races.find((race) => race.id === association.pet.raceId).name,
         vet: association?.vetData?.name,
         veterinary:
           association?.veterinaryData.person.lastName +
@@ -231,40 +249,9 @@ export default function PetsManagement() {
           association?.veterinaryData.person?.name,
       });
     });
+    console.log(finalData);
     setData(finalData);
   }
-
-  // function generateDataParticular(associations) {
-  //   //para clínicas
-  //   var finalData = [];
-  //   let filteredData = associations.filter(
-  //     (ass) => ass.vetData.name === "Atención particular"
-  //   );
-  //   filteredData.forEach((association) => {
-  //     finalData.push({
-  //       key: association?.associationId,
-  //       id: association?.associationId,
-  //       name: association?.pet.name,
-  //       tutorName:
-  //         association?.tutorData.person.lastName +
-  //         " " +
-  //         association?.tutorData.person.name,
-  //       dni: association?.tutorData.person.dni,
-  //       especie: species?.find(
-  //         (specie) =>
-  //           specie?.id ===
-  //           races?.find((race) => race.id === association.pet.raceId).specieId
-  //       ).name,
-  //       raza: races?.find((race) => race.id === association.pet.raceId).name,
-  //       // vet: association?.vetData.name,
-  //       veterinary:
-  //         association?.veterinaryData.person.lastName +
-  //         " " +
-  //         association?.veterinaryData.person.name,
-  //     });
-  //   });
-  //   setData(finalData);
-  // }
 
   const columns = [
     {
@@ -350,21 +337,6 @@ export default function PetsManagement() {
     },
   ];
 
-  const getAssociations = async () => {
-    if (selectedVet && selectedVet?.value) {
-      setIsLoading(true);
-      getAllByVetId(selectedVet?.value)
-        .then((associations) => {
-          generateData(associations);
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      //aca entra si es atencion particular
-      console.log("no hay vet seleccionada");
-    }
-    setData([]);
-  };
-
   const onChange = (pagination, filters, sorter, extra) => {
     // console.log("params", pagination, filters, sorter, extra);
   };
@@ -411,35 +383,17 @@ export default function PetsManagement() {
       });
   };
 
-  if (!isInit) {
-    getAssociations();
-    setIsInit(true);
-    refreshComponent();
-  }
+  // lo saco para que cargue de forma normal, parece que no afecta funcionamiento
+  // useEffect(() => {
+  //   if (isFetchData) {
+  //     // getAssociations();
+  //     setIsInit(true);
+  //   }
+  // }, [isFetchData]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await raceService.findAll().then((response) => {
-        setRaces(response);
-      });
-      await specieService.findAll().then((response) => {
-        setSpecies(response);
-      });
-      setIsFetchData(true);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (isFetchData) {
-      // getAssociations();
-      setIsInit(true);
-    }
-  }, [isFetchData]);
-
-  useEffect(() => {
-    getAssociations();
-  }, [selectedVet]);
+  // useEffect(() => {
+  //   // getAssociations();
+  // }, [selectedVet]);
 
   return (
     <>

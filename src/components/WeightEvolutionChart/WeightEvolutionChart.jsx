@@ -1,123 +1,201 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels'; // Asegúrate de tener este import
+import React, { useState, useEffect } from "react";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import { clinicalRecordService } from "../../services/clinical_record.service";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartDataLabels);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
 
-const WeightEvolutionChart = ({ data, title }) => {
-  // Validar que data y data.datasets existan y sean arrays
-  if (!data || !Array.isArray(data.datasets)) {
-    return <div>Error: Datos inválidos</div>;
-  }
+const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
+  const [chartData, setChartData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const colors = [
-    '#5b2569', // Púrpura
-    '#e9c4f2', // Rosa claro
-    '#1abc9c', // Turquesa
-    '#16b8a0', // Turquesa claro
-    '#19b0a4', // Turquesa más claro
-    '#ae5198', // Rosa suave
-    '#d367a5', // Rosa brillante
-    '#de7db2', // Rosa claro
-    '#a8e6cf', // Verde claro
-    '#d8e7c9', // Verde más claro
-    '#b2f0e4', // Verde suave
-    '#f2d5e4', // Rosa suave
-    '#e1f5fe', // Turquesa muy claro
-  ];
+  const colors = ["#5b2569", "#e9c4f2", "#40e0d0", "#ff69b4", "#ffb6c1"];
 
-  const chartData = {
-    labels: data.labels,
-    datasets: data.datasets.map((dataset, index) => ({
-      ...dataset,
-      borderColor: colors[index % colors.length] || 'rgba(153, 102, 255, 1)',
-      backgroundColor: colors[index % colors.length].replace('1)', '0.2)') || 'rgba(153, 102, 255, 0.2)',
-      fill: true,
-      tension: 0.1,
-    })),
+  // Función para formatear fechas
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true, // Mostrar la leyenda
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            return `${context.raw} kg`; // Mostrar el peso en kg en el tooltip
-          },
-        },
-      },
-      datalabels: {
-        color: 'black',
-        font: {
-          weight: 'bold',
-          size: 12,
-        },
-        anchor: 'end', // Posiciona la etiqueta al final
-        align: 'end',  // Alinea la etiqueta al final
-        offset: 1,     // Mueve la etiqueta hacia arriba
-        formatter: (value) => {
-          return `${value} kg`; // Muestra solo el peso en kg
-        },
-      },
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        ticks: {
-          autoSkip: false,
-          maxRotation: 45,
-          minRotation: 45,
-        },
-      },
-      y: {
-        display: false, // Ocultar el eje Y
-        beginAtZero: true,
-        ticks: {
-          callback: function (value) {
-            return `${value} kg`; // Mostrar el peso en kg en el eje Y
-          },
-        },
-        grid: {
-          display: false, // Ocultar las líneas de la cuadrícula del eje Y
-        },
-        suggestedMax: Math.max(...data.datasets.flatMap(dataset => dataset.data)) + 30, // Ajustar el máximo del eje Y
-      },
-    },
-    elements: {
-      point: {
-        radius: 3, // Tamaño de los puntos
-        hoverRadius: 5, // Tamaño de los puntos al pasar el cursor
-        pointStyle: 'circle',
-        backgroundColor: 'rgba(153, 102, 255, 1)',
-        borderColor: 'rgba(153, 102, 255, 1)',
-        borderWidth: 1,
-        hoverBorderWidth: 2,
-        hoverBackgroundColor: 'rgba(153, 102, 255, 0.8)',
-      },
-    },
+  // Generar título dinámico
+  const generateTitle = () => {
+    const currentYear = new Date().getFullYear();
+
+    if (!fromDate && !toDate) {
+      return `Peso evolutivo de Mis Mascotas (en KG) - Año ${currentYear}`;
+    }
+
+    const formattedStart = fromDate ? formatDate(fromDate) : "la fecha de registro en Cuivet";
+    const formattedEnd = toDate ? formatDate(toDate) : "Hoy";
+
+    return `Peso evolutivo de Mis Mascotas (en KG) - Desde ${formattedStart} hasta ${formattedEnd}`;
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!tutorId) {
+          console.log("Tutor ID inválido o no proporcionado:", tutorId);
+          setErrorMessage("Datos inválidos. Ingrese un DNI válido.");
+          setChartData(null);
+          return;
+        }
+
+        const records = await clinicalRecordService.findAllByTutorId(tutorId);
+        console.log("Registros clínicos obtenidos:", records);
+
+        // Aplicar filtros
+        const filteredRecords = records.filter((record) => {
+          const visitDate = new Date(record.createdAt);
+          const startFilter = fromDate ? new Date(fromDate) : null;
+          const endFilter = toDate ? new Date(toDate) : null;
+
+          console.log("Fecha de la visita:", visitDate);
+          console.log("Inicio del filtro:", startFilter);
+          console.log("Fin del filtro:", endFilter);
+
+          // Filtros de fecha
+          if (startFilter && visitDate < startFilter) {
+            console.log("Registro excluido por estar antes del rango:", record);
+            return false;
+          }
+          if (endFilter && visitDate > endFilter) {
+            console.log("Registro excluido por estar después del rango:", record);
+            return false;
+          }
+
+          // Filtro por nombre de mascota
+          if (petNames?.length > 0 && !petNames.includes(record.pet?.name)) {
+            console.log("Registro excluido por no coincidir con las mascotas:", record);
+            return false;
+          }
+
+          return true; // Incluir registros que pasen los filtros
+        });
+
+        console.log("Registros filtrados:", filteredRecords);
+
+        if (filteredRecords.length === 0) {
+          setErrorMessage("No hay datos para mostrar.");
+          setChartData(null);
+          return;
+        }
+
+        // Agrupar datos por mascota
+        const petsData = {};
+        filteredRecords.forEach((record) => {
+          const petName = record.pet?.name || "Desconocido";
+          const visitDate = record.createdAt.split("T")[0];
+          const weight = record.physicalExam?.weight || 0;
+
+          if (!petsData[petName]) {
+            petsData[petName] = { dates: [], weights: [] };
+          }
+
+          petsData[petName].dates.push(visitDate);
+          petsData[petName].weights.push(weight);
+        });
+
+        console.log("Datos organizados por mascota:", petsData);
+
+        // Obtener todas las fechas únicas y ordenarlas
+        const allDates = Array.from(
+          new Set(filteredRecords.map((record) => record.createdAt.split("T")[0]))
+        ).sort((a, b) => new Date(a) - new Date(b));
+
+        console.log("Fechas únicas ordenadas:", allDates);
+
+        // Generar datasets para el gráfico
+        const datasets = Object.entries(petsData).map(([petName, data], index) => {
+          let lastWeight = 0;
+          let startedRecording = false;
+
+          return {
+            label: petName,
+            data: allDates.map((date) => {
+              const dateIndex = data.dates.indexOf(date);
+
+              if (dateIndex !== -1) {
+                lastWeight = data.weights[dateIndex];
+                startedRecording = true;
+                return lastWeight;
+              } else if (startedRecording) {
+                return lastWeight; // Rellenar con el último peso conocido
+              }
+
+              return null; // Sin datos aún
+            }),
+            fill: false,
+            borderColor: colors[index % colors.length],
+            tension: 0.1,
+          };
+        });
+
+        console.log("Datasets para el gráfico:", datasets);
+
+        // Configurar los datos del gráfico
+        const data = {
+          labels: allDates,
+          datasets,
+        };
+
+        setChartData(data);
+        setErrorMessage("");
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+        setErrorMessage("Error al obtener los datos.");
+        setChartData(null);
+      }
+    };
+
+    fetchData();
+  }, [tutorId, petNames, fromDate, toDate]);
 
   return (
     <div>
-      <h1 style={{ fontSize: '18px', fontWeight: 'bold', textAlign: 'center', color: '#333' }}>{title}</h1>
-      <Line data={chartData} options={options} />
+      <h3 style={{ textAlign: "center", marginBottom: "10px" }}>
+        {generateTitle()}
+      </h3>
+      {errorMessage ? (
+        <p>{errorMessage}</p>
+      ) : chartData ? (
+        <div style={{ width: "100%", maxWidth: "1200px", height: "300px", margin: "0 auto" }}>
+          <Line
+            data={chartData}
+            options={{
+              maintainAspectRatio: false,
+              scales: {
+                y: { title: { display: true } },
+                x: { title: { display: true } },
+              },
+            }}
+          />
+        </div>
+      ) : (
+        <p>Cargando datos...</p>
+      )}
     </div>
   );
 };
 
 export default WeightEvolutionChart;
-
-
-
-
-
-
-
-
-
-

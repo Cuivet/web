@@ -43,6 +43,28 @@ export function getPetsByTutorId(tutorId) {
        
 };
 
+export function getPetsById(id) {
+    var axios = require('axios');
+    console.log(sessionStorage.getItem('token'));
+    return axios({
+        method: "get",
+        url: `${basePATH}/pet/allById/${id}`,
+        timeout: 1000 * 5, // Wait for 5 seconds
+        headers: {
+            "Content-Type": "application/json",
+            Accept: 'application/json',
+            "token": sessionStorage.getItem('token'),
+        }
+        })
+        .then((response) => {
+            return response.data;
+        })
+        .catch((err) => {
+            return err;
+        });
+       
+};
+
 
 export function deletePet(petId) {
     var axios = require('axios');

@@ -27,26 +27,22 @@ export default function VetQualification() {
       });
   }
 
-  function generateData(responseQualifications) {
-    //debugger
-    const finalData = responseQualifications
-      .map((item) => ({
-        key: item.qualification.id,
-        date: moment(item.clinicalRecord.createdAt).format("DD/MM/YYYY"), //clinicalRecord.createdAt.slice(0, 10),
-        
-        tutorName: item.clinicalRecord.tutorData.person.name,
-        petName: item.clinicalRecord.pet.name,
-        qualification: item.qualification.qualification,
-        observation: item.qualification.observation_qa,
-      }))
-      .filter(
-        (record) => record.qualification != null || record.observation != null
-      ); // Filtrar registros con ambos valores en null
-
-    console.log("Final Data:", finalData); // Debug: Muestra el finalData
-    setData(finalData);
-    calculateAverage(finalData); // Calcular promedio después de setear los datos
-  }
+    function generateData(responseQualifications) {
+        //debugger
+        const finalData = responseQualifications?.map(item => ({
+                key: item.qualification.id,
+                date: item.qualification.updatedAt.slice(0, 10),
+                tutorName: item.clinicalRecord.tutorData.person.name,
+                petName: item.clinicalRecord.pet.name,
+                qualification: item.qualification.qualification,
+                observation: item.qualification.observation_qa,
+            }))
+            .filter(record => record.qualification != null || record.observation != null); // Filtrar registros con ambos valores en null
+    
+        console.log("Final Data:", finalData); // Debug: Muestra el finalData
+        setData(finalData);
+        calculateAverage(finalData); // Calcular promedio después de setear los datos
+    }
 
   function calculateAverage(data) {
     const totalQualifications = data.reduce((sum, record) => {

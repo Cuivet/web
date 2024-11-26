@@ -12,6 +12,7 @@ export default function VetQualification() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [averageQualification, setAverageQualification] = useState(0);
+  const [totalQualifications, setTotalQualifications] = useState(0);
   const profile = JSON.parse(sessionStorage.getItem("profile")); // OBTENER PERFIL DEL VET
 
   useEffect(() => {
@@ -60,11 +61,14 @@ export default function VetQualification() {
 
     const average = count > 0 ? totalQualifications / count : 0; // Evitar división por cero
     setAverageQualification(average);
+    setTotalQualifications(count);
   }
 
   useEffect(() => {
     console.log("Average Qualification:", averageQualification); // Debug: Muestra el promedio
   }, [averageQualification]);
+
+
 
   const columnsComplete = [
     {
@@ -95,42 +99,46 @@ export default function VetQualification() {
       title: "Calificación",
       dataIndex: "qualification",
       key: "qualification",
-      render: (_, record) =>
-        record.qualification != null ? (
-          <StarSelector qualification={record.qualification} disabled />
-        ) : null,
+      render: (_, record) => (
+        <StarSelector
+          qualification={record.qualification}
+          disabled={true} // Siempre deshabilitado, sin posibilidad de edición
+          // No se pasa `onChange` porque no se debe permitir cambios
+        />
+      ),
     },
     {
       title: "Observación",
       dataIndex: "observation",
       key: "observation",
       fixed: "center",
-      render: (_, record) =>
-        record.observation != null ? <span>{record.observation}</span> : null,
-    },
+      render: (_, record) => <span>{record.observation}</span>, // Solo muestra el valor de la observación
+    }
+    
   ];
 
   return (
     <>
-      <Row align={"middle"}>
+        <Row align={"middle"}>
         <Col span={24} style={{ display: "flex", alignItems: "center" }}>
           <Title className="appTitle" style={{ marginBottom: 0 }}>
             Calificaciones Obtenidas{" "}
           </Title>
           <StarTwoTone
+            
+            title="Promedio de calificaciones"
             style={{ fontSize: "28px", marginLeft: "2%" }}
             twoToneColor="rgba(88, 9, 114, 0.329)"
           />
-          <span style={{ marginLeft: "1%", fontSize: "28px" }}>
-            {averageQualification.toFixed(2)}
+          <span style={{ marginLeft: "1%", fontSize: "25px" }}>
+            {averageQualification.toFixed(2)} 
+          </span>
+          <span style={{ marginLeft: "1%", fontSize: "15px" }}>
+            ({totalQualifications} calificaciones)
           </span>
         </Col>
       </Row>
-      {/* <div className="qualifications__average" style={{ marginLeft: '40px', display: 'flex', alignItems: 'center' }}>
-            
-            </div>
-        </div>
-            <div className="divider"></div> */}
+
       <Divider />
       <Table columns={columnsComplete} dataSource={data} loading={isLoading} />
     </>

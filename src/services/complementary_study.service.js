@@ -34,3 +34,22 @@ export function getComplementaryStudyById(studyId) {
       .then((response) => response)
       .catch((err) => err);
   }
+
+  export function createComplementaryStudy(data) {
+    return axios({
+      method: "post",
+      url: `${basePATH}/complementary-study`, // Sin ID porque es una creación
+      data: data,
+      timeout: 1000 * 5, // 5 segundos
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        token: sessionStorage.getItem("token"),
+      },
+    })
+      .then((response) => response)
+      .catch((err) => {
+        console.error("Error al crear el Complementary Study:", err);
+        return null;
+      });
+  }

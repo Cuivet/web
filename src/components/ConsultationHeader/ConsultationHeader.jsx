@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Row,  Typography, List, Input } from "antd";
+import { Row, Typography, List, Input } from "antd";
 import { FormOutlined, LinkOutlined } from "@ant-design/icons";
+import { encodeId } from "../../utils/idEncoder";
 
-const {  Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 export default function ConsultationHeader(props) {
   const { id, tutorName, reasonConsultation, cStudies } = props;
   const [studies, setStudies] = useState(false);
-
-  const study = cStudies || "";
   const [complementaryStudies, setComplementaryStudies] = useState(
-    JSON.parse(sessionStorage.getItem("complementaryStudies")) || study
+    JSON.parse(sessionStorage.getItem("complementaryStudies")) || cStudies || []
   );
   const [urls, setUrls] = useState([]);
 
   const updateComplementaryStudies = () => {
-    setComplementaryStudies(
-      JSON.parse(sessionStorage.getItem("complementaryStudies")) || null
-    );
+    const storedStudies = JSON.parse(sessionStorage.getItem("complementaryStudies"));
+    setComplementaryStudies(storedStudies || []);
   };
 
   useEffect(() => {
@@ -55,15 +53,16 @@ export default function ConsultationHeader(props) {
 
   useEffect(() => {
     sessionStorage.setItem("reasonConsultation", JSON.stringify(responses));
-    if (complementaryStudies !== null) {
-      if (complementaryStudies.length > 0) {
-        const updatedUrls = complementaryStudies.map((item) =>
-          item.url ? item.url : "404: not-found"
-        );
-        console.log(updatedUrls);
-        setUrls(updatedUrls);
-        setStudies(true);
-      }
+
+    if (complementaryStudies.length > 0) {
+      // Crear las URLs dinámicamente usando el id de cada estudio
+      const updatedUrls = complementaryStudies.map((item) =>
+        `${window.location.origin}/study/${encodeId(item.id)}`  // Asumiendo que el campo `id` existe en cada estudio
+      );
+      setUrls(updatedUrls);
+      setStudies(true);
+    } else {
+      setStudies(false);
     }
   }, [responses, complementaryStudies]);
 
@@ -89,29 +88,33 @@ export default function ConsultationHeader(props) {
           }
         />
       </Row>
-      {studies ? (
+      {studies && urls.length > 0 ? (
         <Paragraph>
           <pre>
-        <List
-          size="small"
-          style={{fontFamily: "Poppins, sans-serif"}}
-          header={"Estudios Complementarios:"}
-          grid={{ gutter: 16, column: 1 }}
-          dataSource={urls}
-          renderItem={(item) => (
-            <List.Item>
-              {item ? (
-                <a href={item}>
-                  <LinkOutlined />
-                  {` ${item}`}
-                </a>
-              ) : null}
-            </List.Item>
-          )}
-        />
-        </pre>
+            <List
+              size="small"
+              style={{ fontFamily: "Poppins, sans-serif" }}
+              header={"Estudios Complementarios:"}
+              grid={{ gutter: 16, column: 1 }}
+              dataSource={urls}
+              renderItem={(item) => (
+                <List.Item>
+                  {item ? (
+                    <a href={item} target="_blank" rel="noopener noreferrer">
+                      <LinkOutlined />
+                      {` ${item}`}
+                    </a>
+                  ) : (
+                    <Typography.Text type="danger">No encontrado</Typography.Text>
+                  )}
+                </List.Item>
+              )}
+            />
+          </pre>
         </Paragraph>
-      ) : null}
+      ) : (
+        <Typography.Text type="secondary">No hay estudios complementarios.</Typography.Text>
+      )}
     </>
   );
 }

@@ -1,14 +1,15 @@
 // Diccionario de codificación predefinido
 const codeMap = {
-    1: "QWL",
-    2: "ERM",
-    3: "TYN",
-    4: "UIN",
-    5: "OPB",
-    6: "ASV",
-    7: "DFC",
-    8: "GHX",
-    9: "JKZ",
+    1: "9WL",
+    2: "E8M",
+    3: "72N",
+    4: "UI6",
+    5: "O5B",
+    6: "4SV",
+    7: "D3C",
+    8: "2HX",
+    9: "J1Z",
+    0: "A0S"
   };
   
   // Función para codificar el número

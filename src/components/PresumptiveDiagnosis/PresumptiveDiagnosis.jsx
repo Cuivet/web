@@ -26,7 +26,6 @@ export default function PresumptiveDiagnosis(props) {
   const { disabled, toggleEdit } = useEditContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [blocked, setBlocked] = useState(true);
-  
 
   const wrapper = {
     sm: { offset: 0, span: 14 },
@@ -48,7 +47,7 @@ export default function PresumptiveDiagnosis(props) {
     JSON.parse(sessionStorage.getItem("presumptiveDiagnosisItems")) || flag
   );
   
-  const study =  props.complementaryStudies || "";
+  const study = props.complementaryStudies || [];
   const [complementaryStudies, setComplementaryStudies] = useState(
     JSON.parse(sessionStorage.getItem("complementaryStudies")) || study
   );
@@ -92,10 +91,10 @@ export default function PresumptiveDiagnosis(props) {
     });
   };
 
-
   const handleAddItem = (item) => {
-    setComplementaryStudies([...complementaryStudies, item]);
+    setComplementaryStudies((prev) => [...prev, item.data.data]);
   };
+
   const handleRemovePresumptiveDiagnosisItem = (id) => {
     setResponses((prevState) => {
       const updatedPresumptiveDiagnosis = { ...prevState };
@@ -103,7 +102,6 @@ export default function PresumptiveDiagnosis(props) {
       return updatedPresumptiveDiagnosis;
     });
   };
-  
   
 
   return (
@@ -121,7 +119,6 @@ export default function PresumptiveDiagnosis(props) {
                 className="studiesButton"
                 shape="circle"
                 size="small"
-                disabled={blocked}
                 icon={<BiotechOutlinedIcon />}
                 onClick={showModal}
               />
@@ -129,7 +126,6 @@ export default function PresumptiveDiagnosis(props) {
           </Typography.Title>
         </Col>
         <Col xs={{ span: 24 }} md={{ span: 10 }}>
-          
           <Form
             // onFinish={register}
             autoComplete="off"

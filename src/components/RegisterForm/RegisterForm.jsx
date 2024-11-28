@@ -195,7 +195,7 @@ export default function RegisterForm(props) {
       file = fileList[0].originFileObj;
     } else {
       setIsRegistering(false);
-      return message.error("No se encontró un archivo válido en fileList.");
+      message.error("No se encontró un archivo válido en fileList.");
     }
 
     const reader = new FileReader();

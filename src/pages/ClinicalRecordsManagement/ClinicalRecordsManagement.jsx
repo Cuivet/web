@@ -61,9 +61,7 @@ export default function ClinicalRecordsManagement() {
   const [drugs, setDrugs] = useState([]);
   const [drugTypes, setDrugTypes] = useState([]);
 
-
   useEffect(() => {
-    
     const fetchData = async () => {
       await raceService.findAll().then((response) => {
         setRaces(response);
@@ -96,12 +94,11 @@ export default function ClinicalRecordsManagement() {
         setTreatmentOptions(response);
       });
       setIsFetchData(true);
-      console.log("Info obtenida" + {species})
+      console.log("Info obtenida" + { species });
     };
 
     fetchData();
   }, []);
-
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -272,47 +269,52 @@ export default function ClinicalRecordsManagement() {
 
   function handleDownloadPDF(petName, clinicalRecordId) {
     // Llama a refreshSpeciesAndRaces antes de generar el enlace del PDF
-    
 
     const currentDate = moment().format("DDMMYY");
     const fileName = `${petName}_Ficha${clinicalRecordId}_${currentDate}.pdf`;
-    const clinicalrecord = clinicalRecordPDF.find(record => record.id === clinicalRecordId);
-    
-    const petRace = races.find((race) => race.id === clinicalrecord.pet.raceId);
-    const petHairColor = hairColors.find((hairColor) => hairColor.id === clinicalrecord.pet.hairColorId);
-    const petHairLenght = hairLengths.find((hairLength) => hairLength.id === clinicalrecord.pet.hairLengthId);
-    const petSize = petSizes.find((petSize) => petSize.id === clinicalrecord.pet.petSizeId);
-    
+    const clinicalrecord = clinicalRecordPDF.find(
+      (record) => record.id === clinicalRecordId
+    );
 
+    const petRace = races.find((race) => race.id === clinicalrecord.pet.raceId);
+    const petHairColor = hairColors.find(
+      (hairColor) => hairColor.id === clinicalrecord.pet.hairColorId
+    );
+    const petHairLenght = hairLengths.find(
+      (hairLength) => hairLength.id === clinicalrecord.pet.hairLengthId
+    );
+    const petSize = petSizes.find(
+      (petSize) => petSize.id === clinicalrecord.pet.petSizeId
+    );
 
     return (
-        <PDFDownloadLink
-            document={
-                <ClinicalRecordExport
-                    petName={petName}
-                    clinicalRecord={clinicalrecord}
-                    questions={questions}
-                    petRace={petRace}
-                    races={races}
-                    species={species}
-                    petHairColor={petHairColor}
-                    petHairLenght={petHairLenght} 
-                    petSize={petSize} // Validar si `petRace` existe
-                    drugs={drugs}
-                    drugTypes = {drugTypes}
-                    treatmentOptions = {treatmentOptions}
-                    selectedTreatmentTypeId= {selectedTreatmentTypeId}
-                />
-            }
-            fileName={fileName}
-            style={{ textDecoration: "none", color: "inherit" }}
-        >
-            <Button shape="circle" size="large" className="margin-right">
-                <FilePdfOutlined />
-            </Button>
-        </PDFDownloadLink>
+      <PDFDownloadLink
+        document={
+          <ClinicalRecordExport
+            petName={petName}
+            clinicalRecord={clinicalrecord}
+            questions={questions}
+            petRace={petRace}
+            races={races}
+            species={species}
+            petHairColor={petHairColor}
+            petHairLenght={petHairLenght}
+            petSize={petSize} // Validar si `petRace` existe
+            drugs={drugs}
+            drugTypes={drugTypes}
+            treatmentOptions={treatmentOptions}
+            selectedTreatmentTypeId={selectedTreatmentTypeId}
+          />
+        }
+        fileName={fileName}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Button shape="circle" size="large" className="margin-right">
+          <FilePdfOutlined />
+        </Button>
+      </PDFDownloadLink>
     );
-}
+  }
 
   const columns = [
     {
@@ -381,7 +383,8 @@ export default function ClinicalRecordsManagement() {
       render: (_, { indexIdForButton, progressObject, petName, record }) => (
         <>
           <Tooltip placement="top" title="Descargar PDF">
-            {handleDownloadPDF(petName, indexIdForButton)} {/* Llama a la función aquí */}
+            {handleDownloadPDF(petName, indexIdForButton)}{" "}
+            {/* Llama a la función aquí */}
           </Tooltip>
           {progressObject.percentage === 100 ? (
             <Tooltip placement="top" title="Ver la Ficha Clínica">

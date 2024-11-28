@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { Modal, Row, Col, Form, Input, Select, Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import { Modal, Row, Col, Form, Input, Select, Typography, message } from "antd";
 import { complementaryStudiyTypeService } from "../../services/complementary_study_type.service";
-import { useEffect } from "react";
+import { createComplementaryStudy } from "../../services/complementary_study.service";
 
 const { Title } = Typography;
 
 export default function ComplementaryStudiesModal(prop) {
-  const { isModalOpen, handleCancel, onAddStudy, presumptiveDiagnosisId } =
-    prop;
+  const { isModalOpen, handleCancel, onAddStudy, presumptiveDiagnosisId } = prop;
   const [studies, setStudies] = useState([]);
+  const [complementaryStudyTypeId, setComplementaryStudyTypeId] = useState("");
+  const [observation, setObservation] = useState("");
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,28 +34,38 @@ export default function ComplementaryStudiesModal(prop) {
     return options;
   };
 
-  const [complementaryStudyTypeId, setComplementaryStudyTypeId] = useState("");
-  const [observation, setObservation] = useState("");
-  const [count, setCount] = useState(0);
-  const [form] = Form.useForm();
-
-  const handleAddStudy = () => {
+  const handleAddStudy = async () => {
     if (complementaryStudyTypeId) {
-      onAddStudy({
+      const newStudy = {
         complementaryStudyTypeId,
         observation,
-        presumptiveDiagnosisId: presumptiveDiagnosisId, //revisar bien como lo vamos a modificar
-        id: count,
-        url: "www.cuivet.com/studies-request" + complementaryStudyTypeId,
-      });
-      let studies =
-        JSON.parse(sessionStorage.getItem("complementaryStudies")) || [];
-      setCount(studies.length + 1);
-      setComplementaryStudyTypeId("");
-      setObservation("");
-      handleCancel();
+        presumptiveDiagnosisId,
+        url: null,
+      };
+  
+      try {
+        // Crear el estudio complementario en el backend
+        const createdStudy = await createComplementaryStudy(newStudy);
+  
+        // Notificar éxito
+        message.success("Estudio complementario creado exitosamente");
+  
+        // Enviar el registro creado al componente padre
+        onAddStudy(createdStudy);
+  
+        // Limpiar campos y cerrar modal
+        setComplementaryStudyTypeId("");
+        setObservation("");
+        form.resetFields();
+        handleCancel();
+      } catch (error) {
+        console.error(error);
+        message.error("Error al crear el estudio complementario");
+      }
+    } else {
+      message.warning("Por favor seleccione un tipo de estudio");
     }
-  };
+  };  
 
   return (
     <Modal
@@ -61,7 +73,6 @@ export default function ComplementaryStudiesModal(prop) {
       visible={isModalOpen}
       onOk={() => {
         form.validateFields().then(() => {
-          form.resetFields();
           handleAddStudy();
         });
       }}
@@ -86,19 +97,15 @@ export default function ComplementaryStudiesModal(prop) {
               <Select
                 placeholder={"Estudios"}
                 allowClear
-                // mode="multiple"
-                // labelInValue
                 showSearch
                 name={"complementaryStudyTypeId"}
                 className="select-before full-width"
                 style={{ width: "100%" }}
-                // value={null}
                 onChange={(value) => setComplementaryStudyTypeId(value)}
                 options={setOptions(studies)}
-                // maxTagCount={'responsive'}
                 optionFilterProp="children"
                 filterOption={(input, option) =>
-                  (option?.label ?? "").includes(input)
+                  (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                 }
                 filterSort={(optionA, optionB) =>
                   (optionA?.label ?? "")
@@ -119,9 +126,8 @@ export default function ComplementaryStudiesModal(prop) {
                 showCount
                 allowClear
                 maxLength={500}
-                defaultValue={""}
                 value={observation}
-                placeholder="Ingrese observacion..."
+                placeholder="Ingrese observación..."
                 autoSize={{
                   minRows: 3,
                   maxRows: 5,

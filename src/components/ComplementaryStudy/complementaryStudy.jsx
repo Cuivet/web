@@ -148,8 +148,7 @@ const ComplementaryStudy = () => {
   return (
     <div style={{ padding: '20px' }}>
       <h2>Pedido de estudio N: {id}</h2>
-      <h3>Nombre: {complementaryStudy.name}</h3>
-      <p>Descripción: {complementaryStudy.description}</p>
+      <p>Descripción: {complementaryStudy.observation}</p>
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}

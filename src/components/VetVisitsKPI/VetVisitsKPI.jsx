@@ -125,13 +125,14 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
 
       <div style={cardStyle}>
         {Object.keys(visits).length === 0 ? (
-          <p>No tienes visitas registradas.</p>
+          <p>No tenes visitas registradas.</p>
         ) : (
           <ul style={listStyle}>
             {Object.entries(visits).map(
               ([key, { visits, vetName, petName, clinicName, lastVisitDate }]) => (
                 <li key={key} style={listItemStyle}>
-                  Clínica: <strong>{clinicName} - {vetName}</strong>
+                  Clínica: <strong>{clinicName} </strong> <br />
+                  Veterinario/a: <strong>{vetName}</strong>
                   <br />
                   Mascota: <strong>{petName}</strong> - Cantidad de visitas:{" "}
                   <strong>{visits}</strong>

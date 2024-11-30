@@ -20,6 +20,8 @@ import { getAllByRegentId } from "../../services/vet.service";
 import MyContext from "../../MyContext";
 import MedicationOutlinedIcon from "@mui/icons-material/MedicationOutlined";
 import BarChartIcon from '@mui/icons-material/BarChart';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
 
 export default function MenuSider(props) {
   const { menuCollapsed } = props;

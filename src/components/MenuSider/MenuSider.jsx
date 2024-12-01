@@ -19,6 +19,9 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import { getAllByRegentId } from "../../services/vet.service";
 import MyContext from "../../MyContext";
 import MedicationOutlinedIcon from "@mui/icons-material/MedicationOutlined";
+import BarChartIcon from '@mui/icons-material/BarChart';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
 
 export default function MenuSider(props) {
   const { menuCollapsed } = props;
@@ -123,13 +126,21 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Veterinarios Asociados </span>
               </Link>
             </Menu.Item>
+
             <Menu.Item key="qualifications">
-              <Link to={"/qualification"} className="admin-sider__item">
-                <StarOutlined />
-                {/* <Icon component={''}><StarBorderIcon fontSize="small" /></Icon> */}
-                <span className="nav-text"> Calificaciones </span>
+              <Link to={"/qualification"} className='admin-sider__item'>                      
+                <Icon component={''}><StarBorderIcon fontSize="small" /></Icon>
+                  <span className="nav-text"> Calificaciones </span>
               </Link>
             </Menu.Item>
+
+            <Menu.Item key="Reports">
+            <Link to={"/reports"} className='admin-sider__item'>            
+              <Icon component={''}><BarChartIcon fontSize="small" /></Icon>
+                  <span className="nav-text"> Reportes </span>
+            </Link>
+        </Menu.Item>
+            
           </>
         ) : null}
 
@@ -143,6 +154,7 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Ficha Clínica </span>
               </Link>
             </Menu.Item>
+
             <Menu.Item key="Vaccination" hidden={veterinaryWithNoVets}>
               <Link to={"/vaccination"} className="admin-sider__item">
                 <Icon>
@@ -205,6 +217,7 @@ export default function MenuSider(props) {
                   <span className="nav-text"> Gestión de Veterinarios </span>
                 </Link>
               </Menu.Item>
+
             ) : null}
 
             <Menu.Item
@@ -227,6 +240,13 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Clínicas Asociadas </span>
               </Link>
             </Menu.Item>
+                                
+            <Menu.Item key="Reports">
+              <Link to={"/reports"} className='admin-sider__item'>            
+                <Icon component={''}><BarChartIcon fontSize="small" /></Icon>
+                    <span className="nav-text"> Reportes </span>
+              </Link>
+          </Menu.Item>
           </>
         ) : null}
 
@@ -252,8 +272,10 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Mis Clínicas </span>
               </Link>
             </Menu.Item>
+            
           </>
         ) : null}
+
 
         <Menu.Item key="map">
           <Link to={"/vetsMap"} className="admin-sider__item">

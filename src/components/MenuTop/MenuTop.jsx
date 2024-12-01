@@ -77,7 +77,7 @@ export default function MenuTop(props) {
   };
 
   useEffect(() => {
-    if (veterinariasAsociadas.length > 0) {
+    if (veterinariasAsociadas?.length > 0) {
       const defaultVet = veterinariasAsociadas[0];
       setSelectedVetId(defaultVet.vetData.vet.id);
       const defaultOption = {

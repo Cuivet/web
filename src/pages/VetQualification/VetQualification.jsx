@@ -118,6 +118,18 @@ export default function VetQualification() {
       fixed: "center",
       render: (_, record) => <span>{record.observation}</span>, // Solo muestra el valor de la observación
     }
+
+    function generateData(responseQualifications) {
+        //debugger
+        const finalData = responseQualifications?.map(item => ({
+                key: item.qualification.id,
+                date: item.qualification.updatedAt.slice(0, 10),
+                tutorName: item.clinicalRecord.tutorData.person.name,
+                petName: item.clinicalRecord.pet.name,
+                qualification: item.qualification.qualification,
+                observation: item.qualification.observation_qa,
+            }))
+            .filter(record => record.qualification != null || record.observation != null); // Filtrar registros con ambos valores en null
     
   ];
 

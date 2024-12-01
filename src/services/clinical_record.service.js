@@ -8,6 +8,7 @@ export var clinicalRecordService = {
     findAllByTutor: findAllByTutor,
     findAllByTutorId: findAllByTutorId,
     findAllByPet: findAllByPet,
+     
 }
 
 async function findOneById(id) {
@@ -123,3 +124,4 @@ async function findAllByPet(petId) {
           return response.data;
       })
 };
+

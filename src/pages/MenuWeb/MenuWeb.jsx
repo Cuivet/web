@@ -42,23 +42,23 @@ export default function MenuWeb() {
 
   const veterinary = {
     module: veterinaryWithNoVets
-      ? ["Clinicas Veterinarias", "Mapa"]
+      ? ["Clínicas Veterinarias", "Mapa"]
       : [
           "Ficha Clínica",
-          "Vacunacion",
+          "Vacunación",
           "Estudios Complementarios",
-          "Historial Clinico",
+          "Historial Clínico",
           "Calificaciones",
-          "Gestion de Veterinarios",
+          "Gestión de Veterinarios",
           "Mis Pacientes",
-          "Clinicas Veterinarias",
+          "Clínicas Veterinarias",
           "Mapa",
           "Reportes",
         ],
     description: veterinaryWithNoVets
       ? [
           "Visualiza las clínicas veterinarias asociadas.",
-          "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
+          "Encontra la ubicación de clínicas veterinarias en un mapa interactivo.",
         ]
       : [
           "Inicia la consulta médica de cada Mascota, registrando sus datos clínicos.",
@@ -66,10 +66,10 @@ export default function MenuWeb() {
           "Visualiza los estudios complementarios realizados a las Mascotas.",
           "Accede a los historiales clinicos de las Mascotas, facilitando un seguimiento exhaustivo de su evolución.",
           "Consulta las valoraciones que han recibido tus servicios.",
-          "Gestiona a los veterinarios asociados a la clínica.",
+          "Gestiona los veterinarios asociados a la clínica.",
           "Visualiza y accede rápidamente a la lista de pacientes asociados.",
           "Visualiza las clínicas veterinarias asociadas.",
-          "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
+          "Encontra la ubicación de clínicas veterinarias en un mapa interactivo.",
           "Consulta y genera reportes sobre el rendimiento y la actividad de los diferentes servicios del sistema.",
         ],
     disabled: [false, true],
@@ -118,7 +118,7 @@ export default function MenuWeb() {
       "Gestiona y accede rápidamente a la lista de Mascotas.",
       "Gestiona a los veterinarios asociados.",
       "Registrá valoraciones a tus Veterinarios asociados",
-      "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
+      "Encontra la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
     img: [historial, estudios, mascota, veterinarios, calificacion, mapa],
@@ -137,7 +137,7 @@ export default function MenuWeb() {
     description: [
       "Gestiona a los veterinarios asociados a tus clínicas.",
       "Gestiona tus clínicas veterinarias.",
-      "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
+      "Encontra la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
     img: [veterinarios, clinica, mapa],
@@ -149,7 +149,7 @@ export default function MenuWeb() {
     description: [
       "Visualiza los datos los usuarios registrados.",
       "Visualizá los datos de las clinicas registradas.",
-      "Encuentra la ubicación de clínicas veterinarias en un mapa interactivo.",
+      "Encontra la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
     img: [user, clinica, mapa],

@@ -42,14 +42,20 @@ export default function ClinicalRecordMenu() {
     setIsSearchingTutorData(true);
     getTutorDataByDni(tutorDni)
       .then((res) => {
+        // console.log(res);
         setIsSearchingTutorData(false);
         getAllByTutorId(res.tutor.id).then((pets) => {
+          console.log(pets);
           const petsArray = pets
             .filter(
               (item) =>
-                item.veterinaryData.veterinary.id === profile.veterinary.id
+                // esta condicion deja afuera a los coveterinarios ahora
+                item.veterinaryData.veterinary.id === profile.veterinary.id ||
+                item.vetData.id === selectedVet.value
+              // console.log(selectedVet)
             )
             .map((item) => item.pet);
+          console.log(petsArray);
           petsArray.length === 0
             ? setSearchedTutorData(null)
             : setSearchedTutorData(res);

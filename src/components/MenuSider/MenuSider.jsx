@@ -125,6 +125,7 @@ export default function MenuSider(props) {
               </Link>
             </Menu.Item>
 
+
             <Menu.Item key="qualifications">
               <Link to={"/qualification"} className="admin-sider__item">
                   <StarOutlined />
@@ -153,6 +154,7 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Ficha Clínica </span>
               </Link>
             </Menu.Item>
+
 
             <Menu.Item key="Vaccination" hidden={veterinaryWithNoVets}>
               <Link to={"/vaccination"} className="admin-sider__item">
@@ -216,6 +218,7 @@ export default function MenuSider(props) {
                   <span className="nav-text"> Gestión de Veterinarios </span>
                 </Link>
               </Menu.Item>
+
             ) : null}
 
             <Menu.Item
@@ -272,8 +275,10 @@ export default function MenuSider(props) {
                 <span className="nav-text"> Mis Clínicas </span>
               </Link>
             </Menu.Item>
+            
           </>
         ) : null}
+
 
         <Menu.Item key="map">
           <Link to={"/vetsMap"} className="admin-sider__item">

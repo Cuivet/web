@@ -11,80 +11,98 @@ ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 const RingChart = ({ veterinaryId, filters }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [title, setTitle] = useState("Porcentaje de mascotas asociadas");
+  const [noDataMessage, setNoDataMessage] = useState(""); // Nuevo estado para manejar el mensaje
 
   const fetchData = async () => {
     try {
       setLoading(true);
+      setNoDataMessage(""); // Resetear el mensaje de error al cargar nuevos datos
 
       const { fromDate, toDate, pet, specie } = filters || {};
 
       // Obtener las asociaciones de mascotas asociadas al veterinaryId
       const petAssociations = await getAllByVeterinaryId(veterinaryId);
-      console.log("Datos obtenidos del endpoint:", petAssociations);
-
       let filteredAssociations = petAssociations;
 
-      // Aplicar filtros por fecha si están definidos
+      // Actualizar título dinámico según los filtros de fecha
+      let dynamicTitle = "Porcentaje de mascotas asociadas";
+      const currentYear = new Date().getFullYear();
+
+      if (fromDate && toDate) {
+        const fromDateString = fromDate.format("DD/MM/YYYY");
+        const toDateString = toDate.format("DD/MM/YYYY");
+        dynamicTitle = `Porcentaje de mascotas asociadas desde ${fromDateString} hasta ${toDateString}`;
+      } else if (fromDate) {
+        const fromDateString = fromDate.format("DD/MM/YYYY");
+        dynamicTitle = `Porcentaje de mascotas asociadas desde ${fromDateString} hasta hoy`;
+      } else if (toDate) {
+        const toDateString = toDate.format("DD/MM/YYYY");
+        dynamicTitle = `Porcentaje de mascotas asociadas desde la fecha de inicio hasta ${toDateString}`;
+      } else {
+        dynamicTitle = `Porcentaje de mascotas asociadas en ${currentYear}`;
+      }
+      setTitle(dynamicTitle);
+
+      // Aplicar filtros por fecha
       if (fromDate && toDate) {
         filteredAssociations = filteredAssociations.filter(association => {
-          const associationDate = new Date(association.createdAt); // Compara con createdAt de la asociación
-          console.log(`Comparando fechas: ${associationDate} con ${fromDate.toDate()} y ${toDate.toDate()}`);
+          const associationDate = new Date(association.associationDate);
           return associationDate >= fromDate.toDate() && associationDate <= toDate.toDate();
         });
+      } else if (fromDate) {
+        filteredAssociations = filteredAssociations.filter(association => {
+          const associationDate = new Date(association.associationDate);
+          return associationDate >= fromDate.toDate();
+        });
+      } else if (toDate) {
+        filteredAssociations = filteredAssociations.filter(association => {
+          const associationDate = new Date(association.associationDate);
+          return associationDate <= toDate.toDate();
+        });
       }
+
 
       // Filtrar por nombre de mascota
       if (pet && pet.length > 0) {
         filteredAssociations = filteredAssociations.filter(association => pet.includes(association.pet.name));
-        console.log("Filtrando por mascota(s):", pet, filteredAssociations);
       }
 
-      // Paso 1: Extraer los raceId de las mascotas filtradas
+      // Paso 1: Obtener los raceIds
       const raceIds = filteredAssociations.map(association => association.pet.raceId);
-      console.log("Race IDs extraídos:", raceIds);
 
-      // Paso 2: Usar los raceIds para traer las especies
-      const speciesDataPromises = raceIds.map(raceId => raceService.findByRaceId(raceId)); // Llamamos a findByRaceId para cada raceId
-      const speciesDataResults = await Promise.all(speciesDataPromises); // Esperamos a que todas las respuestas lleguen
-      console.log("Datos de especies obtenidos:", speciesDataResults);
+      // Paso 2: Obtener los specieIds
+      const speciesDataPromises = raceIds.map(raceId => raceService.findByRaceId(raceId));
+      const speciesDataResults = await Promise.all(speciesDataPromises);
 
-      // Paso 3: Crear un array con los specieId correspondientes a cada raceId
       const specieIdsFromAssociations = speciesDataResults
         .map((speciesData, index) => {
-          // Extraemos el specieId de la especie correspondiente a cada raza
           const species = speciesData.find(species => species.id === raceIds[index]);
           return species ? species.specieId : null;
         })
-        .filter(specieId => specieId !== null); // Filtrar los nulls si es que hubo alguno
+        .filter(specieId => specieId !== null);
 
-      console.log("Specie IDs de las asociaciones:", specieIdsFromAssociations);
-
-      // Filtrar por especie (ID) usando los specieIds extraídos
       let filteredSpecieIds = specieIdsFromAssociations;
 
+      // Filtrar por especie seleccionada
       if (specie && specie.length > 0) {
-        // Filtrar los specieIds de las asociaciones para que solo queden los que coincidan con los seleccionados
         filteredSpecieIds = specieIdsFromAssociations.filter(specieId => specie.includes(specieId));
-        console.log("Specie IDs después de aplicar el filtro de especie(s):", filteredSpecieIds);
       }
 
-      // Si no hay specieIds después de aplicar el filtro, usamos todos los specieIds extraídos
+      // Manejo de mensaje de datos faltantes
       if (filteredSpecieIds.length === 0) {
-        filteredSpecieIds = specieIdsFromAssociations;
+        setNoDataMessage("No encontramos especies para el filtro seleccionado");
+        setData(null); // Asegurarse de que no haya datos en el gráfico
+        return; // Salir de la función
       }
 
-      console.log("Datos filtrados (por especie):", filteredSpecieIds);
-
-      // Paso 4: Usar los specieIds filtrados para contar las especies y calcular el porcentaje
-      const speciesList = await specieService.findAll(); // Obtener lista completa de especies
+      const speciesList = await specieService.findAll();
       const speciesNames = filteredSpecieIds.map(specieId => {
         const specie = speciesList.find(specie => specie.id === specieId);
         return specie ? specie.name : null;
-      }).filter(name => name !== null); // Filtramos los nulls
+      }).filter(name => name !== null);
 
-      // Contar las especies filtradas
       const speciesCount = {};
-
       speciesNames.forEach(specieName => {
         if (!speciesCount[specieName]) {
           speciesCount[specieName] = 0;
@@ -92,19 +110,14 @@ const RingChart = ({ veterinaryId, filters }) => {
         speciesCount[specieName]++;
       });
 
-      // Calcular el porcentaje de cada especie
       const totalSpecies = speciesNames.length;
-      const speciesPercentage = Object.keys(speciesCount).map(specieName => {
-        const count = speciesCount[specieName];
-        return {
-          name: specieName,
-          percentage: ((count / totalSpecies) * 100).toFixed(2),
-        };
-      });
+      const speciesPercentage = Object.keys(speciesCount).map(specieName => ({
+        name: specieName,
+        percentage: ((speciesCount[specieName] / totalSpecies) * 100).toFixed(2),
+      }));
 
-      // Preparamos los datos para el gráfico
-      const labels = speciesPercentage.map(specie => specie.name); // Las claves serán los nombres de las especies
-      const values = speciesPercentage.map(specie => specie.percentage); // Los valores serán los porcentajes
+      const labels = speciesPercentage.map(specie => specie.name);
+      const values = speciesPercentage.map(specie => specie.percentage);
 
       const chartData = {
         labels,
@@ -112,17 +125,17 @@ const RingChart = ({ veterinaryId, filters }) => {
           {
             data: values,
             backgroundColor: [
-              '#5b2569', '#e9c4f2', '#ff69b4', '#ffb6c1', '#40e0d0', '#afeeee',
+              '#b68dca', '#e9c4f2', '#9253ab', '#ffb6c1','#f4a0c2', '#7fc3d4', '#40e0d0', '#afeeee','#a8d8e7',
             ],
             borderColor: [
-              '#5b2569', '#e9c4f2', '#ff69b4', '#ffb6c1', '#40e0d0', '#afeeee',
+              '#b68dca', '#e9c4f2', '#9253ab', '#ffb6c1', '#f4a0c2', '#7fc3d4', '#40e0d0', '#afeeee','#a8d8e7',
             ],
             borderWidth: 1,
           },
         ],
       };
 
-      setData(chartData); // Establecer los datos para el gráfico
+      setData(chartData);
     } catch (error) {
       console.error("Error al obtener datos para el gráfico:", error);
     } finally {
@@ -132,40 +145,45 @@ const RingChart = ({ veterinaryId, filters }) => {
 
   useEffect(() => {
     fetchData();
-  }, [veterinaryId, filters]); // Re-render cuando los filtros cambian
+  }, [veterinaryId, filters]);
 
   const options = {
     responsive: true,
     plugins: {
-      legend: {
-        display: false, // Oculta la leyenda
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.label}: ${context.raw}%`; // Corregido
+            return `${context.label}: ${context.raw}%`;
           },
         },
       },
       datalabels: {
         color: 'black',
-        font: {
-          weight: 'bold',
-          size: 12,
-        },
+        font: { weight: 'bold', size: 12 },
         formatter: (value, context) => {
           const name = context.chart.data.labels[context.dataIndex];
-          return `${name}s\n${value}%`; // Corregido
+          return `${name}s\n${value}%`;
         },
       },
     },
   };
 
   return (
-    <div style={{ width: '60%', height: '60%', marginLeft: '50px' }}>
-      {loading ? <p>Cargando...</p> : <Doughnut data={data} options={options} />}
+    <div style={{ width: '65%', height: '70%', marginLeft: '50px' }}>
+      <h1 style={{ fontSize: '18px', fontWeight: 'bold', textAlign: 'center', color: '#333' }}>
+        {title}
+      </h1>
+      {loading ? (
+        <p>Cargando...</p>
+      ) : noDataMessage ? (
+        <p style={{ color: 'black', textAlign: 'center' }}>{noDataMessage}</p>
+      ) : (
+        <Doughnut data={data} options={options} />
+      )}
     </div>
   );
 };
 
 export default RingChart;
+

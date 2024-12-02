@@ -23,6 +23,7 @@ import { specieService } from "../../services/specie.service";
 import { getPetsByTutorId } from "../../services/pet.service";
 import { getTutorDataByDni } from "../../services/tutor.service";
 
+
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -276,8 +277,6 @@ function Reports() {
           return (
             <>
               <Col xs={{ span: 24 }} lg={{ span: 8 }}>
-                <h1 style={{ fontSize: '18px', fontWeight: 'bold', textAlign: 'center', color: '#333' }}> Porcentaje total de mascotas atendidas
-                </h1>
                 <div style={chartStyle}>
                 <RingChart
                 veterinaryId={profile.veterinary.id} 

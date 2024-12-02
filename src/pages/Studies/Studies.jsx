@@ -197,44 +197,6 @@ export default function Studies() {
           </Col>
         )}
       </Row>
-      <Divider orientation="left">Filtros</Divider>
-      <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
-          <Input placeholder="Numero de estudio" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 6 }}>
-          <DatePicker
-            locale={locale}
-            disabledDate={disabledDate}
-            name="date"
-            placeholder="Fecha de estudio"
-            className="appDatePicker"
-            format={"DD/MM/yyyy"}
-          />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 7 }}>
-          <Input placeholder="Mascota" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 7 }}>
-          <Input placeholder="Veterinario" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 12 }}>
-          <Input placeholder="Laboratorio" />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 12 }} md={{ span: 12 }}>
-          <Select
-            placeholder="Estudios"
-            showSearch
-            mode="multiple"
-            className="select-before full-width"
-          >
-            <Option value="1">Radiografía</Option>
-            <Option value="2">Rayos X</Option>
-            <Option value="3">Particular</Option>
-            <Option value="4">Ecografía</Option>
-          </Select>
-        </Col>
-      </Row>
       <Divider orientation="left"></Divider>
       <Table
         columns={columns}

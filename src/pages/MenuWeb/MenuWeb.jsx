@@ -42,16 +42,16 @@ export default function MenuWeb() {
 
   const veterinary = {
     module: veterinaryWithNoVets
-      ? ["Clinicas Veterinarias", "Mapa"]
+      ? ["Clínicas Veterinarias", "Mapa"]
       : [
           "Ficha Clínica",
-          "Vacunacion",
+          "Vacunación",
           "Estudios Complementarios",
-          "Historial Clinico",
+          "Historial Clínico",
           "Calificaciones",
-          "Gestion de Veterinarios",
+          "Gestión de Veterinarios",
           "Mis Pacientes",
-          "Clinicas Veterinarias",
+          "Clínicas Veterinarias",
           "Mapa",
           "Reportes",
         ],

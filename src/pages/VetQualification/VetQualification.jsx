@@ -114,7 +114,6 @@ export default function VetQualification() {
       fixed: "center",
       render: (_, record) => <span>{record.observation}</span>, // Solo muestra el valor de la observación
     }
-    
   ];
 
   return (

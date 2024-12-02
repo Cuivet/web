@@ -32,7 +32,7 @@ export default function VetQualification() {
         //debugger
         const finalData = responseQualifications?.map(item => ({
                 key: item.qualification.id,
-                date: item.qualification.updatedAt.slice(0, 10),
+                date: moment(item.clinicalRecord.updatedAt).format("DD/MM/YYYY"),
                 tutorName: item.clinicalRecord.tutorData.person.name,
                 petName: item.clinicalRecord.pet.name,
                 qualification: item.qualification.qualification,

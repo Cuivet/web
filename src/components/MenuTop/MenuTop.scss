@@ -20,6 +20,11 @@
       padding: 0 10px;
     }
   }
+  &__center {
+    @media (max-width: $media-breackpoint-up-sm) {
+      display: none!important;
+    }
+  }
   &__right {
     position: absolute;
     right: 0;
@@ -37,6 +42,10 @@
     &-label {
       margin-right: 8px; /* Ajusta el margen según sea necesario */
       font-weight: bold;
+      
+      @media (max-width: $media-breackpoint-up-sm) {
+        display: none!important;
+      }
     }
     &__right {
       position: absolute;

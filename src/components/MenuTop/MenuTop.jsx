@@ -22,14 +22,14 @@ export default function MenuTop(props) {
   const [vetsLoaded, setVetsLoaded] = useState(false);
   const [selectedVetId, setSelectedVetId] = useState(undefined);
 
-  const veterinariaParticular = {
-    vetData: {
-      vet: {
-        id: null,
-        name: "Atención particular",
-      },
-    },
-  };
+  // const veterinariaParticular = {
+  //   vetData: {
+  //     vet: {
+  //       id: null,
+  //       name: "Atención particular",
+  //     },
+  //   },
+  // };
 
   useEffect(() => {
     if (profile.veterinary != null) {

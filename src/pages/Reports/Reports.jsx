@@ -127,11 +127,13 @@ function Reports() {
     return current && current > moment().endOf("day");
   };
 
+  
+
   const renderFilters = () => {
     if (profile.veterinary) {
       return (
         <>
-          <Col className="gutter-row" xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
             <Select
               placeholder="Especie"
               showSearch
@@ -148,7 +150,7 @@ function Reports() {
             </Select>
           </Col>
 
-          <Col className="gutter-row" xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
             <DatePicker
               locale={locale}
               disabledDate={disabledDate}
@@ -161,7 +163,7 @@ function Reports() {
             />
           </Col>
 
-          <Col className="gutter-row" xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
             <DatePicker
               locale={locale}
               disabledDate={disabledDate}
@@ -175,7 +177,7 @@ function Reports() {
           </Col>
 
           {/* Input de DNI del Tutor */}
-          <Col xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col xs={{ span: 24 }} md={{ span: 4 }}>
             <Input
               placeholder="Ingrese DNI del Tutor"
               value={dni}
@@ -197,7 +199,7 @@ function Reports() {
           </Col>
 
           {/* Filtro de Mascota (habilitado si el DNI es válido) */}
-          <Col xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col xs={{ span: 24 }} md={{ span: 4 }}>
             <Select
               placeholder="Seleccione Mascota"
               showSearch
@@ -220,7 +222,7 @@ function Reports() {
     } else if (profile.tutor) {
       return (
         <>
-          <Col className="gutter-row" xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
             <DatePicker
               locale={locale}
               disabledDate={disabledDate}
@@ -232,7 +234,7 @@ function Reports() {
               onChange={setSelectedFromDate}
             />
           </Col>
-          <Col className="gutter-row" xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
             <DatePicker
               locale={locale}
               disabledDate={disabledDate}
@@ -244,7 +246,7 @@ function Reports() {
               onChange={setSelectedToDate}
             />
           </Col>
-          <Col className="gutter-row" xs={{ span: 4 }} md={{ span: 4 }}>
+          <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 4 }}>
             <Select
               placeholder="Mascota"
               showSearch

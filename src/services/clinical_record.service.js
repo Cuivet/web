@@ -8,6 +8,7 @@ export var clinicalRecordService = {
     findAllByTutor: findAllByTutor,
     findAllByTutorId: findAllByTutorId,
     findAllByPet: findAllByPet,
+    deleteClinicalRecord: deleteClinicalRecord,
      
 }
 
@@ -125,3 +126,17 @@ async function findAllByPet(petId) {
       })
 };
 
+export function deleteClinicalRecord(id) {
+  var axios = require("axios");
+  return axios({
+    method: "delete",
+    url: `${basePATH}/clinical-record/${id}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  }).then((response) => {
+    return response.data;
+  });
+}

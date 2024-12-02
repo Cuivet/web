@@ -52,8 +52,8 @@ export default function MenuWeb() {
           "Gestión de Veterinarios",
           "Mis Pacientes",
           "Clínicas Veterinarias",
-          "Mapa",
           "Reportes",
+          "Mapa",
         ],
     description: veterinaryWithNoVets
       ? [
@@ -69,8 +69,8 @@ export default function MenuWeb() {
           "Gestioná a los veterinarios asociados a la clínica.",
           "Visualizá y accedé rápidamente a la lista de pacientes asociados.",
           "Visualizá las clínicas veterinarias asociadas.",
-          "Encontrá la ubicación de clínicas veterinarias en un mapa interactivo.",
           "Consultá reportes sobre el rendimiento y la actividad de los diferentes servicios del sistema.",
+          "Encontrá la ubicación de clínicas veterinarias en un mapa interactivo.",
         ],
     disabled: [false, true],
     img: veterinaryWithNoVets
@@ -84,8 +84,8 @@ export default function MenuWeb() {
           veterinarios,
           mascota,
           clinica,
-          mapa,
           reportes,
+          mapa,
         ],
     routes: veterinaryWithNoVets
       ? ["/vets-associations", "/vetsMap"]
@@ -98,8 +98,8 @@ export default function MenuWeb() {
           "/veterinaries-management",
           "/pets-management",
           "/vets-associations",
-          "/vetsMap",
           "/reports",
+          "/vetsMap",
         ],
   };
 
@@ -110,6 +110,7 @@ export default function MenuWeb() {
       "Mis Mascotas",
       "Veterinarios Asociados",
       "Calificaciones",
+      "Reportes",
       "Mapa",
     ],
     description: [
@@ -118,16 +119,26 @@ export default function MenuWeb() {
       "Gestioná y accedé rápidamente a la lista de Mascotas.",
       "Gestioná a los veterinarios asociados.",
       "Registrá valoraciones a tus Veterinarios asociados",
+      "Consultá reportes sobre el rendimiento y la actividad de los diferentes servicios del sistema.",
       "Encontrá la ubicación de clínicas veterinarias en un mapa interactivo.",
     ],
     disabled: [false, true],
-    img: [historial, estudios, mascota, veterinarios, calificacion, mapa],
+    img: [
+      historial,
+      estudios,
+      mascota,
+      veterinarios,
+      calificacion,
+      reportes,
+      mapa,
+    ],
     routes: [
       "/clinical-history",
       "/studies",
       "/pets",
       "/veterinaries-associations",
       "/qualification",
+      "/reports",
       "/vetsMap",
     ],
   };

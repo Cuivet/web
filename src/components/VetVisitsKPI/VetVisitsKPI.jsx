@@ -92,12 +92,12 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
 
   const cardStyle = {
     backgroundColor: "#5b2569",
-    color: "#ffffff",
-    borderRadius: "10px",
-    padding: "20px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    maxWidth: "360px",
-    margin: "0 auto",
+    height: "300px",
+    display: "flex",
+    flexDirection: "column",
+  };
+  const listTextStyle = {
+    color: "#fff",
   };
 
   const listStyle = {
@@ -126,37 +126,70 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
   return (
     // <div className="vet-visits-kpi">
     <div>
+      <style>
+        {`
+      .scroll-container::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .scroll-container::-webkit-scrollbar-thumb {
+        background: #E9C4F2; /* Ajusta el color según tu diseño */
+        border-radius: 10px;
+      }
+
+      .scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #523c89; /* Ajusta el color según tu diseño */
+      }
+    `}
+      </style>
       <h3 style={{ textAlign: "center" }}>
         {getTitle()}
         <br />
       </h3>
 
-      <Card style={{ height: "300px", overflow: "hidden" }}>
+      <div style={cardStyle}>
         {Object.keys(visits).length === 0 ? (
           <p>No tenes visitas registradas.</p>
         ) : (
-          <List
+          <div
             style={{
-              color: "white",
-              height: "100%",
+              flex: 1,
               overflowY: "auto", // Permite scroll vertical
             }}
-            dataSource={Object.values(visits)}
-            size="small"
-            split
-            renderItem={(item) => (
-              <List.Item key={item.key}>
-                Clínica:{" "}
-                <Typography.Text strong>{item.clinicName}</Typography.Text>
-                <br></br>Veterinario/a:{" "}
-                <Typography.Text strong>{item.vetName}</Typography.Text>
-                <br></br>Mascota:{" "}
-                <Typography.Text strong>{item.petName}</Typography.Text>
-                <br></br>Última visita:{" "}
-                <Typography.Text strong>{item.lastVisitDate ? formatDate(item.lastVisitDate) : "No disponible"}</Typography.Text>
-              </List.Item>
-            )}
-          />
+            className="scroll-container"
+          >
+            <List
+              dataSource={Object.values(visits)}
+              size="small"
+              split
+              renderItem={(item) => (
+                <List.Item key={item.key} style={listTextStyle}>
+                  Clínica:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.clinicName}
+                  </Typography.Text>
+                  <br></br>Veterinario/a:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.vetName}
+                  </Typography.Text>
+                  <br></br>Mascota:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.petName}
+                  </Typography.Text>
+                  <br></br>Última visita:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.lastVisitDate
+                      ? formatDate(item.lastVisitDate)
+                      : "No disponible"}
+                  </Typography.Text>
+                </List.Item>
+              )}
+            />
+          </div>
           // {/* {Object.entries(visits).map(
           //   ([key, { visits, vetName, petName, clinicName, lastVisitDate }]) => (
           //     <li key={key} style={listItemStyle}>
@@ -171,7 +204,7 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
           //   )
           // )} */}
         )}
-      </Card>
+      </div>
     </div>
   );
 };

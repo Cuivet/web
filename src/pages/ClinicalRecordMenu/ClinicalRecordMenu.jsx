@@ -107,7 +107,7 @@ export default function ClinicalRecordMenu() {
           style={{ marginBottom: "1%" }}
         >
           <Card
-            title="Datos para la nueva ficha"
+            title="Datos para la nueva ficha clínica"
             hoverable
             actions={[
               <Col>
@@ -135,7 +135,7 @@ export default function ClinicalRecordMenu() {
                             <Text keyboard strong>
                               MASCOTA
                             </Text>{" "}
-                            para poder generar la vacunacion
+                            para poder generar la ficha clínica
                           </Text>
                         ) : (
                           <Text>
@@ -143,7 +143,7 @@ export default function ClinicalRecordMenu() {
                             <Text keyboard strong>
                               TUTOR
                             </Text>{" "}
-                            para poder crear la vacunacion
+                            para poder crear la ficha clínica
                           </Text>
                         )
                       }

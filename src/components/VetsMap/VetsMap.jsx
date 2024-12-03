@@ -23,7 +23,10 @@ const VetsMap = () => {
     const fetchVets = async () => {
       try {
         const data = await getAllVets();
-        const activeVets = data.filter((vet) => vet.active !== 0);
+        const activeVets = data.filter(
+          (vet) => vet?.active !== 0 && vet?.veterinaryId != null
+        );
+        console.log(activeVets, "active");
         setVets(activeVets);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
@@ -116,12 +119,12 @@ const VetsMap = () => {
               )}
             />
           </div>
-          <div className="button-container" style={{ marginRight:'2%' }}>
+          <div className="button-container" style={{ marginRight: "2%" }}>
             <Button
               shape="round"
               type="primary"
               onClick={() => setSelectedVet(null)}
-              style={{ width: "100%"}}
+              style={{ width: "100%" }}
             >
               Ver todas
             </Button>

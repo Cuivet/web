@@ -186,6 +186,10 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
                       ? formatDate(item.lastVisitDate)
                       : "No disponible"}
                   </Typography.Text>
+                  <br></br>Cantidad de visitas:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.visits}
+                  </Typography.Text>
                 </List.Item>
               )}
             />

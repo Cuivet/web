@@ -143,7 +143,6 @@ export default function ClinicalRecord() {
         });
       //crea una de cero
     } else if (profile && profile.veterinary && profile.veterinary.id && flag) {
-      debugger;
       let cRecord = {
         veterinaryId: profile.veterinary.id,
         petId: location.state.petId,

@@ -12,6 +12,7 @@ import {
   Modal,
   Spin,
   message,
+  Popconfirm,
 } from "antd";
 import {
   NodeIndexOutlined,
@@ -28,7 +29,6 @@ import { getVeterinaryDataByMP } from "../../services/veterinary.service";
 import { veterinaryAssociationService } from "../../services/veterinary_association.service";
 import AvatarSearch from "../../components/AvatarSearch";
 import MyContext from "../../MyContext";
-import { lightGreen } from "@mui/material/colors";
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -120,7 +120,6 @@ export default function VeterinariesManagement() {
 
   function generateDataOwner(vets) {
     var finalData = [];
-
     vets.forEach((vet) => {
       if (vet.veterinaryData === null) {
         return;
@@ -178,6 +177,7 @@ export default function VeterinariesManagement() {
     );
     filteredData.forEach((association) => {
       finalData.push({
+        id: association.id,
         mp: association.coveterinaryData.veterinary.mp,
         name: association.coveterinaryData.person.name,
         lastName: association.coveterinaryData.person.lastName,
@@ -187,9 +187,19 @@ export default function VeterinariesManagement() {
         actions:
           regent[0] === "Si" ? (
             <Tooltip placement="top" title="Desvincular Co-Veterinario">
-              <Button shape="circle" size="large" className="margin-right">
-                <DisconnectOutlined />
-              </Button>
+              <Popconfirm
+                title="¿Está seguro que desea desasociar co-veterinario?"
+                onConfirm={() => {
+                  confirm(association.id);
+                  // console.log(association, "id");
+                }}
+                okText="Sí"
+                cancelText="No"
+              >
+                <Button shape="circle" size="large" className="margin-right">
+                  <DisconnectOutlined />
+                </Button>
+              </Popconfirm>
             </Tooltip>
           ) : null,
       });
@@ -337,6 +347,18 @@ export default function VeterinariesManagement() {
     setIsModalVetOwner(true);
   };
 
+  const confirm = async (id) => {
+    try {
+      // Llamada al servicio
+      await veterinaryAssociationService.deleteAssociation(id);
+      message.success("Asociación borrada exitosamente.");
+      setIsInit(false);
+    } catch (error) {
+      console.error("Error al borrar la asociación:", error);
+      message.error("Hubo un error al intentar borrar la asociación.");
+    }
+  };
+
   return (
     <>
       <Row align="middle">
@@ -466,8 +488,8 @@ export default function VeterinariesManagement() {
                 htmlType="submit"
                 type="primary"
                 onClick={() => {
-                  setIsInit(false);
                   hideModal();
+                  setIsInit(false);
                 }}
                 className="register-form_button-ok-modal"
               >
@@ -632,7 +654,10 @@ export default function VeterinariesManagement() {
               <Button
                 htmlType="submit"
                 type="primary"
-                onClick={hideModal}
+                onClick={() => {
+                  hideModal();
+                  setIsInit(false);
+                }}
                 className="register-form_button-ok-modal"
               >
                 Aceptar

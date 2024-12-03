@@ -11,6 +11,7 @@ import {
   Progress,
   Tooltip,
   Popconfirm,
+  message
 } from "antd";
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { anamnesisQuestionService } from "../../services/anamnesis_question.service";
@@ -100,6 +101,8 @@ export default function ClinicalRecordsManagement() {
     fetchData();
   }, []);
 
+  //codigo para la busqueda en columnas
+  //empieza aca
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -202,18 +205,16 @@ export default function ClinicalRecordsManagement() {
           {text ? text.toString() : ""}
         </Text>
       ) : (
-        // <Highlighter
-        //   highlightStyle={{
-        //     backgroundColor: '#ffc069',
-        //     padding: 0,
-        //   }}
-        //   searchWords={[searchText]}
-        //   autoEscape
-        //   textToHighlight={text ? text.toString() : ''}
-        // />
         text
       ),
   });
+  //termina aca
+  const confirm = (id) => {
+    message.success("Ficha Clínica borrada",3);
+    
+    clinicalRecordService.deleteClinicalRecord(id);
+    window.location.replace("");
+  };
 
   if (!isInit) {
     refreshComponent();
@@ -416,8 +417,11 @@ export default function ClinicalRecordsManagement() {
           )}
           <Tooltip placement="top" title="Borrar la Ficha Clínica">
             <Popconfirm
-              title="¿Seguro que quieres borrar esta ficha?"
+              title="¿Seguro que quieres borrar esta ficha clínica?"
               placement="left"
+              onConfirm={() => confirm(indexIdForButton)}
+              cancelText="Cancelar"
+              okText="Borrar"
               icon={<WarningOutlined style={{ color: "red" }} />}
             >
               <Button shape="circle" danger size="large">
@@ -452,39 +456,6 @@ export default function ClinicalRecordsManagement() {
           <Title className="appTitle">Historiales Clínicos</Title>
         </Col>
       </Row>
-
-      {/* <Divider orientation="left">Filtros</Divider>
-
-      <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input
-            placeholder="Código de la ficha clinica"
-            allowClear
-            onChange={filterClinicalRecordId}
-          />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Select
-            className="full-width"
-            showSearch
-            placeholder="Ingrese nombre o código de la mascota"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().includes(input.toLowerCase())
-            }
-          >
-            <Option value="1">Lima - CuivetID: 200</Option>
-            <Option value="2">Wendy - CuivetID: 2522</Option>
-            <Option value="3">Tom - CuivetID: 32</Option>
-          </Select>
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input placeholder="DNI del tutor..." />
-        </Col>
-        <Col className="gutter-row" xs={{ span: 24 }} md={{ span: 12 }}>
-          <Input placeholder="Fecha desde..." />
-        </Col>
-      </Row> */}
 
       <Divider orientation="left"></Divider>
 

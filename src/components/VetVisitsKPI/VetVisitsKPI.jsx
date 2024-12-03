@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Card, List, Typography } from "antd";
 import { findAllByTutorId } from "../../services/clinical_record.service";
 
 // Función para formatear la fecha a dd/mm/yyyy
@@ -49,7 +50,9 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
             }
 
             const pet = record.pet?.name || "Desconocida";
-            const vet = `${record.veterinaryData?.person?.name || "Desconocido"} ${record.veterinaryData?.person?.lastName || ""}`;
+            const vet = `${
+              record.veterinaryData?.person?.name || "Desconocido"
+            } ${record.veterinaryData?.person?.lastName || ""}`;
             const clinic = record.vet?.name || "Desconocida";
 
             if (year === currentYear) {
@@ -67,7 +70,10 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
 
               visitsCount[key].visits++;
               // Actualizar la fecha de la última visita si es más reciente
-              if (!visitsCount[key].lastVisitDate || visitDate > new Date(visitsCount[key].lastVisitDate)) {
+              if (
+                !visitsCount[key].lastVisitDate ||
+                visitDate > new Date(visitsCount[key].lastVisitDate)
+              ) {
                 visitsCount[key].lastVisitDate = visitDate;
               }
             }
@@ -86,12 +92,12 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
 
   const cardStyle = {
     backgroundColor: "#5b2569",
-    color: "#ffffff",
-    borderRadius: "10px",
-    padding: "20px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    maxWidth: "360px",
-    margin: "0 auto",
+    height: "300px",
+    display: "flex",
+    flexDirection: "column",
+  };
+  const listTextStyle = {
+    color: "#fff",
   };
 
   const listStyle = {
@@ -110,14 +116,36 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
       return `Visitas a la Veterinaria en ${currentYear}`;
     }
 
-    const formattedFromDate = fromDate ? formatDate(fromDate) : "la fecha de inicio";
+    const formattedFromDate = fromDate
+      ? formatDate(fromDate)
+      : "la fecha de inicio";
     const formattedToDate = toDate ? formatDate(toDate) : "Hoy"; // Si no hay 'toDate', usar la fecha actual
     return `Visitas Veterinarias desde ${formattedFromDate} hasta ${formattedToDate}`;
   };
 
-  
   return (
-    <div className="vet-visits-kpi">
+    // <div className="vet-visits-kpi">
+    <div>
+      <style>
+        {`
+      .scroll-container::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .scroll-container::-webkit-scrollbar-thumb {
+        background: #E9C4F2; /* Ajusta el color según tu diseño */
+        border-radius: 10px;
+      }
+
+      .scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #523c89; /* Ajusta el color según tu diseño */
+      }
+    `}
+      </style>
       <h3 style={{ textAlign: "center" }}>
         {getTitle()}
         <br />
@@ -127,21 +155,54 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
         {Object.keys(visits).length === 0 ? (
           <p>No tenes visitas registradas.</p>
         ) : (
-          <ul style={listStyle}>
-            {Object.entries(visits).map(
-              ([key, { visits, vetName, petName, clinicName, lastVisitDate }]) => (
-                <li key={key} style={listItemStyle}>
-                  Clínica: <strong>{clinicName} </strong> <br />
-                  Veterinario/a: <strong>{vetName}</strong>
-                  <br />
-                  Mascota: <strong>{petName}</strong> - Cantidad de visitas:{" "}
-                  <strong>{visits}</strong>
-                  <br />
-                  Última visita: <strong>{lastVisitDate ? formatDate(lastVisitDate) : "No disponible"}</strong>
-                </li>
-              )
-            )}
-          </ul>
+          <div
+            style={{
+              flex: 1,
+              overflowY: "auto", // Permite scroll vertical
+            }}
+            className="scroll-container"
+          >
+            <List
+              dataSource={Object.values(visits)}
+              size="small"
+              split
+              renderItem={(item) => (
+                <List.Item key={item.key} style={listTextStyle}>
+                  Clínica:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.clinicName}
+                  </Typography.Text>
+                  <br></br>Veterinario/a:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.vetName}
+                  </Typography.Text>
+                  <br></br>Mascota:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.petName}
+                  </Typography.Text>
+                  <br></br>Última visita:{" "}
+                  <Typography.Text style={listTextStyle} strong>
+                    {item.lastVisitDate
+                      ? formatDate(item.lastVisitDate)
+                      : "No disponible"}
+                  </Typography.Text>
+                </List.Item>
+              )}
+            />
+          </div>
+          // {/* {Object.entries(visits).map(
+          //   ([key, { visits, vetName, petName, clinicName, lastVisitDate }]) => (
+          //     <li key={key} style={listItemStyle}>
+          //       Clínica: <strong>{clinicName} </strong> <br />
+          //       Veterinario/a: <strong>{vetName}</strong>
+          //       <br />
+          //       Mascota: <strong>{petName}</strong> - Cantidad de visitas:{" "}
+          //       <strong>{visits}</strong>
+          //       <br />
+          //       Última visita: <strong>{lastVisitDate ? formatDate(lastVisitDate) : "No disponible"}</strong>
+          //     </li>
+          //   )
+          // )} */}
         )}
       </div>
     </div>

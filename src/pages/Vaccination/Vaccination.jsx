@@ -28,7 +28,7 @@ import {
   WarningOutlined,
   CheckCircleTwoTone,
   CloseCircleTwoTone,
-  SearchOutlined
+  SearchOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 import AvatarSearch from "../../components/AvatarSearch";
@@ -355,7 +355,8 @@ export default function Vaccination() {
           const petsArray = pets
             .filter(
               (item) =>
-                item.veterinaryData.veterinary.id === profile.veterinary.id
+                item.veterinaryData.veterinary.id === profile.veterinary.id ||
+                item.vetData.id === selectedVet.value
             )
             .map((item) => item.pet);
           petsArray.length === 0

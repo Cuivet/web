@@ -211,7 +211,6 @@ export default function ClinicalRecordsManagement() {
   //termina aca
   const confirm = (id) => {
     message.success("Ficha Clínica borrada",3);
-    
     clinicalRecordService.deleteClinicalRecord(id);
     window.location.replace("");
   };
@@ -323,7 +322,6 @@ export default function ClinicalRecordsManagement() {
       dataIndex: "clinicalRecordId",
       defaultSortOrder: "descend",
       ...getColumnSearchProps("clinicalRecordId"),
-      onFilter: (value, record) => record.clinicalRecordId.includes(value),
       filterSearch: true,
       // width: "30%",
       responsive: ["md"],

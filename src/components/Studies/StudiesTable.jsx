@@ -5,8 +5,8 @@ import {
   getAllByTutorId,
 } from "../../services/complementary_study.service.js";
 import { Table, Button, Tooltip, Input, Space, Modal, message } from "antd";
-import { SearchOutlined, DownloadOutlined,EyeOutlined } from "@ant-design/icons";
-import MyContext from "../../MyContext.js";
+import { SearchOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
+import MyContext from "../../MyContext";
 
 const StudiesTable = () => {
   const [studies, setStudies] = useState([]);
@@ -174,9 +174,7 @@ const StudiesTable = () => {
             <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
                 shape="circle"
-                // type="primary"
-                size="large"
-                className="margin-right"
+                icon={<EyeOutlined />}
                 onClick={() => window.open(record.URL, "_blank")}
               >
                 <EyeOutlined />

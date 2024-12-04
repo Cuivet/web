@@ -70,30 +70,17 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
           const startFilter = fromDate ? new Date(fromDate) : null;
           const endFilter = toDate ? new Date(toDate) : null;
 
-          console.log("Fecha de la visita:", visitDate);
-          console.log("Inicio del filtro:", startFilter);
-          console.log("Fin del filtro:", endFilter);
-
           // Filtros de fecha
-          if (startFilter && visitDate < startFilter) {
-            console.log("Registro excluido por estar antes del rango:", record);
-            return false;
-          }
-          if (endFilter && visitDate > endFilter) {
-            console.log("Registro excluido por estar después del rango:", record);
-            return false;
-          }
+          if (startFilter && visitDate < startFilter) return false;
+          if (endFilter && visitDate > endFilter) return false;
 
           // Filtro por nombre de mascota
           if (petNames?.length > 0 && !petNames.includes(record.pet?.name)) {
-            console.log("Registro excluido por no coincidir con las mascotas:", record);
             return false;
           }
 
-          return true; // Incluir registros que pasen los filtros
+          return true;
         });
-
-        console.log("Registros filtrados:", filteredRecords);
 
         if (filteredRecords.length === 0) {
           setErrorMessage("No hay datos para mostrar.");
@@ -106,7 +93,7 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
         filteredRecords.forEach((record) => {
           const petName = record.pet?.name || "Desconocido";
           const visitDate = record.createdAt.split("T")[0];
-          const weight = record.physicalExam?.weight || 0;
+          const weight = record.physicalExam?.weight || null;
 
           if (!petsData[petName]) {
             petsData[petName] = { dates: [], weights: [] };
@@ -116,18 +103,14 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
           petsData[petName].weights.push(weight);
         });
 
-        console.log("Datos organizados por mascota:", petsData);
-
         // Obtener todas las fechas únicas y ordenarlas
         const allDates = Array.from(
           new Set(filteredRecords.map((record) => record.createdAt.split("T")[0]))
         ).sort((a, b) => new Date(a) - new Date(b));
 
-        console.log("Fechas únicas ordenadas:", allDates);
-
         // Generar datasets para el gráfico
         const datasets = Object.entries(petsData).map(([petName, data], index) => {
-          let lastWeight = 0;
+          let lastWeight = null; // Inicializa como null en lugar de 0
           let startedRecording = false;
 
           return {
@@ -138,9 +121,9 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
               if (dateIndex !== -1) {
                 lastWeight = data.weights[dateIndex];
                 startedRecording = true;
-                return lastWeight;
+                return lastWeight; // Usa el peso actual
               } else if (startedRecording) {
-                return lastWeight; // Rellenar con el último peso conocido
+                return lastWeight || null; // Usa el último peso conocido si existe
               }
 
               return null; // Sin datos aún
@@ -150,8 +133,6 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
             tension: 0.1,
           };
         });
-
-        console.log("Datasets para el gráfico:", datasets);
 
         // Configurar los datos del gráfico
         const data = {
@@ -185,8 +166,35 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
             options={{
               maintainAspectRatio: false,
               scales: {
-                y: { title: { display: true } },
-                x: { title: { display: true } },
+                y: {
+                  title: { display: true, text: "Peso (KG)" },
+                },
+                x: {
+                  title: { display: true, text: "Fechas" },
+                  ticks: {
+                    maxTicksLimit: 25,
+                    font: {
+                      size: 10,
+                    },
+                    callback: function (value) {
+                      return this.getLabelForValue(value);
+                    },
+                  },
+                },
+              },
+              elements: {
+                point: {
+                  radius: 4,
+                  hoverRadius: 6,
+                  pointStyle: "circle",
+                },
+              },
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.dataset.label}: ${context.raw} KG`,
+                  },
+                },
               },
             }}
           />

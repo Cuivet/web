@@ -163,7 +163,7 @@ const RingChart = ({ veterinaryId, filters }) => {
         font: { weight: 'bold', size: 12 },
         formatter: (value, context) => {
           const name = context.chart.data.labels[context.dataIndex];
-          return `${name}s\n${value}%`;
+          return `${name}\n${value}%`;
         },
       },
     },

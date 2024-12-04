@@ -211,7 +211,6 @@ export default function ClinicalRecordsManagement() {
   //termina aca
   const confirm = (id) => {
     message.success("Ficha Clínica borrada",3);
-
     clinicalRecordService.deleteClinicalRecord(id);
     window.location.replace("");
   };

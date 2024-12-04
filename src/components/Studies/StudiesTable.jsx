@@ -5,8 +5,8 @@ import {
   getAllByTutorId,
 } from "../../services/complementary_study.service.js";
 import { Table, Button, Tooltip, Input, Space, Modal, message } from "antd";
-import { SearchOutlined, DownloadOutlined } from "@ant-design/icons";
-import MyContext from "../../MyContext";
+import { SearchOutlined, DownloadOutlined,EyeOutlined } from "@ant-design/icons";
+import MyContext from "../../MyContext.js";
 
 const StudiesTable = () => {
   const [studies, setStudies] = useState([]);
@@ -171,13 +171,16 @@ const StudiesTable = () => {
           title: "Acciones",
           dataIndex: "actions",
           render: (_, record) => (
-            <Tooltip title="Descargar">
+            <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
-                type="primary"
                 shape="circle"
-                icon={<DownloadOutlined />}
+                // type="primary"
+                size="large"
+                className="margin-right"
                 onClick={() => window.open(record.URL, "_blank")}
-              />
+              >
+                <EyeOutlined />
+              </Button>
             </Tooltip>
           ),
           align: "center",
@@ -238,13 +241,16 @@ const StudiesTable = () => {
           title: "Acciones",
           dataIndex: "actions",
           render: (_, record) => (
-            <Tooltip title="Descargar">
+            <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
-                type="primary"
                 shape="circle"
-                icon={<DownloadOutlined />}
+                // type="primary"
+                size="large"
+                className="margin-right"
                 onClick={() => window.open(record.URL, "_blank")}
-              />
+              >
+                <EyeOutlined />
+              </Button>
             </Tooltip>
           ),
           align: "center",

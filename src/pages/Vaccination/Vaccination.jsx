@@ -476,7 +476,7 @@ export default function Vaccination() {
         width: 150,
       },
       {
-        title: "Proxima Vacuna",
+        title: "Próxima Vacuna",
         dataIndex: "nextDate",
         key: "nextDate",
         // responsive: ["sm"],
@@ -858,7 +858,7 @@ export default function Vaccination() {
                 label="Firma: "
                 tooltip={{
                   title:
-                    "Este firmado no reemplaza el firmado del carnet de vacunacion.",
+                    "Este firmado no reemplaza el firmado del carnet de vacunación.",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -870,7 +870,7 @@ export default function Vaccination() {
                 name={"nextDate"}
                 label="Proxima fecha: "
                 tooltip={{
-                  title: "Proxima fecha de vacunacion ",
+                  title: "Próxima fecha de vacunacion ",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -887,9 +887,9 @@ export default function Vaccination() {
             <Col>
               <Form.Item
                 name={"observation"}
-                label="Observacion: "
+                label="Observación: "
                 tooltip={{
-                  title: "Alguna observacion ",
+                  title: "Alguna observación ",
                   icon: <InfoCircleOutlined />,
                 }}
               >
@@ -897,7 +897,7 @@ export default function Vaccination() {
                   name="observation"
                   rows={4}
                   allowClear
-                  placeholder="Ingrese alguna observacion"
+                  placeholder="Ingrese alguna observación"
                   maxLength={500}
                   showCount
                   autoSize={{ minRows: 2, maxRows: 6 }}

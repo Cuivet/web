@@ -1,8 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { decodeId } from '../../utils/idEncoder';
-import { uploadPDF } from '../../firebaseConfig'; // Función para subir PDFs
-import { getComplementaryStudyById, updateComplementaryStudy } from '../../services/complementary_study.service';
+import React, { useEffect, useState } from "react";
+import {
+  Result,
+  List,
+  Divider,
+  Row,
+  Typography,
+  Upload,
+  message,
+  Col,
+  Button,
+} from "antd";
+import BiotechOutlinedIcon from "@mui/icons-material/BiotechOutlined";
+import Icon, {
+  InboxOutlined,
+  LineOutlined,
+  ArrowRightOutlined,
+} from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import { decodeId } from "../../utils/idEncoder";
+import { uploadPDF } from "../../firebaseConfig"; // Función para subir PDFs
+import {
+  getComplementaryStudyById,
+  updateComplementaryStudy,
+} from "../../services/complementary_study.service";
 
 const ComplementaryStudy = () => {
   const { encodedId } = useParams();
@@ -61,7 +81,7 @@ const ComplementaryStudy = () => {
   const handleDrop = (event) => {
     event.preventDefault();
     const droppedFile = event.dataTransfer.files[0];
-    if (droppedFile && droppedFile.type === 'application/pdf') {
+    if (droppedFile && droppedFile.type === "application/pdf") {
       setFile(droppedFile);
     } else {
       alert("Por favor, sube un archivo PDF.");
@@ -84,10 +104,13 @@ const ComplementaryStudy = () => {
       const updatedStudy = { ...complementaryStudy, url: url };
       await updateComplementaryStudy(id, updatedStudy);
 
-      alert("Archivo subido y Complementary Study actualizado con éxito.");
+      message.success("Archivo subido con éxito.");
     } catch (error) {
-      console.error("Error al subir el archivo o actualizar el estudio:", error);
-      alert("Error al procesar la solicitud.");
+      console.error(
+        "Error al subir el archivo o actualizar el estudio:",
+        error
+      );
+      message.error("Error al procesar la solicitud.");
     } finally {
       setUploading(false);
     }
@@ -95,7 +118,7 @@ const ComplementaryStudy = () => {
 
   const handleDownload = () => {
     if (downloadURL) {
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = downloadURL;
       link.download = "archivo.pdf"; // Nombre predeterminado para descargar
       document.body.appendChild(link);
@@ -122,7 +145,9 @@ const ComplementaryStudy = () => {
           textAlign: "center",
         }}
       >
-        <p style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "10px" }}>
+        <p
+          style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "10px" }}
+        >
           ⚠️ Atención
         </p>
         <p style={{ fontSize: "16px" }}>{error}</p>
@@ -146,38 +171,106 @@ const ComplementaryStudy = () => {
     : "Selecciona un archivo";
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Pedido de estudio N: {id}</h2>
-      <p>Descripción: {complementaryStudy.observation}</p>
-      <div
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        style={{
-          border: '2px dashed #ddd',
-          borderRadius: '10px',
-          padding: '20px',
-          textAlign: 'center',
-          marginBottom: '20px',
-        }}
-      >
-        {file ? (
-          <p>{file.name}</p>
-        ) : (
-          <p>Arrastra y suelta un archivo PDF aquí</p>
-        )}
-      </div>
-      <button onClick={handleUpload} style={{ marginRight: '10px' }} disabled={uploading}>
-        {uploading ? "Subiendo..." : uploadButtonText}
-      </button>
-      {downloadURL && (
-        <p>
-          Archivo actual:{" "}
-          <a href={downloadURL} target="_blank" rel="noopener noreferrer">
-            Descargar PDF
-          </a>
-        </p>
-      )}
-    </div>
+    <>
+      <Row align="center">
+        <Col span={24}>
+          <Result
+            status={"success"}
+            style={{ height: "100vh" }}
+            icon={
+              <Icon style={{ fontSize: "131px", color: "#523c89" }}>
+                <BiotechOutlinedIcon />
+              </Icon>
+            }
+            title={"Pedido de Estudios Complementarios"}
+            subTitle={`Nro de Estudio: ${id} `}
+            extra={[
+              // <Col span={10} offset={7}>
+              //   <List
+              //     size=""
+              //     header={<Divider>Estudios</Divider>}
+              //     grid={{ gutter: 10, column: 1 }}
+              //     dataSource={data}
+              //     renderItem={(item) => (
+              //       <List.Item>
+              //         <Typography.Title style={{ textAlign: "left" }} level={5}>
+              //           <ArrowRightOutlined style={{color:'#e6c4f3'}} /> {item}
+              //         </Typography.Title>
+              //       </List.Item>
+              //     )}
+              //   />
+              // </Col>,
+              <Col span={10} offset={7}>
+                <Upload.Dragger multiple={false} showUploadList={false} onDragOver={handleDragOver} onDrop={handleDrop}>
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  {file ? (
+                    <p>{file.name}</p>
+                  ) : (
+                    <p className="ant-upload-text">
+                      Arrastra un archivo hasta aqui
+                    </p>
+                  )}
+                </Upload.Dragger>
+              </Col>,
+              <Col span={10} offset={7} style={{ marginTop: "10px" }}>
+                <Button
+                  type="primary"
+                  onClick={handleUpload}
+                  loading={uploading}
+                  disabled={uploading}
+                  style={{ marginRight: "10px" }}
+                >
+                  {uploading ? "Subiendo..." : uploadButtonText}
+                </Button>
+                <Button  href={downloadURL}>
+                  Descargar archivo
+                </Button>
+              </Col>,
+              // { downloadURL && (                
+              // )
+              // <Col span={10} offset={7}>
+                
+              // </Col>,
+            ]}
+          />
+        </Col>
+      </Row>
+    </>
+
+    // <div style={{ padding: '20px' }}>
+    //   <h2>Pedido de estudio N: {id}</h2>
+    //   <p>Descripción: {complementaryStudy.observation}</p>
+    //   <div
+    //     onDragOver={handleDragOver}
+    //     onDrop={handleDrop}
+    //     style={{
+    //       border: '2px dashed #ddd',
+    //       borderRadius: '10px',
+    //       padding: '20px',
+    //       textAlign: 'center',
+    //       marginBottom: '20px',
+    //     }}
+    //   >
+    //     {file ? (
+    //       <p>{file.name}</p>
+    //     ) : (
+    //       <p>Arrastra y suelta un archivo PDF aquí</p>
+    //     )}
+    //   </div>
+    //   <button onClick={handleUpload} style={{ marginRight: '10px' }} disabled={uploading}>
+    //     {uploading ? "Subiendo..." : uploadButtonText}
+    //   </button>
+    //   {downloadURL && (
+    //     <p>
+    //       Archivo actual:{" "}
+    //       <a href={downloadURL} target="_blank" rel="noopener noreferrer">
+    //         Descargar PDF
+    //       </a>
+    //     </p>
+    //   )}
+    // </div>
   );
 };
 

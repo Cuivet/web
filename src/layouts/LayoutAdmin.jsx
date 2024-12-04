@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Divider, Typography, Row } from "antd";
+import { Layout, Divider, Typography, Row, Affix } from "antd";
 import MenuTop from "../components/MenuTop";
 import MenuSider from "../components/MenuSider/MenuSider";
 import "./LayoutsAdmin.scss";
@@ -42,13 +42,14 @@ export default function LayoutAdmin(props) {
                     			Made with ❤ by Cuivet
                     		</Typography.Title>
                     	</Row>
+						<Affix offsetBottom={20}>
                     	<Tooltip title="FAQ">
                     		<Button
                     			type="primary"
                     			shape="circle"
                     			href="https://www.youtube.com/@CUIVET/videos"
                     			target="_blank"
-                    			icon={<QuestionCircleOutlined style={{ fontSize: "24px" }}/>}
+                    			icon={<QuestionCircleOutlined style={{ fontSize: "22px" }} />}
                     			style={{
                     				position: "absolute",
                     				bottom: "20px", // Ajusta esta distancia según lo necesario
@@ -63,6 +64,7 @@ export default function LayoutAdmin(props) {
 								}}
                     		/>
                     	</Tooltip>
+						</Affix>
                     </Footer>
 				</Layout>
 			</Layout>

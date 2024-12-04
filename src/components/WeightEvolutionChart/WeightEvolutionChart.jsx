@@ -180,16 +180,54 @@ const WeightEvolutionChart = ({ tutorId, petNames, fromDate, toDate }) => {
         <p>{errorMessage}</p>
       ) : chartData ? (
         <div style={{ width: "100%", maxWidth: "1200px", height: "300px", margin: "0 auto" }}>
-          <Line
-            data={chartData}
-            options={{
-              maintainAspectRatio: false,
-              scales: {
-                y: { title: { display: true } },
-                x: { title: { display: true } },
-              },
-            }}
-          />
+<Line
+  data={chartData}
+  options={{
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        title: { display: true, text: "Peso (KG)" },
+      },
+      x: {
+        title: { display: true, text: "Fechas" },
+        ticks: {
+          maxTicksLimit: 25, // Muestra un máximo de 25 fechas
+          font: {
+            size: 10, // Tamaño más pequeño para las etiquetas de fecha
+          },
+          callback: function (value) {
+            return this.getLabelForValue(value); // Ajusta la visibilidad de las etiquetas
+          },
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 4, // Tamaño de los puntos
+        hoverRadius: 6,
+        pointStyle: "circle",
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw} KG`, // Personaliza los tooltips
+        },
+      },
+      datalabels: {
+        align: "top", // Coloca los valores encima de los puntos
+        anchor: "start",
+        formatter: (value) => (value ? `${value}` : ""), // Formato del valor
+        font: {
+          size: 10, // Tamaño de la etiqueta
+        },
+        color: "#000", // Color del texto
+      },
+    },
+  }}
+/>
+
+
         </div>
       ) : (
         <p>Cargando datos...</p>

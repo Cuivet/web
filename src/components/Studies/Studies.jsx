@@ -5,7 +5,7 @@ import {
   getAllByTutorId,
 } from "../../services/complementary_study.service.js";
 import { Table, Button, Tooltip, Input, Space, Modal, message } from "antd";
-import { SearchOutlined, DownloadOutlined } from "@ant-design/icons";
+import { SearchOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 import MyContext from "../../MyContext";
 
 const StudiesTable = () => {
@@ -175,7 +175,7 @@ const StudiesTable = () => {
               <Button
                 type="primary"
                 shape="circle"
-                icon={<DownloadOutlined />}
+                icon={<EyeOutlined />}
                 onClick={() => window.open(record.URL, "_blank")}
               />
             </Tooltip>

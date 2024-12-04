@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   Table,
   Button,
@@ -11,7 +11,7 @@ import {
   Progress,
   Tooltip,
   Popconfirm,
-  message
+  message,
 } from "antd";
 import { clinicalRecordService } from "../../services/clinical_record.service";
 import { anamnesisQuestionService } from "../../services/anamnesis_question.service";
@@ -34,7 +34,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import moment from "moment";
-
+import MyContext from "../../MyContext";
 import ClinicalRecordExport from "../../components/PDFExport/ClinicalRecodExport";
 import { PDFDownloadLink } from "@react-pdf/renderer"; // Importa PDFDownloadLink
 
@@ -61,6 +61,7 @@ export default function ClinicalRecordsManagement() {
   const [treatmentOptions, setTreatmentOptions] = useState([]);
   const [drugs, setDrugs] = useState([]);
   const [drugTypes, setDrugTypes] = useState([]);
+  const { selectedVet } = useContext(MyContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -210,7 +211,7 @@ export default function ClinicalRecordsManagement() {
   });
   //termina aca
   const confirm = (id) => {
-    message.success("Ficha Clínica borrada",3);
+    message.success("Ficha Clínica borrada", 3);
     clinicalRecordService.deleteClinicalRecord(id);
     window.location.replace("");
   };
@@ -220,9 +221,14 @@ export default function ClinicalRecordsManagement() {
     setIsInit(true);
   }
 
+  useEffect(() => {
+    refreshComponent();
+  }, [selectedVet]);
+
   function refreshComponent() {
     clinicalRecordService
-      .findAllByVeterinaryId(profile.veterinary.id)
+      // .findAllByVeterinaryId(profile.veterinary.id)
+      .findAllByVetId(selectedVet?.value)
       .then((clinicalRecords) => {
         console.log(clinicalRecords);
         generateData(clinicalRecords);

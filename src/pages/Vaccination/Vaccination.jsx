@@ -46,7 +46,10 @@ import {
   vaccinationService,
   deleteVaccination,
 } from "../../services/vaccination.service";
-import { getAllByVeterinaryId } from "../../services/pet_association.service";
+import {
+  getAllByVeterinaryId,
+  getAllByVetId,
+} from "../../services/pet_association.service";
 import MyContext from "../../MyContext";
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -202,58 +205,59 @@ export default function Vaccination() {
   });
 
   const refreshComponent = () => {
-    getAllByVeterinaryId(profile.veterinary.id).then((associations) => {
+    //busca asociacion por clinica veterinaria seleccionada en el header
+    // getAllByVeterinaryId(profile.veterinary.id).then((associations) => {
+    //   generatePetData(associations);
+    //   console.log(associations, "byveterinary");
+    // });
+    getAllByVetId(selectedVet?.value).then((associations) => {
       generatePetData(associations);
     });
-    // findAllByVeterinaryId(profile.veterinary.id).then((vaccination) => {
-    //   console.log(vaccination);
-    // });
   };
 
-  const generatePetData = (associations) => {
+  const generatePetData = async (associations) => {
     let finalData = [];
-    associations.forEach((association) => {
-      console.log(association);
+    for (const association of associations) {
       finalData.push({
         key: association.pet.id,
         id: association.pet.id,
-        name: association.pet.name,
+        name: association.pet?.name,
         sex: association.pet.isMale === 1 ? "Macho" : "Hembra",
         tutorName:
           association.tutorData.person.lastName +
           " " +
-          association.tutorData.person.name,
+          association.tutorData.person?.name,
         dni: association.tutorData.person.dni,
         especie: species.find(
           (specie) =>
             specie.id ===
             races.find((race) => race.id === association.pet.raceId).specieId
-        ).name,
-        raza: races.find((race) => race.id === association.pet.raceId).name,
+        )?.name,
+        raza: races.find((race) => race.id === association.pet.raceId)?.name,
       });
-      findAllByPetId(association.pet.id).then((response) => {
-        generatePetVaccinationData(association.pet.id, response);
-      });
-    });
-    // console.log("tabla1: ", finalData);
+      const vaccinations = await findAllByPetId(association.pet.id);
+      if (vaccinations.length > 0) {
+        generatePetVaccinationData(association.pet.id, vaccinations);
+      }
+    }
     setPetData(finalData);
   };
 
   const generatePetVaccinationData = (petId, vaccinations) => {
     let finalData = [];
-    // console.log("vaccinations: ", vaccinations);
     vaccinations.forEach((vaccination) => {
       finalData.push({
         key: vaccination.id,
+        vetId: vaccination.vetId,
         petId: petId === vaccination.petId ? petId : null,
         id: vaccination.id,
         placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
-        drug: drugs.find((drug) => drug.id === vaccination.drugId).name,
+        drug: drugs.find((drug) => drug.id === vaccination.drugId)?.name,
         drugType: drugTypes.find(
           (drugType) =>
             drugType.id ===
             drugs.find((drug) => drug.id === vaccination.drugId).drugTypeId
-        ).name,
+        )?.name,
         weight: vaccination.weight,
         signed: vaccination.signed,
         nextDate:
@@ -263,9 +267,12 @@ export default function Vaccination() {
         observation: vaccination.observation,
       });
     });
-    console.log("tabla2: ", finalData);
     // setVaccinatioData(finalData);
-    setVaccinationData((prevData) => [...prevData, ...finalData]);
+    const filteredByVet = finalData.filter(
+      (vaccination) => vaccination.vetId === selectedVet?.value
+    );
+
+    setVaccinationData((prevData) => [...prevData, ...filteredByVet]);
   };
 
   if (!isInit && isFetchData) {
@@ -279,13 +286,13 @@ export default function Vaccination() {
       if (drugType.id !== drugTypeId) {
         list.push(
           <Select.Option key={drugType.id} value={drugTypeId}>
-            {drugType.name}
+            {drugType?.name}
           </Select.Option>
         );
       } else {
         list.push(
           <Select.Option key={drugType.id} value={drugType.id}>
-            {drugType.name}
+            {drugType?.name}
           </Select.Option>
         );
       }
@@ -296,6 +303,7 @@ export default function Vaccination() {
   const onDrugTypeChange = (drugTypeId) => {
     setSelectedDrugTypeId(drugTypeId);
   };
+
   const renderDrugs = (drugTypeId) => {
     let list = [];
     // console.log(drug);
@@ -308,7 +316,7 @@ export default function Vaccination() {
           // console.log(drug);
           list.push(
             <Select.Option key={drug.id} value={drug.id}>
-              {drug.name}
+              {drug?.name}
             </Select.Option>
           );
         }
@@ -379,7 +387,7 @@ export default function Vaccination() {
   const generatePetOptions = (pets) => {
     var renderPetOptions = [];
     pets.forEach(function eachPet(pet) {
-      renderPetOptions.push(<Option key={pet.id}>{pet.name}</Option>);
+      renderPetOptions.push(<Option key={pet.id}>{pet?.name}</Option>);
     });
     return renderPetOptions;
   };
@@ -547,11 +555,16 @@ export default function Vaccination() {
     const petVaccinations = vaccinationData.filter(
       (vaccination) => vaccination.petId === pet.id
     );
+    const uniquePetVaccinations = Array.from(
+      new Set(petVaccinations.map((v) => v.id))
+    ).map((id) => {
+      return petVaccinations.find((v) => v.id === id);
+    });
 
     return (
       <Table
         columns={columns}
-        dataSource={petVaccinations}
+        dataSource={uniquePetVaccinations}
         pagination={false}
         bordered
         size="small"
@@ -606,6 +619,10 @@ export default function Vaccination() {
       // responsive: ['md']
     },
   ];
+
+  useEffect(() => {
+    refreshComponent();
+  }, [selectedVet]);
 
   return (
     <>

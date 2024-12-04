@@ -113,14 +113,14 @@ const VetVisitsKPI = ({ tutorId, fromDate, toDate, petName }) => {
   const getTitle = () => {
     if (!fromDate && !toDate) {
       // Si no hay filtros de fecha, mostrar el título con el año actual
-      return `Visitas a la Veterinaria en ${currentYear}`;
+      return `Visitas a la Clínica Veterinaria en ${currentYear}`;
     }
 
     const formattedFromDate = fromDate
       ? formatDate(fromDate)
       : "la fecha de inicio";
     const formattedToDate = toDate ? formatDate(toDate) : "Hoy"; // Si no hay 'toDate', usar la fecha actual
-    return `Visitas Veterinarias desde ${formattedFromDate} hasta ${formattedToDate}`;
+    return `Visitas a la Clínica Veterinarias desde ${formattedFromDate} hasta ${formattedToDate}`;
   };
 
   return (

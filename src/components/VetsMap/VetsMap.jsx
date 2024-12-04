@@ -26,7 +26,6 @@ const VetsMap = () => {
         const activeVets = data.filter(
           (vet) => vet?.active !== 0 && vet?.veterinaryId != null
         );
-        console.log(activeVets, "active");
         setVets(activeVets);
       } catch (error) {
         console.error("Error al obtener los datos:", error);

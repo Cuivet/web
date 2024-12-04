@@ -1,16 +1,16 @@
 import { basePATH } from "./config";
 
 export var clinicalRecordService = {
-    findOneById: findOneById,
-    findAllByVeterinaryId: findAllByVeterinaryId,
-    registerClinicalRecord: registerClinicalRecord,
-    updateClinicalRecord: updateClinicalRecord,
-    findAllByTutor: findAllByTutor,
-    findAllByTutorId: findAllByTutorId,
-    findAllByPet: findAllByPet,
-    deleteClinicalRecord: deleteClinicalRecord,
-     
-}
+  findOneById: findOneById,
+  findAllByVeterinaryId: findAllByVeterinaryId,
+  registerClinicalRecord: registerClinicalRecord,
+  updateClinicalRecord: updateClinicalRecord,
+  findAllByTutor: findAllByTutor,
+  findAllByTutorId: findAllByTutorId,
+  findAllByPet: findAllByPet,
+  deleteClinicalRecord: deleteClinicalRecord,
+  findAllByVetId: findAllByVetId,
+};
 
 async function findOneById(id) {
   var axios = require("axios");
@@ -32,6 +32,21 @@ export async function findAllByVeterinaryId(veterinaryId) {
   return axios({
     method: "get",
     url: `${basePATH}/clinical-record/allByVeterinaryId/${veterinaryId}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  }).then((response) => {
+    return response.data;
+  });
+}
+
+export async function findAllByVetId(vetId) {
+  var axios = require("axios");
+  return axios({
+    method: "get",
+    url: `${basePATH}/clinical-record/allByVetId/${vetId}`,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -94,37 +109,34 @@ async function updateClinicalRecord(data) {
 }
 
 async function findAllByTutor(tutorId) {
-  var axios = require('axios');
+  var axios = require("axios");
   return axios({
-      method: "get",
-      url: `${basePATH}/clinical-record/allByTutor/${tutorId}`,
-      headers: {
-          "Content-Type": "application/json",
-          Accept: 'application/json',
-          "token": sessionStorage.getItem('token'),
-      }
-      })
-      .then((response) => {
-          return response.data;
-      })
-};
-
+    method: "get",
+    url: `${basePATH}/clinical-record/allByTutor/${tutorId}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  }).then((response) => {
+    return response.data;
+  });
+}
 
 async function findAllByPet(petId) {
-  var axios = require('axios');
+  var axios = require("axios");
   return axios({
-      method: "get",
-      url: `${basePATH}/clinical-record/allByPet/${petId}`,
-      headers: {
-          "Content-Type": "application/json",
-          Accept: 'application/json',
-          "token": sessionStorage.getItem('token'),
-      }
-      })
-      .then((response) => {
-          return response.data;
-      })
-};
+    method: "get",
+    url: `${basePATH}/clinical-record/allByPet/${petId}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  }).then((response) => {
+    return response.data;
+  });
+}
 
 export function deleteClinicalRecord(id) {
   var axios = require("axios");

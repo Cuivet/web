@@ -171,13 +171,14 @@ const StudiesTable = () => {
           title: "Acciones",
           dataIndex: "actions",
           render: (_, record) => (
-            <Tooltip title="Descargar">
+            <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
-                type="primary"
                 shape="circle"
                 icon={<EyeOutlined />}
                 onClick={() => window.open(record.URL, "_blank")}
-              />
+              >
+                <EyeOutlined />
+              </Button>
             </Tooltip>
           ),
           align: "center",
@@ -238,13 +239,16 @@ const StudiesTable = () => {
           title: "Acciones",
           dataIndex: "actions",
           render: (_, record) => (
-            <Tooltip title="Descargar">
+            <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
-                type="primary"
                 shape="circle"
-                icon={<DownloadOutlined />}
+                // type="primary"
+                size="large"
+                className="margin-right"
                 onClick={() => window.open(record.URL, "_blank")}
-              />
+              >
+                <EyeOutlined />
+              </Button>
             </Tooltip>
           ),
           align: "center",

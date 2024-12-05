@@ -252,7 +252,7 @@ export default function VeterinariesAssociations() {
     <>
       <Row align="middle">
         <Col span={22}>
-          <Title className="appTitle">Clínicas Veterinarias Asociadas</Title>
+          <Title className="appTitle">Veterinarias/Clínicas Asociadas</Title>
         </Col>
         <Col span={2}>
           <Tooltip

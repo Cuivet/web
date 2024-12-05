@@ -109,7 +109,7 @@ export default function PresumptiveDiagnosis(props) {
       <Row justify="center" gutter={24}>
         <Col span={24}>
           <Typography.Title className="" level={4}>
-            Diagnostico Presuntivo
+          Diagnóstico Presuntivo
             <Tooltip
               title="Pedido de Estudios Complementarios"
               placement="right"

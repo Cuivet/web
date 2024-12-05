@@ -27,7 +27,7 @@ export default function VaccinationModal(props) {
       // width: 150,
     },
     {
-      title: "Clinica",
+      title: "Clínica",
       dataIndex: "vetName",
       key: "vetName",
       sorter: (a, b) => a.vetName.length - b.vetName.length,

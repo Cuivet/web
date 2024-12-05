@@ -704,7 +704,7 @@ export default function Vaccination() {
                             <Text keyboard strong>
                               MASCOTA
                             </Text>{" "}
-                            para poder generar la vacunacion
+                            para poder generar la vacunación
                           </Text>
                         ) : (
                           <Text>
@@ -712,7 +712,7 @@ export default function Vaccination() {
                             <Text keyboard strong>
                               TUTOR
                             </Text>{" "}
-                            para poder crear la vacunacion
+                            para poder crear la vacunación
                           </Text>
                         )
                       }

@@ -254,14 +254,14 @@ export default function ClinicalRecord() {
       };
 
       // console.log(cRecord);
-      message.loading("Finalizando Ficha Clinica", 1, () => {
+      message.loading("Finalizando Ficha Clínica", 1, () => {
         clinicalRecordService
           .updateClinicalRecord(cRecord)
           .then((res) => {
-            message.success("Ficha Clinica finalizada con exito!");
+            message.success("Ficha Clínica finalizada con exito!");
           })
           .catch((error) => {
-            message.error("Error al finalizar Ficha Clinica");
+            message.error("Error al finalizar Ficha Clínica");
           });
 
         goBack();
@@ -385,14 +385,14 @@ export default function ClinicalRecord() {
 
     // console.log(cRecord);
 
-    message.loading("Guardando Ficha Clinica", 1, () => {
+    message.loading("Guardando Ficha Clínica", 1, () => {
       clinicalRecordService
         .updateClinicalRecord(cRecord)
         .then((res) => {
-          message.success("Ficha Clinica Guardada");
+          message.success("Ficha Clínica Guardada");
         })
         .catch((error) => {
-          message.error("Error al Guardar Ficha Clinica");
+          message.error("Error al Guardar Ficha Clínica");
         });
     });
     goBack();

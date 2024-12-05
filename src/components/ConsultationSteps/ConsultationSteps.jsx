@@ -264,7 +264,7 @@ export default function ConsultationSteps(props) {
           </Tooltip>
         )}
         {current === steps.length - 1 && (
-          <Tooltip title="Finalizar Ficha Clinica">
+          <Tooltip title="Finalizar Ficha Clínica">
             <Button
               type="primary"
               className="steps-action-finish"

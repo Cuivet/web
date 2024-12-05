@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DefaultAvatar from "../../assets/img/jpg/veterinaryAvatar.jpg";
+import DefaultAvatar from "../../assets/img/jpg/home/clinical.jpeg";
 import Meta from "antd/lib/card/Meta";
 import {
   Col,
@@ -185,8 +185,11 @@ export default function VeterinariesAssociations() {
               <img
                 alt="required text"
                 src={
-                  association.veterinaryData.person.photo
-                    ? association.veterinaryData.person.photo
+                  // association.veterinaryData.person.photo
+                  //   ? association.veterinaryData.person.photo
+                  //   : DefaultAvatar
+                  association.vetData.photo
+                    ? association.vetData.photo
                     : DefaultAvatar
                 }
               ></img>
@@ -219,16 +222,19 @@ export default function VeterinariesAssociations() {
               className=""
               title={
                 !association.vetData.id
-                  ? "Atención Particular de: "
-                  : "Clínica Veterinaria: "
-              }
-              description={
-                !association.vetData.id
                   ? association.veterinaryData.person.name +
                     " " +
                     association.veterinaryData.person.lastName
                   : association.vetData.name
-                //"Profesional asociado: " + association.veterinaryData.person.name + " " +  association.veterinaryData.person.lastName
+                // !association.vetData.id
+                //   ? "Atención Particular de: "
+                //   : "Clínica Veterinaria: "
+              }
+              description={
+                "Profesional asociado: " +
+                association.veterinaryData.person.name.split(' ')[0] +
+                " " +
+                association.veterinaryData.person.lastName
               }
             />
             <br></br>
@@ -252,7 +258,7 @@ export default function VeterinariesAssociations() {
     <>
       <Row align="middle">
         <Col span={22}>
-          <Title className="appTitle">Veterinarias/Clínicas Asociadas</Title>
+          <Title className="appTitle">Veterinarios/Clínicas Asociadas</Title>
         </Col>
         <Col span={2}>
           <Tooltip

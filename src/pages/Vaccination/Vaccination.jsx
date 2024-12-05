@@ -879,7 +879,7 @@ export default function Vaccination() {
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Checkbox size="large">Desea firmar esta vacunacion?</Checkbox>
+                <Checkbox size="large">Desea firmar esta vacunación?</Checkbox>
               </Form.Item>
             </Col>
             <Col>
@@ -887,7 +887,7 @@ export default function Vaccination() {
                 name={"nextDate"}
                 label="Proxima fecha: "
                 tooltip={{
-                  title: "Próxima fecha de vacunacion ",
+                  title: "Próxima fecha de vacunación ",
                   icon: <InfoCircleOutlined />,
                 }}
               >

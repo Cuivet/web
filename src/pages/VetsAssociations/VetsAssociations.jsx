@@ -20,7 +20,7 @@ import Icon, {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import SyncDisabledOutlinedIcon from "@mui/icons-material/SyncDisabledOutlined";
-import clinica from "../../assets/img/jpg/clinica.jpg";
+import clinica from "../../assets/img/jpg/home/clinical.jpeg";
 
 import {
   getTemporalAssociationByCode,
@@ -144,6 +144,7 @@ export default function VetsAssociations(props) {
   function returnRegentAssociationCards() {
     var renderAssociationCards = [];
     veterinaryAssociationDataList.forEach((association) => {
+      console.log(association);
       const isRegent =
         association.vetData.regentData.veterinary.id === profile.veterinary.id
           ? true
@@ -157,43 +158,54 @@ export default function VetsAssociations(props) {
             <Card
               className="appCard"
               hoverable
-              cover={<img alt="required text" src={clinica}></img>}
-              actions={[
-                // <Tooltip placement="top" title="Ver Clínica">
-                //   <Button
-                //     type="link"
-                //     size="large"
-                //     style={{ border: "none" }}
-                //     icon={<EyeOutlined key="edit" />}
-                //     onClick={() => displayVet(association.vetData.vet)}
-                //   />
-                // </Tooltip>,
-                // <Popconfirm
-                //   title="¿Está seguro que desea desasociar clínica veterinaria?"
-                //   onConfirm={confirm}
-                //   okText="Si"
-                //   cancelText="No"
-                //   placement="top"
-                //   arrowPointAtCenter
-                //   icon={
-                //     <ExclamationCircleOutlined
-                //       fontSize="small"
-                //       style={{ color: "red" }}
-                //     />
-                //   }
-                // >
-                //   <Button
-                //     type="link"
-                //     size="large"
-                //     style={{ border: "none" }}
-                //     icon={
-                //       <Icon>
-                //         <SyncDisabledOutlinedIcon key="delete" />
-                //       </Icon>
-                //     }
-                //   />
-                // </Popconfirm>,
-              ]}
+              cover={
+                <img
+                  alt="required text"
+                  src={
+                    association.vetData.vet.photo
+                      ? association.vetData.vet.photo
+                      : clinica
+                  }
+                ></img>
+              }
+              actions={
+                [
+                  // <Tooltip placement="top" title="Ver Clínica">
+                  //   <Button
+                  //     type="link"
+                  //     size="large"
+                  //     style={{ border: "none" }}
+                  //     icon={<EyeOutlined key="edit" />}
+                  //     onClick={() => displayVet(association.vetData.vet)}
+                  //   />
+                  // </Tooltip>,
+                  // <Popconfirm
+                  //   title="¿Está seguro que desea desasociar clínica veterinaria?"
+                  //   onConfirm={confirm}
+                  //   okText="Si"
+                  //   cancelText="No"
+                  //   placement="top"
+                  //   arrowPointAtCenter
+                  //   icon={
+                  //     <ExclamationCircleOutlined
+                  //       fontSize="small"
+                  //       style={{ color: "red" }}
+                  //     />
+                  //   }
+                  // >
+                  //   <Button
+                  //     type="link"
+                  //     size="large"
+                  //     style={{ border: "none" }}
+                  //     icon={
+                  //       <Icon>
+                  //         <SyncDisabledOutlinedIcon key="delete" />
+                  //       </Icon>
+                  //     }
+                  //   />
+                  // </Popconfirm>,
+                ]
+              }
             >
               <Meta
                 className=""
@@ -213,7 +225,7 @@ export default function VetsAssociations(props) {
                     <Row>
                       <Typography.Text type="primary">
                         {"Veterinario Regente: " +
-                          association.vetData.regentData.person.name +
+                          association.vetData.regentData.person.name.split(' ')[0] +
                           " " +
                           association.vetData.regentData.person.lastName}
                       </Typography.Text>

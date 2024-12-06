@@ -174,12 +174,15 @@ const StudiesTable = () => {
             <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
                 shape="circle"
-                icon={<EyeOutlined />}
+                // type="dashed"
+                size="large"
+                className="margin-right"
                 onClick={() => window.open(record.URL, "_blank")}
               >
                 <EyeOutlined />
               </Button>
             </Tooltip>
+            
           ),
           align: "center",
           //   responsive: ["md"],
@@ -242,7 +245,7 @@ const StudiesTable = () => {
             <Tooltip placement="left" title="Ver Estudio Complementario">
               <Button
                 shape="circle"
-                // type="primary"
+                // type="dashed"
                 size="large"
                 className="margin-right"
                 onClick={() => window.open(record.URL, "_blank")}

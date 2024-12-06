@@ -51,9 +51,10 @@ export default function VetQualification() {
       return sum + (typeof qualification === "number" ? qualification : 0); // Asegúrate de sumar solo números
     }, 0);
 
-    const count = data.filter((record) =>
-      Number.isInteger(record.qualification)
-    ).length; // Contar solo las calificaciones válidas
+    const count = data.length;
+    //  data.filter((record) =>
+    //   Number.isInteger(record.qualification)
+    // ).length; // Contar solo las calificaciones válidas
 
     console.log("Total Qualifications:", totalQualifications); // Debug: Muestra el total
     console.log("Count of Valid Qualifications:", count); // Debug: Muestra el conteo

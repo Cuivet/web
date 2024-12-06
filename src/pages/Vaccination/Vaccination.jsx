@@ -704,7 +704,7 @@ export default function Vaccination() {
                             <Text keyboard strong>
                               MASCOTA
                             </Text>{" "}
-                            para poder generar la vacunacion
+                            para poder generar la vacunación
                           </Text>
                         ) : (
                           <Text>
@@ -712,7 +712,7 @@ export default function Vaccination() {
                             <Text keyboard strong>
                               TUTOR
                             </Text>{" "}
-                            para poder crear la vacunacion
+                            para poder crear la vacunación
                           </Text>
                         )
                       }
@@ -879,7 +879,7 @@ export default function Vaccination() {
                   icon: <InfoCircleOutlined />,
                 }}
               >
-                <Checkbox size="large">Desea firmar esta vacunacion?</Checkbox>
+                <Checkbox size="large">Desea firmar esta vacunación?</Checkbox>
               </Form.Item>
             </Col>
             <Col>
@@ -887,7 +887,7 @@ export default function Vaccination() {
                 name={"nextDate"}
                 label="Proxima fecha: "
                 tooltip={{
-                  title: "Próxima fecha de vacunacion ",
+                  title: "Próxima fecha de vacunación ",
                   icon: <InfoCircleOutlined />,
                 }}
               >

@@ -269,7 +269,7 @@ export default function ClinicalHistory() {
       sorter: (a, b) => a.petName.length - b.petName.length,
     },
     {
-      title: "Clinica",
+      title: "Clínica",
       dataIndex: "vetName",
       ...getColumnSearchProps("vetName"),
       sorter: (a, b) => a.vetName.length - b.vetName.length,

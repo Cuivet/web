@@ -10,6 +10,7 @@ import {
   Form,
   Col,
   Divider,
+  message,
 } from "antd";
 import { EditOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import "./Qualification.scss";
@@ -126,12 +127,15 @@ export default function Qualification() {
       key: "qualification",
       render: (_, record) => (
         <StarSelector
-          qualification={record.qualification}
-          onChange={(value) =>
-            handleDataChange(record.key, "qualification", value)
-          }
-          disabled={editingKey !== record.key || record.qualification !== null || record.observation !== null}
-        />
+        qualification={record.qualification}
+        onChange={(value) =>
+          handleDataChange(record.key, "qualification", value)
+        }
+        disabled={
+          editingKey !== record.key || 
+          (record.qualification !== null && record.observation !== null)
+        }
+      />
       ),
     },
     {
@@ -165,13 +169,23 @@ export default function Qualification() {
         const canEdit = record.qualification === null && record.observation === null;
         const isEditing = editingKey === record.key;
     
+        const handleSaveClick = () => {
+          if (record.qualification === null) {
+            // Mostrar advertencia
+            message.warning("Debe asignar una calificación antes de guardar.");
+            return; // Salir de la función sin llamar a save
+          }
+          // Llamar a save solo si la calificación no es null
+          save(record.key);
+        };
+    
         return isEditing ? (
           <>
             <Tooltip placement="top" title="Guardar cambios">
               <Button
                 shape="circle"
                 size="large"
-                onClick={() => save(record.key)}
+                onClick={handleSaveClick}
                 className="margin-right"
               >
                 <CheckOutlined />

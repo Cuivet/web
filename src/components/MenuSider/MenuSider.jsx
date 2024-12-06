@@ -98,7 +98,7 @@ export default function MenuSider(props) {
             <Menu.Item key="tutorStudies">
               <Link to={"/studies"} className="admin-sider__item">
                 <Icon component={""}>
-                  <ScienceIcon fontSize="small" />
+                  <ScienceIcon style={{fontSize: '30px'}} />
                 </Icon>
                 <span className="nav-text"> Estudios </span>
               </Link>

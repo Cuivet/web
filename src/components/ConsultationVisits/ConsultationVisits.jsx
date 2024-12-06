@@ -42,6 +42,7 @@ export default function ConsultationVisits(props) {
   const renderSteps = () => {
     // cambiar los nombres para que esten en espaniol
     let render = [];
+    console.log(steps);
     steps.forEach((i) => {
       render.push(<Tag color="geekblue">{i}</Tag>);
     });

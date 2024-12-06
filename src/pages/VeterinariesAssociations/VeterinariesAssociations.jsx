@@ -249,7 +249,7 @@ export default function VeterinariesAssociations() {
   function renderPetTags(pets) {
     const renderedPetTags = [];
     pets.forEach((pet) => {
-      renderedPetTags.push(<Tag color="purple">{pet.name}</Tag>);
+      renderedPetTags.push(<Tag color="purple" style={{fontSize: "1em"}}  >{pet.name}</Tag>);
     });
     return renderedPetTags;
   }

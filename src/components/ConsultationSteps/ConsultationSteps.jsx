@@ -69,7 +69,7 @@ export default function ConsultationSteps(props) {
       //   subTitle: Visits(cRecord.anamnesis),
     },
     {
-      title: "Exámen Físico",
+      title: "Examen Físico",
       ...(physicalExam !== null
         ? {
             content: (

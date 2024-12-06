@@ -75,12 +75,12 @@ export default function ClinicalRecord() {
 
     const translations = {
       reasonConsultation: "motivo Consulta",
-      review: "revisión",
+      review: "reseña",
       anamnesis: "anamnesis",
-      physicalExam: "examen Fisico",
-      presumptiveDiagnosis: "diagnostico Presuntivo",
-      diagnosis: "diagnostico",
-      prognosis: "pronostico",
+      physicalExam: "examen físico",
+      presumptiveDiagnosis: "diagnóstico Presuntivo",
+      diagnosis: "diagnóstico",
+      prognosis: "pronóstico",
     };
 
     return Object.keys(cRecord)
@@ -414,7 +414,7 @@ export default function ClinicalRecord() {
     var stepsDone = getStepsDone(clinicalRecord).map((str) =>
       str.toUpperCase()
     );
-    // console.log(stepsDone);
+    console.log(stepsDone);
   }
   const showVaccinationModal = () => {
     // console.log(vaccinationData);

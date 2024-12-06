@@ -6,7 +6,7 @@ import StarSelector from "../../components/StarDisplay/StarDisplay";
 import { StarTwoTone } from "@ant-design/icons"; // Importa el icono
 import moment from "moment";
 
-const { Title } = Typography;
+const { Title , Text, SubTitle} = Typography;
 
 export default function VetQualification() {
   const [data, setData] = useState([]);
@@ -124,17 +124,17 @@ export default function VetQualification() {
             Calificaciones Obtenidas{" "}
           </Title>
           <StarTwoTone
-            
             title="Promedio de calificaciones"
             style={{ fontSize: "28px", marginLeft: "2%" }}
             twoToneColor="rgba(88, 9, 114, 0.329)"
           />
-          <span style={{ marginLeft: "1%", fontSize: "25px" }}>
-            {averageQualification.toFixed(2)} 
-          </span>
-          <span style={{ marginLeft: "1%", fontSize: "15px" }}>
-            ({totalQualifications} calificaciones)
-          </span>
+          <Typography.Text style={{ marginLeft: "2%",fontSize: "24px"}}>
+          {     averageQualification.toFixed(2)} 
+          </Typography.Text>
+          
+          <Typography.Text style={{ marginLeft: "2%",fontSize: "14px"}}>
+          ({totalQualifications} calificaciones)
+          </Typography.Text>
         </Col>
       </Row>
 

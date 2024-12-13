@@ -80,23 +80,22 @@ export default function Vaccination() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await raceService.findAll().then((response) => {
-        setRaces(response);
-      });
-      await specieService.findAll().then((response) => {
-        setSpecies(response);
-      });
-      await drugTypeService.findAll().then((response) => {
-        setDrugTypes(response);
-      });
-      await drugService.findAll().then((response) => {
-        setDrugs(response);
-      });
-      setIsFetchData(true);
+      try {
+        const races = await raceService.findAll();
+        const species = await specieService.findAll();
+        const drugs = await drugService.findAll();
+        const drugTypes = await drugTypeService.findAll();
+        setRaces(races);
+        setSpecies(species);
+        setDrugs(drugs);
+        setDrugTypes(drugTypes);
+        setIsFetchData(true);
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
     };
-
     fetchData();
-  }, [isModalOpen]);
+  }, []);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -236,7 +235,7 @@ export default function Vaccination() {
         raza: races.find((race) => race.id === association.pet.raceId)?.name,
       });
       const vaccinations = await findAllByPetId(association.pet.id);
-      if (vaccinations.length > 0) {
+      if (vaccinations?.length > 0) {
         generatePetVaccinationData(association.pet.id, vaccinations);
       }
     }
@@ -252,12 +251,8 @@ export default function Vaccination() {
         petId: petId === vaccination.petId ? petId : null,
         id: vaccination.id,
         placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
-        drug: drugs.find((drug) => drug.id === vaccination.drugId)?.name,
-        drugType: drugTypes.find(
-          (drugType) =>
-            drugType.id ===
-            drugs.find((drug) => drug.id === vaccination.drugId).drugTypeId
-        )?.name,
+        drug: vaccination.drugName,
+        drugType: vaccination.drugTypeName,
         weight: vaccination.weight,
         signed: vaccination.signed,
         nextDate:
@@ -267,11 +262,9 @@ export default function Vaccination() {
         observation: vaccination.observation,
       });
     });
-    // setVaccinatioData(finalData);
     const filteredByVet = finalData.filter(
       (vaccination) => vaccination.vetId === selectedVet?.value
     );
-
     setVaccinationData((prevData) => [...prevData, ...filteredByVet]);
   };
 

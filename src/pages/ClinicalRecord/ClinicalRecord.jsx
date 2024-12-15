@@ -16,7 +16,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { clinicalRecordService } from "../../services/clinical_record.service";
-import { findAllByPetId } from "../../services/vaccination.service";
+import { findAllByVetIdByPetId } from "../../services/vaccination.service";
 import { drugTypeService } from "../../services/drug_type.service";
 import { drugService } from "../../services/drug.service";
 import ConsultationHeader from "../../components/ConsultationHeader/ConsultationHeader";
@@ -46,20 +46,19 @@ export default function ClinicalRecord() {
   useEffect(() => {
     // Función para limpiar el sessionStorage cuando se cambia de ruta
     const handleRouteChange = () => {
-        // Aquí eliminamos las variables específicas de sessionStorage
-        sessionStorage.removeItem('anamnesisItems');
-        sessionStorage.removeItem('complementaryStudies');
-        sessionStorage.removeItem('diagnosisItems');
-        sessionStorage.removeItem('physicalExam');
-        sessionStorage.removeItem('presumptiveDiagnosisItems');
-        sessionStorage.removeItem('prognosis');
-        sessionStorage.removeItem('reasonConsultation');
+      // Aquí eliminamos las variables específicas de sessionStorage
+      sessionStorage.removeItem("anamnesisItems");
+      sessionStorage.removeItem("complementaryStudies");
+      sessionStorage.removeItem("diagnosisItems");
+      sessionStorage.removeItem("physicalExam");
+      sessionStorage.removeItem("presumptiveDiagnosisItems");
+      sessionStorage.removeItem("prognosis");
+      sessionStorage.removeItem("reasonConsultation");
     };
 
     // Escucha de cambios en la ubicación para limpiar sessionStorage
     return () => handleRouteChange();
-
-}, [location]);
+  }, [location]);
 
   //renderiza los pasos completados en tags en el Header
   const getStepsDone = (cRecord) => {
@@ -101,12 +100,8 @@ export default function ClinicalRecord() {
         petId: vaccination.petId,
         id: vaccination.id,
         placementDate: moment(vaccination.placementDate).format("DD/MM/YYYY"),
-        drug: drugs.find((drug) => drug.id === vaccination.drugId).name,
-        drugType: drugTypes.find(
-          (drugType) =>
-            drugType.id ===
-            drugs.find((drug) => drug.id === vaccination.drugId).drugTypeId
-        ).name,
+        drug: vaccination.drugName,
+        drugType: vaccination.drugTypeName,
         weight: vaccination.weight,
         signed: vaccination.signed,
         nextDate:
@@ -114,6 +109,11 @@ export default function ClinicalRecord() {
             ? "-"
             : moment(vaccination.nextDate).format("DD/MM/YYYY"),
         observation: vaccination.observation,
+        veterinaryName:
+          vaccination.veterinaryData.name +
+          " " +
+          vaccination.veterinaryData.lastName,
+        vetName: vaccination.vetName,
       });
     });
     // console.log("tabla2: ", finalData);
@@ -158,7 +158,7 @@ export default function ClinicalRecord() {
           message.error(error.response.data);
         });
     }
-    findAllByPetId(clinicalRecord?.pet.id).then((res) => {
+    findAllByVetIdByPetId(clinicalRecord?.pet.id).then((res) => {
       generatePetVaccinationData(res);
     });
     setNewVisit({

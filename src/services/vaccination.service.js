@@ -7,7 +7,8 @@ export var vaccinationService = {
   updateVaccination: updateVaccination,
   findAllByPetId: findAllByPetId,
   deleteVaccination: deleteVaccination,
-  findAllByVeterinaryId: findAllByVeterinaryId
+  findAllByVeterinaryId: findAllByVeterinaryId,
+  findAllByVetIdByPetId: findAllByVetIdByPetId,
 };
 
 async function findAll() {
@@ -23,7 +24,7 @@ async function findAll() {
   }).then((response) => {
     return response.data;
   });
-};
+}
 
 async function findOneById(id) {
   var axios = require("axios");
@@ -38,7 +39,7 @@ async function findOneById(id) {
   }).then((response) => {
     return response.data;
   });
-};
+}
 
 async function registerVaccination(data) {
   var axios = require("axios");
@@ -54,7 +55,7 @@ async function registerVaccination(data) {
   }).then((response) => {
     return response.data;
   });
-};
+}
 
 async function updateVaccination(data) {
   var axios = require("axios");
@@ -70,7 +71,7 @@ async function updateVaccination(data) {
   }).then((response) => {
     return response.data;
   });
-};
+}
 
 export function findAllByPetId(petId) {
   var axios = require("axios");
@@ -85,7 +86,22 @@ export function findAllByPetId(petId) {
   }).then((response) => {
     return response.data;
   });
-};
+}
+
+export function findAllByVetIdByPetId(petId) {
+  var axios = require("axios");
+  return axios({
+    method: "get",
+    url: `${basePATH}/vaccination/allByVetByPet/${petId}`,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      token: sessionStorage.getItem("token"),
+    },
+  }).then((response) => {
+    return response.data;
+  });
+}
 
 export function findAllByVeterinaryId(veterinaryId) {
   var axios = require("axios");
@@ -100,7 +116,7 @@ export function findAllByVeterinaryId(veterinaryId) {
   }).then((response) => {
     return response.data;
   });
-};
+}
 
 export function deleteVaccination(vaccinationId) {
   var axios = require("axios");
@@ -115,4 +131,4 @@ export function deleteVaccination(vaccinationId) {
   }).then((response) => {
     return response.data;
   });
-};
+}

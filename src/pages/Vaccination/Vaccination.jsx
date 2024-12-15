@@ -42,7 +42,7 @@ import { specieService } from "../../services/specie.service";
 import locale from "antd/lib/date-picker/locale/es_ES";
 import "./Vaccination.scss";
 import {
-  findAllByPetId,
+  findAllByVetIdByPetId,
   vaccinationService,
   deleteVaccination,
 } from "../../services/vaccination.service";
@@ -234,7 +234,7 @@ export default function Vaccination() {
         )?.name,
         raza: races.find((race) => race.id === association.pet.raceId)?.name,
       });
-      const vaccinations = await findAllByPetId(association.pet.id);
+      const vaccinations = await findAllByVetIdByPetId(association.pet.id);
       if (vaccinations?.length > 0) {
         generatePetVaccinationData(association.pet.id, vaccinations);
       }

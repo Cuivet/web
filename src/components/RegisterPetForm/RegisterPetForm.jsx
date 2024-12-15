@@ -263,6 +263,14 @@ export default function RegisterPetForm(props) {
     return current && current > moment().endOf("day");
   };
 
+  const disabledCastrationDate = (current) => {
+    if (!pet.birth) {
+      return true; // Deshabilitar todas las fechas si `birth` no está seleccionada
+    }
+    // Deshabilitar fechas antes de `birth` y fechas futuras
+    return current && (current < pet.birth.startOf("day") || current > moment().endOf("day"));
+  };
+
   function renderSpecies() {
     let list = [];
     species.forEach((specie) => {
@@ -424,7 +432,8 @@ export default function RegisterPetForm(props) {
           <Form.Item>
             <DatePicker
               locale={locale}
-              disabledDate={disabledDate}
+              disabledDate={disabledCastrationDate}
+              disabled={!pet.birth}
               name="castrationDate"
               value={pet.castrationDate}
               inputReadOnly={true}

@@ -20,7 +20,11 @@ import locale from "antd/lib/date-picker/locale/es_ES";
 import moment from "moment";
 import "../Settings/UserSettings/UserSettings.scss";
 import { specieService } from "../../services/specie.service";
-import { getPetsByTutorId } from "../../services/pet.service";
+import { raceService } from "../../services/race.service";
+import {
+  getPetsByTutorId,
+  getPetsDataByTutorId,
+} from "../../services/pet.service";
 import { getTutorDataByDni } from "../../services/tutor.service";
 
 const { Title } = Typography;
@@ -44,12 +48,12 @@ function Reports() {
 
   const handleApplyFilters = () => {
     // Podrías implementar lógica adicional aquí si es necesario antes de pasar los valores a VetVisitsKPI
-    console.log("Aplicando filtros:", {
-      fromDate: selectedFromDate,
-      toDate: selectedToDate,
-      pet: selectedPet,
-      specie: selectedSpecies,
-    });
+    // console.log("Aplicando filtros:", {
+    //   fromDate: selectedFromDate,
+    //   toDate: selectedToDate,
+    //   pet: selectedPet,
+    //   specie: selectedSpecies,
+    // });
   };
 
   const handleClearFilters = () => {
@@ -99,9 +103,20 @@ function Reports() {
       if (person && person.name && person.lastName) {
         setTutorName(`${person.name} ${person.lastName}`);
         setErrorMessage("");
-        const petsData = await getPetsByTutorId(tutor.id);
-        setPets(petsData);
+        const petsData = await getPetsDataByTutorId(tutor.id);
+        if (selectedSpecies.length > 0) {
+          const filteredPets = petsData.filter((pet) =>
+            selectedSpecies.includes(pet.specieId)
+          );
+          if (filteredPets.length === 0) {
+            setErrorMessage(`No tiene mascotas con la especie seleccionada`);
+          }
+          setPets(filteredPets);
+        } else {
+          setPets(petsData);
+        }
         setShowPetsSelect(true);
+
       } else {
         setTutorName("");
         setErrorMessage("DNI no asociado");
@@ -121,13 +136,17 @@ function Reports() {
     }
   }, [dni]);
 
+  useEffect(() => {
+    if (dni) {
+      fetchTutorData();
+    }
+  }, [selectedSpecies]);
+
   const chartStyle = { height: "400px" }; // Establecer una altura fija
 
   const disabledDate = (current) => {
     return current && current > moment().endOf("day");
   };
-
-  
 
   const renderFilters = () => {
     if (profile.veterinary) {
@@ -207,6 +226,7 @@ function Reports() {
               className="select-before full-width"
               style={{ marginTop: "0px" }}
               disabled={!showPetsSelect} // Se habilita solo si showPetsSelect es true
+              //AGREGAR ARREGLO DE ESPECIE
               value={selectedPet} // Ahora `selectedPet` es un array vacío al limpiar
               onChange={setSelectedPet} // Controla el cambio correctamente
             >
@@ -322,12 +342,12 @@ function Reports() {
         <>
           <Col xs={{ span: 20 }} lg={{ span: 12 }}>
             {/* <div style={{ height: "300px" }}> */}
-              <VetVisitsKPI
-                tutorId={profile.tutor.id}
-                fromDate={selectedFromDate}
-                toDate={selectedToDate}
-                petName={selectedPet}
-              />
+            <VetVisitsKPI
+              tutorId={profile.tutor.id}
+              fromDate={selectedFromDate}
+              toDate={selectedToDate}
+              petName={selectedPet}
+            />
             {/* </div> */}
           </Col>
 

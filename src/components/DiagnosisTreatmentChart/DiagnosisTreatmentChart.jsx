@@ -34,12 +34,12 @@ const DiagnosisTreatmentChart = ({ veterinaryId, filters }) => {
     const fetchDiagnosisData = async () => {
 
       try {
-        console.log("Fetching clinical records for veterinaryId:", veterinaryId);
+        // console.log("Fetching clinical records for veterinaryId:", veterinaryId);
 
   
         // Llamada al servicio para obtener todas las historias clínicas del veterinario
         const clinicalRecords = await findAllByVeterinaryId(veterinaryId);
-        console.log("Clinical Records:", clinicalRecords);
+        // console.log("Clinical Records:", clinicalRecords);
   
         let filteredRecords = clinicalRecords;
   
@@ -89,7 +89,7 @@ const DiagnosisTreatmentChart = ({ veterinaryId, filters }) => {
           filteredRecords = filteredRecords.filter(record =>
             pet.some(petName => record.pet.name === petName)
           );
-          console.log("Filtrando por mascota(s):", pet, filteredRecords);
+          // console.log("Filtrando por mascota(s):", pet, filteredRecords);
         }
 
         //filtrar por especie
@@ -115,12 +115,11 @@ const DiagnosisTreatmentChart = ({ veterinaryId, filters }) => {
         }*/
               // Paso 1: Obtener los raceIds
       const raceIds = filteredRecords.map(record => record.pet.raceId);
-      console.log('Razas', raceIds)
-
+      // console.log('Razas', raceIds)
       // Paso 2: Obtener los specieIds
       const speciesDataPromises = raceIds.map(raceId => raceService.findByRaceId(raceId));
       const speciesDataResults = await Promise.all(speciesDataPromises);
-      console.log('Todas las razas', speciesDataResults)
+      // console.log('Todas las razas', speciesDataResults)
 
       const specieIdsFromAssociations = speciesDataResults
         .map((speciesData, index) => {
@@ -128,17 +127,17 @@ const DiagnosisTreatmentChart = ({ veterinaryId, filters }) => {
           return species ? species.specieId : null;
         })
         .filter(specieId => specieId !== null);
-        console.log('ESPECIE DE LA CLINCIAL RECORD', specieIdsFromAssociations)
+        // console.log('ESPECIE DE LA CLINCIAL RECORD', specieIdsFromAssociations)
         
       let filteredSpecieIds = specieIdsFromAssociations; 
       // Filtrar por especie seleccionada
       if (specie && specie.length > 0) {
-        console.log('Especie filtrada', specie);
+        // console.log('Especie filtrada', specie);
         
         // Filtrar specieIdsFromAssociations manteniendo solo los IDs que estén en el array specie
         filteredSpecieIds = specieIdsFromAssociations.filter(specieId => specie.includes(specieId));
       
-        console.log('Especies coincidentes después de la comparación', filteredSpecieIds);
+        // console.log('Especies coincidentes después de la comparación', filteredSpecieIds);
       
         // Si no hay coincidencias, limpiar registros filtrados
         if (filteredSpecieIds.length === 0) {
@@ -181,7 +180,7 @@ const DiagnosisTreatmentChart = ({ veterinaryId, filters }) => {
           });
         });
   
-        console.log("Final diagnosisMap:", diagnosisMap);
+        // console.log("Final diagnosisMap:", diagnosisMap);
   
         // Convertir el diccionario a un array y ordenar por frecuencia
         const diagnosisArray = Object.entries(diagnosisMap).map(([name, count]) => ({
